@@ -1,5 +1,15 @@
+'use client'
+
+import { useFormState } from "react-dom"
+import { Login } from "src/actions"
+
+const initialState = {
+  errors: [],
+  errorMsg: ""
+}; 
 
 export const LoginForm = () => {
+  const [ status, formAction ] = useFormState(Login, initialState);
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -12,7 +22,7 @@ export const LoginForm = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" action={formAction} method="POST">
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 ring-gray-300">
                 Correo Electrónico
@@ -21,10 +31,10 @@ export const LoginForm = () => {
                 <input
                   id="email"
                   name="email"
-                  type="email"
+                  //type="email"
                   autoComplete="email"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -47,7 +57,8 @@ export const LoginForm = () => {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  //pattern= "^[A-Za-z0-9]{8,40}$"
+                  className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -60,6 +71,8 @@ export const LoginForm = () => {
                 Iniciar Sesión
               </button>
             </div>
+            {status.errors ? status.errors.map((error: any, index: number) => <p className="text-sm text-center" key={`${error.message}-${index}`}>{error.message}</p>) : null}
+            {status.errorMsg ? <p className="text-sm text-center">{ status.errorMsg }</p> : null	}
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
@@ -67,7 +80,7 @@ export const LoginForm = () => {
             <a href="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
             Registrate aquí!
             </a>
-          </p>
+          </p>  
         </div>
       </div>
     </>

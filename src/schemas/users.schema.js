@@ -19,6 +19,16 @@ const userSchema = new Schema ({
         type: String,
         required: true,
         trim: true
+    },
+    secret_question: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    secret_answer: {
+        type: String,
+        required: true,
+        trim: true
     }
     },
     {

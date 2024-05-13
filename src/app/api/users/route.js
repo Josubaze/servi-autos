@@ -14,15 +14,29 @@ export async function GET(request, {  params }){
     }
     
 }
-
 export async function POST(request){
-    try {
-        const data = await request.json()
-        const newUser = new User(data)
-        const savedUser = await newUser.save()
-        return NextResponse.json(savedUser)
-    } catch (error) {
-        return NextResponse.json(error.message, {
+    const data = await request.json()
+    const type = data.type;
+    if (type === 'register'){
+        try {
+            const newUser = new User(data)
+            const savedUser = await newUser.save()
+            return NextResponse.json(savedUser)
+        } catch (error) {
+            return NextResponse.json(error.message, {
+                status: 400 
+            })
+        }
+    }else if (type === 'login') {
+        const user = await User.findOne({ email: data.email, password: data.password })
+        if (!user) {
+            return NextResponse.json('Usuario no encontrado', {
+                status: 404 
+            })
+        }
+        return NextResponse.json({ status: 200 })
+    } else {
+        return NextResponse.json('Tipo de solicitud no válido', {
             status: 400 
         })
     }
