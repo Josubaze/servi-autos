@@ -28,7 +28,7 @@ export async function POST(request){
             })
         }
     }else if (type === 'login') {
-        const user = await User.findOne({ email: data.email, password: data.password })
+        const user = await User.findOne({ email: data.email, username: data.username })
         if (!user) {
             return NextResponse.json('Usuario no encontrado', {
                 status: 404 

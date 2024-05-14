@@ -1,21 +1,46 @@
+'use client'
 
+import { useFormState } from "react-dom"
+import { Signup } from "src/actions"
+
+const initialState = {
+  errors: [],
+  errorMessage: "",
+}; 
 export const SignupForm = () => {
+  const [ status, formAction ] = useFormState(Signup , initialState);
     return (
       <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             className="mx-auto h-28 w-auto"
             src="/svg/logo.svg"
             alt="Your Company"
           />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight ring-gray-300">
+          <h2 className=" text-center text-2xl font-bold leading-9 tracking-tight ring-gray-300">
             Registrar cuenta
           </h2>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+          <form className="space-y-6" action={formAction} method="POST">
+
+          <div>
+              <label htmlFor="username" className="block text-sm font-medium leading-6 ring-gray-300">
+                Nombre de usuario
+              </label>
+              <div className="mt-2">
+                <input
+                  id="username"
+                  placeholder="Ej. Fernan"
+                  name="username"
+                  required
+                  className="block w-full rounded-md border-0 py-1 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus:placeholder-gray-50"
+                />
+              </div>
+            </div>
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 ring-gray-300">
                 Correo Electrónico
@@ -23,12 +48,12 @@ export const SignupForm = () => {
               <div className="mt-2">
                 <input
                   id="email"
-                  placeholder="Ej. Anafer@example.com"
+                  placeholder="Anafer@example.com"
                   name="email"
-                  type="email"
+                  //type="email"
                   autoComplete="email"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus:placeholder-gray-50"
+                  className="block w-full rounded-md border-0 py-1 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus:placeholder-gray-50"
                 />
               </div>
             </div>
@@ -47,7 +72,7 @@ export const SignupForm = () => {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus:placeholder-gray-50"
+                  className="block w-full rounded-md border-0 py-1 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus:placeholder-gray-50"
                 />
               </div>
             </div>
@@ -57,15 +82,15 @@ export const SignupForm = () => {
                 Rol
               </label>
               <div className="mt-2">
-                <input
+                <select
                   id="role"
-                  placeholder="Adminstrador o Lider"
                   name="role"
-                  type="role"
-                  autoComplete="role"
                   required
                   className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus:placeholder-gray-50"
-                />
+                  >
+                    <option value="administrador">Adminstrador</option>
+                    <option value="lider">Lider de equipo</option>
+                </select>
               </div>
             </div>
 
@@ -76,12 +101,11 @@ export const SignupForm = () => {
               </label>
               <div className="mt-2">
                 <input
-                  type="text"
+                  required
                   placeholder="¿Nombre de tu mascota?"
                   name="secret-question"
                   id="secret-question"
-                  autoComplete="given-name"
-                  className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus:placeholder-gray-50"
+                  className="block w-full rounded-md border-0 py-1 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus:placeholder-gray-50"
                 />
               </div>
             </div>
@@ -92,12 +116,11 @@ export const SignupForm = () => {
               </label>
               <div className="mt-2">
                 <input
-                  type="text"
+                  required
                   placeholder="Neron"
                   name="secret-answer"
                   id="secret-answer"
-                  autoComplete="family-name"
-                  className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus:placeholder-gray-50"
+                  className="block w-full rounded-md border-0 py-1 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus:placeholder-gray-50"
                 />
               </div>
             </div>
@@ -110,6 +133,8 @@ export const SignupForm = () => {
                 Registrar
               </button>
             </div>
+            {status?.errors ? status.errors.map((error: any, index: number) => <p className="text-sm text-center" key={`${error.message}-${index}`}>{error.message}</p>) : null}
+            {status?.error ? <p className="text-sm text-center">{ status.error }</p> : null	}
           </form>
         </div>
       </div>

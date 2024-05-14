@@ -1,5 +1,6 @@
 'use client'
 
+
 import { useFormState } from "react-dom"
 import { Login } from "src/actions"
 
@@ -31,7 +32,7 @@ export const LoginForm = () => {
                 <input
                   id="email"
                   name="email"
-                  //type="email"
+                  type="email"
                   autoComplete="email"
                   required
                   className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -71,8 +72,8 @@ export const LoginForm = () => {
                 Iniciar Sesión
               </button>
             </div>
-            {status.errors ? status.errors.map((error: any, index: number) => <p className="text-sm text-center" key={`${error.message}-${index}`}>{error.message}</p>) : null}
-            {status.errorMsg ? <p className="text-sm text-center">{ status.errorMsg }</p> : null	}
+            {status?.errors ? status.errors.map((error: any, index: number) => <p className="text-sm text-center" key={`${error.message}-${index}`}>{error.message}</p>) : null}
+            {status?.errorMsg ? <p className="text-sm text-center">{ status.errorMsg }</p> : null	}
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
