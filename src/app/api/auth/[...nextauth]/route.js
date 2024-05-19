@@ -33,8 +33,7 @@ export const authOptions = {
   ],
     pages: {
       signIn: "/login",
-      signOut: '/login',
-      //error: '/not-found',
+      error: '/not-found',
     },
 };
 const handler = NextAuth(authOptions);

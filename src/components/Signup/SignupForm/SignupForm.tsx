@@ -24,7 +24,7 @@ export const SignupForm = () => {
         </div>
 
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action={formAction} method="POST">
+          <form className="space-y-6" action={formAction}>
 
           <div>
               <label htmlFor="username" className="block text-sm font-medium leading-6 ring-gray-300">
