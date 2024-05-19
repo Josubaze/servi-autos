@@ -1,16 +1,70 @@
 'use client'
 
-
 import { useFormState } from "react-dom"
-import { Login } from "src/actions"
+import { signIn } from "next-auth/react";
+import { loginSchema } from "src/utils/validation.zod";
+import {useRouter} from 'next/navigation'
+import { z } from "zod"
+import { useEffect } from "react";
+
 
 const initialState = {
   errors: [],
-  errorMsg: ""
+  shouldRedirect: false,
 }; 
 
+const Login = async (prevState: any, formData: FormData) => {
+  try {
+    const parsedData = loginSchema.parse({
+      email: formData.get('email'),
+      password: formData.get('password')
+      });
+  
+      const res = await signIn("credentials", {
+      email: parsedData.email,
+      password: parsedData.password,
+      redirect: false,
+    }) 
+
+    console.log(res);
+    if (!res?.ok) {
+      let errorMessage = res?.error|| "Ha ocurrido un error";
+      throw new Error(errorMessage)
+    } else {
+      return { ...prevState, shouldRedirect: true };
+    }
+    
+  } catch (error) {
+    let errorMessage = "Ha ocurrido un error";
+    if (error instanceof z.ZodError) {{
+      return {
+          errors: error.errors.map((err) => {
+              return {
+                  field: err.path.join('.'),
+                  message: err.message
+              } 
+          })
+      }
+  }}
+    if(error instanceof Error) {
+      errorMessage = `${error.message}`;       
+    }
+    return {
+      error: errorMessage
+    } 
+}
+}
+
 export const LoginForm = () => {
+  const router = useRouter();
   const [ status, formAction ] = useFormState(Login, initialState);
+
+  useEffect(() => {
+    if (status.shouldRedirect) {
+      router.push('/dashboard');
+    }
+  }, [status.shouldRedirect, router]);
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -73,7 +127,7 @@ export const LoginForm = () => {
               </button>
             </div>
             {status?.errors ? status.errors.map((error: any, index: number) => <p className="text-sm text-center" key={`${error.message}-${index}`}>{error.message}</p>) : null}
-            {status?.errorMsg ? <p className="text-sm text-center">{ status.errorMsg }</p> : null	}
+            {status?.error ? <p className="text-sm text-center">{ status.error }</p> : null	} 
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
