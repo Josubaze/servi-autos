@@ -25,6 +25,7 @@ const productSchema = new Schema ({
         default: true
     }
     },
+    { collection: 'products' },
     {
         timestamps: true    
     })

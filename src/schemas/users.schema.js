@@ -31,6 +31,7 @@ const userSchema = new Schema ({
         trim: true
     }
     },
+    { collection: 'users' },
     {
         timestamps: true    
     })

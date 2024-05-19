@@ -5,8 +5,6 @@ import { IoLogOutOutline } from "react-icons/io5";
 
 export const Navbar = async () => {
   const session = await getServerSession(authOptions);
-  console.log(session);
-
   return (
     <nav className="flex justify-between items-center bg-gray-900 text-white px-4 md:px-24 py-3">
       <h1 className="text-xl font-bold pe-5">NextAuth</h1>
