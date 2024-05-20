@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "app/api/auth/[...nextauth]/route";
+import { authOptions} from 'src/utils/authOptions';
 import { IoLogOutOutline } from "react-icons/io5";
 
 export const Navbar = async () => {
