@@ -26,7 +26,6 @@ const Login = async (prevState: any, formData: FormData) => {
       redirect: false,
     }) 
 
-    console.log(res);
     if (!res?.ok) {
       let errorMessage = res?.error|| "Ha ocurrido un error";
       throw new Error(errorMessage)
@@ -48,17 +47,16 @@ const Login = async (prevState: any, formData: FormData) => {
   }}
     if(error instanceof Error) {
       errorMessage = `${error.message}`;       
+      return {
+        error: errorMessage
+      } 
     }
-    return {
-      error: errorMessage
-    } 
 }
 }
 
 export const LoginForm = () => {
   const router = useRouter();
   const [ status, formAction ] = useFormState(Login, initialState);
-
   useEffect(() => {
     if (status.shouldRedirect) {
       router.push('/dashboard');
@@ -130,7 +128,6 @@ export const LoginForm = () => {
             {status?.errors ? status.errors.map((error: any, index: number) => <p className="text-sm text-center" key={`${error.message}-${index}`}>{error.message}</p>) : null}
             {status?.error ? <p className="text-sm text-center">{ status.error }</p> : null	} 
           </form>
-
           <p className="mt-10 text-center text-sm text-gray-500">
             No eres miembro?{' '}
             <a href="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
