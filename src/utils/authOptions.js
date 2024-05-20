@@ -14,7 +14,7 @@ export const authOptions = {
       },
       async authorize(credentials, req) {
         await connectDB();
-        const userFound = await User.findOne({ email: credentials?.email });
+        const userFound = await User.findOne({ email: credentials.email });
         if (!userFound) {
           throw new Error('Usuario no encontrado');
         }
