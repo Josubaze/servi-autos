@@ -11,5 +11,6 @@ export const SignupSchema = z.object({
     password: z.string().min(8, { message: "Las contraseñas son mayor o igual a 8 caracteres" }),
     role: z.enum(["administrador", "lider"]),
     secret_question: z.string(),
-    secret_answer: z.string()
+    secret_answer: z.string(),
+    image: z.string().nullable(), 
 })

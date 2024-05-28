@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Navbar } from "src/components/Nabvar/";
+import { Navbar } from "src/components/Nabvar/Nabvar";
 import SessionAuthProvider from "src/context/SessionAuthProvider";
 
 import "./globals.css";

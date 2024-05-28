@@ -30,6 +30,11 @@ const userSchema = new Schema ({
         required: true,
         trim: true
     }
+    ,
+    image: {
+        type: String,
+        trim: true
+    }
     },
     { collection: 'users' },
     {

@@ -3,11 +3,12 @@ import { z } from "zod"
 import { redirect } from 'next/navigation'
 import {connectDB} from 'src/utils/mongoose'
 import {SignupSchema } from 'src/utils/validation.zod'
-
+import fs from 'fs';
 connectDB()
 
 export const Signup = async (prevState: any, formData: FormData) => { 
     let shouldRedirect = false;
+    
     try {
         const parsedData = SignupSchema.parse({
             username: formData.get('username'),
@@ -15,7 +16,8 @@ export const Signup = async (prevState: any, formData: FormData) => {
             password: formData.get('password'),
             role: formData.get('role'),
             secret_question: formData.get('secret-question'),
-            secret_answer: formData.get('secret-answer')
+            secret_answer: formData.get('secret-answer'),
+            image: formData.get('link-image'),
         });
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`, {

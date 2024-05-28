@@ -26,6 +26,8 @@ export const authOptions = {
           id: userFound.id,
           name: userFound.username,
           email: userFound.email,
+          image: userFound.image,
+          role: userFound.role,
         };
       },
     }),
@@ -35,5 +37,21 @@ export const authOptions = {
     error: '/not-found',
   },
   secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    async session({ session, token }) {
+      if (session?.user) {
+        session.user.role = token.role;
+        session.user.image = token.image; // Añadir la imagen a la sesión
+      }
+      return session;
+    },
+    async jwt({ token, user }) { //JWT (JSON Web Token) te permite agregar propiedades adicionales al objeto de sesión
+      if (user) {
+        token.role = user.role;
+        token.image = user.image; // Añadir la imagen al token
+      }
+      return token;
+    },
+  },
 };
 
