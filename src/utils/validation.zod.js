@@ -14,3 +14,11 @@ export const SignupSchema = z.object({
     secret_answer: z.string(),
     image: z.string().nullable(), 
 })
+
+export const ProductSchema = z.object({
+    name: z.string().min(3, { message: "El nombre debe ser mayor o igual a 3 caracteres" }).max(25, { message: "El nombre debe ser menor o igual a 25 caracteres" }),
+    description: z.string().max(25, { message: "La descripción debe ser menor a 25 caracteres" }).nullish(),
+    category: z.string().max(25, { message: "La categoría debe ser menor a 25 caracteres" }),
+    price: z.number().min(0).lte(99999),
+    quantity: z.number().min(0).int().lte(10000),
+})

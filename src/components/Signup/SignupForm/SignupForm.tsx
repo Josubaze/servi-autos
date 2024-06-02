@@ -2,14 +2,14 @@
 
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { useFormState } from "react-dom"
-import { Signup } from "src/actions"
+import { handlerSignup } from "src/actions"
 
 const initialState = {
   errors: [],
   errorMessage: "",
 }; 
 export const SignupForm = () => {
-  const [ status, formAction ] = useFormState(Signup , initialState);
+  const [ status, formAction ] = useFormState(handlerSignup , initialState);
     return (
       <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-6 lg:px-8">

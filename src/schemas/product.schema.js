@@ -20,10 +20,10 @@ const productSchema = new Schema ({
         required: true,
         trim: true
     },
-    inStock: {
-        type: Boolean,
-        default: true
-    }
+    quantity: {
+        type: Number,
+        required: true
+    },
     },
     { collection: 'products' },
     {

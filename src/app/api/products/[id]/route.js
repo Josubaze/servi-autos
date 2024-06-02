@@ -41,7 +41,8 @@ export async function DELETE(request, {  params }){
                 {message: "Product not found"},
                 { status: 404 }
             )
-        return NextResponse.json(productDeleted)
+        const products = await Product.find()    
+        return NextResponse.json(products) // envio todos menos el borrado
     } catch (error) {
         return NextResponse.json(
             error.message,

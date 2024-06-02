@@ -1,0 +1,1 @@
+export { FormProduct } from './ProductForm';

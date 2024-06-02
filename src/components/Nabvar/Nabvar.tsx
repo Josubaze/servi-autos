@@ -41,7 +41,7 @@ export const Navbar = () => {
                       <>
                         <a href="/dashboard" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Principal</a>
                         <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Proveedores</a>
-                        <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Almacén</a>
+                        <a href="/storehouse" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Almacén</a>
                         <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Consultar Mercado</a>
                       </>
                     ) : (
@@ -120,10 +120,10 @@ export const Navbar = () => {
             <div className="space-y-1 px-2 pb-3 pt-2">
               {session?.user ? (
                 <>
-                  <DisclosureButton as="a" href="/" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Principal</DisclosureButton>
-                  <DisclosureButton as="a" href="/login" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Proveedores</DisclosureButton>
-                  <DisclosureButton as="a" href="/signup" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Almacén</DisclosureButton>
-                  <DisclosureButton as="a" href="/signup" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Consultar Mercado</DisclosureButton>
+                  <DisclosureButton as="a" href="/dashboard" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Principal</DisclosureButton>
+                  <DisclosureButton as="a" href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Proveedores</DisclosureButton>
+                  <DisclosureButton as="a" href="/storehouse" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Almacén</DisclosureButton>
+                  <DisclosureButton as="a" href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Consultar Mercado</DisclosureButton>
                 </>
               ) : (
                 <>
