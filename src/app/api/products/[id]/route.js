@@ -1,5 +1,4 @@
 import { NextResponse  } from "next/server";
-import {connectDB} from 'src/utils/mongoose'
 import Product from '/src/schemas/product.schema' 
 
 export async function GET(request, {  params }){

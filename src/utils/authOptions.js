@@ -41,14 +41,20 @@ export const authOptions = {
     async session({ session, token }) {
       if (session?.user) {
         session.user.role = token.role;
-        session.user.image = token.image; // Añadir la imagen a la sesión
+        session.user.image = token.image; 
+        session.user.id = token.id;// Añadir la imagen a la sesión
       }
       return session;
     },
-    async jwt({ token, user }) { //JWT (JSON Web Token) te permite agregar propiedades adicionales al objeto de sesión
+    async jwt({ token, user, trigger, session }) { //JWT (JSON Web Token) te permite agregar propiedades adicionales al objeto de sesión
+      if (trigger === "update") {
+        token.image = session.user.image;
+      }
+      
       if (user) {
         token.role = user.role;
-        token.image = user.image; // Añadir la imagen al token
+        token.image = user.image; 
+        token.id = user.id;// Añadir la imagen al token
       }
       return token;
     },

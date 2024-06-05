@@ -12,7 +12,6 @@ export const SignupSchema = z.object({
     role: z.enum(["administrador", "lider"]),
     secret_question: z.string(),
     secret_answer: z.string(),
-    image: z.string().nullable(), 
 })
 
 export const ProductSchema = z.object({

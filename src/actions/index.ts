@@ -17,7 +17,7 @@ export const handlerSignup = async (prevState: any, formData: FormData) => {
             role: formData.get('role'),
             secret_question: formData.get('secret-question'),
             secret_answer: formData.get('secret-answer'),
-            image: formData.get('link-image'),
+            //image: formData.get('link-image'),
         });
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`, {
