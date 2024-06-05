@@ -1,6 +1,6 @@
 'use client'
 
-import { UserCircleIcon } from "@heroicons/react/24/outline";
+import Image from 'next/image'
 import { useFormState } from "react-dom"
 import { handlerSignup } from "src/actions"
 
@@ -14,11 +14,15 @@ export const SignupForm = () => {
       <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-24 w-auto"
-            src="/svg/gear-icon.svg"
-            alt="Your Company"
-          />
+          <div className="flex flex-shrink-0 items-center">
+            <Image
+              src="/svg/gear-icon.svg"
+              alt="Tools"
+              width={500} 
+              height={500} 
+              className="mx-auto h-30 w-auto max-sm:h-16"
+            />
+          </div>
           <h2 className=" text-center text-2xl font-bold leading-9 tracking-tight ring-gray-300">
             Registrar cuenta
           </h2>

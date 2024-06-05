@@ -6,7 +6,7 @@ import { loginSchema } from "src/utils/validation.zod";
 import {useRouter} from 'next/navigation'
 import { z } from "zod"
 import { useEffect } from "react";
-
+import Image from 'next/image'
 
 const initialState = {
   errors: [],
@@ -68,11 +68,15 @@ export const LoginForm = () => {
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-26 w-auto"
-            src="/svg/logo.svg"
-            alt="Your Company"
-          />
+          <div className="flex flex-shrink-0 items-center">
+            <Image
+              src="/svg/logo.svg"
+              alt="Your Company"
+              width={500} 
+              height={500} 
+              layout="responsive"
+            />
+          </div>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSession } from 'next-auth/react'
+import Image from 'next/image'
 
 export const UploadImage = () => {
   const [file, setFile] = useState(null);
@@ -59,17 +60,21 @@ export const UploadImage = () => {
         <div className="flex items-center justify-center">
           { session?.user?.image ? (
             <div>
-              <img
-                className="max-w-xs md:max-w-lg mx-auto"
+              <Image
                 src={session.user.image}
-                alt="user-image"
+                alt="User Image"
+                width={400} 
+                height={400} 
+                className="max-w-xs md:max-w-lg mx-auto"
               />
             </div>
           ) : (
-            <img
-              className="max-w-xs md:max-w-lg mx-auto"
-              src="svg/user.svg"
-              alt="user-image"
+            <Image
+                src="svg/user.svg"
+                alt="User Image"
+                width={400} 
+                height={400} 
+                className="max-w-xs md:max-w-lg mx-auto"
             />
           )}
         </div>

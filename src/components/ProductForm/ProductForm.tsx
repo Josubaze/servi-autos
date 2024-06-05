@@ -7,6 +7,7 @@ import { handleAddProduct, handleUpdateProduct } from 'src/actions';
 const initialState = {
   errors: [],
   shouldClose: false,
+  newProduct: null
 };
 
 export const FormProduct = ({ onClose, onAddProduct, onUpdateProduct, product }: any) => {
@@ -24,7 +25,7 @@ export const FormProduct = ({ onClose, onAddProduct, onUpdateProduct, product }:
       }
       onClose();
     }
-  }, [status.shouldClose, onClose, onAddProduct, onUpdateProduct, product]);
+  }, [status.shouldClose, status.newProduct,  onClose, onAddProduct, onUpdateProduct, product]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">

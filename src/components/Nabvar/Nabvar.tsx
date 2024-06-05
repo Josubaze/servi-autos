@@ -3,7 +3,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useSession } from 'next-auth/react'
-
+import Image from 'next/image'
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
 }
@@ -29,10 +29,11 @@ export const Navbar = () => {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <img
-                    className="h-8 w-auto"
-                    src="svg/logo.svg"
+                  <Image
+                    src="/svg/logo.svg"
                     alt="Your Company"
+                    width={60} 
+                    height={60}  
                   />
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
@@ -71,11 +72,17 @@ export const Navbar = () => {
                       <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                         <span className="absolute -inset-1.5" />
                         <span className="sr-only">Open user menu</span>
-                        <img
-                          className="h-8 w-8 rounded-full"
-                          src={session.user?.image ?? "svg/user.svg"}
-                          alt="image-profile"
-                        />
+                        <div className="relative h-8 w-8 rounded-full overflow-hidden">
+                          <Image
+                            src={session.user?.image ?? "svg/user.svg"}
+                            alt="Profile Image"
+                            width={50}
+                            height={50}
+                            objectFit="cover"
+                            objectPosition="50% 50%"
+                            className="absolute inset-0"
+                          />
+                        </div>
                       </MenuButton>
                     </div>
                     <Transition
