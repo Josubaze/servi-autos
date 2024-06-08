@@ -82,7 +82,7 @@ export const LoginForm = () => {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action={formAction}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 ring-gray-300">
+              <label htmlFor="email" className="block text-sm font-medium leading-6 ring-gray-300 xl:text-xl">
                 Correo Electrónico
               </label>
               <div className="mt-2">
@@ -92,18 +92,18 @@ export const LoginForm = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 xl:text-xl"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium leading-6 ring-gray-300">
+                <label htmlFor="password" className="block text-sm font-medium leading-6 ring-gray-300 xl:text-xl">
                   Contraseña
                 </label>
                 <div className="text-sm">
-                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500 xl:text-lg">
                   ¿Olvidaste la contraseña?
                   </a>
                 </div>
@@ -116,7 +116,7 @@ export const LoginForm = () => {
                   autoComplete="current-password"
                   required
                   //pattern= "^[A-Za-z0-9]{8,40}$"
-                  className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 xl:text-xl"
                 />
               </div>
             </div>
@@ -124,7 +124,7 @@ export const LoginForm = () => {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 xl:text-xl"
               >
                 Iniciar Sesión
               </button>
@@ -132,7 +132,7 @@ export const LoginForm = () => {
             {status?.errors ? status.errors.map((error: any, index: number) => <p className="text-sm text-center" key={`${error.message}-${index}`}>{error.message}</p>) : null}
             {status?.error ? <p className="text-sm text-center">{ status.error }</p> : null	} 
           </form>
-          <p className="mt-10 text-center text-sm text-gray-500">
+          <p className="mt-10 text-center text-sm text-gray-500 xl:text-lg">
             No eres miembro?{' '}
             <a href="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
             Registrate aquí!

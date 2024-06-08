@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Navbar } from "src/components/Nabvar/Nabvar";
+import { Footer } from "src/components/Footer";
 import SessionAuthProvider from "src/context/SessionAuthProvider";
 
 import "./globals.css";
@@ -23,6 +24,7 @@ export default function RootLayout({
         <SessionAuthProvider>
           <Navbar/>
           {children}
+          <Footer/>
         </SessionAuthProvider>
       </body>
     </html>
