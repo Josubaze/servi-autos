@@ -8,7 +8,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        'black-nav': '#161616', 
+      },
       backgroundImage: {
+        'custom-gradient': 'linear-gradient(90deg, #000000, #0a0010, #140020, #0a0010, #000000)',
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",

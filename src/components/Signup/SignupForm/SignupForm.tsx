@@ -12,15 +12,15 @@ export const SignupForm = () => {
   const [ status, formAction ] = useFormState(handlerSignup , initialState);
     return (
       <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-6 lg:px-8">
+      <div className="flex min-h-screen flex-col justify-center items-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className="flex flex-shrink-0 items-center">
             <Image
               src="/svg/gear-icon.svg"
               alt="Tools"
-              width={500} 
-              height={500} 
-              className="mx-auto h-30 w-auto max-sm:h-16"
+              width={400} 
+              height={400} 
+              className="mx-auto h-28 w-auto max-sm:h-16"
             />
           </div>
           <h2 className=" text-center text-2xl font-bold leading-9 tracking-tight ring-gray-300">
@@ -99,8 +99,8 @@ export const SignupForm = () => {
               </div>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-3">
+            <div className=" grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-6">
+            <div className="sm:col-span-3 ">
               <label htmlFor="secret-question" className="block text-sm font-medium leading-6 ring-gray-300">
                 Pregunta Secreta
               </label>

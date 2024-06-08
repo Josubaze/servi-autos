@@ -11,7 +11,7 @@ function classNames(...classes: any) {
 export const Navbar = () => {
   const { data: session } = useSession()
   return (
-    <Disclosure as="nav" className="bg-gray-950">
+    <Disclosure as="nav" className="bg-black-nav">
       {({ open }) => (
         <>
           <div className="mx-auto px-2 sm:px-6 lg:px-8">
@@ -28,13 +28,14 @@ export const Navbar = () => {
                 </DisclosureButton>
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex flex-shrink-0 items-center">
+                <div className="flex items-center font-medium text-sm text-gray-200">
                   <Image
-                    src="/svg/logo.svg"
-                    alt="Your Company"
-                    width={60} 
-                    height={60}  
-                  />
+                      src="/svg/nombreEmpresa.svg"
+                      alt="Your Company"
+                      width={120} 
+                      height={120}  
+                      className='pt-1.5'
+                    />
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
@@ -47,7 +48,7 @@ export const Navbar = () => {
                       </>
                     ) : (
                       <>  
-                        <a href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Home</a>
+                        <a href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Inicio</a>
                         <a href="/login" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Iniciar Sesión</a>
                         <a href="/signup" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Registrarse</a>
                       </>
@@ -134,7 +135,7 @@ export const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <DisclosureButton as="a" href="/" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home</DisclosureButton>
+                  <DisclosureButton as="a" href="/" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Inicio</DisclosureButton>
                   <DisclosureButton as="a" href="/login" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Iniciar Sesión</DisclosureButton>
                   <DisclosureButton as="a" href="/signup" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Registrarse</DisclosureButton>
                 </>
