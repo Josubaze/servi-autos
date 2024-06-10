@@ -4,12 +4,14 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
 }
 
 export const Navbar = () => {
   const { data: session } = useSession()
+  const pathname = usePathname()
   return (
     <Disclosure as="nav" className="bg-black-nav">
       {({ open }) => (
@@ -41,16 +43,44 @@ export const Navbar = () => {
                   <div className="flex space-x-4">
                     {session?.user ? (
                       <>
-                        <a href="/dashboard" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Principal</a>
-                        <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Proveedores</a>
-                        <a href="/storehouse" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Almacén</a>
-                        <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Consultar Mercado</a>
+                        <a href="/dashboard" className={classNames(
+                            'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
+                            pathname === '/dashboard' ? 'bg-gray-700 text-white' : ''
+                          )}
+                          aria-current={pathname === '/dashboard' ? 'page' : undefined}>Principal</a>
+                        <a href="#" className={classNames(
+                            'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
+                            pathname === '#' ? 'bg-gray-700 text-white' : ''
+                          )}
+                          aria-current={pathname === '#' ? 'page' : undefined}>Proveedores</a>
+                        <a href="/storehouse" className={classNames(
+                            'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
+                            pathname === '/storehouse' ? 'bg-gray-700 text-white' : ''
+                          )}
+                          aria-current={pathname === '/storehouse' ? 'page' : undefined}>Almacén</a>
+                        <a href="#" className={classNames(
+                            'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
+                            pathname === '#' ? 'bg-gray-700 text-white' : ''
+                          )}
+                          aria-current={pathname === '#' ? 'page' : undefined}>Consultar Mercado</a>
                       </>
                     ) : (
                       <>  
-                        <a href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Inicio</a>
-                        <a href="/login" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Iniciar Sesión</a>
-                        <a href="/signup" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Registrarse</a>
+                        <a href="/" className={classNames(
+                            'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
+                            pathname === '/' ? 'bg-gray-700 text-white' : ''
+                          )}
+                          aria-current={pathname === '/' ? 'page' : undefined}>Inicio</a>
+                        <a href="/login" className={classNames(
+                            'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
+                            pathname === '/login' ? 'bg-gray-700 text-white' : ''
+                          )}
+                          aria-current={pathname === '/login' ? 'page' : undefined}>Iniciar Sesión</a>
+                        <a href="/signup" className={classNames(
+                            'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
+                            pathname === '/signup' ? 'bg-gray-700 text-white' : ''
+                          )}
+                          aria-current={pathname === '/signup' ? 'page' : undefined}>Registrarse</a>
                       </>
                     )}
                   </div>
@@ -128,16 +158,44 @@ export const Navbar = () => {
             <div className="space-y-1 px-2 pb-3 pt-2">
               {session?.user ? (
                 <>
-                  <DisclosureButton as="a" href="/dashboard" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Principal</DisclosureButton>
-                  <DisclosureButton as="a" href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Proveedores</DisclosureButton>
-                  <DisclosureButton as="a" href="/storehouse" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Almacén</DisclosureButton>
-                  <DisclosureButton as="a" href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Consultar Mercado</DisclosureButton>
+                  <DisclosureButton as="a" href="/dashboard" className={classNames(
+                      'block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white', 
+                      pathname === '/dashboard' ? 'bg-gray-700 text-white' : ''
+                    )}
+                    aria-current={pathname === '/dashboard' ? 'page' : undefined}>Principal</DisclosureButton>
+                  <DisclosureButton as="a" href="#" className={classNames(
+                      'block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white', 
+                      pathname === '#' ? 'bg-gray-700 text-white' : ''
+                    )}
+                    aria-current={pathname === '#' ? 'page' : undefined}>Proveedores</DisclosureButton>
+                  <DisclosureButton as="a" href="/storehouse" className={classNames(
+                      'block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white', 
+                      pathname === '/storehouse' ? 'bg-gray-700 text-white' : ''
+                    )}
+                    aria-current={pathname === '/storehouse' ? 'page' : undefined}>Almacén</DisclosureButton>
+                  <DisclosureButton as="a" href="#" className={classNames(
+                      'block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white', 
+                      pathname === '#' ? 'bg-gray-700 text-white' : ''
+                    )}
+                    aria-current={pathname === '#' ? 'page' : undefined}>Consultar Mercado</DisclosureButton>
                 </>
               ) : (
                 <>
-                  <DisclosureButton as="a" href="/" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Inicio</DisclosureButton>
-                  <DisclosureButton as="a" href="/login" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Iniciar Sesión</DisclosureButton>
-                  <DisclosureButton as="a" href="/signup" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Registrarse</DisclosureButton>
+                  <DisclosureButton as="a" href="/" className={classNames(
+                      'block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white', 
+                      pathname === '/' ? 'bg-gray-700 text-white' : ''
+                    )}
+                    aria-current={pathname === '/' ? 'page' : undefined}>Inicio</DisclosureButton>
+                  <DisclosureButton as="a" href="/login" className={classNames(
+                      'block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white', 
+                      pathname === '/login' ? 'bg-gray-700 text-white' : ''
+                    )}
+                    aria-current={pathname === '/login' ? 'page' : undefined}>Iniciar Sesión</DisclosureButton>
+                  <DisclosureButton as="a" href="/signup" className={classNames(
+                      'block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white', 
+                      pathname === '/signup' ? 'bg-gray-700 text-white' : ''
+                    )}
+                    aria-current={pathname === '/signup' ? 'page' : undefined}>Registrarse</DisclosureButton>
                 </>
               )}
             </div>

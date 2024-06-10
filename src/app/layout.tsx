@@ -23,7 +23,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <SessionAuthProvider>
           <Navbar/>
-          {children}
+          <div className="flex flex-col min-h-[57rem] sm:min-h-[95vh]">
+            {children}
+          </div>
           <Footer/>
         </SessionAuthProvider>
       </body>

@@ -19,7 +19,7 @@ export const TableProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const filteredProducts = useProductFilter(products, searchTerm);
-  const productsPerPage = 10;
+  const productsPerPage = 15;
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -77,7 +77,7 @@ export const TableProducts = () => {
   const currentProducts = getCurrentProducts(filteredProducts, currentPage, productsPerPage)
 
   return (
-    <div className="flex flex-col py-4 px-12">
+    <div className="flex flex-grow flex-col py-6 px-12">
       <div className="my-4 flex justify-between items-center gap-2 pb-2">
         <button
           className="bg-emerald-600 hover:bg-emerald-800 text-white px-4 py-2 rounded max-sm:hidden"

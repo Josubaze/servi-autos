@@ -66,7 +66,7 @@ export const LoginForm = () => {
 
   return (
     <>
-      <div className="flex min-h-screen flex-col justify-center items-center px-6 py-12 lg:px-8">
+      <div className="flex flex-grow flex-col justify-center  px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className="flex flex-shrink-0 items-center">
             <Image
@@ -74,7 +74,7 @@ export const LoginForm = () => {
               alt="Your Company"
               width={500} 
               height={500} 
-              className="max-sm:w-3/4 max-sm:mx-10 "
+              className="mx-auto "
             />
           </div>
         </div>

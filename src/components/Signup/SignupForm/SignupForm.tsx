@@ -11,8 +11,7 @@ const initialState = {
 export const SignupForm = () => {
   const [ status, formAction ] = useFormState(handlerSignup , initialState);
     return (
-      <>
-      <div className="flex min-h-screen flex-col justify-center items-center px-6 pb-6 lg:px-8">
+      <div className="flex flex-grow flex-col  justify-center px-6 pb-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className="flex flex-shrink-0 items-center">
             <Image
@@ -20,10 +19,10 @@ export const SignupForm = () => {
               alt="Tools"
               width={400} 
               height={400} 
-              className="mx-auto max-sm:h-16 h-28 w-auto lg:h-40"
+              className="mx-auto h-22 md:h-44 w-auto"
             />
           </div>
-          <h2 className=" text-center text-2xl font-bold leading-9 tracking-tight ring-gray-300 xl:text-4xl">
+          <h2 className=" text-center pb-2 text-2xl font-bold leading-9 tracking-tight ring-gray-300 xl:text-4xl">
             Registrar cuenta
           </h2>
         </div>
@@ -144,6 +143,6 @@ export const SignupForm = () => {
           </form>
         </div>
       </div>
-    </>
+
     )
   }

@@ -1,10 +1,8 @@
 
 export const Footer = () => {
   return (
-
-  <footer className="bg-black-nav text-center text-white">
-        
-        <div className="flex gap-10 w-full items-center justify-center py-4">
+  <footer className="relative bg-black-nav text-center text-white py-2">
+    <div className="flex gap-10 w-full items-center justify-center py-4">
             <a className="text-gray-200">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
