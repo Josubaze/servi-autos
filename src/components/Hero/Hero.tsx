@@ -1,8 +1,11 @@
 'use client'
 
 import Image from 'next/image'
+import {Typewriter} from 'src/components/Typewriter' 
 
 export const Hero = () => {
+  const words = ["HOLA ESTIMADOS! BIENVENIDOS A ESTA PROPUESTA.", "APLICACIÓN PARA LA AUTOMATIZACIÓN DE LOS SERVICIOS EN LA EMPRESA AUTOMOTRIZ SERVIAUTOS BAEZ C.A"];
+
   return (
     <div className="relative bg-cover bg-center flex flex-grow">
       <div className="relative isolate lg: w-full">
@@ -26,10 +29,13 @@ export const Hero = () => {
               </div>
             </div>
             <div className="text-center lg:text-left">
-              <h1 className="text-4xl  text-center font-bold tracking-tight text-indigo-700 md:text-6xl xl:text-7xl">
+              <div className='min-h-52 mx-auto sm:min-h-80'>
+                <Typewriter words={words}></Typewriter>
+              </div>
+              {/* <h1 className="text-4xl  text-center font-bold tracking-tight text-indigo-700 md:text-6xl xl:text-7xl">
                 Aplicación de Automatización de los Servicios en la Empresa Automotriz ServiAutos Baez
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-gray-200 text-justify md:text-2xl xl:text-3xl">
+              </h1> */}
+              <p className="mt-2 text-lg leading-8 text-gray-200 text-justify md:text-2xl xl:text-3xl">
                 Gestiona facturas, presupuestos e inventario de manera eficiente. 
                 Simplifica tus operaciones y optimiza el taller automotriz llevandolo a un siguiente nivel!
               </p>
@@ -66,6 +72,8 @@ export const Hero = () => {
         </div>
       </div>
     </div>
+    
   )
+  
 }
 
