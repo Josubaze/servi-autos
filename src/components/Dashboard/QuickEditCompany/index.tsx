@@ -1,0 +1,1 @@
+export { QuickEditCompany } from './QuickEditCompany'

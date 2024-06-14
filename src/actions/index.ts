@@ -8,7 +8,6 @@ connectDB()
 
 export const handlerSignup = async (prevState: any, formData: FormData) => { 
     let shouldRedirect = false;
-    
     try {
         const parsedData = SignupSchema.parse({
             username: formData.get('username'),

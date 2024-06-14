@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 body {
-  @apply bg-custom-gradient text-white; 
+  @apply bg-custom-gradient text-gray-100; 
 }
