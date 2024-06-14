@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+
 import { Button } from "src/components/Common/Button";
 import { SectionTitle } from "src/components/Common/SectionTitle";
 
@@ -61,9 +61,9 @@ export const QuickEditCompany = () => {
         </div>
       </div>
     </>
-
+    
     <div className="mt-3">
-      <Button color="bg-indigo-600" block={1}>
+      <Button block >
         <span className="inline-block ml-2"> Enviar </span>
       </Button>
     </div>

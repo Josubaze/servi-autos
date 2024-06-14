@@ -63,7 +63,7 @@ export const QuickAddClient = () => {
     </>
 
     <div className="mt-3">
-      <Button color="bg-indigo-600"  block={1}>
+      <Button  block>
         <span className="inline-block ml-2"> Enviar </span>
       </Button>
     </div>

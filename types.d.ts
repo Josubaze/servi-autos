@@ -20,6 +20,16 @@ interface Product {
     products: Product[];
   }
 
+  interface ButtonProps {
+    children: ReactNode;
+    size?: string;
+    block?: boolean;
+    outlined?: boolean;
+    secondary?: boolean;
+    success?: boolean;
+    danger?: boolean;
+    color?: string;
+}
 
   
   

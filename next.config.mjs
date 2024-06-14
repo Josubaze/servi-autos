@@ -2,7 +2,14 @@
 const nextConfig = {
     reactStrictMode: true,
     images: {
-        domains: ['res.cloudinary.com'], // Agrega otros dominios si es necesario
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'res.cloudinary.com',
+                port: '',
+                pathname: '/**',
+            },
+        ],
     },
 };
 

@@ -1,7 +1,9 @@
+'use client'
+
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 
-export const Button = (props: any) => {
+export const Button = (props: ButtonProps) => {
   const {
     children,
     size = "",
@@ -10,7 +12,8 @@ export const Button = (props: any) => {
     secondary = false,
     success = false,
     danger = false,
-    color = "", // Nueva prop color
+    color = "",
+    ...rest // Captura las demás props
   } = props;
 
   const buttonClasses = useMemo(() => {
@@ -28,7 +31,7 @@ export const Button = (props: any) => {
     }
 
     if (outlined) {
-      defaultClasses += " bg-gray-200 "; // Add a background color for outlined buttons
+      defaultClasses += " bg-gray-200 ";
       if (secondary) {
         defaultClasses += " border-gray-400 border text-gray-600";
       } else if (success) {
@@ -46,7 +49,7 @@ export const Button = (props: any) => {
       } else if (color) {
         defaultClasses += ` ${color} `;
       } else {
-        defaultClasses += " bg-blue-600 ";
+        defaultClasses += " bg-indigo-600 ";
       }
     }
 
@@ -66,7 +69,7 @@ export const Button = (props: any) => {
       whileTap={{ scale: 0.9 }}
       type="button"
       className={buttonClasses}
-      {...props}
+      {...rest} // Solo pasa las demás props que no son booleanas
     >
       {children}
     </motion.button>
