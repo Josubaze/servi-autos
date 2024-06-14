@@ -43,10 +43,9 @@ export const Hero = () => {
                 <Image
                   src="/images/hero.png"
                   alt="Descriptive Alt Text"
-                  layout='fill'
-                  objectFit="cover"
-                  style={{ filter: 'opacity(70%)' }}
-                  className='rounded-lg shadow-xl shadow-zinc-700'
+                  fill
+                  style={{ objectFit: 'cover', filter: 'opacity(70%)' }} 
+                  className="rounded-lg shadow-xl shadow-zinc-700"
                 />
               </div>
               <div className="py-8 flex items-center justify-center">
@@ -63,10 +62,9 @@ export const Hero = () => {
           <div className="relative h-full hidden lg:block">
             <Image
               src="/images/hero.png"
-              alt="Descriptive Alt Text" 
-              layout="fill"
-              objectFit="cover"
-              style={{ filter: 'opacity(70%)' }}
+              alt="Descriptive Alt Text"
+              fill
+              style={{ objectFit: 'cover', filter: 'opacity(70%)' }} 
             />
           </div>
         </div>
