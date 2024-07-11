@@ -43,7 +43,7 @@ export const Typewriter = ({ words }: any) => {
     return () => clearTimeout(timer);
   }, [text, isDeleting, speed, words, currentWordIndex, hasCompleted]);
 
-  return <h1 className="text-3xl text-center  tracking-tight text-indigo-700 md:text-6xl xl:text-6xl">{text}</h1>;
+  return <h1 className="text-3xl text-center text-indigo-600 md:text-6xl">{text}</h1>;
 };
 
 export default Typewriter;

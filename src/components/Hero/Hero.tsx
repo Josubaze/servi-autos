@@ -14,7 +14,7 @@ export const Hero = () => {
             <div className="justify-center mb-8 flex">
               <div className="flex rounded-full px-3 py-1 text-sm leading-6 text-gray-400 ring-1 ring-gray-900/10 hover:ring-gray-900/20 md:text-md xl:text-xl">
                 El repositorio de esta aplicación lo puedes encontrar.{' '}
-                <a href="https://github.com/Josubaze/servi-autos" className="flex gap-1 justify-center items-center font-semibold text-indigo-600 hover:text-indigo-400 cursor-pointer">
+                <a href="https://github.com/Josubaze/servi-autos" className="flex gap-1 justify-center items-center font-semibold text-indigo-700 hover:text-gray-200 cursor-pointer">
                   <span aria-hidden="true" />
                   Aquí! <span aria-hidden="true">&rarr;</span>
                   <svg
@@ -32,10 +32,7 @@ export const Hero = () => {
               <div className='min-h-52 mx-auto sm:min-h-80'>
                 <Typewriter words={words}></Typewriter>
               </div>
-              {/* <h1 className="text-4xl  text-center font-bold tracking-tight text-indigo-700 md:text-6xl xl:text-7xl">
-                Aplicación de Automatización de los Servicios en la Empresa Automotriz ServiAutos Baez
-              </h1> */}
-              <p className="mt-2 text-lg leading-8 text-gray-200 text-justify md:text-2xl xl:text-3xl">
+              <p className="mt-2 text-lg leading-8 text-gray-300 text-justify md:text-2xl">
                 Gestiona facturas, presupuestos e inventario de manera eficiente. 
                 Simplifica tus operaciones y optimiza el taller automotriz llevandolo a un siguiente nivel!
               </p>
@@ -51,7 +48,7 @@ export const Hero = () => {
               <div className="py-8 flex items-center justify-center">
                 <a
                   href="/signup"
-                  className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-md font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 lg:text-xl"
+                  className="rounded-md bg-indigo-700 px-3.5 py-2.5 text-md font-semibold text-white shadow-sm hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 lg:text-xl"
                 >
                   Empezar!
                 </a>
