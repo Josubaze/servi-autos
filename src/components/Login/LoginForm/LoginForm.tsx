@@ -70,7 +70,7 @@ export const LoginForm = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className="flex flex-shrink-0 items-center">
             <Image
-              src="svg/logo.svg"
+              src="/svg/logo2.svg"
               alt="Your Company"
               width={500} 
               height={500} 

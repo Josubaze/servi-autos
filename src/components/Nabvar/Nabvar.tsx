@@ -32,10 +32,10 @@ export const Navbar = () => {
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex items-center font-medium text-sm text-gray-200">
                   <Image
-                      src="/svg/nombreEmpresa.svg"
+                      src="/svg/auto.svg"
                       alt="Your Company"
-                      width={120} 
-                      height={120}  
+                      width={60} 
+                      height={60}  
                       className='pt-1.5'
                     />
                 </div>
