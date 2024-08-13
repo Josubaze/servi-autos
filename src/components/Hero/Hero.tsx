@@ -7,8 +7,6 @@ export const Hero = () => {
   const words = ["HOLA ESTIMADOS! BIENVENIDOS A ESTA PROPUESTA.", "APLICACIÓN PARA LA AUTOMATIZACIÓN DE LOS SERVICIOS EN LA EMPRESA AUTOMOTRIZ SERVIAUTOS BAEZ C.A"];
 
   return (
-    <div className="relative bg-cover bg-center flex flex-grow">
-      <div className="relative isolate lg: w-full">
         <div className="h-full grid grid-cols-1 lg:grid-cols-2 gap-8 ">
           <div className="flex flex-col py-4 px-8 md:py-12 justify-center">
             <div className="justify-center mb-8 flex">
@@ -65,9 +63,6 @@ export const Hero = () => {
             />
           </div>
         </div>
-      </div>
-    </div>
-    
   )
   
 }

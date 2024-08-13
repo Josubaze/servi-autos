@@ -15,7 +15,7 @@ export const DashboardScreen = () => {
       <div className="p-4">
         <PageTitle title="Panel de visualización"/>
       </div>
-      <div className="flex flex-wrap px-6 py-6">
+      <div className="flex px-6 py-6">
         <div className="w-full lg:w-4/6 pl-4 pr-4 sm:pl-4 sm:pr-0 mb-4 sm:mb-1">
           <DashWidgets />
           <div className="mt-1">

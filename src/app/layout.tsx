@@ -22,11 +22,17 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SessionAuthProvider>
-          <Navbar/>
-          <div className="flex flex-col min-h-[57rem] sm:min-h-[95vh]">
-            {children}
+          <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
+            <div className="row-start-1 row-end-2">
+              <Navbar />
+            </div>
+            <div className="row-start-2 row-end-3">
+              {children}
+            </div>
+            <div className="row-start-3 row-end-4">
+              <Footer />
+            </div>
           </div>
-          <Footer/>
         </SessionAuthProvider>
       </body>
     </html>
