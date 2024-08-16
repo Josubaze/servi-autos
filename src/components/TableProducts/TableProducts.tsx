@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { handleViewProducts, handleDeleteProduct } from 'src/actions';
+import { handleListProducts, handleDeleteProduct } from 'src/actions';
 import { IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { FormProduct } from 'src/components/ProductForm';
@@ -10,7 +10,7 @@ import { Pagination } from 'src/components/Pagination';
 import { getCurrentProducts } from '../Pagination/Pagination';
 import { useProductFilter } from 'src/hooks/useProductFilter';
 import { SearchBar } from 'src/components/SearchBar';
-
+import { Loading } from '../Common/Loading';
 export const TableProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -20,10 +20,11 @@ export const TableProducts = () => {
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const filteredProducts = useProductFilter(products, searchTerm);
   const productsPerPage = 15;
+  const [isLoading, setIsLoading] = useState(true);
 
-  const fetchProducts = useCallback(async () => {
+const fetchProducts = async () => {
     try {
-      const data = await handleViewProducts();
+      const data = await handleListProducts();
       if (data) {
         setProducts(data);
       } else {
@@ -33,11 +34,14 @@ export const TableProducts = () => {
       setError('Failed to fetch products');
       console.error('Failed to fetch products:', error);
     }
-  }, []);
+  };
 
   useEffect(() => {
+    setIsLoading(true);
     fetchProducts();
-  }, [fetchProducts]);
+    setIsLoading(false);
+  }, []);
+
 
   const handleDeleteButton = async (productId: string) => {
     try {
@@ -47,16 +51,6 @@ export const TableProducts = () => {
       setError('Failed to delete product');
       console.error('Failed to delete product:', error);
     }
-  };
-
-  const handleAddButtonClick = () => {
-    setShowForm(true);
-    setCurrentProduct(null);
-  };
-
-  const handleCloseForm = () => {
-    setShowForm(false);
-    setCurrentProduct(null);
   };
 
   const handleAddProduct = (newProduct: Product) => {
@@ -73,6 +67,16 @@ export const TableProducts = () => {
       prevProducts.map((product) => (product._id === updatedProduct._id ? updatedProduct : product))
     );
   };
+
+  const openForm = () => {
+    setShowForm(true);
+    setCurrentProduct(null);
+  };
+
+  const CloseForm = () => {
+    setShowForm(false);
+    setCurrentProduct(null);
+  };
   // Calculate the products to display on the current page
   const currentProducts = getCurrentProducts(filteredProducts, currentPage, productsPerPage)
 
@@ -81,7 +85,7 @@ export const TableProducts = () => {
       <div className="my-4 flex justify-between items-center gap-2 pb-2">
         <button
           className="bg-emerald-600 hover:bg-emerald-800 text-white px-4 py-2 rounded max-sm:hidden"
-          onClick={handleAddButtonClick}
+          onClick={openForm}
         >
           <span className='flex items-center gap-2'>
             <FaPlus />
@@ -91,13 +95,13 @@ export const TableProducts = () => {
 
         <button
           className="bg-emerald-600 hover:bg-emerald-800 text-white p-4 rounded-full fixed bottom-0 right-0 mr-3 mb-8 shadow-2xl shadow-emerald-300 sm:hidden"
-          onClick={handleAddButtonClick}
+          onClick={openForm}
         >
           <FaPlus />
         </button>
         {showForm && (
           <FormProduct
-            onClose={handleCloseForm}
+            onClose={CloseForm}
             onAddProduct={handleAddProduct}
             onUpdateProduct={handleUpdateProduct}
             product={currentProduct}
@@ -122,14 +126,19 @@ export const TableProducts = () => {
                 </tr>
               </thead>
               <tbody>
-                {error ? (
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={7} className="py-60">
+                      <Loading color="#3730a3" size={80} justify="center" />
+                    </td>
+                  </tr>
+                ) : error ? (
                   <tr>
                     <td colSpan={7} className="whitespace-nowrap px-6 py-4 font-medium text-red-600 text-center">
                       Error fetching products: {error}
                     </td>
                   </tr>
                 ) : (
-                  
                   currentProducts.map((product) => (
                     <tr
                       key={product._id}
@@ -148,21 +157,25 @@ export const TableProducts = () => {
                       </td>
                     </tr>
                   ))
-                )}
+                )
+              }
               </tbody>
             </table>
+            {!isLoading && (
+                <div className="flex justify-center mt-6">
+                <Pagination
+                  totalItems={filteredProducts.length}
+                  itemsPerPage={productsPerPage}
+                  currentPage={currentPage}
+                  paginate={setCurrentPage}
+                  products={filteredProducts}
+                />
+                </div>
+            )}
           </div>
         </div>
       </div>
-      <div className="flex justify-center mt-6">
-        <Pagination
-          totalItems={filteredProducts.length}
-          itemsPerPage={productsPerPage}
-          currentPage={currentPage}
-          paginate={setCurrentPage}
-          products={filteredProducts}
-        />
-      </div>
-    </div>
-  );
-};
+
+</div>
+);
+}
