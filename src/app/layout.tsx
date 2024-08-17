@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Navbar } from "src/components/Nabvar/Nabvar";
 import { Footer } from "src/components/Footer";
 import SessionAuthProvider from "src/context/SessionAuthProvider";
+import Providers  from "../redux/providers";
 
 import "./globals.css";
 
@@ -22,17 +23,19 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SessionAuthProvider>
-          <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
-            <div className="row-start-1 row-end-2">
-              <Navbar />
+          <Providers>   
+            <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
+              <div className="row-start-1 row-end-2">
+                <Navbar />
+              </div>
+              <div className="row-start-2 row-end-3">
+                {children}
+              </div>
+              <div className="row-start-3 row-end-4">
+                <Footer />
+              </div>
             </div>
-            <div className="row-start-2 row-end-3">
-              {children}
-            </div>
-            <div className="row-start-3 row-end-4">
-              <Footer />
-            </div>
-          </div>
+          </Providers>
         </SessionAuthProvider>
       </body>
     </html>

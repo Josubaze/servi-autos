@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { handleListProducts, handleDeleteProduct } from 'src/actions';
+import { getListProducts, handleDeleteProduct } from 'src/actions';
 import { IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { FormProduct } from 'src/components/ProductForm';
@@ -11,6 +11,8 @@ import { getCurrentProducts } from '../Pagination/Pagination';
 import { useProductFilter } from 'src/hooks/useProductFilter';
 import { SearchBar } from 'src/components/SearchBar';
 import { Loading } from '../Common/Loading';
+import { fetchProductsRedux } from 'src/redux/features/productSlice';
+
 export const TableProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -22,9 +24,10 @@ export const TableProducts = () => {
   const productsPerPage = 15;
   const [isLoading, setIsLoading] = useState(true);
 
+
 const fetchProducts = async () => {
     try {
-      const data = await handleListProducts();
+      const data = await getListProducts();
       if (data) {
         setProducts(data);
       } else {
@@ -38,6 +41,7 @@ const fetchProducts = async () => {
 
   useEffect(() => {
     setIsLoading(true);
+    fetchProductsRedux();
     fetchProducts();
     setIsLoading(false);
   }, []);

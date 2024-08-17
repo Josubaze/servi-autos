@@ -54,7 +54,7 @@ export const handlerSignup = async (prevState: any, formData: FormData) => {
     }
 }
 
-export const handleListProducts = async () => {
+export const getListProducts = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
       if (!res.ok) {
