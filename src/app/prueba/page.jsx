@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "src/redux/hooks";
 import { increment } from "src/redux/features/couterSlice";
 import { fetchProductsRedux } from 'src/redux/features/productSlice';
 function Home() {
-  const count = useSelector((state) => state.counter.counter);
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.products.list);
-  const status = useSelector((state) => state.products.status);
-  const error = useSelector((state) => state.products.error);
+  const count = useAppSelector((state) => state.counter.counter);
+  const dispatch = useAppDispatch();
+  const products = useAppSelector((state) => state.products.list);
+  const status = useAppSelector((state) => state.products.status);
+  const error = useAppSelector((state) => state.products.error);
  
   useEffect(() => {
       dispatch(fetchProductsRedux());

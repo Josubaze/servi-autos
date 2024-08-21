@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { Navbar } from "src/components/Nabvar/Nabvar";
 import { Footer } from "src/components/Footer";
 import SessionAuthProvider from "src/context/SessionAuthProvider";
-import Providers  from "../redux/providers";
+import StoreProvider  from "../redux/providers";
 
 import "./globals.css";
 
@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SessionAuthProvider>
-          <Providers>   
+          <StoreProvider>   
             <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
               <div className="row-start-1 row-end-2">
                 <Navbar />
@@ -35,7 +35,7 @@ export default function RootLayout({
                 <Footer />
               </div>
             </div>
-          </Providers>
+          </StoreProvider>
         </SessionAuthProvider>
       </body>
     </html>
