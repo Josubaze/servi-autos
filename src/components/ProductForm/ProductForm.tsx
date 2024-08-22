@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useFormState } from 'react-dom';
-import { handleAddProduct, handleUpdateProduct } from 'src/actions';
+import { AddProduct, UpdateProduct } from 'src/actions';
 
 const initialState = {
   errors: [],
@@ -12,7 +12,7 @@ const initialState = {
 
 export const FormProduct = ({ onClose, onAddProduct, onUpdateProduct, product }: any) => {
   const [status, formAction] = useFormState(
-    product ? handleUpdateProduct : handleAddProduct, 
+    product ? UpdateProduct : AddProduct, 
     initialState
   );
 

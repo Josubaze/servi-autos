@@ -1,26 +1,63 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getListProducts } from 'src/actions';
+// src/redux/features/productSlice.ts
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getListProducts, DeleteProduct, AddProduct, UpdateProduct } from 'src/actions';
 
-const initialState = {
+
+interface ProductState {
+    list: Product[];
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    error: string;
+}
+
+const initialState: ProductState = {
     list: [],
-    status: 'loading', 
-    error: null,
+    status: 'idle',
+    error: '',
 };
 
-export const fetchProductsRedux = createAsyncThunk(
+export const fetchProductsRedux = createAsyncThunk<Product[]>(
     'products/fetchProducts',
     async () => {
         const productRes = await getListProducts();
-        return productRes; // Devuelve los datos obtenidos
+        return productRes;
     }
 );
 
-export const productSlice = createSlice({
+export const addProductRedux = createAsyncThunk<Product, FormData>(
+    'products/addProduct',
+    async (formData) => {
+        const result = await AddProduct({}, formData);
+        if (result.error) throw new Error(result.error);
+        return result.newProduct;
+    }
+);
+
+export const updateProductRedux = createAsyncThunk<Product, FormData>(
+    'products/updateProduct',
+    async (formData) => {
+        const result = await UpdateProduct({}, formData);
+        if (result.error) throw new Error(result.error);
+        return result.newProduct;
+    }
+);
+
+export const deleteProductRedux = createAsyncThunk<string, string>(
+    'products/deleteProduct',
+    async (productId) => {
+        await DeleteProduct(productId);
+        return productId;
+    }
+);
+
+const productSlice = createSlice({
     name: 'products',
     initialState,
     reducers: {
-        setProduct: (state, action) => {
+        setProducts: (state, action: PayloadAction<Product[]>) => {
             state.list = action.payload;
+        },
+        setError: (state, action: PayloadAction<string>) => {
+            state.error = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -28,16 +65,36 @@ export const productSlice = createSlice({
             .addCase(fetchProductsRedux.pending, (state) => {
                 state.status = 'loading';
             })
-            .addCase(fetchProductsRedux.fulfilled, (state, action) => {
+            .addCase(fetchProductsRedux.fulfilled, (state, action: PayloadAction<Product[]>) => {
                 state.status = 'succeeded';
-                state.list = action.payload; // Actualiza el estado con los datos obtenidos
+                state.list = action.payload;
             })
             .addCase(fetchProductsRedux.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                state.error = action.error.message ?? 'Failed to fetch products';
+            })
+            .addCase(addProductRedux.fulfilled, (state, action: PayloadAction<Product>) => {
+                state.list.push(action.payload);
+            })
+            .addCase(addProductRedux.rejected, (state, action) => {
+                state.error = action.error.message ?? 'Failed to add product';
+            })
+            .addCase(updateProductRedux.fulfilled, (state, action: PayloadAction<Product>) => {
+                state.list = state.list.map(product =>
+                    product._id === action.payload._id ? action.payload : product
+                );
+            })
+            .addCase(updateProductRedux.rejected, (state, action) => {
+                state.error = action.error.message ?? 'Failed to update product';
+            })
+            .addCase(deleteProductRedux.fulfilled, (state, action: PayloadAction<string>) => {
+                state.list = state.list.filter(product => product._id !== action.payload);
+            })
+            .addCase(deleteProductRedux.rejected, (state, action) => {
+                state.error = action.error.message ?? 'Failed to delete product';
             });
     },
 });
 
-export const { setProduct } = productSlice.actions;
+export const { setProducts, setError } = productSlice.actions;
 export default productSlice.reducer;

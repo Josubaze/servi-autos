@@ -4,10 +4,12 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "src/redux/hooks";
 import { increment } from "src/redux/features/couterSlice";
 import { fetchProductsRedux } from 'src/redux/features/productSlice';
+
+
 function Home() {
   const count = useAppSelector((state) => state.counter.counter);
   const dispatch = useAppDispatch();
-  const products = useAppSelector((state) => state.products.list);
+  const products: Product[] = useAppSelector((state) => state.products.list);
   const status = useAppSelector((state) => state.products.status);
   const error = useAppSelector((state) => state.products.error);
  
@@ -29,8 +31,8 @@ function Home() {
       ) : (
         <ul>
         { status === "idle" }
-        {products.map((product) => (
-          <li key={product.id}>{product.name}</li>
+        {products.map((product ) => (
+          <li key={product._id }>{product.name}</li>
         ))}
       </ul>
       )}

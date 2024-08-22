@@ -7,6 +7,12 @@ interface Product {
     price: number;
   }
 
+  interface ProductState {
+    list: Product[];
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    error: string;
+  }
+  
   interface SearchBarProps {
     searchTerm: string;
     setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
@@ -17,7 +23,6 @@ interface Product {
     itemsPerPage: number;
     currentPage: number;
     paginate: (pageNumber: number) => void;
-    products: Product[];
   }
 
   interface ButtonProps {

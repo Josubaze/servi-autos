@@ -8,7 +8,7 @@ export const getCurrentProducts = (filteredProducts: Product[], currentPage: num
     return filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
   };
 
-export const Pagination: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, currentPage, paginate, products }) => {
+export const Pagination: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, currentPage, paginate }) => {
   // Calculate the total number of pages
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {

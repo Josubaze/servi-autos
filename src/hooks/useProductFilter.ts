@@ -6,6 +6,7 @@ export const useProductFilter = (products: Product[], searchTerm: string) => {
   useEffect(() => {
     const lowercasedSearchTerm = searchTerm.toLowerCase();
     let filtered = products;
+  
     if (lowercasedSearchTerm) {
       filtered = products.filter(product =>
         product._id.includes(lowercasedSearchTerm) ||
@@ -13,9 +14,11 @@ export const useProductFilter = (products: Product[], searchTerm: string) => {
         product.category.toLowerCase().includes(lowercasedSearchTerm)
       );
     }
-    // Ordenar los productos filtrados por nombre
-    filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
-    setFilteredProducts(filtered);
+  
+    // Crear una copia del arreglo antes de ordenarlo
+    const sortedFilteredProducts = filtered.slice().sort((a, b) => a.name.localeCompare(b.name));
+  
+    setFilteredProducts(sortedFilteredProducts);
   }, [searchTerm, products]);
 
   return filteredProducts;

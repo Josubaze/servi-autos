@@ -68,7 +68,7 @@ export const getListProducts = async () => {
     }
   };
 
-  export const handleDeleteProduct = async (productId: string) => {
+  export const DeleteProduct = async (productId: string) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`, {
         method: 'DELETE',
@@ -85,7 +85,7 @@ export const getListProducts = async () => {
     }
 };
 
-export const handleAddProduct = async (prevState: any, formData: FormData) => {
+export const AddProduct = async (prevState: any, formData: FormData) => {
   try {
     if (!(formData instanceof FormData)) {
       throw new Error("Invalid formData");
@@ -133,7 +133,7 @@ export const handleAddProduct = async (prevState: any, formData: FormData) => {
 };
 
 
-export const handleUpdateProduct = async (prevState: any, formData: FormData) => {
+export const UpdateProduct = async (prevState: any, formData: FormData) => {
   try {
     if (!(formData instanceof FormData)) {
       throw new Error("Invalid formData");
@@ -158,7 +158,7 @@ export const handleUpdateProduct = async (prevState: any, formData: FormData) =>
         throw new Error(err.message);  
     }
     const newProduct = await res.json();
-    console.log(newProduct);
+
     return { shouldClose: true, newProduct };
   } catch (error) {
     if (error instanceof z.ZodError) {

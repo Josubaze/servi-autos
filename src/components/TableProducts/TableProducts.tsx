@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { getListProducts, handleDeleteProduct } from 'src/actions';
+import { useEffect, useState } from 'react';
 import { IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { FormProduct } from 'src/components/ProductForm';
@@ -11,78 +10,68 @@ import { getCurrentProducts } from '../Pagination/Pagination';
 import { useProductFilter } from 'src/hooks/useProductFilter';
 import { SearchBar } from 'src/components/SearchBar';
 import { Loading } from '../Common/Loading';
-import { fetchProductsRedux } from 'src/redux/features/productSlice';
+import { fetchProductsRedux, setError, deleteProductRedux, addProductRedux, updateProductRedux} from 'src/redux/features/productSlice';
+import { useAppSelector, useAppDispatch } from 'src/redux/hooks';
 
 export const TableProducts = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const products: Product[] = useAppSelector((state) => state.products.list);
+  const status = useAppSelector((state) => state.products.status);
+  const error = useAppSelector((state) => state.products.error);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const filteredProducts = useProductFilter(products, searchTerm);
   const productsPerPage = 15;
-  const [isLoading, setIsLoading] = useState(true);
-
-
-const fetchProducts = async () => {
-    try {
-      const data = await getListProducts();
-      if (data) {
-        setProducts(data);
-      } else {
-        setError('Failed to fetch products');
-      }
-    } catch (error) {
-      setError('Failed to fetch products');
-      console.error('Failed to fetch products:', error);
-    }
-  };
-
+ 
   useEffect(() => {
-    setIsLoading(true);
-    fetchProductsRedux();
-    fetchProducts();
-    setIsLoading(false);
-  }, []);
+    dispatch(fetchProductsRedux());
+}, [dispatch]);
 
+const handleDeleteProduct = async (productId: string) => {
+  try {
+    await dispatch(deleteProductRedux(productId));
+  } catch (error) {
+    dispatch(setError('Failed to delete product'));
+  }
+};
 
-  const handleDeleteButton = async (productId: string) => {
-    try {
-      const updatedProducts = await handleDeleteProduct(productId);
-      setProducts(updatedProducts);
-    } catch (error) {
-      setError('Failed to delete product');
-      console.error('Failed to delete product:', error);
-    }
-  };
+const handleAddProduct = async (formData: FormData) => {
+  try {
+    await dispatch(addProductRedux(formData));
+  } catch (error) {
+    dispatch(setError('Failed to add product'));
+  }
+};
 
-  const handleAddProduct = (newProduct: Product) => {
-    setProducts((prevProducts) => [...prevProducts, newProduct]);
-  };
-
-  const handleEditButton = (product: Product) => {
-    setCurrentProduct(product);
-    setShowForm(true);
-  };
-
-  const handleUpdateProduct = (updatedProduct: Product) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) => (product._id === updatedProduct._id ? updatedProduct : product))
-    );
-  };
-
+const handleUpdateProduct = async (formData: FormData) => {
+  try {
+    await dispatch(updateProductRedux(formData));
+  } catch (error) {
+    dispatch(setError('Failed to update product'));
+  }
+};
   const openForm = () => {
     setShowForm(true);
     setCurrentProduct(null);
+  };
+
+  const openFormUpdate = (product: Product) => {
+    setCurrentProduct(product);
+    setShowForm(true);
   };
 
   const CloseForm = () => {
     setShowForm(false);
     setCurrentProduct(null);
   };
+
+
   // Calculate the products to display on the current page
   const currentProducts = getCurrentProducts(filteredProducts, currentPage, productsPerPage)
+
+
 
   return (
     <div className="flex flex-col py-6 px-12">
@@ -130,19 +119,19 @@ const fetchProducts = async () => {
                 </tr>
               </thead>
               <tbody>
-                {isLoading ? (
+                {status === "loading" ? (
                   <tr>
                     <td colSpan={7} className="py-60">
                       <Loading color="#3730a3" size={80} justify="center" />
                     </td>
                   </tr>
-                ) : error ? (
+                ) : status === "failed" ? (
                   <tr>
                     <td colSpan={7} className="whitespace-nowrap px-6 py-4 font-medium text-red-600 text-center">
                       Error fetching products: {error}
                     </td>
                   </tr>
-                ) : (
+                ) : status === "succeeded" ? (
                   currentProducts.map((product) => (
                     <tr
                       key={product._id}
@@ -155,27 +144,24 @@ const fetchProducts = async () => {
                       <td className="whitespace-nowrap px-4 py-4 text-base max-sm:text-sm">{product.price}</td>
                       <td className="whitespace-nowrap px-4 py-4 text-base max-sm:text-sm">
                         <div className="flex gap-2">
-                          <IoPencil className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => handleEditButton(product)} />
-                          <MdDelete className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => handleDeleteButton(product._id)} />
+                          <IoPencil className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => openFormUpdate(product)} />
+                          <MdDelete className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => handleDeleteProduct(product._id)} />
                         </div>
                       </td>
                     </tr>
                   ))
-                )
+                ) : null
               }
               </tbody>
             </table>
-            {!isLoading && (
-                <div className="flex justify-center mt-6">
+            <div className="flex justify-center mt-6">
                 <Pagination
                   totalItems={filteredProducts.length}
                   itemsPerPage={productsPerPage}
                   currentPage={currentPage}
                   paginate={setCurrentPage}
-                  products={filteredProducts}
                 />
                 </div>
-            )}
           </div>
         </div>
       </div>
