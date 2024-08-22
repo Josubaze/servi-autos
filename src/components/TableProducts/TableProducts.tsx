@@ -27,7 +27,7 @@ export const TableProducts = () => {
  
   useEffect(() => {
     dispatch(fetchProductsRedux());
-}, [dispatch]);
+}, [dispatch, showForm]);
 
 const handleDeleteProduct = async (productId: string) => {
   try {

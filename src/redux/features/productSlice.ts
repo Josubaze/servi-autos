@@ -1,5 +1,4 @@
-// src/redux/features/productSlice.ts
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getListProducts, DeleteProduct, AddProduct, UpdateProduct } from 'src/actions';
 
 
@@ -15,7 +14,7 @@ const initialState: ProductState = {
     error: '',
 };
 
-export const fetchProductsRedux = createAsyncThunk<Product[]>(
+export const fetchProductsRedux = createAsyncThunk(
     'products/fetchProducts',
     async () => {
         const productRes = await getListProducts();
@@ -23,41 +22,45 @@ export const fetchProductsRedux = createAsyncThunk<Product[]>(
     }
 );
 
-export const addProductRedux = createAsyncThunk<Product, FormData>(
+export const addProductRedux = createAsyncThunk(
     'products/addProduct',
-    async (formData) => {
-        const result = await AddProduct({}, formData);
+    async (formData: FormData) => {
+        const result = await AddProduct(formData);
         if (result.error) throw new Error(result.error);
         return result.newProduct;
     }
 );
 
-export const updateProductRedux = createAsyncThunk<Product, FormData>(
+export const updateProductRedux = createAsyncThunk(
     'products/updateProduct',
-    async (formData) => {
-        const result = await UpdateProduct({}, formData);
+    async (formData: FormData) => {
+        const result = await UpdateProduct(formData);
         if (result.error) throw new Error(result.error);
         return result.newProduct;
     }
 );
 
-export const deleteProductRedux = createAsyncThunk<string, string>(
+export const deleteProductRedux = createAsyncThunk(
     'products/deleteProduct',
-    async (productId) => {
+    async (productId: string) => {
         await DeleteProduct(productId);
         return productId;
     }
 );
 
-const productSlice = createSlice({
+export const productSlice = createSlice({
     name: 'products',
     initialState,
     reducers: {
-        setProducts: (state, action: PayloadAction<Product[]>) => {
+        // Reducers normales para actualizar el estado
+        setProducts: (state, action) => {
             state.list = action.payload;
         },
-        setError: (state, action: PayloadAction<string>) => {
+        setError: (state, action) => {
             state.error = action.payload;
+        },
+        clearError: (state) => {
+            state.error = '';
         },
     },
     extraReducers: (builder) => {
@@ -65,7 +68,7 @@ const productSlice = createSlice({
             .addCase(fetchProductsRedux.pending, (state) => {
                 state.status = 'loading';
             })
-            .addCase(fetchProductsRedux.fulfilled, (state, action: PayloadAction<Product[]>) => {
+            .addCase(fetchProductsRedux.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.list = action.payload;
             })
@@ -73,13 +76,14 @@ const productSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.error.message ?? 'Failed to fetch products';
             })
-            .addCase(addProductRedux.fulfilled, (state, action: PayloadAction<Product>) => {
+            .addCase(addProductRedux.fulfilled, (state, action) => {
+                console.log('Product added:', action.payload);
                 state.list.push(action.payload);
             })
             .addCase(addProductRedux.rejected, (state, action) => {
                 state.error = action.error.message ?? 'Failed to add product';
             })
-            .addCase(updateProductRedux.fulfilled, (state, action: PayloadAction<Product>) => {
+            .addCase(updateProductRedux.fulfilled, (state, action) => {
                 state.list = state.list.map(product =>
                     product._id === action.payload._id ? action.payload : product
                 );
@@ -87,7 +91,7 @@ const productSlice = createSlice({
             .addCase(updateProductRedux.rejected, (state, action) => {
                 state.error = action.error.message ?? 'Failed to update product';
             })
-            .addCase(deleteProductRedux.fulfilled, (state, action: PayloadAction<string>) => {
+            .addCase(deleteProductRedux.fulfilled, (state, action) => {
                 state.list = state.list.filter(product => product._id !== action.payload);
             })
             .addCase(deleteProductRedux.rejected, (state, action) => {
@@ -96,5 +100,5 @@ const productSlice = createSlice({
     },
 });
 
-export const { setProducts, setError } = productSlice.actions;
+export const { setProducts, setError, clearError } = productSlice.actions;
 export default productSlice.reducer;

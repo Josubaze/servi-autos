@@ -1,5 +1,6 @@
 'use client';
 
+
 import { useEffect } from 'react';
 import { useFormState } from 'react-dom';
 import { AddProduct, UpdateProduct } from 'src/actions';
@@ -10,7 +11,20 @@ const initialState = {
   newProduct: null
 };
 
-export const FormProduct = ({ onClose, onAddProduct, onUpdateProduct, product }: any) => {
+type FormProductProps = {
+  onClose: () => void;
+  onAddProduct: (formData: FormData) => Promise<void>;
+  onUpdateProduct: (formData: FormData) => Promise<void>;
+  product?: Product | null; // Puede ser opcional o null si es un nuevo producto
+};
+
+export const FormProduct = ({
+  onClose,
+  onAddProduct,
+  onUpdateProduct,
+  product,
+}: FormProductProps) => {
+  
   const [status, formAction] = useFormState(
     product ? UpdateProduct : AddProduct, 
     initialState
@@ -19,9 +33,9 @@ export const FormProduct = ({ onClose, onAddProduct, onUpdateProduct, product }:
   useEffect(() => {
     if (status.shouldClose) {
       if (product) {
-        onUpdateProduct(status.newProduct);
+        onUpdateProduct(status.newProduct as FormData);
       } else {
-        onAddProduct(status.newProduct);
+        onAddProduct(status.newProduct as FormData);
       }
       onClose();
     }

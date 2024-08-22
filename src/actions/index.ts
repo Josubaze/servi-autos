@@ -85,11 +85,8 @@ export const getListProducts = async () => {
     }
 };
 
-export const AddProduct = async (prevState: any, formData: FormData) => {
+export const AddProduct = async ( formData: FormData) => {
   try {
-    if (!(formData instanceof FormData)) {
-      throw new Error("Invalid formData");
-    }
     const parsedData = ProductSchema.parse({
       name: formData.get('name'),
       description: formData.get('description'),
@@ -100,7 +97,6 @@ export const AddProduct = async (prevState: any, formData: FormData) => {
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(parsedData)
     })
       
@@ -109,7 +105,7 @@ export const AddProduct = async (prevState: any, formData: FormData) => {
         throw new Error(err.message);  
     }
     const newProduct = await res.json();
-    return { ...prevState, shouldClose: true, newProduct };
+    return { shouldClose: true, newProduct };
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
@@ -133,12 +129,8 @@ export const AddProduct = async (prevState: any, formData: FormData) => {
 };
 
 
-export const UpdateProduct = async (prevState: any, formData: FormData) => {
+export const UpdateProduct = async ( formData: FormData) => {
   try {
-    if (!(formData instanceof FormData)) {
-      throw new Error("Invalid formData");
-    }
-
     const parsedData = ProductSchema.parse({
       name: formData.get('name'),
       description: formData.get('description'),
@@ -149,7 +141,6 @@ export const UpdateProduct = async (prevState: any, formData: FormData) => {
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${formData.get('id')}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(parsedData)
     })
       
