@@ -7,6 +7,8 @@ import { AddProduct, UpdateProduct } from 'src/actions';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import { ProductSchema } from 'src/utils/validation.zod';
+import { fetchProductsRedux, setError, deleteProductRedux, updateProductRedux} from 'src/redux/features/productSlice';
+import { useAppSelector, useAppDispatch } from 'src/redux/hooks';
 
 type Inputs = {
   name: string;
@@ -18,29 +20,41 @@ type Inputs = {
 
 type FormProductProps = {
   onClose: () => void;
-  onAddProduct: (formData: FormData) => Promise<void>;
-  onUpdateProduct: (formData: FormData) => Promise<void>;
+  // onAddProduct: (formData: FormData) => Promise<void>;
+  // onUpdateProduct: (formData: FormData) => Promise<void>;
   product?: Product | null; // Puede ser opcional o null si es un nuevo producto
 };
 
 export const FormProduct = ({
   onClose,
-  onAddProduct,
+  // onAddProduct,
   // onUpdateProduct,
   // product,
 }: FormProductProps) => {
-
-  const { register, handleSubmit ,formState: {errors} } = useForm<Inputs>({
+  const dispatch = useAppDispatch();
+  const { register, handleSubmit ,formState: {errors} } = useForm<Product>({
     resolver: zodResolver(ProductSchema),
   }); 
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  // const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  // try {
+  //   await dispatch(addProductRedux(data));
+  // } catch (error) {
+  //   dispatch(setError('Failed to add product'));
+  // }
+  // };
+
+  const onSubmit: SubmitHandler<Product> = async (data) => {
     try {
+      // const res = await dispatch(addProductRedux(data)).unwrap();
+      // if(res.shouldClose){
+      //   onClose();
+      // }
       console.log(data);
     } catch (error) {
-      console.error('Error al guardar el producto:', error);
+      dispatch(setError('Failed to add product'));
     }
-  };
+    };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
@@ -58,7 +72,7 @@ export const FormProduct = ({
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {errors.name?.message && <p className='text-red-700 pb-2'>{errors.name.message}</p>}
+        {errors.name?.message && <p className='text-red-500 pb-2'>{errors.name.message}</p>}
 
         <div className="mb-4">
           <label className="block text-sm font-bold mb-2" htmlFor="description">
@@ -71,7 +85,7 @@ export const FormProduct = ({
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {errors.description?.message && <p className='text-red-700 pb-2'>{errors.description.message}</p>}
+        {errors.description?.message && <p className='text-red-500 pb-2'>{errors.description.message}</p>}
         
         <div className="mb-4">
           <label className="block text-sm font-bold mb-2" htmlFor="category">
@@ -84,7 +98,7 @@ export const FormProduct = ({
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {errors.category?.message && <p className='text-red-700 pb-2'>{errors.category.message}</p>}
+        {errors.category?.message && <p className='text-red-500 pb-2'>{errors.category.message}</p>}
         
         <div className="mb-4">
           <label className="block text-sm font-bold mb-2" htmlFor="quantity">
@@ -97,7 +111,7 @@ export const FormProduct = ({
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {errors.quantity?.message && <p className='text-red-700 pb-2'>{errors.quantity.message}</p>}
+        {errors.quantity?.message && <p className='text-red-500 pb-2'>{errors.quantity.message}</p>}
 
         <div className="mb-4">
           <label className="block text-sm font-bold mb-2" htmlFor="price">
@@ -110,7 +124,7 @@ export const FormProduct = ({
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {errors.price?.message && <p className='text-red-700 pb-2'>{errors.price.message}</p>}
+        {errors.price?.message && <p className='text-red-500 pb-2'>{errors.price.message}</p>}
         
         <div className="flex items-center justify-between">
           <button

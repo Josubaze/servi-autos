@@ -10,24 +10,26 @@ import { getCurrentProducts } from '../Pagination/Pagination';
 import { useProductFilter } from 'src/hooks/useProductFilter';
 import { SearchBar } from 'src/components/SearchBar';
 import { Loading } from '../Common/Loading';
-import { fetchProductsRedux, setError, deleteProductRedux, addProductRedux, updateProductRedux} from 'src/redux/features/productSlice';
+import { fetchProductsRedux, setError, deleteProductRedux} from 'src/redux/features/productSlice';
 import { useAppSelector, useAppDispatch } from 'src/redux/hooks';
+import { useGetProductsQuery } from 'src/redux/services/productsApi';
+import { isError } from 'util';
 
 export const TableProducts = () => {
   const dispatch = useAppDispatch();
-  const products: Product[] = useAppSelector((state) => state.products.list);
+  const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProductsQuery();
   const status = useAppSelector((state) => state.products.status);
-  const error = useAppSelector((state) => state.products.error);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
-  const filteredProducts = useProductFilter(products, searchTerm);
+  const filteredProducts = useProductFilter(data, searchTerm);
   const productsPerPage = 15;
+  
  
   useEffect(() => {
     dispatch(fetchProductsRedux());
-}, [dispatch, showForm]);
+}, [dispatch]);
 
 const handleDeleteProduct = async (productId: string) => {
   try {
@@ -37,21 +39,6 @@ const handleDeleteProduct = async (productId: string) => {
   }
 };
 
-const handleAddProduct = async (formData: FormData) => {
-  try {
-    await dispatch(addProductRedux(formData));
-  } catch (error) {
-    dispatch(setError('Failed to add product'));
-  }
-};
-
-const handleUpdateProduct = async (formData: FormData) => {
-  try {
-    await dispatch(updateProductRedux(formData));
-  } catch (error) {
-    dispatch(setError('Failed to update product'));
-  }
-};
   const openForm = () => {
     setShowForm(true);
     setCurrentProduct(null);
@@ -95,8 +82,8 @@ const handleUpdateProduct = async (formData: FormData) => {
         {showForm && (
           <FormProduct
             onClose={CloseForm}
-            onAddProduct={handleAddProduct}
-            onUpdateProduct={handleUpdateProduct}
+            // onAddProduct={handleAddProduct}
+            // onUpdateProduct={handleUpdateProduct}
             product={currentProduct}
           />
         )}
@@ -119,19 +106,19 @@ const handleUpdateProduct = async (formData: FormData) => {
                 </tr>
               </thead>
               <tbody>
-                {status === "loading" ? (
+                {isLoading || isFetching ? (
                   <tr>
                     <td colSpan={7} className="py-60">
                       <Loading color="#3730a3" size={80} justify="center" />
                     </td>
                   </tr>
-                ) : status === "failed" ? (
+                ) : isError ? (
                   <tr>
                     <td colSpan={7} className="whitespace-nowrap px-6 py-4 font-medium text-red-600 text-center">
-                      Error fetching products: {error}
+                      Error fetching products
                     </td>
                   </tr>
-                ) : status === "succeeded" ? (
+                ) : isSuccess ? (
                   currentProducts.map((product) => (
                     <tr
                       key={product._id}

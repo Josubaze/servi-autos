@@ -23,13 +23,14 @@ export const fetchProductsRedux = createAsyncThunk(
 );
 
 export const addProductRedux = createAsyncThunk(
-    'products/addProduct',
-    async (formData: FormData) => {
-        const result = await AddProduct(formData);
-        if (result.error) throw new Error(result.error);
-        return result.newProduct;
-    }
+  'products/addProduct',
+  async (product: Product) => {
+      const result = await AddProduct(product);
+      if (result.error) throw new Error(result.error);
+      return { newProduct: result.newProduct, shouldClose: result.shouldClose };
+  }
 );
+
 
 export const updateProductRedux = createAsyncThunk(
     'products/updateProduct',
@@ -78,7 +79,7 @@ export const productSlice = createSlice({
             })
             .addCase(addProductRedux.fulfilled, (state, action) => {
                 console.log('Product added:', action.payload);
-                state.list.push(action.payload);
+                state.list.push(action.payload.newProduct);
             })
             .addCase(addProductRedux.rejected, (state, action) => {
                 state.error = action.error.message ?? 'Failed to add product';

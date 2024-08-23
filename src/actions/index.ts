@@ -3,6 +3,7 @@ import { z } from "zod"
 import { redirect } from 'next/navigation'
 import {connectDB} from 'src/utils/mongoose'
 import {ProductSchema, SignupSchema } from 'src/utils/validation.zod'
+import { createAsyncThunk} from '@reduxjs/toolkit';
 
 connectDB()
 
@@ -85,19 +86,11 @@ export const getListProducts = async () => {
     }
 };
 
-export const AddProduct = async ( formData: FormData) => {
+export const AddProduct = async (product: Product) => {
   try {
-    const parsedData = ProductSchema.parse({
-      name: formData.get('name'),
-      description: formData.get('description'),
-      category: formData.get('category'),
-      quantity: Number(formData.get('quantity')),
-      price: Number(formData.get('price')),
-    });
-
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
       method: 'POST',
-      body: JSON.stringify(parsedData)
+      body: JSON.stringify(product)
     })
       
     if (!res.ok) {
@@ -107,23 +100,8 @@ export const AddProduct = async ( formData: FormData) => {
     const newProduct = await res.json();
     return { shouldClose: true, newProduct };
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return {
-        errors: error.errors.map((err) => ({
-          field: err.path.join('.'),
-          message: err.message,
-        })),
-      };
-    }
-
-    if (error instanceof Error) {
-      return {
-        error: error.message,
-      };
-    }
-
     return {
-      error: 'Ha ocurrido un error desconocido',
+      error: 'Ha ocurrido un error fetching product',
     };
   }
 };
@@ -172,3 +150,4 @@ export const UpdateProduct = async ( formData: FormData) => {
     };
   }
 };
+
