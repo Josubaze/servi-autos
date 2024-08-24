@@ -4,46 +4,52 @@ import { useEffect, useState } from 'react';
 import { IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { FormProduct } from 'src/components/ProductForm';
+import { UpdateProductForm } from '../UpdateProductForm';
 import { FaPlus } from "react-icons/fa6";
 import { Pagination } from 'src/components/Pagination';
 import { getCurrentProducts } from '../Pagination/Pagination';
 import { useProductFilter } from 'src/hooks/useProductFilter';
 import { SearchBar } from 'src/components/SearchBar';
 import { Loading } from '../Common/Loading';
-import { useDeleteProductMutation, useGetProductsQuery } from 'src/redux/services/productsApi';
+import { useDeleteProductMutation, useGetProductsQuery, useUpdateProductMutation } from 'src/redux/services/productsApi';
 
 
 export const TableProducts = () => {
 
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProductsQuery();
+  const { } = useUpdateProductMutation();
   const [ deleteProduct ] = useDeleteProductMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
+  const [showFormUpdate, setshowFormUpdate] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
+  const [currentProduct, setCurrentProduct] = useState<Product>({
+    _id: '',
+    name: '',
+    description: '',
+    category: '',
+    price: 0,
+    quantity: 0,
+  });
   const filteredProducts = useProductFilter(data, searchTerm);
   const productsPerPage = 15;
 
   const openForm = () => {
     setShowForm(true);
-    setCurrentProduct(null);
   };
 
   const openFormUpdate = (product: Product) => {
     setCurrentProduct(product);
-    setShowForm(true);
+    setshowFormUpdate(true);
   };
 
   const CloseForm = () => {
     setShowForm(false);
-    setCurrentProduct(null);
+    setshowFormUpdate(false);
   };
-
 
   // Calculate the products to display on the current page
   const currentProducts = getCurrentProducts(filteredProducts, currentPage, productsPerPage)
-
-
 
   return (
     <div className="flex flex-col py-6 px-12">
@@ -64,14 +70,7 @@ export const TableProducts = () => {
         >
           <FaPlus />
         </button>
-        {showForm && (
-          <FormProduct
-            onClose={CloseForm}
-            // onAddProduct={handleAddProduct}
-            // onUpdateProduct={handleUpdateProduct}
-            product={currentProduct}
-          />
-        )}
+        
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
 
@@ -117,7 +116,7 @@ export const TableProducts = () => {
                       <td className="whitespace-nowrap px-4 py-4 text-base max-sm:text-sm">
                         <div className="flex gap-2">
                           <IoPencil className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => openFormUpdate(product)} />
-                          <MdDelete className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => deleteProduct({id: product._id})} />
+                          <MdDelete className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => deleteProduct(product._id)} />
                         </div>
                       </td>
                     </tr>
@@ -137,7 +136,18 @@ export const TableProducts = () => {
           </div>
         </div>
       </div>
-
+      { showForm ? (
+          <FormProduct
+            onClose={CloseForm}
+          />
+      ) : showFormUpdate ? (
+        <UpdateProductForm
+          product={currentProduct}
+          onClose={CloseForm}
+        />
+      ) : null
+      }
+          
 </div>
 );
 }

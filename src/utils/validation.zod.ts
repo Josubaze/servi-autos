@@ -26,6 +26,6 @@ export const ProductSchema = z.object({
     name: z.string().min(3, { message: "El nombre debe ser mayor o igual a 3 caracteres" }).max(25, { message: "El nombre debe ser menor o igual a 25 caracteres" }),
     description: z.string().max(25, { message: "La descripción debe ser menor a 25 caracteres" }).nullish(),
     category: z.string().min(3, { message: "La categoría debe ser mayor a 3 caracteres" }).max(25, { message: "La categoría debe ser menor a 25 caracteres" }),
-    price: z.string().refine(price => !isNaN(parseFloat(price)), { message: "el precio no es un número"}),
-    quantity: z.string().refine(quantity => /^[0-9]+$/.test(quantity), { message: "el precio no es un número entero" }),
+    price: z.string().refine(price => !isNaN(parseFloat(price)), { message: "El precio no es un número" }).transform(price => parseFloat(price)),
+    quantity: z.string().refine(quantity => /^[0-9]+$/.test(quantity), { message: "La cantidad no es un número entero" }).transform(quantity => parseInt(quantity, 10)),
 })
