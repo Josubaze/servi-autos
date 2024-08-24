@@ -5,23 +5,27 @@ export const productsApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api`,       
     }),
+    tagTypes: ['Products'], 
     endpoints: (builder) => ({
         getProducts: builder.query<Product[], void>({
             query: () => '/products',
+            providesTags: ['Products'],
         }),
-        ProductDelete: builder.mutation<void, {id: string}>({
+        deleteProduct: builder.mutation<void, {id: string}>({
             query: ({id}) => ({
                 url: `/products/${id}`,
                 method: 'DELETE',
             }),
+            invalidatesTags: ['Products'],
         }),
-        // addProduct: builder.mutation<void, Product>({
-        //     query: (product) => ({
-        //         url: '/products',
-        //         method: 'POST',
-        //         body: product,
-        //     }),
-        // }),
+        createProduct: builder.mutation<void, ProductSinId>({
+            query: (newProduct) => ({
+                url: '/products',
+                method: 'POST',
+                body: newProduct,
+            }),
+            invalidatesTags: ['Products'],
+        }),
         // updateProduct: builder.mutation<void, Product>({
         //     query: (product) => ({
         //         url: `/products/${product._id}`,
@@ -32,4 +36,4 @@ export const productsApi = createApi({
     }),
 });
 
-export const { useGetProductsQuery, useProductDeleteMutation } =  productsApi
+export const { useGetProductsQuery, useDeleteProductMutation , useCreateProductMutation } =  productsApi

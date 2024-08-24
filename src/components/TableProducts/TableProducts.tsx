@@ -10,34 +10,19 @@ import { getCurrentProducts } from '../Pagination/Pagination';
 import { useProductFilter } from 'src/hooks/useProductFilter';
 import { SearchBar } from 'src/components/SearchBar';
 import { Loading } from '../Common/Loading';
-import { fetchProductsRedux, setError, deleteProductRedux} from 'src/redux/features/productSlice';
-import { useAppSelector, useAppDispatch } from 'src/redux/hooks';
-import { useGetProductsQuery } from 'src/redux/services/productsApi';
-import { isError } from 'util';
+import { useDeleteProductMutation, useGetProductsQuery } from 'src/redux/services/productsApi';
+
 
 export const TableProducts = () => {
-  const dispatch = useAppDispatch();
+
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProductsQuery();
-  const status = useAppSelector((state) => state.products.status);
+  const [ deleteProduct ] = useDeleteProductMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const filteredProducts = useProductFilter(data, searchTerm);
   const productsPerPage = 15;
-  
- 
-  useEffect(() => {
-    dispatch(fetchProductsRedux());
-}, [dispatch]);
-
-const handleDeleteProduct = async (productId: string) => {
-  try {
-    await dispatch(deleteProductRedux(productId));
-  } catch (error) {
-    dispatch(setError('Failed to delete product'));
-  }
-};
 
   const openForm = () => {
     setShowForm(true);
@@ -132,7 +117,7 @@ const handleDeleteProduct = async (productId: string) => {
                       <td className="whitespace-nowrap px-4 py-4 text-base max-sm:text-sm">
                         <div className="flex gap-2">
                           <IoPencil className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => openFormUpdate(product)} />
-                          <MdDelete className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => handleDeleteProduct(product._id)} />
+                          <MdDelete className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => deleteProduct({id: product._id})} />
                         </div>
                       </td>
                     </tr>

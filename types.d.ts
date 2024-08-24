@@ -7,6 +7,14 @@ interface Product {
     price: number;
   }
 
+  interface ProductSinId {
+    name: string;
+    description: string;
+    category: string;
+    quantity: number;
+    price: number;
+  }
+
   interface ProductState {
     list: Product[];
     status: 'idle' | 'loading' | 'succeeded' | 'failed';

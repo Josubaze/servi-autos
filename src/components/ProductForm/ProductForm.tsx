@@ -1,14 +1,10 @@
 'use client';
 
-
-import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
-import { AddProduct, UpdateProduct } from 'src/actions';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import { ProductSchema } from 'src/utils/validation.zod';
-import { fetchProductsRedux, setError, deleteProductRedux, updateProductRedux} from 'src/redux/features/productSlice';
-import { useAppSelector, useAppDispatch } from 'src/redux/hooks';
+import { useCreateProductMutation } from 'src/redux/services/productsApi';
+import { useEffect } from 'react';
 
 type Inputs = {
   name: string;
@@ -20,42 +16,31 @@ type Inputs = {
 
 type FormProductProps = {
   onClose: () => void;
-  // onAddProduct: (formData: FormData) => Promise<void>;
-  // onUpdateProduct: (formData: FormData) => Promise<void>;
   product?: Product | null; // Puede ser opcional o null si es un nuevo producto
 };
 
 export const FormProduct = ({
   onClose,
-  // onAddProduct,
-  // onUpdateProduct,
-  // product,
 }: FormProductProps) => {
-  const dispatch = useAppDispatch();
-  const { register, handleSubmit ,formState: {errors} } = useForm<Product>({
+  const { register, handleSubmit ,formState: {errors} } = useForm<Inputs>({
     resolver: zodResolver(ProductSchema),
-  }); 
+  });
+  const [ createProduct ] = useCreateProductMutation()
 
-  // const onSubmit: SubmitHandler<Inputs> = async (data) => {
-  // try {
-  //   await dispatch(addProductRedux(data));
-  // } catch (error) {
-  //   dispatch(setError('Failed to add product'));
-  // }
-  // };
-
-  const onSubmit: SubmitHandler<Product> = async (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-      // const res = await dispatch(addProductRedux(data)).unwrap();
-      // if(res.shouldClose){
-      //   onClose();
-      // }
-      console.log(data);
+      await createProduct({
+        name: data.name,
+        description: data.description,
+        category: data.category,
+        price: Number.parseFloat(data.price),
+        quantity: Number(data.quantity),
+      }).unwrap();
+      onClose();
     } catch (error) {
-      dispatch(setError('Failed to add product'));
+      console.error('Error create product:', error);
     }
     };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg mx-auto bg-gray-900 p-8 rounded-md shadow-md border-2 border-x-gray-600 ">
