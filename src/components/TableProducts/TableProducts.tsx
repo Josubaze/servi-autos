@@ -1,28 +1,49 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { FormProduct } from 'src/components/ProductForm';
 import { UpdateProductForm } from '../UpdateProductForm';
 import { FaPlus } from "react-icons/fa6";
-import { Pagination } from 'src/components/Pagination';
-import { getCurrentProducts } from '../Pagination/Pagination';
-import { useProductFilter } from 'src/hooks/useProductFilter';
 import { SearchBar } from 'src/components/SearchBar';
 import { Loading } from '../Common/Loading';
-import { useDeleteProductMutation, useGetProductsQuery, useUpdateProductMutation } from 'src/redux/services/productsApi';
+import { useDeleteProductMutation, useGetProductsQuery } from 'src/redux/services/productsApi';
+import { DataGrid, GridColDef, GridRowsProp, GridCellParams } from '@mui/x-data-grid';
 
+const columns: GridColDef[] = [
+  { field: 'name', headerName: 'Nombre', width: 180, sortable: true },
+  { field: 'price', headerName: 'Precio', width: 120, sortable: true },
+  { field: 'category', headerName: 'Categoría', width: 180 },
+  { field: 'quantity', headerName: 'Cantidad', width: 120 },
+  { field: 'description', headerName: 'Descripción', width: 240 },
+  {
+    field: 'actions',
+    headerName: 'Acciones',
+    width: 200,
+    renderCell: (params: GridCellParams) => (
+      <>
+        <IoPencil className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => handleEdit(params.row)} />
+        <MdDelete className="cursor-pointer text-red-500 hover:text-red-800" onClick={() => handleDelete(params.row)} />
+      </>
+    ),
+  },
+];
+
+const handleEdit = (product: Product) => {
+  // Open update form with selected product
+};
+
+const handleDelete = (product: Product) => {
+  // Handle delete action
+};
 
 export const TableProducts = () => {
-
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProductsQuery();
-  const { } = useUpdateProductMutation();
-  const [ deleteProduct ] = useDeleteProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
-  const [showFormUpdate, setshowFormUpdate] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [showFormUpdate, setShowFormUpdate] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<Product>({
     _id: '',
     name: '',
@@ -31,33 +52,25 @@ export const TableProducts = () => {
     price: 0,
     quantity: 0,
   });
- 
 
-  const openForm = () => {
-    setShowForm(true);
-  };
-
-  const openFormUpdate = (product: Product) => {
-    setCurrentProduct(product);
-    setshowFormUpdate(true);
-  };
-
-  const CloseForm = () => {
-    setShowForm(false);
-    setshowFormUpdate(false);
-  };
-
-  // Calculate the products to display on the current page
-  const filteredProducts = useProductFilter(data, searchTerm);
-  const productsPerPage = 15;
-  const currentProducts = getCurrentProducts(filteredProducts, currentPage, productsPerPage)
+  // Filter and prepare rows
+  const filteredData = data.filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  
+  const rows: GridRowsProp = filteredData.map(product => ({
+    id: product._id,
+    name: product.name,
+    price: product.price,
+    category: product.category,
+    quantity: product.quantity,
+    description: product.description,
+  }));
 
   return (
     <div className="flex flex-col py-6 px-12">
       <div className="my-4 flex justify-between items-center gap-2 pb-2">
         <button
           className="bg-emerald-600 hover:bg-emerald-800 text-white px-4 py-2 rounded max-sm:hidden"
-          onClick={openForm}
+          onClick={() => setShowForm(true)}
         >
           <span className='flex items-center gap-2'>
             <FaPlus />
@@ -67,7 +80,7 @@ export const TableProducts = () => {
 
         <button
           className="bg-emerald-600 hover:bg-emerald-800 text-white p-4 rounded-full fixed bottom-0 right-0 mr-3 mb-8 shadow-2xl shadow-emerald-300 sm:hidden"
-          onClick={openForm}
+          onClick={() => setShowForm(true)}
         >
           <FaPlus />
         </button>
@@ -75,80 +88,44 @@ export const TableProducts = () => {
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
 
-      <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-          <div className="overflow-hidden">
-            <table className="min-w-full text-left text-sm font-light">
-              <thead className="border-b font-medium dark:border-neutral-500">
-                <tr>
-                  <th scope="col" className="px-4 py-4 max-sm:text-sm">ID</th>
-                  <th scope="col" className="px-4 py-4 max-sm:text-sm">NOMBRE</th>
-                  <th scope="col" className="px-6 py-4 hidden lg:table-cell max-sm:text-sm">DESCRIPCIÓN</th>
-                  <th scope="col" className="px-4 py-4 hidden lg:table-cell max-sm:text-sm">CATEGORÍA</th>
-                  <th scope="col" className="px-4 py-4 max-sm:text-sm">CANTIDAD</th>
-                  <th scope="col" className="px-4 py-4 max-sm:text-sm">PRECIO</th>
-                  <th scope="col" className="px-4 py-4 max-sm:text-sm"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {isLoading || isFetching ? (
-                  <tr>
-                    <td colSpan={7} className="py-60">
-                      <Loading color="#3730a3" size={80} justify="center" />
-                    </td>
-                  </tr>
-                ) : isError ? (
-                  <tr>
-                    <td colSpan={7} className="whitespace-nowrap px-6 py-4 font-medium text-red-600 text-center">
-                      Error fetching products
-                    </td>
-                  </tr>
-                ) : isSuccess ? (
-                  currentProducts.map((product) => (
-                    <tr
-                      key={product._id}
-                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
-                      <td className="whitespace-nowrap px-4 py-4 text-base max-sm:text-sm">{product._id.substring(16, 24)}</td>
-                      <td className="whitespace-nowrap px-4 py-4 text-base max-sm:text-sm">{product.name}</td>
-                      <td className="whitespace-nowrap px-6 py-4 text-base hidden lg:table-cell max-sm:text-sm">{product.description}</td>
-                      <td className="whitespace-nowrap px-4 py-4 text-base hidden lg:table-cell max-sm:text-sm">{product.category}</td>
-                      <td className="whitespace-nowrap px-4 py-4 text-base max-sm:text-sm">{product.quantity}</td>
-                      <td className="whitespace-nowrap px-4 py-4 text-base max-sm:text-sm">{product.price}</td>
-                      <td className="whitespace-nowrap px-4 py-4 text-base max-sm:text-sm">
-                        <div className="flex gap-2">
-                          <IoPencil className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => openFormUpdate(product)} />
-                          <MdDelete className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => deleteProduct(product._id)} />
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : null
-              }
-              </tbody>
-            </table>
-            <div className="flex justify-center mt-6">
-                <Pagination
-                  totalItems={filteredProducts.length}
-                  itemsPerPage={productsPerPage}
-                  currentPage={currentPage}
-                  paginate={setCurrentPage}
-                />
-                </div>
-          </div>
-        </div>
-      </div>
-      { showForm ? (
-          <FormProduct
-            onClose={CloseForm}
+      {isLoading || isFetching ? (
+        <Loading color="#3730a3" size={80} justify="center" />
+      ) : isError ? (
+        <p className="text-red-600">Error fetching products</p>
+      ) : isSuccess ? (
+        <div style={{ height: 'h-full', width: '100%' }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 10 },
+              },
+            }}
+            pageSizeOptions={[5, 10, 15]}
+            checkboxSelection
+            getRowId={(row) => row.id}
+            sx={{
+              backgroundColor: 'bg-custom-gradient',
+              color: '#fff',
+              '& .MuiDataGrid-columnHeaders': {
+                backgroundColor: 'bg-custom-gradient',
+                color: '#fff',
+              },
+              '& .MuiDataGrid-cell': {
+                color: '#fff',
+              },
+              '& .MuiDataGrid-footerContainer': {
+                backgroundColor: '#fff',
+                color: '#fff',
+              },
+            }}
           />
-      ) : showFormUpdate ? (
-        <UpdateProductForm
-          product={currentProduct}
-          onClose={CloseForm}
-        />
-      ) : null
-      }
-          
-</div>
-);
-}
+        </div>
+      ) : null}
+
+      {showForm && <FormProduct onClose={() => setShowForm(false)} />}
+      {showFormUpdate && <UpdateProductForm product={currentProduct} onClose={() => setShowFormUpdate(false)} />}
+    </div>
+  );
+};
