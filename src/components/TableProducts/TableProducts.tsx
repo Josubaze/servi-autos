@@ -31,8 +31,7 @@ export const TableProducts = () => {
     price: 0,
     quantity: 0,
   });
-  const filteredProducts = useProductFilter(data, searchTerm);
-  const productsPerPage = 15;
+ 
 
   const openForm = () => {
     setShowForm(true);
@@ -49,6 +48,8 @@ export const TableProducts = () => {
   };
 
   // Calculate the products to display on the current page
+  const filteredProducts = useProductFilter(data, searchTerm);
+  const productsPerPage = 15;
   const currentProducts = getCurrentProducts(filteredProducts, currentPage, productsPerPage)
 
   return (

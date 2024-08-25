@@ -29,9 +29,8 @@ export const UpdateProductForm = ({
   const [updateProduct, { isError }] = useUpdateProductMutation();
 
   const onSubmit: SubmitHandler<Product> = async (data) => {
-    console.log(data);
-    // await updateProduct( { ...data, _id: product._id } ).unwrap();
-    // onClose();
+    await updateProduct( { ...data, _id: product._id } ).unwrap();
+    onClose();
   }
 
   return (
@@ -40,14 +39,14 @@ export const UpdateProductForm = ({
         <h2 className="text-2xl text-center font-bold mb-6">Editar Producto</h2>
         <div className="mb-4">
           <label className="flex items-center justify-center text-sm font-bold mb-2 gap-2" htmlFor="id">
-            ID:
-            <input
-            type="text"
-            id="id"
-            {...register('_id')}
-            className="border-none w-full py-2 px-3 bg-gray-900"
-            readOnly
-            />
+              ID:
+              <input
+              type="text"
+              id="id"
+              {...register('_id')}
+              className="border-none w-full py-2 px-3 bg-gray-900"
+              readOnly
+              />
           </label>
         </div>
 

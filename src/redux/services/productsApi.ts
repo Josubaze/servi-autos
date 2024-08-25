@@ -10,6 +10,9 @@ export const productsApi = createApi({
         getProducts: builder.query<Product[], void>({
             query: () => '/products',
             providesTags: ['Products'],
+            transformResponse: (response: Product[]) => {
+                return response.sort((a, b) => a.name.localeCompare(b.name));
+            },
         }),
         deleteProduct: builder.mutation<void, string>({
             query: (id) => ({
