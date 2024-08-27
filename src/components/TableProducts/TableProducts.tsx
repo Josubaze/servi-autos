@@ -8,24 +8,44 @@ import { UpdateProductForm } from '../UpdateProductForm';
 import { FaPlus } from "react-icons/fa6";
 import { SearchBar } from 'src/components/SearchBar';
 import { Loading } from '../Common/Loading';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useDeleteProductMutation, useGetProductsQuery } from 'src/redux/services/productsApi';
 import { DataGrid, GridColDef, GridRowsProp, GridCellParams } from '@mui/x-data-grid';
 
+// Define el tema oscuro
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    background: {
+      paper: 'bg-black-nav', 
+    },
+    text: {
+      primary: '#ffffff', 
+      secondary: '#b0b0b0', 
+    },
+  },
+});
+
 const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Nombre', width: 180, sortable: true },
-  { field: 'price', headerName: 'Precio', width: 120, sortable: true },
-  { field: 'category', headerName: 'Categoría', width: 180 },
-  { field: 'quantity', headerName: 'Cantidad', width: 120 },
-  { field: 'description', headerName: 'Descripción', width: 240 },
+  { field: 'id', headerName: 'ID', flex: 1, sortable: true },
+  { field: 'name', headerName: 'Nombre', flex: 0.8, sortable: true },
+  { field: 'category', headerName: 'Categoría', flex: 0.8, sortable: false },
+  { field: 'price', headerName: 'Precio', flex: 0.8, sortable: true },
+  { field: 'quantity', headerName: 'Cantidad', flex: 0.8, sortable: true },
+  { field: 'description', headerName: 'Descripción', flex: 2, sortable: false },
   {
     field: 'actions',
     headerName: 'Acciones',
-    width: 200,
+    flex: 0.8,
+    sortable: false,
+    disableColumnMenu: true,
+    align: 'center', 
+    headerAlign: 'center',
     renderCell: (params: GridCellParams) => (
-      <>
-        <IoPencil className="cursor-pointer text-indigo-500 hover:text-indigo-800" onClick={() => handleEdit(params.row)} />
-        <MdDelete className="cursor-pointer text-red-500 hover:text-red-800" onClick={() => handleDelete(params.row)} />
-      </>
+      <div className='flex justify-center py-4 gap-5'>
+        <IoPencil className="cursor-pointer text-xl text-indigo-500 hover:text-indigo-800" onClick={() => handleEdit(params.row)} />
+        <MdDelete className="cursor-pointer text-xl text-indigo-500 hover:text-indigo-800" onClick={() => handleDelete(params.row)} />
+      </div>
     ),
   },
 ];
@@ -59,8 +79,8 @@ export const TableProducts = () => {
   const rows: GridRowsProp = filteredData.map(product => ({
     id: product._id,
     name: product.name,
-    price: product.price,
     category: product.category,
+    price: product.price,
     quantity: product.quantity,
     description: product.description,
   }));
@@ -89,11 +109,12 @@ export const TableProducts = () => {
       </div>
 
       {isLoading || isFetching ? (
-        <Loading color="#3730a3" size={80} justify="center" />
+        <Loading color="#3730a3" size={100} justify="center" pt={32} />
       ) : isError ? (
         <p className="text-red-600">Error fetching products</p>
       ) : isSuccess ? (
-        <div style={{ height: 'h-full', width: '100%' }}>
+        <ThemeProvider theme={darkTheme}>
+        <div className='w-full'>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -103,25 +124,13 @@ export const TableProducts = () => {
               },
             }}
             pageSizeOptions={[5, 10, 15]}
-            checkboxSelection
-            getRowId={(row) => row.id}
-            sx={{
-              backgroundColor: 'bg-custom-gradient',
-              color: '#fff',
-              '& .MuiDataGrid-columnHeaders': {
-                backgroundColor: 'bg-custom-gradient',
-                color: '#fff',
-              },
-              '& .MuiDataGrid-cell': {
-                color: '#fff',
-              },
-              '& .MuiDataGrid-footerContainer': {
-                backgroundColor: '#fff',
-                color: '#fff',
-              },
-            }}
+            autoHeight {...data}
+            slots={{ noRowsOverlay: () => <div className='flex justify-center items-center pt-6'> AGREGA PRODUCTOS..</div>}}
+            sx={{ '--DataGrid-overlayHeight': '300px' }}
+            disableColumnResize={true}
           />
         </div>
+        </ThemeProvider>
       ) : null}
 
       {showForm && <FormProduct onClose={() => setShowForm(false)} />}
