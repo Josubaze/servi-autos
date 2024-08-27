@@ -45,4 +45,4 @@ interface Product {
 }
 
   
-  
+declare module 'mui-datatables';
