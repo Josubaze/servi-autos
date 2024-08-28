@@ -31,7 +31,7 @@ const options = {
 
 export const TableProducts = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProductsQuery();
-  const [deleteProduct, {isError: isErrorDelete}] = useDeleteProductMutation();
+  const [deleteProduct, { isError: isErrorDelete }] = useDeleteProductMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
   const [showFormUpdate, setShowFormUpdate] = useState(false);
@@ -43,7 +43,7 @@ export const TableProducts = () => {
     category: '',
     price: 0,
     quantity: 0,
-  }); 
+  });
 
   const columns = [
     { 
@@ -112,7 +112,7 @@ export const TableProducts = () => {
   ];
 
   const responsiveColumns = useResponsiveColumns(columns);
-  const filteredData = useProductFilter(data, searchTerm )
+  const filteredData = useProductFilter(data, searchTerm);
   const rows = filteredData.map(product => ({
     id: product._id,
     name: product.name,
@@ -126,6 +126,7 @@ export const TableProducts = () => {
     setCurrentProduct(product);
     setShowFormUpdate(true);
   };
+
   const handleDelete = async (productId: string) => {
     await deleteProduct(productId);
     if (isErrorDelete) {
@@ -134,25 +135,18 @@ export const TableProducts = () => {
   };
 
   return (
-    <div className="flex flex-col py-6 px-12">
+    <div className="relative flex flex-col py-6 px-0 sm:px-12 ">
       <div className="my-4 flex justify-between items-center gap-2 pb-2">
         <button
-          className="bg-emerald-600 hover:bg-emerald-800 text-white px-4 py-2 rounded max-sm:hidden"
+          className="transition ease-in-out delay-150 bg-emerald-500 text-white px-4 py-2 rounded hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300 max-sm:hidden"
           onClick={() => setShowForm(true)}
         >
-          <span className='flex items-center gap-2'>
+          <span className='flex items-center gap-2 '>
             <FaPlus />
             Agregar Producto
           </span>
         </button>
 
-        <button
-          className="bg-emerald-600 hover:bg-emerald-800 text-white p-4 rounded-full fixed bottom-0 right-0 mr-3 mb-8 shadow-2xl shadow-emerald-300 sm:hidden"
-          onClick={() => setShowForm(true)}
-        >
-          <FaPlus />
-        </button>
-        
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
       
@@ -172,11 +166,20 @@ export const TableProducts = () => {
           </ThemeProvider>
         </StyledEngineProvider>
       ) : null}
+      
+      <button
+        className="bg-emerald-600 hover:bg-emerald-800 text-3xl text-white p-5 rounded-full fixed bottom-0 right-0 mr-8 mb-12 shadow-2xl shadow-emerald-400 sm:hidden z-50"
+        onClick={() => setShowForm(true)}
+      >
+        <FaPlus />
+      </button>
+      
       <BasicModal 
         open={openModal} 
         onClose={() => setOpenModal(false)} 
         message="No se ha podido borrar el producto!" 
       />
+      
       {showForm && <FormProduct onClose={() => setShowForm(false)} />}
       {showFormUpdate && <UpdateProductForm product={currentProduct} onClose={() => setShowFormUpdate(false)} />}
     </div>
