@@ -18,13 +18,12 @@ const style = {
 };
 
 interface BasicModalProps {
+  message: string;
   open: boolean;
   onClose: () => void;
-  message: string;
 }
 
-export const BasicModal: React.FC<BasicModalProps> = ({ open, onClose, message }) => {
-
+export const BasicModal: React.FC<BasicModalProps> = ({ message, open, onClose }) => {
   return (
     <Modal
       open={open}
@@ -34,21 +33,26 @@ export const BasicModal: React.FC<BasicModalProps> = ({ open, onClose, message }
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
-          ¡Ha ocurrido un error!
+        ¡Ha ocurrido un error!
         </Typography>
-        <Typography id="modal-modal-description" align="center" sx={{ mt: 2, mb: 2 }}>
-          {message}
+        <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }} align="center">
+        {message}
         </Typography>
-        <Button onClick={onClose} sx={{ 
-            mt: 2, 
-            display: 'block',  
-            margin: '0 auto', 
-            bgcolor: 'red',   
-            color: 'white',    
-            '&:hover': {       
+        <Button
+          onClick={onClose}
+          sx={{
+            mt: 2,
+            display: 'block',
+            margin: '0 auto',
+            bgcolor: 'red',
+            color: 'white',
+            '&:hover': {
               bgcolor: 'darkred',
-            }
-        }}>Cerrar</Button>
+            },
+          }}
+        >
+          Cerrar
+        </Button>
       </Box>
     </Modal>
   );

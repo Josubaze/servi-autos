@@ -9,28 +9,16 @@ import { FaPlus } from "react-icons/fa6";
 import { SearchBar } from 'src/components/SearchBar';
 import { Loading } from '../Common/Loading';
 import MUIDataTable from "mui-datatables";
-import { createTheme, StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
+import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { useDeleteProductMutation, useGetProductsQuery } from 'src/redux/services/productsApi';
 import { BasicModal } from '../Common/Modal';
-
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    background: {
-      paper: '#000000', 
-    },
-    text: {
-      primary: '#ffffff',
-      secondary: '#b0b0b0',
-    },
-  },
-});
-
+import { useProductFilter } from 'src/hooks/useProductFilter';
+import { darkTheme, useResponsiveColumns } from './style';
 
 const options = {
   responsive: "standard",
-  selectableRows: "none", // Si no deseas permitir la selección de filas
+  search: false,
+  selectableRows: "none",
   pagination: true,
   rowsPerPage: 10,
   rowsPerPageOptions: [5, 10, 15],
@@ -55,7 +43,7 @@ export const TableProducts = () => {
     category: '',
     price: 0,
     quantity: 0,
-  });
+  }); 
 
   const columns = [
     { 
@@ -69,14 +57,14 @@ export const TableProducts = () => {
       options: { filter: true, sort: true } 
     },
     { 
+      name: "description", 
+      label: "Descripción", 
+      options: { filter: false, sort: false },
+    },
+    { 
       name: "category", 
       label: "Categoría", 
       options: { filter: true, sort: false } 
-    },
-    { 
-      name: "price", 
-      label: "Precio", 
-      options: { filter: false, sort: true } 
     },
     { 
       name: "quantity", 
@@ -84,10 +72,11 @@ export const TableProducts = () => {
       options: { filter: false, sort: true } 
     },
     { 
-      name: "description", 
-      label: "Descripción", 
-      options: { filter: false, sort: false } 
+      name: "price", 
+      label: "Precio", 
+      options: { filter: false, sort: true } 
     },
+    
     {
       name: "Acciones",
       label: "Opciones",
@@ -99,19 +88,20 @@ export const TableProducts = () => {
           const product = {
             _id: rowData[0],
             name: rowData[1],
-            category: rowData[2],
-            price: rowData[3],
+            description: rowData[2],
+            category: rowData[3],
             quantity: rowData[4],
-            description: rowData[5],
-          };
+            price: rowData[5],
+            
+          };      
           return (
-            <div className='flex justify-center py-4 gap-5'>
+            <div className='flex py-2 gap-5'>
               <IoPencil
-                className="cursor-pointer text-xl text-indigo-500 hover:text-indigo-800"
+                className="cursor-pointer text-2xl text-indigo-600 hover:text-indigo-800"
                 onClick={() => handleEdit(product)}
               />
               <MdDelete
-                className="cursor-pointer text-xl text-indigo-500 hover:text-indigo-800"
+                className="cursor-pointer text-2xl text-indigo-600 hover:text-indigo-800"
                 onClick={() => handleDelete(product._id)}
               />
             </div>
@@ -121,37 +111,28 @@ export const TableProducts = () => {
     }
   ];
 
-    // Filtrar datos según el término de búsqueda
-    const filteredData = data.filter((product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  
-    // Adaptar los datos a la estructura requerida por MUIDataTable
-    const rows = filteredData.map(product => ({
-      id: product._id,
-      name: product.name,
-      category: product.category,
-      price: product.price,
-      quantity: product.quantity,
-      description: product.description,
-    }));
-
+  const responsiveColumns = useResponsiveColumns(columns);
+  const filteredData = useProductFilter(data, searchTerm )
+  const rows = filteredData.map(product => ({
+    id: product._id,
+    name: product.name,
+    description: product.description,
+    category: product.category,
+    quantity: product.quantity,
+    price: product.price,
+  }));
     
   const handleEdit = (product: any) => {
     setCurrentProduct(product);
     setShowFormUpdate(true);
   };
-
   const handleDelete = async (productId: string) => {
     await deleteProduct(productId);
-    if (isErrorDelete){
+    if (isErrorDelete) {
       setOpenModal(true);
     }
   };
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-  
+
   return (
     <div className="flex flex-col py-6 px-12">
       <div className="my-4 flex justify-between items-center gap-2 pb-2">
@@ -185,17 +166,17 @@ export const TableProducts = () => {
             <MUIDataTable
               title={"Lista de Productos"}
               data={rows}
-              columns={columns}
+              columns={responsiveColumns}
               options={options}
             />
           </ThemeProvider>
         </StyledEngineProvider>
       ) : null}
       <BasicModal 
-          open={openModal} 
-          onClose={handleCloseModal} 
-          message="No se ha podido borrar el producto!" 
-        />
+        open={openModal} 
+        onClose={() => setOpenModal(false)} 
+        message="No se ha podido borrar el producto!" 
+      />
       {showForm && <FormProduct onClose={() => setShowForm(false)} />}
       {showFormUpdate && <UpdateProductForm product={currentProduct} onClose={() => setShowFormUpdate(false)} />}
     </div>
