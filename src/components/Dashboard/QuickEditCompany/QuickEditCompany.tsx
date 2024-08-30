@@ -63,9 +63,9 @@ export const QuickEditCompany = () => {
     </>
     
     <div className="mt-3">
-      <Button block >
-        <span className="inline-block ml-2"> Enviar </span>
-      </Button>
+      <button  className="rounded-xl font-titl flex flex-row items-center justify-center w-full  h-12 px-4 transition ease-in-out delay-150 bg-indigo-600 text-white rounded-s-lg hover:-translate-y-1 hover:scale-110 hover:bg-indigo-700 duration-300">
+        Enviar 
+      </button>
     </div>
   </div>
   );

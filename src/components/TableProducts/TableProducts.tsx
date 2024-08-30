@@ -14,17 +14,28 @@ import { useDeleteProductMutation, useGetProductsQuery } from 'src/redux/service
 import { BasicModal } from '../Common/Modal';
 import { useProductFilter } from 'src/hooks/useProductFilter';
 import { darkTheme, useResponsiveColumns } from './style';
+import Tooltip from '@mui/material/Tooltip';
 
 const options = {
   responsive: "standard",
+  pagination: true,
   search: false,
   selectableRows: "none",
-  pagination: true,
   rowsPerPage: 10,
-  rowsPerPageOptions: [5, 10, 15],
+  rowsPerPageOptions: [5, 10, 20, 50],
   textLabels: {
     body: {
       noMatch: "AGREGA PRODUCTOS..",
+    },
+    pagination: {
+      rowsPerPage: "Filas por página",
+      displayRows: "de",
+    },
+    toolbar: {
+      viewColumns: "Ver Columnas",
+      filterTable: "Filtrar Tabla",
+      downloadCsv: "Descargar CSV",
+      print: "Imprimir",
     },
   },
 };
@@ -96,14 +107,21 @@ export const TableProducts = () => {
           };      
           return (
             <div className='flex py-2 gap-5'>
-              <IoPencil
-                className="cursor-pointer text-2xl text-indigo-600 hover:text-indigo-800"
-                onClick={() => handleEdit(product)}
-              />
-              <MdDelete
-                className="cursor-pointer text-2xl text-indigo-600 hover:text-indigo-800"
-                onClick={() => handleDelete(product._id)}
-              />
+              <Tooltip title="Editar producto">
+                <span>
+                  <IoPencil className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300" 
+                  onClick={() => handleEdit(product)}
+                  />
+                </span>
+              </Tooltip>
+              <Tooltip title="Eliminar producto">
+                <span>
+                  <MdDelete
+                  className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300"
+                  onClick={() => handleDelete(product._id)}
+                  />
+                </span>
+              </Tooltip>
             </div>
           );
         },
@@ -138,7 +156,7 @@ export const TableProducts = () => {
     <div className="relative flex flex-col py-6 px-0 sm:px-12 ">
       <div className="my-4 flex justify-between items-center gap-2 pb-2">
         <button
-          className="transition ease-in-out delay-150 bg-emerald-500 text-white px-4 py-2 rounded hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300 max-sm:hidden"
+          className="transition ease-in-out delay-150 bg-emerald-600 text-white px-4 py-2 rounded hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300 max-sm:hidden"
           onClick={() => setShowForm(true)}
         >
           <span className='flex items-center gap-2 '>

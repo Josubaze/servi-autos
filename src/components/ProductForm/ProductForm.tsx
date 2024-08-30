@@ -95,7 +95,7 @@ export const FormProduct = ({
         <div className="flex items-center justify-between">
           <button
             type="submit"
-            className="bg-emerald-600 hover:bg-emerald-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="transition ease-in-out delay-150 bg-emerald-600 text-white px-4 py-2 rounded hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300"
           >
             Agregar
           </button>
@@ -103,7 +103,7 @@ export const FormProduct = ({
           <button
             type="button"
             onClick={onClose}
-            className="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-red-600 hover:bg-indigo-600 transition ease-in-out delay-150  text-white px-4 py-2 rounded hover:-translate-y-1 hover:scale-110 duration-300"
           >
             Cancelar
           </button>
