@@ -1,6 +1,5 @@
 
 export const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm }) => {
-  console.log(searchTerm);
   return (
     <input
       type="text"

@@ -24,16 +24,12 @@ export default function RootLayout({
       <body className={inter.className}>
         <SessionAuthProvider>
           <StoreProvider>   
-            <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
-              <div className="row-start-1 row-end-2">
-                <Navbar />
-              </div>
-              <div className="row-start-2 row-end-3">
+            <div className="grid min-h-screen grid-rows-[auto,1fr,auto]">
+              <Navbar />
+              <main>
                 {children}
-              </div>
-              <div className="row-start-3 row-end-4">
-                <Footer />
-              </div>
+              </main>
+              <Footer />
             </div>
           </StoreProvider>
         </SessionAuthProvider>
