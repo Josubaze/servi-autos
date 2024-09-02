@@ -6,8 +6,8 @@ import { DashWidgets } from "src/components/Dashboard/DashWidgets";
 import { InvoiceIcon } from "src/components/Icons/InvoiceIcon";
 import { QuickEditCompany } from "../QuickEditCompany";
 import { QuickAddClient } from "../QuickAddClient";
-import { InvoiceTable } from "src/components/Invoice/InvoiceTable/InvoiceTable";
-import { ClientTable } from "src/components/Client/ClientTable";
+import { InvoiceTable } from "src/components/Dashboard/InvoiceTable/InvoiceTable";
+import { ClientTable } from "src/components/Dashboard/Client/ClientTable";
 
 export const DashboardScreen = () => {
   return (

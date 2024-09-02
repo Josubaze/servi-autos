@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import {Typewriter} from 'src/components/Typewriter' 
+import {Typewriter} from 'src/components/Presentation/Typewriter' 
 
 export const Hero = () => {
   const words = ["HOLA ESTIMADOS! BIENVENIDOS A ESTA PROPUESTA.", "APLICACIÓN PARA LA AUTOMATIZACIÓN DE LOS SERVICIOS EN LA EMPRESA AUTOMOTRIZ SERVIAUTOS BAEZ C.A"];

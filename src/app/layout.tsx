@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Navbar } from "src/components/Nabvar/Nabvar";
-import { Footer } from "src/components/Footer";
+import { Navbar } from "src/components/Common/Nabvar/Nabvar";
+import { Footer } from "src/components/Common/Footer";
 import SessionAuthProvider from "src/context/SessionAuthProvider";
 import StoreProvider  from "../redux/providers";
 

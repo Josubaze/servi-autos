@@ -1,4 +1,4 @@
-import { UploadImage } from "src/components/Upload/UploadImage"
+import { UploadImage } from "src/components/Profile/Upload/UploadImage"
 
 
 export default function UploadImageProfile(){

@@ -1,5 +1,5 @@
 
-import { TableProducts } from "src/components/TableProducts/TableProducts"
+import { StoreHouseScreen } from "src/components/StoreHouse/StoreHouseScreen"
 export default function TableP(){
-  return <TableProducts/>
+  return <StoreHouseScreen/>
 }
