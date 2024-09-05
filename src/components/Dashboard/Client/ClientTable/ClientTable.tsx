@@ -1,4 +1,3 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { InvoiceTwoIcon } from "src/components/Icons/InvoiceTwoIcon";
 
 export const ClientTable = () => {

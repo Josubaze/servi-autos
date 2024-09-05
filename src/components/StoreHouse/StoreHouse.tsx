@@ -4,28 +4,22 @@ import { useState } from 'react';
 import { FaPlus } from "react-icons/fa6";
 import { SearchBar } from 'src/components/Common/SearchBar';
 import { useDeleteProductMutation, useGetProductsQuery } from 'src/redux/services/productsApi';
-import { TableProducts } from '../TableProducts';
-import { FormProduct } from '../ProductForm';
-import { UpdateProductForm } from '../UpdateProductForm';
-import { Notification } from '../../Common/Notification';
+import { TableProducts } from './TableProducts';
+import { FormProduct } from './ProductForm';
+import { UpdateProductForm } from './UpdateProductForm';
+import { Notification } from '../Common/Notification';
+import { PRODUCTVOID } from 'src/utils/constanst';
 
 
-export const StoreHouseScreen = () => {
+export const StoreHouse = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProductsQuery();
   const [deleteProduct, { isError: isErrorDelete }] = useDeleteProductMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
   const [showFormUpdate, setShowFormUpdate] = useState(false);
-  const [currentProduct, setCurrentProduct] = useState({
-    _id: '',
-    name: '',
-    description: '',
-    category: '',
-    price: 0,
-    quantity: 0,
-  });
+  const [currentProduct, setCurrentProduct] = useState(PRODUCTVOID);
 
-  const handleEdit = (product: any) => {
+  const handleEdit = (product: Product) => {
     setCurrentProduct(product);
     setShowFormUpdate(true);
   };

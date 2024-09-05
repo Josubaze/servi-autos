@@ -1,4 +1,3 @@
-'use client'
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { BellIcon} from '@heroicons/react/24/outline'

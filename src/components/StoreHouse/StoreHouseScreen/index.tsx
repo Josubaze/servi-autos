@@ -1,1 +1,0 @@
-export { StoreHouseScreen } from './StoreHouseScreen';

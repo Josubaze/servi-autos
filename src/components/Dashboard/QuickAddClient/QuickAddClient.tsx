@@ -1,7 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button } from "src/components/Common/Button";
-import { SectionTitle } from "src/components/Common/SectionTitle";
 
+import { SectionTitle } from "src/components/Common/SectionTitle";
 
 export const QuickAddClient = () => {
 

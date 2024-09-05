@@ -1,3 +1,4 @@
+
 interface Product {
     _id: string;
     name: string;
@@ -44,5 +45,8 @@ interface Product {
     color?: string;
 }
 
-  
+interface OptionsMenuProps {
+  session: Session | null;
+}
+
 declare module 'mui-datatables';

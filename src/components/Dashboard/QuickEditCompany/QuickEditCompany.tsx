@@ -1,7 +1,5 @@
 
-import { Button } from "src/components/Common/Button";
 import { SectionTitle } from "src/components/Common/SectionTitle";
-
 
 export const QuickEditCompany = () => {
 

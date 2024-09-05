@@ -1,5 +1,5 @@
 
-import { StoreHouseScreen } from "src/components/StoreHouse/StoreHouseScreen"
-export default function TableP(){
-  return <StoreHouseScreen/>
+import { StoreHouse } from "src/components/StoreHouse"
+export default function StoreHouseScreen(){
+  return <StoreHouse/>
 }

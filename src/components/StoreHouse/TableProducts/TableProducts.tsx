@@ -1,4 +1,3 @@
-'use client'
 
 import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
