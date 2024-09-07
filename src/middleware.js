@@ -1,3 +1,6 @@
 export { default } from "next-auth/middleware";
 
 export const config = { matcher: ["/dashboard/:path*", "/storehouse/:path*", "/profile/:path*"] };
+
+
+// crear rutas y protegerlas..

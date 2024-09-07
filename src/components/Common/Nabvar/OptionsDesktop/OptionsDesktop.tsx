@@ -12,8 +12,8 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                 {session?.user ? (
                   <>
                     <a href="/dashboard" className={classNames(
-                        'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
-                        pathname === '/dashboard' ? 'bg-gray-700 text-white' : ''
+                        'text-gray-100 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
+                        pathname === '/dashboard' ? 'bg-gray-700' : ''
                       )}
                       aria-current={pathname === '/dashboard' ? 'page' : undefined}>Panel</a>
                       
@@ -34,7 +34,37 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                                 href={item.href}
                                 aria-current={isCurrent ? 'page' : undefined}
                                 className={classNames(
-                                  isCurrent ? 'bg-gray-400 text-gray-800' : 'text-gray-100 data-[focus]:bg-gray-700 ',
+                                  isCurrent ? 'bg-gray-700' : 'text-gray-100 data-[focus]:bg-gray-700 ',
+                                  'block px-4 py-2 text-sm font-medium'
+                                )}
+                              >
+                                {item.name}
+                              </a>
+                            </MenuItem>
+                          );
+                        })}
+                      </MenuItems>
+                    </Menu>
+
+                     {/* Menú Control */}
+                    <Menu as="div" className="relative inline-block text-left">
+                      <MenuButton 
+                        className={classNames(
+                        'inline-flex justify-center w-full rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white', 
+                        MENUCONTROL.some(item => pathname === item.href) ? 'bg-gray-700 text-white' : '')
+                        }>
+                        Control
+                      </MenuButton>
+                      <MenuItems className="absolute z-10 mt-2 w-48 origin-top-right rounded-md outline outline-2 outline-indigo-800 bg-black-nav">
+                        {MENUCONTROL.map((item) => {
+                          const isCurrent = pathname === item.href;
+                          return (
+                            <MenuItem key={item.name}>
+                              <a
+                                href={item.href}
+                                aria-current={isCurrent ? 'page' : undefined}
+                                className={classNames(
+                                  isCurrent ? 'bg-gray-700' : 'text-gray-100 data-[focus]:bg-gray-700 ',
                                   'block px-4 py-2 text-sm font-medium'
                                 )}
                               >
@@ -64,7 +94,7 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                                 href={item.href}
                                 aria-current={isCurrent ? 'page' : undefined}
                                 className={classNames(
-                                  isCurrent ? 'bg-gray-400 text-gray-800' : 'text-gray-100 data-[focus]:bg-gray-700 ',
+                                  isCurrent ? 'bg-gray-700' : 'text-gray-100 data-[focus]:bg-gray-700 ',
                                   'block px-4 py-2 text-sm font-medium'
                                 )}
                               >
@@ -76,40 +106,10 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                         })}
                       </MenuItems>
                     </Menu>
-
-                    {/* Menú Control */}
-                    <Menu as="div" className="relative inline-block text-left">
-                      <MenuButton 
-                        className={classNames(
-                        'inline-flex justify-center w-full rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white', 
-                        MENUCONTROL.some(item => pathname === item.href) ? 'bg-gray-700 text-white' : '')
-                        }>
-                        Control
-                      </MenuButton>
-                      <MenuItems className="absolute z-10 mt-2 w-48 origin-top-right rounded-md outline outline-2 outline-indigo-800 bg-black-nav">
-                        {MENUCONTROL.map((item) => {
-                          const isCurrent = pathname === item.href;
-                          return (
-                            <MenuItem key={item.name}>
-                              <a
-                                href={item.href}
-                                aria-current={isCurrent ? 'page' : undefined}
-                                className={classNames(
-                                  isCurrent ? 'bg-gray-400 text-gray-800' : 'text-gray-100 data-[focus]:bg-gray-700 ',
-                                  'block px-4 py-2 text-sm font-medium'
-                                )}
-                              >
-                                {item.name}
-                              </a>
-                            </MenuItem>
-                          );
-                        })}
-                      </MenuItems>
-                    </Menu>
                       
-                    <a href="#" className={classNames(
-                        'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
-                        pathname === '#' ? 'bg-gray-700 text-white' : ''
+                    <a href="/market" className={classNames(
+                        'text-gray-100 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
+                        pathname === '/market' ? 'bg-gray-700' : ''
                       )}
                     aria-current={pathname === '/market' ? 'page' : undefined}>Consultar Mercado</a>
                   </>
@@ -123,8 +123,8 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                           key={item.name}
                           href={item.href}
                           className={classNames(
-                            'text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium',
-                            isCurrent ? 'bg-gray-700 text-white' : ''
+                            'text-gray-100 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium',
+                            isCurrent ? 'bg-gray-700' : ''
                           )}
                           aria-current={isCurrent ? 'page' : undefined}
                         >
