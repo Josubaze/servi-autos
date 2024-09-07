@@ -34,6 +34,7 @@ export const authOptions = {
   ],
   pages: {
     signIn: "/login",
+    newUser: '/signup',
     error: '/not-found',
   },
   secret: process.env.NEXTAUTH_SECRET,

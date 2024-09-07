@@ -10,8 +10,7 @@ import { OptionsMobile } from './NavbarMobile/OptionsMobile';
 import { OptionsDesktop } from './OptionsDesktop';
 
 export const Navbar = () => {
-  const { data: session } = useSession();
-
+  const { data: session } = useSession();  
   return (
     <Disclosure as="nav" className="bg-black-nav">
       <div className="mx-auto px-2 sm:px-6 lg:px-8">

@@ -1,12 +1,13 @@
-// app/layout.tsx
 import { Inter } from "next/font/google";
 import { Navbar } from "src/components/Common/Nabvar/Nabvar";
 import { Footer } from "src/components/Common/Footer";
 import SessionAuthProvider from "src/context/SessionAuthProvider";
 import StoreProvider from "../redux/providers";
 import { getServerSession } from "next-auth/next"; // Importa la función para obtener la sesión
+import { Suspense } from "react";
 
 import "./globals.css";
+import { Disclosure } from "@headlessui/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,15 +23,18 @@ export default async function RootLayout({
 }) {
   // Obtén la sesión del servidor
   const session = await getServerSession();
-
   return (
     <html lang="en">
       <body className={inter.className}>
         <SessionAuthProvider session={session}>
           <StoreProvider>
             <div className="grid min-h-screen grid-rows-[auto,1fr,auto]">
-              <Navbar />
-              <main>{children}</main>
+              <Suspense fallback={<Disclosure as="nav" className="bg-black-nav"></Disclosure>}>
+                <Navbar />
+              </Suspense>
+              <main>
+                {children}
+              </main>
               <Footer />
             </div>
           </StoreProvider>
