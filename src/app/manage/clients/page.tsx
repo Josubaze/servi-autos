@@ -1,5 +1,5 @@
 
-export default function ManageClients(){
+export default function manageClientsPage(){
   return (
     <div>
         Manage Clients

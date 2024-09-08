@@ -1,5 +1,5 @@
 
-export default function createBugets(){
+export default function createBugetsPage(){
   return (
     <div>
         Control Bugets

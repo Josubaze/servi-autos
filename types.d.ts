@@ -45,6 +45,11 @@ interface Product {
     color?: string;
 }
 
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
 interface OptionsMenuProps {
   session: Session | null;
 }

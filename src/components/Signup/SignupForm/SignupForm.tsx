@@ -11,7 +11,7 @@ const initialState = {
 export const SignupForm = () => {
   const [ status, formAction ] = useFormState(handlerSignup , initialState);
     return (
-      <div className="flex flex-grow flex-col  justify-center px-6 pb-6 lg:px-8">
+      <div className="flex flex-grow flex-col justify-center px-6 py-16 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className="flex flex-shrink-0 items-center">
             <Image

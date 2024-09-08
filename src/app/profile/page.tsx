@@ -1,6 +1,6 @@
 import { UploadImage } from "src/components/Profile/Upload/UploadImage"
 
 
-export default function UploadImageProfile(){
+export default function profilePage(){
   return <UploadImage />
 }

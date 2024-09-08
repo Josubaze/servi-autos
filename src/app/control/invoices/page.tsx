@@ -1,4 +1,4 @@
-export default function createInvoices(){
+export default function createInvoicesPage(){
   return (
     <div>
         Control Invoices

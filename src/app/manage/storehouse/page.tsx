@@ -1,5 +1,5 @@
 
 import { StoreHouse } from "src/components/StoreHouse"
-export default function StoreHouseScreen(){
+export default function storeHousePage(){
   return <StoreHouse/>
 }

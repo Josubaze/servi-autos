@@ -10,7 +10,7 @@ export const mapRoles: {[key in Roles]: string} = {
 
 export const loginSchema = z.object({
     email: z.string().email({ message: "Correo electrónico inválido" }),
-    password: z.string().min(8, { message: "Las contraseñas son mayor o igual a 8 caracteres" })
+    password: z.string().min(8, { message: "La contraseña es inválida" })
 });
 
 export const SignupSchema = z.object({

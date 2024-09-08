@@ -1,5 +1,5 @@
 
-export default function createReport(){
+export default function createReportPage(){
   return (
     <div>
         Create Report

@@ -1,5 +1,5 @@
 
-export default function ManageProviders(){
+export default function manageProvidersPage(){
     return (
       <div>
           Manage Providers

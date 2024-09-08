@@ -1,5 +1,5 @@
 
-export default function createBuget(){
+export default function createBugetPage(){
   return (
     <div>
         Create Buget

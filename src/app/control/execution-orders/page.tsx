@@ -1,5 +1,5 @@
 
-export default function createExecutionOrders(){
+export default function createExecutionOrdersPage(){
   return (
     <div>
         Control Execution Orders

@@ -1,5 +1,5 @@
 
-export default function createPurchaseOrders(){
+export default function createPurchaseOrdersPage(){
   return (
     <div>
         Control Purchase Orders
