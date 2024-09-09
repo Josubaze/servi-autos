@@ -1,0 +1,1 @@
+export { SignupImage } from './SignupImage'
