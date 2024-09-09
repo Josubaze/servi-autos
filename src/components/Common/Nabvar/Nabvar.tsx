@@ -23,7 +23,6 @@ export const Navbar = () => {
                   alt="Your Company"
                   width={60}
                   height={60}
-                  className="pt-1.5"
               />
             </div>
             <div className="hidden sm:ml-6 sm:block">

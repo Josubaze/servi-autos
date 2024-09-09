@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { MENUPROFILE } from 'src/utils/constanst'
 
 interface ProfileDropdownProps {
-    image?: string | null;
+    image: string | null | undefined;
   }
 
 export const ProfileDropdown = ({ image }: ProfileDropdownProps ) => {
@@ -28,13 +28,10 @@ export const ProfileDropdown = ({ image }: ProfileDropdownProps ) => {
                     <span className="absolute -inset-1.5" />
                     <div className="relative h-8 w-8 rounded-full overflow-hidden">
                       <Image
-                        src={image ?? "svg/user.svg"}
+                        src={image ?? "/svg/user.svg"}
                         alt="Profile Image"
                         width={50}
                         height={50}
-                        objectFit="cover"
-                        objectPosition="50% 50%"
-                        className="absolute inset-0"
                       />
                     </div>
                     </MenuButton>
