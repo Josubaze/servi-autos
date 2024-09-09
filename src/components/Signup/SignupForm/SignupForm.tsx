@@ -1,6 +1,3 @@
-'use client';
-
-import Image from 'next/image';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserSchema } from 'src/utils/validation.zod';
@@ -24,23 +21,6 @@ export const SignupForm = () => {
   };
 
   return (
-    <div className="flex flex-grow flex-col justify-center px-6 py-6 md:py-40 lg:pt-16 lg:pb-20 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <div className="flex flex-shrink-0 items-center">
-          <Image
-            src="/svg/gear-icon.svg"
-            alt="Tools"
-            width={400} 
-            height={400} 
-            className="mx-auto h-22 md:h-44 w-auto"
-          />
-        </div>
-        <h2 className="text-center pb-2 text-2xl font-bold leading-9 tracking-tight ring-gray-300 xl:text-4xl">
-          Registrar cuenta
-        </h2>
-      </div>
-
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
           {/* Nombre de usuario */}
           <div>
@@ -162,7 +142,5 @@ export const SignupForm = () => {
           </div>
           {isError && <p className='text-red-500 pt-2 text-center'>Ocurrió un error al tratar de registrar el usuario</p>} 
         </form>
-      </div>
-    </div>
   );
 };
