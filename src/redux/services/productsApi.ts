@@ -13,6 +13,7 @@ export const productsApi = createApi({
             transformResponse: (response: Product[]) => {
                 return response.sort((a, b) => a.name.localeCompare(b.name));
             },
+            keepUnusedDataFor: 600,
         }),
         deleteProduct: builder.mutation<void, string>({
             query: (id) => ({
