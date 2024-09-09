@@ -3,7 +3,7 @@
 import { useAppDispatch, useAppSelector } from "src/redux/hooks";
 import { increment } from "src/redux/features/couterSlice";
 
-
+// solo para probar el redux
 function Home() {
   const count = useAppSelector((state) => state.counter.counter);
   const dispatch = useAppDispatch();
