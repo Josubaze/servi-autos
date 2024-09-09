@@ -16,6 +16,26 @@ interface Product {
     price: number;
   }
 
+  interface User {
+    _id: string;
+    username: string;
+    email: string;
+    password: string;
+    role: string;
+    secret_question: string;
+    secret_answer: string;
+    image?: string; 
+  }
+
+  interface UserSinId {
+    username: string;
+    email: string;
+    password: string;
+    role: string;
+    secret_question: string;
+    secret_answer: string;
+  }
+
   interface ProductState {
     list: Product[];
     status: 'idle' | 'loading' | 'succeeded' | 'failed';

@@ -13,13 +13,13 @@ export const loginSchema = z.object({
     password: z.string().min(8, { message: "La contraseña es inválida" })
 });
 
-export const SignupSchema = z.object({
-    username: z.string().min(5, { message: "EL nombre de usuario debe ser mayor a 5 caracteres" }),
-    email: z.string().email({ message: "Correo electrónico inválido" }),
+export const UserSchema = z.object({
+    username: z.string().min(3, 'El nombre de usuario debe tener al menos 3 caracteres'),
+    email: z.string().email('Ingrese un correo válido'),
     password: z.string().min(8, { message: "Las contraseñas son mayor o igual a 8 caracteres" }),
     role: z.enum(["administrador", "lider"], { message: "Seleccione un rol"}),
-    secret_question: z.string({ message: "Por favor ingrese una pregunta secreta"}),
-    secret_answer: z.string({ message: "Por favor ingrese una respuesta a la pregunta"}),
+    secret_question: z.string().min(5, 'La pregunta debe tener al menos 5 caracteres'),
+    secret_answer: z.string().min(2, 'La respuesta debe tener al menos 2 caracteres'),
 })
 
 export const ProductSchema = z.object({

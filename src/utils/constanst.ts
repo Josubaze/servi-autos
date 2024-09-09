@@ -7,6 +7,10 @@ export const PRODUCTVOID = {
     quantity: 0,
 }
 
+export const MENUPROFILE = [
+  { name: 'Tu Perfil', href: '/profile' },
+  { name: 'Cerrar Sesión', href: '/api/auth/signout' },
+];
 
 export const MENUCREATE= [
     { name: 'Factura', href: '/create/invoice' },

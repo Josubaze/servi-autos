@@ -2,19 +2,13 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { BellIcon} from '@heroicons/react/24/outline'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join('')
-}
+import { MENUPROFILE } from 'src/utils/constanst'
+
 interface ProfileDropdownProps {
     image?: string | null;
   }
 
 export const ProfileDropdown = ({ image }: ProfileDropdownProps ) => {
-    const menuProfile = [
-        { name: 'Tu Perfil', href: '/profile' },
-        { name: 'Cerrar Sesión', href: '/api/auth/signout' },
-      ];
     return (
         <>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -46,7 +40,7 @@ export const ProfileDropdown = ({ image }: ProfileDropdownProps ) => {
                     </MenuButton>
                 </div>
                     <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    {menuProfile.map((item) => (
+                    {MENUPROFILE.map((item) => (
                         <MenuItem key={item.name}>
                         <a
                             href={item.href}
