@@ -1,4 +1,3 @@
-
 import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import Tooltip from '@mui/material/Tooltip';
@@ -9,18 +8,18 @@ import { useDynamicFilter } from "src/hooks/useProductFilter";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { darkTheme } from "src/styles/themes/themeTable";
 
-interface TableProductProps {
-  data: Product[];
+interface TableCustomerProps {
+  data: Customer[];
   searchTerm: string;
   isLoading: boolean;
   isError: boolean;
   isFetching: boolean;
   isSuccess: boolean;
-  handleDelete: (productId: string) => void;
-  handleEdit: (product: any) => void;
+  handleDelete: (customerId: string) => void;
+  handleEdit: (customer: Customer) => void;
 }
 
-export const TableProducts: React.FC<TableProductProps> = ({
+export const CustomersTable: React.FC<TableCustomerProps> = ({
   data,
   searchTerm,
   isLoading,
@@ -30,7 +29,7 @@ export const TableProducts: React.FC<TableProductProps> = ({
   handleDelete,
   handleEdit,
 }) => {
-  
+
   const columns = [
     { 
       name: "id", 
@@ -43,24 +42,24 @@ export const TableProducts: React.FC<TableProductProps> = ({
       options: { filter: true, sort: true } 
     },
     { 
-      name: "description", 
-      label: "Descripción", 
-      options: { filter: true, sort: false },
+      name: "email", 
+      label: "Correo Electrónico", 
+      options: { filter: true, sort: true },
     },
     { 
-      name: "category", 
-      label: "Categoría", 
+      name: "phone", 
+      label: "Teléfono", 
       options: { filter: true, sort: false } 
     },
     { 
-      name: "quantity", 
-      label: "Cantidad", 
-      options: { filter: true, sort: true } 
+      name: "address.city", 
+      label: "Ciudad", 
+      options: { filter: true, sort: false } 
     },
     { 
-      name: "price", 
-      label: "Precio", 
-      options: { filter: true, sort: true } 
+      name: "address.state", 
+      label: "Estado", 
+      options: { filter: true, sort: false } 
     },
     
     {
@@ -71,29 +70,30 @@ export const TableProducts: React.FC<TableProductProps> = ({
         filter: false,
         customBodyRender: (value: any, tableMeta: any) => {
           const rowData = tableMeta.rowData;
-          const product = {
+          const customer = {
             _id: rowData[0],
             name: rowData[1],
-            description: rowData[2],
-            category: rowData[3],
-            quantity: rowData[4],
-            price: rowData[5],
-            
-          };      
+            email: rowData[2],
+            phone: rowData[3],
+            address: {
+              city: rowData[4],
+              state: rowData[5],
+            },
+          };
           return (
             <div className='flex py-2 gap-5'>
-              <Tooltip title="Editar producto">
+              <Tooltip title="Editar cliente">
                 <span>
                   <IoPencil className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300" 
-                  onClick={() => handleEdit(product)}
+                  onClick={() => handleEdit(customer)}
                   />
                 </span>
               </Tooltip>
-              <Tooltip title="Eliminar producto">
+              <Tooltip title="Eliminar cliente">
                 <span>
                   <MdDelete
                   className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300"
-                  onClick={() => handleDelete(product._id)}
+                  onClick={() => handleDelete(customer._id)}
                   />
                 </span>
               </Tooltip>
@@ -104,23 +104,25 @@ export const TableProducts: React.FC<TableProductProps> = ({
     }
   ];
 
-  const mobileColumnsToShow = ['name', 'quantity', 'price'];
-  const tabletColumnsToShow = ['name', 'description', 'quantity', 'price'];
-  const responsiveColumns = useResponsiveColumns(
+    const mobileColumnsToShow = ['name', 'phone', 'email'];
+    const tabletColumnsToShow = ['name', 'email', 'phone', 'city', 'state'];
+    const responsiveColumns = useResponsiveColumns(
     columns,
     mobileColumnsToShow,
     tabletColumnsToShow
-  );
+    );
 
-  const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'category']);
-  const rows = filteredData.map(product => ({
-    id: product._id,
-    name: product.name,
-    description: product.description,
-    category: product.category,
-    quantity: product.quantity,
-    price: product.price,
-  }));
+    const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'email']);
+    const rows = filteredData.map(customer => ({
+        id: customer._id,
+        name: customer.name,
+        email: customer.email,
+        phone: customer.phone,
+        address: {
+          city: customer.address.city,
+          state: customer.address.state,
+        },
+    }));
 
   const options = {
     responsive: "standard",
@@ -131,7 +133,7 @@ export const TableProducts: React.FC<TableProductProps> = ({
     rowsPerPageOptions: [5, 10, 20, 50],
     textLabels: {
       body: {
-        noMatch: "AGREGA PRODUCTOS..",
+        noMatch: "AGREGA CLIENTES..",
       },
       pagination: {
         rowsPerPage: "Filas por página",
@@ -151,12 +153,12 @@ export const TableProducts: React.FC<TableProductProps> = ({
       {isLoading || isFetching ? (
         <Loading color="#3730a3" size={100} justify="center" pt={32} />
       ) : isError ? (
-        <p className="text-red-600 text-center mt-10">Error al cargar los productos..</p>
+        <p className="text-red-600">Error al cargar los clientes..</p>
       ) : isSuccess ? (
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={darkTheme}>
             <MUIDataTable
-              title={"Lista de Productos"}
+              title={"Lista de Clientes"}
               data={rows}
               columns={responsiveColumns}
               options={options}

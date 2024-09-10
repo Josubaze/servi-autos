@@ -7,6 +7,17 @@ export const PRODUCTVOID = {
     quantity: 0,
 }
 
+export const CUSTOMERVOID = {
+  _id: '',
+  name: '',
+  email: '',
+  phone: '',
+  address: {
+    city: '',
+    state: ''
+  },
+};
+
 export const MENUPROFILE = [
   { name: 'Tu Perfil', href: '/profile' },
   { name: 'Cerrar Sesión', href: '/api/auth/signout' },

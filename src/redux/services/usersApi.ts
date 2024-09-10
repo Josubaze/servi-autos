@@ -7,21 +7,7 @@ export const usersApi = createApi({
     }),
     tagTypes: ['Users'], 
     endpoints: (builder) => ({
-        getUsers: builder.query<User[], void>({
-            query: () => '/users',
-            providesTags: ['Users'],
-            transformResponse: (response: User[]) => {
-                return response.sort((a, b) => a.username.localeCompare(b.username));
-            },
-        }),
-        deleteUser: builder.mutation<void, string>({
-            query: (id) => ({
-                url: `/users/${id}`,
-                method: 'DELETE',
-            }),
-            invalidatesTags: ['Users'],
-        }),
-        createUser: builder.mutation<void, UserSinId>({
+        createUser: builder.mutation<void, Omit<User, '_id'>>({
             query: (newUser) => ({
                 url: '/auth/signup',
                 method: 'POST',
@@ -29,15 +15,7 @@ export const usersApi = createApi({
             }),
             invalidatesTags: ['Users'],
         }),
-        updateUser: builder.mutation<void, User>({
-            query: (user) => ({
-                url: `/users/${user._id}`,
-                method: 'PUT',
-                body: user,
-            }),
-            invalidatesTags: ['Users'],
-        }),
     }),
 });
 
-export const { useGetUsersQuery, useDeleteUserMutation , useCreateUserMutation, useUpdateUserMutation } =  usersApi
+export const {  useCreateUserMutation,  } =  usersApi

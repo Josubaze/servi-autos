@@ -1,8 +1,8 @@
 import { NextResponse  } from "next/server";
 import {connectDB} from 'src/utils/mongoose'
 import Product from '/src/schemas/product.schema' 
-connectDB()
 export async function GET(request, {  params }){
+    await connectDB();
     try {
         const products = await Product.find()
         return NextResponse.json(products)
@@ -13,8 +13,8 @@ export async function GET(request, {  params }){
     }
     
 }
-
 export async function POST(request){
+    await connectDB();
     try {
         const data = await request.json()
         const newProduct = new Product(data)

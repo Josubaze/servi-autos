@@ -36,9 +36,9 @@ const userSchema = new Schema ({
         trim: true
     }
     },
-    { collection: 'users' },
     {
-        timestamps: true    
+        collection: 'users',
+        timestamps: true
     })
 
 export default models.User || model('User', userSchema )

@@ -43,3 +43,34 @@ export const ProductSchema = z.object({
       ])
   });
   
+
+  export const CustomerSchema = z.object({
+    name: z.string()
+      .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
+      .max(40, { message: "El nombre no puede exceder los 40 caracteres" })
+      .trim(),
+    
+    email: z.string()
+      .email({ message: "Debe ser un correo electrónico válido" })
+      .trim(),
+    
+    phone: z.string()
+      .min(3, { message: "El teléfono debe tener al menos 3 caracteres" })
+      .max(40, { message: "El teléfono no puede exceder los 40 caracteres" })
+      .trim(),
+    
+    address: z.object({
+      city: z.string()
+        .min(3, { message: "La ciudad debe tener al menos 3 caracteres" })
+        .max(40, { message: "La ciudad no puede exceder los 40 caracteres" })
+        .trim(),
+      
+      state: z.string()
+        .min(3, { message: "El estado debe tener al menos 3 caracteres" })
+        .max(40, { message: "El estado no puede exceder los 40 caracteres" })
+        .trim(),
+    })
+  });
+  
+  export type Customer = z.infer<typeof CustomerSchema>;
+  

@@ -1,7 +1,8 @@
 import { NextResponse  } from "next/server";
+import {connectDB} from 'src/utils/mongoose'
 import Product from '/src/schemas/product.schema' 
-
 export async function GET(request, {  params }){
+    await connectDB();
     try {
         const productFound = await Product.findById( params.id )
         if(!productFound) 
@@ -18,8 +19,8 @@ export async function GET(request, {  params }){
     }
     
 }
-
 export async function PUT(request, {  params }){
+    await connectDB();
     try {
         const data = await request.json()
         const productUpdated = await Product.findByIdAndUpdate(params.id, data, { new: true });
@@ -31,8 +32,8 @@ export async function PUT(request, {  params }){
         )
     }
 }
-
 export async function DELETE(request, {  params }){
+    await connectDB();
     try {
         const productDeleted = await Product.findByIdAndDelete(params.id)
         if(!productDeleted) 
@@ -41,7 +42,7 @@ export async function DELETE(request, {  params }){
                 { status: 404 }
             )
         const products = await Product.find()    
-        return NextResponse.json(products) // envio todos menos el borrado
+        return NextResponse.json(products)
     } catch (error) {
         return NextResponse.json(
             error.message,

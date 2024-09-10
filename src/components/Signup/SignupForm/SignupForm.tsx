@@ -6,14 +6,14 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export const SignupForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<UserSinId>({
+  const { register, handleSubmit, formState: { errors } } = useForm<Omit<User, '_id'>>({
    resolver: zodResolver(UserSchema),
   });
   const [isLoading, setIsLoading] = useState(false);
   const [ createUser, {isError} ] = useCreateUserMutation();
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<UserSinId> = async (data) => {
+  const onSubmit: SubmitHandler<Omit<User, '_id'>> = async (data) => {
     setIsLoading(true);
     await createUser(data).unwrap();
     router.push('/login'); 

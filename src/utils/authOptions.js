@@ -1,7 +1,7 @@
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectDB } from 'src/utils/mongoose';
-import User from 'src/schemas/users.schema';
+import User from 'src/schemas/user.schema';
 import bcrypt from 'bcrypt';
 
 export const authOptions = {

@@ -22,7 +22,7 @@ export const productsApi = createApi({
             }),
             invalidatesTags: ['Products'],
         }),
-        createProduct: builder.mutation<void, ProductSinId>({
+        createProduct: builder.mutation<void, Omit<Product, '_id'>>({
             query: (newProduct) => ({
                 url: '/products',
                 method: 'POST',

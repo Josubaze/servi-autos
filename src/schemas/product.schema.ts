@@ -24,10 +24,9 @@ const productSchema = new Schema ({
         type: Number,
         required: true
     },
-    },
-    { collection: 'products' },
-    {
-        timestamps: true    
+    }, {
+        collection: 'products',
+        timestamps: true
     })
 
 export default models.Product || model('Product', productSchema )

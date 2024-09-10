@@ -1,14 +1,5 @@
-
 interface Product {
     _id: string;
-    name: string;
-    description: string;
-    category: string;
-    quantity: number;
-    price: number;
-  }
-
-  interface ProductSinId {
     name: string;
     description: string;
     category: string;
@@ -27,43 +18,26 @@ interface Product {
     image?: string; 
   }
 
-  interface UserSinId {
-    username: string;
-    email: string;
-    password: string;
-    role: string;
-    secret_question: string;
-    secret_answer: string;
+  interface Provider {
+    _id: string;
+    name: string;
+    contactName?: string;
+    address?: string;
+    phone?: string;
+    email?: string;
   }
 
-  interface ProductState {
-    list: Product[];
-    status: 'idle' | 'loading' | 'succeeded' | 'failed';
-    error: string;
-  }
-  
-  interface SearchBarProps {
-    searchTerm: string;
-    setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
-  }
-
-  interface PaginationProps {
-    totalItems: number;
-    itemsPerPage: number;
-    currentPage: number;
-    paginate: (pageNumber: number) => void;
+  interface Customer {
+    _id: string; 
+    name: string; 
+    email: string; 
+    phone: string;
+    address: {
+      city: string
+      state: string; 
+    };
   }
 
-  interface ButtonProps {
-    children: ReactNode;
-    size?: string;
-    block?: boolean;
-    outlined?: boolean;
-    secondary?: boolean;
-    success?: boolean;
-    danger?: boolean;
-    color?: string;
-}
 
 interface LoginFormValues {
   email: string;

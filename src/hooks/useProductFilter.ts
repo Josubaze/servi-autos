@@ -1,15 +1,19 @@
 import { useMemo } from 'react';
 
-export const useProductFilter = (products: Product[], searchTerm: string) => {
+export const useDynamicFilter = <T>(
+  data: T[], 
+  searchTerm: string, 
+  filterKeys: (keyof T)[]
+) => {
   const lowercasedSearchTerm = useMemo(() => searchTerm.toLowerCase(), [searchTerm]);
 
-  const filteredProducts = useMemo(() => {
-    return products.filter(product =>
-      product._id.includes(lowercasedSearchTerm) ||
-      product.name.toLowerCase().includes(lowercasedSearchTerm) ||
-      product.category.toLowerCase().includes(lowercasedSearchTerm)
+  const filteredData = useMemo(() => {
+    return data.filter(item =>
+      filterKeys.some(key => 
+        String(item[key]).toLowerCase().includes(lowercasedSearchTerm)
+      )
     );
-  }, [lowercasedSearchTerm, products]);
+  }, [lowercasedSearchTerm, data, filterKeys]);
 
-  return filteredProducts;
+  return filteredData;
 };

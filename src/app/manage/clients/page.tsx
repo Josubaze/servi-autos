@@ -1,8 +1,4 @@
-
+import { Customers } from 'src/components/Customers';
 export default function manageClientsPage(){
-  return (
-    <div>
-        Manage Clients
-    </div>
-);
+  return <Customers/>
 }
