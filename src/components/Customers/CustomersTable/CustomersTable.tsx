@@ -32,7 +32,7 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
 
   const columns = [
     { 
-      name: "id", 
+      name: "_id", 
       label: "ID", 
       options: { filter: false, sort: true } 
     },
@@ -52,16 +52,15 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
       options: { filter: true, sort: false } 
     },
     { 
-      name: "address.city", 
+      name: "city",
       label: "Ciudad", 
-      options: { filter: true, sort: false } 
+      options: { filter: true, sort: false }
     },
     { 
-      name: "address.state", 
+      name: "state", 
       label: "Estado", 
-      options: { filter: true, sort: false } 
+      options: { filter: true, sort: false }
     },
-    
     {
       name: "Acciones",
       label: "Opciones",
@@ -70,7 +69,7 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
         filter: false,
         customBodyRender: (value: any, tableMeta: any) => {
           const rowData = tableMeta.rowData;
-          const customer = {
+          const customer = { // extraer data para el edit
             _id: rowData[0],
             name: rowData[1],
             email: rowData[2],
@@ -114,14 +113,12 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
 
     const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'email']);
     const rows = filteredData.map(customer => ({
-        id: customer._id,
-        name: customer.name,
-        email: customer.email,
-        phone: customer.phone,
-        address: {
-          city: customer.address.city,
-          state: customer.address.state,
-        },
+      _id: customer._id,
+      name: customer.name,
+      email: customer.email,
+      phone: customer.phone,
+      city: customer.address.city, // aplanar estructura
+      state: customer.address.state 
     }));
 
   const options = {

@@ -26,7 +26,6 @@ export const Customers = () => {
   const handleDelete = async (customerId: string) => {
     await deleteCustomer(customerId);
   };
-
   return (
     <div className="relative flex flex-col py-6 px-0 sm:px-12 ">
       <div className="my-4 flex justify-between items-center gap-2 pb-2">
@@ -40,7 +39,7 @@ export const Customers = () => {
           </span>
         </button>
 
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder='Buscar por id, nombre o correo..' />
       </div>
 
       <CustomersTable

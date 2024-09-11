@@ -5,7 +5,7 @@ import { useUpdateCustomerMutation } from 'src/redux/services/customersApi'; // 
 
 type FormCustomerProps = {
   onClose: () => void;
-  customer: Customer; // El cliente seleccionado para editar
+  customer: Customer; 
 };
 
 export const CustomerUpdateForm = ({
@@ -29,7 +29,10 @@ export const CustomerUpdateForm = ({
   const [updateCustomer, { isError }] = useUpdateCustomerMutation();
 
   const onSubmit: SubmitHandler<Customer> = async (data) => {
-    await updateCustomer({ ...data, _id: customer._id }).unwrap();
+    await updateCustomer({
+      ...data,
+      _id: customer._id
+    }).unwrap();
     onClose();
   };
 

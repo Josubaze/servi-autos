@@ -44,6 +44,12 @@ interface LoginFormValues {
   password: string;
 }
 
+interface SearchBarProps {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+  placeholder: string;
+}
+
 interface OptionsMenuProps {
   session: Session | null;
 }

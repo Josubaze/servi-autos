@@ -41,7 +41,7 @@ export const StoreHouse = () => {
           </span>
         </button>
 
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder='Buscar por nombre, id o categoría..' />
       </div>
 
       <TableProducts
