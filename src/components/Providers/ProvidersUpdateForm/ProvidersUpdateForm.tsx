@@ -1,41 +1,45 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ProductSchema } from 'src/utils/validation.zod';
-import { useUpdateProductMutation } from 'src/redux/services/productsApi';
+import { ProviderSchema } from 'src/utils/validation.zod'; // Asegúrate de tener un esquema para proveedores
+import { useUpdateProviderMutation } from 'src/redux/services/providersApi'; // Asegúrate de tener un servicio para proveedores
 
-type FormProductProps = {
+type FormProviderProps = {
   onClose: () => void;
-  product: Product; // El producto seleccionado para editar
+  provider: Provider; 
 };
 
-export const UpdateProductForm = ({
+export const ProviderUpdateForm = ({
   onClose,
-  product,
-}: FormProductProps) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<Product>({
-    resolver: zodResolver(ProductSchema),
+  provider,
+}: FormProviderProps) => {
+  const { register, handleSubmit, formState: { errors } } = useForm<Provider>({
+    resolver: zodResolver(ProviderSchema),
     defaultValues: {
-      _id: product._id,
-      name: product.name,
-      vehicle_type: product.vehicle_type,
-      description: product.description,
-      category: product.category,
-      quantity: product.quantity,
-      price: product.price,
+      _id: provider._id,
+      name: provider.name,
+      email: provider.email,
+      phone: provider.phone,
+      address: {
+        city: provider.address.city,
+        state: provider.address.state
+      }
     }
   });
 
-  const [updateProduct, { isError }] = useUpdateProductMutation();
+  const [updateProvider, { isError }] = useUpdateProviderMutation();
 
-  const onSubmit: SubmitHandler<Product> = async (data) => {
-    await updateProduct( { ...data, _id: product._id } ).unwrap();
+  const onSubmit: SubmitHandler<Provider> = async (data) => {
+    await updateProvider({
+      ...data,
+      _id: provider._id
+    }).unwrap();
     onClose();
-  }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg mx-auto bg-gray-900 p-8 rounded-md shadow-md border-2 border-x-gray-600 ">
-        <h2 className="text-2xl text-center font-bold mb-6">Editar Producto</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg mx-auto bg-gray-900 p-8 rounded-md shadow-md border-2 border-x-gray-600">
+        <h2 className="text-2xl text-center font-bold mb-6">Editar Proveedor</h2>
         <div className="mb-4">
           <label className="flex items-center justify-center text-sm font-bold mb-2 gap-2" htmlFor="id">
               ID:
@@ -63,71 +67,56 @@ export const UpdateProductForm = ({
         {errors.name?.message && <p className='text-red-500 pb-2'>{errors.name.message}</p>}
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="name">
-          Modelo de Vehículo
+          <label className="block text-sm font-bold mb-2" htmlFor="email">
+            Correo Electrónico
+          </label>
+          <input
+            type="email"
+            id="email"
+            {...register('email')}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        {errors.email?.message && <p className='text-red-500 pb-2'>{errors.email.message}</p>}
+
+        <div className="mb-4">
+          <label className="block text-sm font-bold mb-2" htmlFor="phone">
+            Teléfono
           </label>
           <input
             type="text"
-            id="vehicle_type"
-            {...register('vehicle_type')}
+            id="phone"
+            {...register('phone')}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {errors.vehicle_type?.message && <p className='text-red-500 pb-2'>{errors.vehicle_type.message}</p>}
-
+        {errors.phone?.message && <p className='text-red-500 pb-2'>{errors.phone.message}</p>}
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="description">
-            Descripción
+          <label className="block text-sm font-bold mb-2" htmlFor="city">
+            Ciudad
           </label>
           <input
             type="text"
-            id="description"
-            {...register('description')}
+            id="address.city"
+            {...register('address.city')}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {errors.description?.message && <p className='text-red-500 pb-2'>{errors.description.message}</p>}
+        {errors.address?.city?.message && <p className='text-red-500 pb-2'>{errors.address.city.message}</p>}
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="category">
-            Categoría
+          <label className="block text-sm font-bold mb-2" htmlFor="state">
+            Estado
           </label>
           <input
             type="text"
-            id="category"
-            {...register('category')}
+            id="address.state"
+            {...register('address.state')}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {errors.category?.message && <p className='text-red-500 pb-2'>{errors.category.message}</p>}
-
-        <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="quantity">
-            Cantidad
-          </label>
-          <input
-            type="number"
-            id="quantity"
-            {...register('quantity')}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        {errors.quantity?.message && <p className='text-red-500 pb-2'>{errors.quantity.message}</p>}
-
-        <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="price">
-            Precio
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="price"
-            {...register('price')}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        {errors.price?.message && <p className='text-red-500 pb-2'>{errors.price.message}</p>}
+        {errors.address?.state?.message && <p className='text-red-500 pb-2'>{errors.address.state.message}</p>}
 
         <div className="flex items-center justify-between">
           <button
@@ -145,7 +134,7 @@ export const UpdateProductForm = ({
             Cancelar
           </button>
         </div>
-        {isError && <p className='text-red-500 pt-2 text-center'>Hubo un error al actualizar el producto</p>}
+        {isError && <p className='text-red-500 pt-2 text-center'>Hubo un error al actualizar el proveedor</p>}
       </form>
     </div>
   );

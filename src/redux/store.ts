@@ -4,6 +4,7 @@ import loadingSlice  from './features/loadingSlice';
 import { productsApi } from './services/productsApi';
 import { usersApi } from './services/usersApi';
 import { customersApi } from './services/customersApi';
+import { providersApi } from './services/providersApi';
 
 export const makeStore = () => {
   return configureStore({
@@ -13,12 +14,14 @@ export const makeStore = () => {
       [productsApi.reducerPath]: productsApi.reducer,
       [usersApi.reducerPath]: usersApi.reducer,
       [customersApi.reducerPath]: customersApi.reducer,
+      [providersApi.reducerPath]: providersApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
         .concat(productsApi.middleware)
         .concat(usersApi.middleware)
-        .concat(customersApi.middleware),
+        .concat(customersApi.middleware)
+        .concat(providersApi.middleware),
   });
 }
 

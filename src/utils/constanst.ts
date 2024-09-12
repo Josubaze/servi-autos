@@ -1,6 +1,7 @@
 export const PRODUCTVOID = {
     _id: '',
     name: '',
+    vehicle_type: '',
     description: '',
     category: '',
     price: 0,
@@ -16,6 +17,17 @@ export const CUSTOMERVOID = {
     city: '',
     state: ''
   },
+};
+
+export const PROVIDERVOID: Provider = {
+  _id: '',
+  name: '',
+  email: '',
+  phone: '',
+  address: {
+    city: '',
+    state: ''
+  }
 };
 
 export const MENUPROFILE = [

@@ -1,8 +1,5 @@
+import { Providers } from "src/components/Providers"
 
 export default function manageProvidersPage(){
-    return (
-      <div>
-          Manage Providers
-      </div>
-  );
+    return <Providers/>
   }

@@ -1,4 +1,4 @@
-import { Schema, model, models } from 'mongoose'
+import { Schema, model, models } from 'mongoose';
 
 const productSchema = new Schema ({
     name: {
@@ -8,7 +8,7 @@ const productSchema = new Schema ({
     },
     description: {
         type: String,
-        required: true,
+        required: false,
         trim: true
     },
     price: {
@@ -24,9 +24,14 @@ const productSchema = new Schema ({
         type: Number,
         required: true
     },
-    }, {
-        collection: 'products',
-        timestamps: true
-    })
+    vehicle_type: { 
+        type: String,
+        required: false,
+        trim: true
+    }
+}, {
+    collection: 'products',
+    timestamps: true
+});
 
-export default models.Product || model('Product', productSchema )
+export default models.Product || model('Product', productSchema);

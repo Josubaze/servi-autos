@@ -39,6 +39,19 @@ export const FormProduct = ({
         {errors.name?.message && <p className='text-red-500 pb-2'>{errors.name.message}</p>}
 
         <div className="mb-4">
+          <label className="block text-sm font-bold mb-2" htmlFor="name">
+          Modelo de Vehículo
+          </label>
+          <input
+            type="text"
+            id="vehicle_type"
+            {...register('vehicle_type')}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        {errors.vehicle_type?.message && <p className='text-red-500 pb-2'>{errors.vehicle_type.message}</p>}
+
+        <div className="mb-4">
           <label className="block text-sm font-bold mb-2" htmlFor="description">
             Descripción
           </label>

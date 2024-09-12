@@ -1,13 +1,12 @@
 
 import React from "react";
 import dynamic from 'next/dynamic';
-
-const LottieMoney = dynamic(() => import("src/components/LottieIcon/LottieMoney"), { ssr: false });
-const LottieBudget = dynamic(() => import("src/components/LottieIcon/LottieBudget"), { ssr: false });
-const LottieInvoice = dynamic(() => import("src/components/LottieIcon/LottieInvoice"), { ssr: false });
-const LottiePersons = dynamic(() => import("src/components/LottieIcon/LottiePersons"), { ssr: false });
-const LottieProduct = dynamic(() => import("src/components/LottieIcon/LottieProduct"), { ssr: false });
-const LottieSupplier = dynamic(() => import("src/components/LottieIcon/LottieSupplier"), { ssr: false });
+export const LottieMoney = dynamic(() => import("src/components/LottieIcon/LottieMoney"), { ssr: false });
+export const LottieBudget = dynamic(() => import("src/components/LottieIcon/LottieBudget"), { ssr: false });
+export const LottieInvoice = dynamic(() => import("src/components/LottieIcon/LottieInvoice"), { ssr: false });
+export const LottiePersons = dynamic(() => import("src/components/LottieIcon/LottiePersons"), { ssr: false });
+export const LottieProduct = dynamic(() => import("src/components/LottieIcon/LottieProduct"), { ssr: false });
+export const LottieSupplier = dynamic(() => import("src/components/LottieIcon/LottieSupplier"), { ssr: false });
 
 export const DashWidgets = () => {
   return (

@@ -8,7 +8,7 @@ import { useDynamicFilter } from "src/hooks/useProductFilter";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { darkTheme } from "src/styles/themes/themeTable";
 
-export const CustomersTable: React.FC<TableCustomerProps> = ({
+export const ProvidersTable: React.FC<TableProviderProps> = ({
   data,
   searchTerm,
   isLoading,
@@ -31,6 +31,11 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
       options: { filter: true, sort: true } 
     },
     { 
+      name: "contactName", 
+      label: "Nombre de Contacto", 
+      options: { filter: true, sort: true },
+    },
+    { 
       name: "email", 
       label: "Correo Electrónico", 
       options: { filter: true, sort: true },
@@ -41,12 +46,12 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
       options: { filter: true, sort: false } 
     },
     { 
-      name: "city",
+      name: "address.city",
       label: "Ciudad", 
       options: { filter: true, sort: false }
     },
     { 
-      name: "state", 
+      name: "address.state", 
       label: "Estado", 
       options: { filter: true, sort: false }
     },
@@ -58,30 +63,31 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
         filter: false,
         customBodyRender: (value: any, tableMeta: any) => {
           const rowData = tableMeta.rowData;
-          const customer = { // extraer data para el edit
+          const provider = { // extraer data para el edit
             _id: rowData[0],
             name: rowData[1],
-            email: rowData[2],
-            phone: rowData[3],
+            contactName: rowData[2],
+            email: rowData[3],
+            phone: rowData[4],
             address: {
-              city: rowData[4],
-              state: rowData[5],
+              city: rowData[5],
+              state: rowData[6],
             },
           };
           return (
             <div className='flex py-2 gap-5'>
-              <Tooltip title="Editar cliente">
+              <Tooltip title="Editar proveedor">
                 <span>
                   <IoPencil className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300" 
-                  onClick={() => handleEdit(customer)}
+                  onClick={() => handleEdit(provider)}
                   />
                 </span>
               </Tooltip>
-              <Tooltip title="Eliminar cliente">
+              <Tooltip title="Eliminar proveedor">
                 <span>
                   <MdDelete
                   className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300"
-                  onClick={() => handleDelete(customer._id)}
+                  onClick={() => handleDelete(provider._id)}
                   />
                 </span>
               </Tooltip>
@@ -92,23 +98,26 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
     }
   ];
 
-    const mobileColumnsToShow = ['name', 'phone', 'email'];
-    const tabletColumnsToShow = ['name', 'email', 'phone', 'city', 'state'];
-    const responsiveColumns = useResponsiveColumns(
+  const mobileColumnsToShow = ['name', 'phone', 'email'];
+  const tabletColumnsToShow = ['name', 'contactName', 'email', 'phone', 'address.city', 'address.state'];
+  const responsiveColumns = useResponsiveColumns(
     columns,
     mobileColumnsToShow,
     tabletColumnsToShow
-    );
+  );
 
-    const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'email']);
-    const rows = filteredData.map(customer => ({
-      _id: customer._id,
-      name: customer.name,
-      email: customer.email,
-      phone: customer.phone,
-      city: customer.address.city, // aplanar estructura
-      state: customer.address.state 
-    }));
+  const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'contactName', 'email']);
+  const rows = filteredData.map(provider => ({
+    _id: provider._id,
+    name: provider.name,
+    contactName: provider.contactName,
+    email: provider.email,
+    phone: provider.phone,
+    address: {
+      city: provider.address.city,
+      state: provider.address.state
+    }
+  }));
 
   const options = {
     responsive: "standard",
@@ -119,7 +128,7 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
     rowsPerPageOptions: [5, 10, 20, 50],
     textLabels: {
       body: {
-        noMatch: "AGREGA CLIENTES..",
+        noMatch: "AGREGA PROVEEDORES..",
       },
       pagination: {
         rowsPerPage: "Filas por página",
@@ -139,12 +148,12 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
       {isLoading || isFetching ? (
         <Loading color="#3730a3" size={100} justify="center" pt={32} />
       ) : isError ? (
-        <p className="text-red-600">Error al cargar los clientes..</p>
+        <p className="text-red-600">Error al cargar los proveedores..</p>
       ) : isSuccess ? (
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={darkTheme}>
             <MUIDataTable
-              title={"Lista de Clientes"}
+              title={"Lista de Proveedores"}
               data={rows}
               columns={responsiveColumns}
               options={options}

@@ -9,17 +9,6 @@ import { useDynamicFilter } from "src/hooks/useProductFilter";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { darkTheme } from "src/styles/themes/themeTable";
 
-interface TableProductProps {
-  data: Product[];
-  searchTerm: string;
-  isLoading: boolean;
-  isError: boolean;
-  isFetching: boolean;
-  isSuccess: boolean;
-  handleDelete: (productId: string) => void;
-  handleEdit: (product: any) => void;
-}
-
 export const TableProducts: React.FC<TableProductProps> = ({
   data,
   searchTerm,
@@ -40,6 +29,11 @@ export const TableProducts: React.FC<TableProductProps> = ({
     { 
       name: "name", 
       label: "Nombre", 
+      options: { filter: true, sort: true } 
+    },
+    { 
+      name: "vehicle_type", 
+      label: "Modelo de Vehículo", 
       options: { filter: true, sort: true } 
     },
     { 
@@ -74,10 +68,11 @@ export const TableProducts: React.FC<TableProductProps> = ({
           const product = {
             _id: rowData[0],
             name: rowData[1],
-            description: rowData[2],
-            category: rowData[3],
-            quantity: rowData[4],
-            price: rowData[5],
+            vehicle_type: rowData[2],
+            description: rowData[3],
+            category: rowData[4],
+            quantity: rowData[5],
+            price: rowData[6],
             
           };      
           return (
@@ -105,17 +100,18 @@ export const TableProducts: React.FC<TableProductProps> = ({
   ];
 
   const mobileColumnsToShow = ['name', 'quantity', 'price'];
-  const tabletColumnsToShow = ['name', 'description', 'quantity', 'price'];
+  const tabletColumnsToShow = ['name', 'vehicle_type', 'quantity', 'price'];
   const responsiveColumns = useResponsiveColumns(
     columns,
     mobileColumnsToShow,
     tabletColumnsToShow
   );
 
-  const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'category']);
+  const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'category', 'vehicle_type']);
   const rows = filteredData.map(product => ({
     id: product._id,
     name: product.name,
+    vehicle_type: product.vehicle_type,
     description: product.description,
     category: product.category,
     quantity: product.quantity,

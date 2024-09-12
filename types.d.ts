@@ -2,6 +2,7 @@ interface Product {
     _id: string;
     name: string;
     description: string;
+    vehicle_type: string;
     category: string;
     quantity: number;
     price: number;
@@ -22,9 +23,12 @@ interface Product {
     _id: string;
     name: string;
     contactName?: string;
-    address?: string;
     phone?: string;
     email?: string;
+    address: {
+      city: string
+      state: string; 
+    };
   }
 
   interface Customer {
@@ -38,20 +42,50 @@ interface Product {
     };
   }
 
+  interface TableBaseProps {
+    searchTerm: string;
+    isLoading: boolean;
+    isError: boolean;
+    isFetching: boolean;
+    isSuccess: boolean;
+  }
 
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
+  interface TableProductProps extends TableBaseProps {
+    data: Product[];
+    handleDelete: (productId: string) => void;
+    handleEdit: (product: Product) => void;
+  }
+  
+  interface TableCustomerProps extends TableBaseProps {
+    data: Customer[]; 
+    handleDelete: (customerId: string) => void;
+    handleEdit: (customer: Customer) => void;
+  }
+  
+  interface TableProviderProps extends TableBaseProps {
+    data: Provider[]; 
+    handleDelete: (providerId: string) => void;
+    handleEdit: (provider: Provider) => void;
+  }
+  
+  interface OptionsMenuProps {
+    session: Session | null;
+  }
 
-interface SearchBarProps {
-  searchTerm: string;
-  setSearchTerm: (value: string) => void;
-  placeholder: string;
-}
+  interface SearchBarProps {
+    searchTerm: string;
+    setSearchTerm: (value: string) => void;
+    placeholder: string;
+  }
 
-interface OptionsMenuProps {
-  session: Session | null;
-}
+
+
+  interface LoginFormValues {
+    email: string;
+    password: string;
+  }
+
+
+
 
 declare module 'mui-datatables';

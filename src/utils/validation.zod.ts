@@ -24,7 +24,8 @@ export const UserSchema = z.object({
 
 export const ProductSchema = z.object({
     name: z.string().min(3, { message: "El nombre debe ser mayor o igual a 3 caracteres" }).max(25, { message: "El nombre debe ser menor o igual a 25 caracteres" }),
-    description: z.string().max(25, { message: "La descripción debe ser menor a 25 caracteres" }).nullish(),
+    vehicle_type: z.string().max(25, { message: "La descripción debe ser menor a 25 caracteres" }).nullish(),
+    description: z.string().max(30, { message: "La descripción debe ser menor a 30 caracteres" }).nullish(),
     category: z.string().min(3, { message: "La categoría debe ser mayor a 3 caracteres" }).max(25, { message: "La categoría debe ser menor a 25 caracteres" }),
     price: z.union([
         z.string()
@@ -72,5 +73,24 @@ export const ProductSchema = z.object({
     })
   });
   
-  export type Customer = z.infer<typeof CustomerSchema>;
-  
+export const ProviderSchema = z.object({
+  name: z.string()
+    .min(3, "El nombre debe tener al menos 3 caracteres")
+    .max(40, "El nombre debe tener como máximo 40 caracteres"),
+  contactName: z.string()
+    .min(3, "El nombre de contacto debe tener al menos 3 caracteres")
+    .max(40, "El nombre de contacto debe tener como máximo 40 caracteres"),
+  email: z.string()
+    .email("Correo electrónico inválido"),
+  phone: z.string()
+    .min(3, "El teléfono debe tener al menos 3 caracteres")
+    .max(40, "El teléfono debe tener como máximo 40 caracteres"),
+  address: z.object({
+    city: z.string()
+      .min(3, "La ciudad debe tener al menos 3 caracteres")
+      .max(40, "La ciudad debe tener como máximo 40 caracteres"),
+    state: z.string()
+      .min(3, "El estado debe tener al menos 3 caracteres")
+      .max(40, "El estado debe tener como máximo 40 caracteres"),
+  }),
+});
