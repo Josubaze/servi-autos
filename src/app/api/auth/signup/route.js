@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import {connectDB} from 'src/utils/mongoose'
-import User  from '/src/schemas/users.schema'
+import User  from '/src/schemas/user.schema'
 
 connectDB()
 export async function POST(request) {
