@@ -46,12 +46,12 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
       options: { filter: true, sort: false } 
     },
     { 
-      name: "address.city",
+      name: "city",
       label: "Ciudad", 
       options: { filter: true, sort: false }
     },
     { 
-      name: "address.state", 
+      name: "state", 
       label: "Estado", 
       options: { filter: true, sort: false }
     },
@@ -63,7 +63,7 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
         filter: false,
         customBodyRender: (value: any, tableMeta: any) => {
           const rowData = tableMeta.rowData;
-          const provider = { // extraer data para el edit
+          const provider = { 
             _id: rowData[0],
             name: rowData[1],
             contactName: rowData[2],
@@ -99,7 +99,7 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
   ];
 
   const mobileColumnsToShow = ['name', 'phone', 'email'];
-  const tabletColumnsToShow = ['name', 'contactName', 'email', 'phone', 'address.city', 'address.state'];
+  const tabletColumnsToShow = ['name', 'contactName', 'email', 'phone'];
   const responsiveColumns = useResponsiveColumns(
     columns,
     mobileColumnsToShow,
@@ -113,10 +113,8 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
     contactName: provider.contactName,
     email: provider.email,
     phone: provider.phone,
-    address: {
-      city: provider.address.city,
-      state: provider.address.state
-    }
+    city: provider.address.city,
+    state: provider.address.state
   }));
 
   const options = {
