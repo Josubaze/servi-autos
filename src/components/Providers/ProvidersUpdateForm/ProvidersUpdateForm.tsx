@@ -17,6 +17,7 @@ export const ProviderUpdateForm = ({
     defaultValues: {
       _id: provider._id,
       name: provider.name,
+      contactName: provider.contactName,
       email: provider.email,
       phone: provider.phone,
       address: {
@@ -55,7 +56,7 @@ export const ProviderUpdateForm = ({
 
         <div className="mb-4">
           <label className="block text-sm font-bold mb-2" htmlFor="name">
-            Nombre
+            Nombre de Empresa
           </label>
           <input
             type="text"
@@ -65,6 +66,19 @@ export const ProviderUpdateForm = ({
           />
         </div>
         {errors.name?.message && <p className='text-red-500 pb-2'>{errors.name.message}</p>}
+
+        <div className="mb-4">
+          <label className="block text-sm font-bold mb-2" htmlFor="contactName">
+            Nombre de Contacto
+          </label>
+          <input
+            type="text"
+            id="contactName"
+            {...register('contactName')}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        {errors.contactName && <p className='text-red-500 pb-2'>{errors.contactName.message}</p>}
 
         <div className="mb-4">
           <label className="block text-sm font-bold mb-2" htmlFor="email">

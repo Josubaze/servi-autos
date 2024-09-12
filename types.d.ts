@@ -22,9 +22,9 @@ interface Product {
   interface Provider {
     _id: string;
     name: string;
-    contactName?: string;
-    phone?: string;
-    email?: string;
+    contactName: string;
+    phone: string;
+    email: string;
     address: {
       city: string
       state: string; 

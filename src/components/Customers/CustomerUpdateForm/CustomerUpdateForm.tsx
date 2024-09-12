@@ -1,7 +1,7 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CustomerSchema } from 'src/utils/validation.zod'; // Asegúrate de tener un esquema para clientes
-import { useUpdateCustomerMutation } from 'src/redux/services/customersApi'; // Asegúrate de tener un servicio para clientes
+import { CustomerSchema } from 'src/utils/validation.zod'; 
+import { useUpdateCustomerMutation } from 'src/redux/services/customersApi'; 
 
 type FormCustomerProps = {
   onClose: () => void;
