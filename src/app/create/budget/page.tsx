@@ -1,8 +1,9 @@
+import { Budget } from "src/components/Budget";
 
 export default function createBugetPage(){
   return (
     <div>
-        Create Buget
+        <Budget/>
     </div>
 );
 }
