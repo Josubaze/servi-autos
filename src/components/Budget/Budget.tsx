@@ -1,4 +1,7 @@
 'use client'
+import { FaBoxes } from "react-icons/fa";
+import { MdNoteAdd } from "react-icons/md";
+import { IoPersonAdd } from "react-icons/io5";
 
 export const Budget = () => {
     return (
@@ -29,23 +32,13 @@ export const Budget = () => {
                 <div className="relative ml-3">
                     <button
                     type="button"
-                    className="rounded-xl font-title text-white flex items-center justify-center text-sm h-8 px-2 primary-self-text border border-blue-400"
+                    className="rounded-xl text-white flex items-center justify-center text-sm h-8 px-2 border-2 border-green-600 transition ease-in-out delay-150 hover:scale-110 hover:bg-green-600 duration-300"
                     >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                    >
-                        <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-                        />
-                    </svg>{" "}
-                    Cargar
+                    <span className="flex items-center justify-center gap-x-2">
+                        Cargar
+                        <IoPersonAdd className="h-4 w-4"/>
+                    </span>
+                   
                     </button>
                 </div>
                 </div>
@@ -129,15 +122,132 @@ export const Budget = () => {
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
-
             {/* termina segmento formulario */}
             </div>
+
+
+             {/* segmento service & products */}
+            <div className="grid grid-cols-4 rounded-lg w-full bg-black-nav px-8 py-3">
+
+                <div className="font-bold text-right pr-10">
+                    Descripción
+                </div>
+
+                <div className="font-bold text-right pr-10">
+                    Cantidad
+                </div>
+
+                <div className="font-bold text-right pr-10">
+                    Precio Unitario
+                </div>
+
+                <div className="font-bold text-right pr-10">
+                    Precio Total
+                </div>
+            </div>
+
+            {/* tabla de presupuesto */}
+            <div className="grid grid-cols-4 rounded-lg w-full px-8 pt-4">
+                <div className="pr-10">
+                    <input
+                        type="text"
+                        name="description"
+                        id="description" 
+                        className="text-base px-2 w-full border-solid border-2  h-8 rounded-xl text-right border-gray-500 bg-gray-800 focus:outline-none  focus:border-indigo-600
+                    "/>
+                </div>
+                <div className="pr-10">
+                <input 
+                        type="number" 
+                        name="quantity" 
+                        id="quantity" 
+                        className="text-base px-2 mr-2 w-full border-solid border-2 h-8 rounded-xl text-right border-gray-500 bg-gray-800 focus:outline-none focus:border-indigo-600 no-arrows"
+                    />
+                </div>
+                <div className="pr-10">
+                    <input 
+                        type="number"
+                        name="unit_price" 
+                        id="unit_price" 
+                        className="text-base px-2 w-full border-solid border-2  h-8 rounded-xl text-right border-gray-500 bg-gray-800 focus:outline-none  focus:border-indigo-600
+                    "/>
+                </div>
+                <div className="pr-10">
+                    <input 
+                        type="number"
+                        name="total_price"
+                        id="total_price" 
+                        className="text-base px-2 w-full border-solid border-2  h-8 rounded-xl text-right border-gray-500 bg-gray-800 focus:outline-none  focus:border-indigo-600
+                    "/>
+                </div>
+            </div>
+
+            {/* botones de agregar */}
+            <div className="grid grid-cols-4 rounded-lg w-full px-8 pt-4">
+                <div className="col-start-3 pr-10">
+                    <button className="text-base px-2 w-full border-solid border-2  h-8 rounded-xl  border-green-600 bg-transparent transition ease-in-out delay-150 hover:scale-105 hover:bg-green-600 duration-300">
+                    <span className="flex items-center justify-center gap-x-2">
+                            Crear Item
+                            <MdNoteAdd className="h-4 w-4" />
+                        </span>
+                    </button>
+                </div>
+
+                <div className="pr-10">
+                    <button className="text-base px-2 w-full border-solid border-2  h-8 rounded-xl  border-green-600 bg-transparent transition ease-in-out delay-150 hover:scale-105 hover:bg-green-600 duration-300">
+                        <span className="flex items-center justify-center gap-x-2">
+                            Cargar 
+                            <FaBoxes className="h-4 w-4" />
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+
+            {/* IVA*/}
+            <div className="grid grid-cols-4 rounded-lg w-full px-8 pt-4">
+                <div className="col-start-3 pr-10 font-bold content-center text-right">
+                    <label htmlFor="tax" className="">I.V.A. % :</label>
+                </div>
+
+                <div className="pr-10">
+                    <input 
+                            type="number"
+                            name="tax"
+                            id="tax" 
+                            placeholder="16"
+                            className="text-base px-2 w-full border-solid border-2  h-8 rounded-xl text-right border-gray-500 bg-gray-800 focus:outline-none  focus:border-indigo-600 holder
+                        "/>
+                </div>
+            </div>
+
+            {/* SUBTOTAL*/}
+            <div className="grid grid-cols-4 rounded-lg w-full px-8 pt-4">
+                <div className="col-start-3 pr-10 font-bold content-center text-right">
+                    <label htmlFor="subtotal" className="">SubTotal :</label>
+                </div>
+
+                <div className="pr-10">
+                    <input 
+                            type="number"
+                            name="subtotal"
+                            id="subtotal" 
+                            className="text-base px-2 w-full border-solid border-2  h-8 rounded-xl text-right border-gray-500 bg-gray-800 focus:outline-none  focus:border-indigo-600 holder
+                        "/>
+                </div>
+            </div>
+
+            {/* TOTAL*/}
+            <div className="grid grid-cols-4 rounded-lg w-full bg-black-nav px-8 py-3 mt-4">
+                <div className="col-start-3 pr-10 content-center font-bold text-right">
+                    Total :
+                </div>
+
+                <div className="pr-10 content-center font-bold text-right">
+                    <label className="">0.00 $</label>            
+                </div>
+            </div>
+
         </div>
     );
 }
