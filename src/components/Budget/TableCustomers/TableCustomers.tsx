@@ -27,6 +27,11 @@ export const TableCustomers: React.FC<{
     { 
       name: "_id", 
       label: "ID", 
+      options: { filter: false, sort: true, display: "none" } 
+    },
+    { 
+      name: "id_card", 
+      label: "Cédula o RIF", 
       options: { filter: false, sort: true } 
     },
     { 
@@ -79,7 +84,7 @@ export const TableCustomers: React.FC<{
         )
     },
     rowsPerPage: 10,
-    rowsPerPageOptions: [5, 10, 20],
+    rowsPerPageOptions: [5, 10, 20,30, 50],
     textLabels: {
       body: {
         noMatch: "No se encontraron clientes.",
@@ -97,12 +102,13 @@ export const TableCustomers: React.FC<{
     onRowClick: (rowData: any) => {
       const selectedCustomer = {
         _id: rowData[0],
-        name: rowData[1],
-        email: rowData[2],
-        phone: rowData[3],
+        id_card: rowData[1],
+        name: rowData[2],
+        email: rowData[3],
+        phone: rowData[4],
         address: {
-          city: rowData[4],
-          state: rowData[5],
+          city: rowData[5],
+          state: rowData[6],
         },
       };
       // Guardar el cliente seleccionado en el estado local

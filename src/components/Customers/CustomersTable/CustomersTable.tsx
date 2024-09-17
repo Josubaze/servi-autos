@@ -7,6 +7,7 @@ import { Loading } from 'src/components/Common/Loading';
 import { useDynamicFilter } from "src/hooks/useProductFilter";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { darkTheme } from "src/styles/themes/themeTable";
+import { FaDisplay } from "react-icons/fa6";
 
 export const CustomersTable: React.FC<TableCustomerProps> = ({
   data,
@@ -23,7 +24,16 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
     { 
       name: "_id", 
       label: "ID", 
-      options: { filter: false, sort: true } 
+      options: { 
+        filter: false, 
+        sort: true,
+        display: false,
+      } 
+    },
+    { 
+      name: "id_card", 
+      label: "Cédula o RIF", 
+      options: { filter: false, sort: true} 
     },
     { 
       name: "name", 
@@ -58,30 +68,32 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
         filter: false,
         customBodyRender: (value: any, tableMeta: any) => {
           const rowData = tableMeta.rowData;
-          const customer = { // extraer data para el edit
+          const customer = {
             _id: rowData[0],
-            name: rowData[1],
-            email: rowData[2],
-            phone: rowData[3],
+            id_card: rowData[1],
+            name: rowData[2],
+            email: rowData[3],
+            phone: rowData[4],
             address: {
-              city: rowData[4],
-              state: rowData[5],
+              city: rowData[5],
+              state: rowData[6],
             },
           };
           return (
             <div className='flex py-2 gap-5'>
               <Tooltip title="Editar cliente">
                 <span>
-                  <IoPencil className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300" 
-                  onClick={() => handleEdit(customer)}
+                  <IoPencil 
+                    className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300" 
+                    onClick={() => handleEdit(customer)}
                   />
                 </span>
               </Tooltip>
               <Tooltip title="Eliminar cliente">
                 <span>
                   <MdDelete
-                  className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300"
-                  onClick={() => handleDelete(customer._id)}
+                    className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300"
+                    onClick={() => handleDelete(customer._id)}
                   />
                 </span>
               </Tooltip>
@@ -100,13 +112,14 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
     tabletColumnsToShow
     );
 
-    const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'email']);
+    const filteredData = useDynamicFilter(data, searchTerm, ['id_card', 'name', 'email']);
     const rows = filteredData.map(customer => ({
       _id: customer._id,
+      id_card: customer.id_card,
       name: customer.name,
       email: customer.email,
       phone: customer.phone,
-      city: customer.address.city, // aplanar estructura
+      city: customer.address.city,
       state: customer.address.state 
     }));
 

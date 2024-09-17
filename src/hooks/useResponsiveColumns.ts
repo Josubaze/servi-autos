@@ -16,8 +16,19 @@ export const useResponsiveColumns = (
 ) => {
   const isMobile = useMediaQuery('(max-width:600px)');
   const isTablet = useMediaQuery('(min-width:601px) and (max-width:960px)');
-  
+
   return columns.map(column => {
+    if (column.name === "_id") {
+      // Always hide the "ID" column
+      return {
+        ...column,
+        options: {
+          ...column.options,
+          display: false
+        }
+      };
+    }
+
     if (isMobile) {
       // In mobile view, show only specified columns
       if (mobileColumnsToShow.includes(column.name)) {
@@ -36,8 +47,8 @@ export const useResponsiveColumns = (
           display: false
         }
       };
-    } 
-    
+    }
+
     if (isTablet) {
       // In tablet view, show only specified columns
       if (tabletColumnsToShow.includes(column.name)) {
@@ -58,7 +69,7 @@ export const useResponsiveColumns = (
       };
     }
 
-    // For desktop, show all columns
+    // For desktop, show all columns except "ID"
     return {
       ...column,
       options: {

@@ -32,7 +32,8 @@ interface Product {
   }
 
   interface Customer {
-    _id: string; 
+    _id: string;
+    id_card: string; 
     name: string; 
     email: string; 
     phone: string;

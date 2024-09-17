@@ -2,23 +2,26 @@ import React, { useEffect, useState } from 'react';
 
 type NotificationProps = {
   message: string;
+  backgroundColor?: string; // El color de fondo es opcional
 };
 
-export const Notification = ({ message }: NotificationProps) => {
+export const Notification = ({ message, backgroundColor = 'bg-red-600' }: NotificationProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsVisible(false); 
+      setIsVisible(false);
     }, 3000);
 
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer);
   }, []);
 
-  if (!isVisible) return null; 
+  if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-2/4 sm:bottom-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-4 py-2 w-full max-w-lg rounded shadow-md text-center flex items-center justify-between">
+    <div
+      className={`fixed bottom-2/4 sm:bottom-20 left-1/2 transform -translate-x-1/2 ${backgroundColor} text-white px-4 py-2 w-full max-w-lg rounded shadow-md text-center flex items-center justify-between`}
+    >
       <span>{message}</span>
       <button
         onClick={() => setIsVisible(false)}

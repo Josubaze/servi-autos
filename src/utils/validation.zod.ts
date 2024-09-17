@@ -51,6 +51,11 @@ export const ProductSchema = z.object({
       .max(40, { message: "El nombre no puede exceder los 40 caracteres" })
       .trim(),
     
+    id_card: z.string().regex(
+      /^(V|E|J|G)\d{7,8}(\d)?$/,
+      "Formato inválido. Debe ser 'V1234567', 'E12345678' para cédulas, o 'J12345678'/'G12345678' con un dígito final opcional para RIF."
+    ),
+    
     email: z.string()
       .email({ message: "Debe ser un correo electrónico válido" })
       .trim(),

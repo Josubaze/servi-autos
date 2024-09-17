@@ -39,6 +39,19 @@ export const CustomerForm = ({
         {errors.name && <p className='text-red-500 pb-2'>{errors.name.message}</p>}
 
         <div className="mb-4">
+          <label className="block text-sm font-bold mb-2" htmlFor="name">
+            Cedula o RIF
+          </label>
+          <input
+            type="text"
+            id="id_card"
+            {...register('id_card')}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
+        {errors.id_card && <p className='text-red-500 pb-2'>{errors.id_card.message}</p>}
+
+        <div className="mb-4">
           <label className="block text-sm font-bold mb-2" htmlFor="email">
             Correo Electrónico
           </label>

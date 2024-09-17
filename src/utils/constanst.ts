@@ -10,6 +10,7 @@ export const PRODUCTVOID = {
 
 export const CUSTOMERVOID = {
   _id: '',
+  id_card: '',
   name: '',
   email: '',
   phone: '',

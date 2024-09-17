@@ -29,10 +29,7 @@ export const CustomerUpdateForm = ({
   const [updateCustomer, { isError }] = useUpdateCustomerMutation();
 
   const onSubmit: SubmitHandler<Customer> = async (data) => {
-    await updateCustomer({
-      ...data,
-      _id: customer._id
-    }).unwrap();
+    await updateCustomer(data).unwrap();
     onClose();
   };
 
@@ -42,13 +39,12 @@ export const CustomerUpdateForm = ({
         <h2 className="text-2xl text-center font-bold mb-6">Editar Cliente</h2>
         <div className="mb-4">
           <label className="flex items-center justify-center text-sm font-bold mb-2 gap-2" htmlFor="id">
-              ID:
+              Cédula o RIF:
               <input
               type="text"
-              id="id"
-              {...register('_id')}
+              id="id_card"
+              {...register('id_card')}
               className="border-none w-full py-2 px-3 bg-gray-900"
-              readOnly
               />
           </label>
         </div>
