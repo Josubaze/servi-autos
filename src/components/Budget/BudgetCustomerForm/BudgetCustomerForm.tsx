@@ -10,11 +10,12 @@ import { TableCustomers } from "../TableCustomers";
 import { Notification } from "src/components/Common/Notification";
 
 export const BudgetCustomerForm = () => {
-    const { data: customers = [], isLoading, isError, isFetching, isSuccess } = useGetCustomersQuery();
+    const { data: customers = [], isLoading: isLoadingCustomers, isError, isFetching, isSuccess } = useGetCustomersQuery();
     const [selectedCustomer, setSelectedCustomer] = useState<Customer>(CUSTOMERVOID);
     const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
     const [createCustomer, { isError: isErrorCustomer }] = useCreateCustomerMutation();
-    const [ isNotification, setIsNotification] = useState(false);
+    const [isNotification, setIsNotification] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Estado para el botón de carga
     const { register, handleSubmit, formState: { errors }, reset } = useForm<Omit<Customer, '_id'>>({
         resolver: zodResolver(CustomerSchema),
         defaultValues: selectedCustomer,
@@ -27,9 +28,10 @@ export const BudgetCustomerForm = () => {
     };
 
     const onSubmit: SubmitHandler<Omit<Customer, '_id'>> = async (data) => {
-        console.log(data);
+        setIsLoading(true);
         await createCustomer(data).unwrap();
         setIsNotification(true);
+        setIsLoading(false);
     };
 
     return (
@@ -54,13 +56,20 @@ export const BudgetCustomerForm = () => {
                 <div className="relative">
                     <button
                         type="button"
-                        className="rounded-xl text-white flex items-center justify-center text-sm h-8 px-2 border-2 border-blue-600 transition ease-in-out delay-150 hover:scale-110 hover:bg-blue-600 duration-300"
-                        onClick={handleSubmit(onSubmit)} // Envío del formulario al hacer clic
-                    >
-                        <span className="flex items-center justify-center gap-x-2">
-                            Agregar
-                            <IoPersonAdd className="h-5 w-5"/>
-                        </span>
+                        disabled={isLoading}
+                        onClick={handleSubmit(onSubmit)}
+                        className={`rounded-xl text-white flex items-center justify-center text-sm h-8 px-2 border-2 border-blue-600 transition ease-in-out delay-150 hover:scale-110 hover:bg-blue-600 duration-300 ${
+                            isLoading ? 'cursor-not-allowed opacity-50' : ''
+                        }`}
+                        >
+                        {isLoading && (
+                            <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                            </svg>
+                        )}       
+                            {isLoading ? 'Procesando...' : 'Agregar'}
+                            {!isLoading && <IoPersonAdd className="h-5 w-5 ml-2" />} 
                     </button>
                 </div>
             </div>
@@ -68,22 +77,29 @@ export const BudgetCustomerForm = () => {
             {/* Formulario siempre visible para ingresar nuevo cliente */}
             <form className="w-full pt-4">
                 <div className="flex flex-wrap gap-y-2 w-full">
-                    <div className="w-full">
+                    <div className="w-full flex flex-wrap gap-x-2">      
+                        <input
+                            placeholder="Cédula o RIF"
+                            {...register("id_card")}
+                            className="w-1/4 px-2 block border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
+                        />
+                        {errors.id_card && <p className="my-2 text-red-500">{errors.id_card.message}</p>}
+
                         <input
                             placeholder="Nombre"
                             {...register("name")}
-                            className="w-1/2 px-2 block border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
+                            className="w-2/5 px-2 block border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
                         />
-                        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-                    </div>
+                        {errors.name && <p className="py-1 text-red-500">{errors.name.message}</p>}
+                    </div>                
 
                     <div className="w-full">
                         <input
                             placeholder="Correo"
                             {...register("email")}
-                            className="w-3/4 px-2 block border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
+                            className="w-1/2 px-2 block border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
                         />
-                        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+                        {errors.email && <p className="py-1 text-red-500">{errors.email.message}</p>}
                     </div>
 
                     <div className="w-full">
@@ -92,33 +108,31 @@ export const BudgetCustomerForm = () => {
                             {...register("phone")}
                             className="w-1/2 px-2 block border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
                         />
-                        {errors.phone && <p className="text-red-500">{errors.phone.message}</p>}
+                        {errors.phone && <p className="py-1 text-red-500">{errors.phone.message}</p>}
                     </div>
 
                     <div className="w-full flex flex-wrap gap-x-2">
                         <input
                             placeholder="Estado"
                             {...register("address.state")}
-                            className="w-1/4 px-2 block border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
+                            className="w-1/4 px-2 border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
                         />
-                        {errors.address?.state && <p className="text-red-500">{errors.address.state.message}</p>}
-
+                        {errors.address?.state && <p className="my-2 text-red-500">{errors.address.state.message}</p>}
+                        
                         <input
                             placeholder="Ciudad"
                             {...register("address.city")}
-                            className="w-1/2 px-2 block border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
+                            className="w-2/5 px-2 border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
                         />
-                        {errors.address?.city && <p className="text-red-500">{errors.address.city.message}</p>}
-                        {isError && <p className='text-red-500 pt-2 text-center'>Hubo un error al tratar de crear el cliente</p>}
+                        {errors.address?.city && <p className="py-1 text-red-500">{errors.address.city.message}</p>}         
                     </div>
+                    {isErrorCustomer && <p className='text-red-500 py-2 text-center'>Hubo un error al tratar de crear el cliente</p>}
                 </div>
             </form>
-            {isErrorCustomer && <p className='text-red-500 pt-2 text-center'>Hubo un error al tratar de crear el cliente</p>}
             {isNotification && <Notification 
                 message="El cliente ha sido registrado exitosamente!" 
                 backgroundColor="bg-green-600"
             />}
-
 
             {/* Modal para la tabla de selección de clientes */}
             {isTableVisible && (
@@ -126,7 +140,7 @@ export const BudgetCustomerForm = () => {
                     <div className="bg-gray-100 p-2 rounded-lg shadow-lg w-3/4">
                         <TableCustomers
                             data={customers}
-                            isLoading={isLoading}
+                            isLoading={isLoadingCustomers}
                             isError={isError}
                             isFetching={isFetching}
                             isSuccess={isSuccess}

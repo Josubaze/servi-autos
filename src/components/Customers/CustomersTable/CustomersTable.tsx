@@ -27,7 +27,6 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
       options: { 
         filter: false, 
         sort: true,
-        display: false,
       } 
     },
     { 

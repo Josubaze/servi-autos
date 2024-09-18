@@ -21,7 +21,7 @@ export const Budget = () => {
             <BudgetHeader/>
 
             {/* Segmento de formularios */}
-            <div className="flex flex-col sm:flex-row pt-3 px-8">
+            <div className="flex flex-col sm:flex-row py-3 px-8">
                 {/* Formulario de cliente */}
                 <div className="flex-1">
                     <BudgetCustomerForm/>

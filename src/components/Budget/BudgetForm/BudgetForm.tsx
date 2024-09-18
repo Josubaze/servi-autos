@@ -1,7 +1,7 @@
 export const BudgetForm = () => {
     return (
         <>
-            <div className="flex flex-col gap-y-2 py-12 pl-4">
+            <div className="flex flex-col gap-y-2 pt-12 pl-4">
                 <div className="flex flex-row justify-between items-center">
                     <div className="font-title font-bold flex-1">Presupuesto</div>
                     <div className="flex-1 text-right">

@@ -53,7 +53,7 @@ export const ProductSchema = z.object({
     
     id_card: z.string().regex(
       /^(V|E|J|G)\d{7,8}(\d)?$/,
-      "Formato inválido. Debe ser 'V1234567', 'E12345678' para cédulas, o 'J12345678'/'G12345678' con un dígito final opcional para RIF."
+      "Formato inválido. Debe ser 'V1234567' para cédulas, o 'J12345678'"
     ),
     
     email: z.string()

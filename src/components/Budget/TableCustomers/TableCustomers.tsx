@@ -4,6 +4,7 @@ import { darkTheme } from "src/styles/themes/themeTable";
 import { Loading } from 'src/components/Common/Loading';
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 
 export const TableCustomers: React.FC<{
   data: Customer[],
@@ -27,7 +28,10 @@ export const TableCustomers: React.FC<{
     { 
       name: "_id", 
       label: "ID", 
-      options: { filter: false, sort: true, display: "none" } 
+      options: { 
+        filter: false, 
+        sort: true,
+      } 
     },
     { 
       name: "id_card", 
@@ -61,8 +65,17 @@ export const TableCustomers: React.FC<{
     }
   ];
 
+  const mobileColumnsToShow = ['name', 'phone', 'email'];
+  const tabletColumnsToShow = ['name', 'email', 'phone', 'city', 'state'];
+  const responsiveColumns = useResponsiveColumns(
+  columns,
+  mobileColumnsToShow,
+  tabletColumnsToShow
+  );
+
   const rows = data.map(customer => ({
     _id: customer._id,
+    id_card: customer.id_card, 
     name: customer.name,
     email: customer.email,
     phone: customer.phone,
@@ -132,7 +145,7 @@ export const TableCustomers: React.FC<{
             <MUIDataTable
               title={"Lista de Clientes"}
               data={rows}
-              columns={columns}
+              columns={responsiveColumns}
               options={options}
             />
           </ThemeProvider>
