@@ -5,12 +5,14 @@ import { productsApi } from './services/productsApi';
 import { usersApi } from './services/usersApi';
 import { customersApi } from './services/customersApi';
 import { providersApi } from './services/providersApi';
+import customerFormSlice from './features/customerFormSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       counter: counterSlice,
       loading: loadingSlice,
+      customerForm: customerFormSlice,
       [productsApi.reducerPath]: productsApi.reducer,
       [usersApi.reducerPath]: usersApi.reducer,
       [customersApi.reducerPath]: customersApi.reducer,

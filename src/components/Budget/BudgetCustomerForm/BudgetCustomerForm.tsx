@@ -8,15 +8,19 @@ import { CustomerSchema } from 'src/utils/validation.zod';
 import { CUSTOMERVOID } from "src/utils/constanst";
 import { TableCustomers } from "../TableCustomers"; 
 import { Notification } from "src/components/Common/Notification";
+import { useImperativeHandle, forwardRef } from 'react';
 
-export const BudgetCustomerForm = () => {
+// Acepta la función onSubmitCustomerData como prop
+export const BudgetCustomerForm = forwardRef((props, ref) => {
     const { data: customers = [], isLoading: isLoadingCustomers, isError, isFetching, isSuccess } = useGetCustomersQuery();
     const [selectedCustomer, setSelectedCustomer] = useState<Customer>(CUSTOMERVOID);
     const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
     const [createCustomer, { isError: isErrorCustomer }] = useCreateCustomerMutation();
     const [isNotification, setIsNotification] = useState(false);
-    const [isLoading, setIsLoading] = useState(false); // Estado para el botón de carga
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<Omit<Customer, '_id'>>({
+    const [isLoading, setIsLoading] = useState(false);
+    const [formState, setFormState] = useState({});
+    // React Hook Form Setup
+    const { register, handleSubmit, formState: { errors }, reset , getValues, trigger} = useForm<Omit<Customer, '_id'>>({
         resolver: zodResolver(CustomerSchema),
         defaultValues: selectedCustomer,
     });
@@ -24,7 +28,7 @@ export const BudgetCustomerForm = () => {
     const handleCustomerSelect = (customer: Customer) => {
         setSelectedCustomer(customer);
         setIsTableVisible(false);
-        reset(customer); // Actualiza el formulario con los datos del cliente seleccionado
+        reset(customer); 
     };
 
     const onSubmit: SubmitHandler<Omit<Customer, '_id'>> = async (data) => {
@@ -33,6 +37,17 @@ export const BudgetCustomerForm = () => {
         setIsNotification(true);
         setIsLoading(false);
     };
+
+    // Función que queremos exponer al padre para obtener los datos
+    const submitForm = () => {
+        const formData = getValues(); // Obtener todos los valores del formulario
+        return formData; // Devolver los datos al padre si lo necesita
+    };
+
+    // Usamos `useImperativeHandle` para exponer la función `submitForm` al padre
+    useImperativeHandle(ref, () => ({
+        submitForm,
+    }));
 
     return (
         <>
@@ -76,7 +91,7 @@ export const BudgetCustomerForm = () => {
 
             {/* Formulario siempre visible para ingresar nuevo cliente */}
             <form className="w-full pt-4">
-                <div className="flex flex-wrap gap-y-2 w-full">
+            <div className="flex flex-wrap gap-y-2 w-full">
                     <div className="w-full flex flex-wrap gap-x-2">      
                         <input
                             placeholder="Cédula o RIF"
@@ -129,10 +144,8 @@ export const BudgetCustomerForm = () => {
                     {isErrorCustomer && <p className='text-red-500 py-2 text-center'>Hubo un error al tratar de crear el cliente</p>}
                 </div>
             </form>
-            {isNotification && <Notification 
-                message="El cliente ha sido registrado exitosamente!" 
-                backgroundColor="bg-green-600"
-            />}
+
+            {isNotification && <Notification message="El cliente ha sido registrado exitosamente!" backgroundColor="bg-green-600" />}
 
             {/* Modal para la tabla de selección de clientes */}
             {isTableVisible && (
@@ -152,4 +165,4 @@ export const BudgetCustomerForm = () => {
             )}
         </>
     );
-};
+});

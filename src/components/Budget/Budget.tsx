@@ -7,15 +7,31 @@ import { BudgetHeader } from "./BudgetHeader";
 import { BudgetCustomerForm } from "./BudgetCustomerForm";
 import { BudgetForm } from "./BudgetForm";
 import { BudgetTable } from "./BudgetTable";
+import { useRef } from 'react';
 
+// Define la interfaz que contiene la función submitForm
+interface BudgetCustomerFormHandle {
+    submitForm: () => any; // Ajusta el tipo de retorno si es necesario
+}
 
 export const Budget = () => {
-    return (
 
+    const formRef = useRef<BudgetCustomerFormHandle | null>(null);;
+
+    const handleSaveAsPending = () => {
+        if (formRef.current) {
+            const data = formRef.current.submitForm(); // Llamamos a la función del hijo
+            console.log("Datos del formulario:", data); // Imprimir los datos en consola
+        }
+    };
+
+    const handleSaveAsAccepted = () => {
+        
+    };
+    return (
         <div className='relative flex flex-col py-6 px-0 sm:px-12'>   
             {/* opciones */}
             <BudgetOptions/>
-
 
             {/* Header del presupuesto */}    
             <BudgetHeader/>
@@ -24,7 +40,8 @@ export const Budget = () => {
             <div className="flex flex-col sm:flex-row py-3 px-8">
                 {/* Formulario de cliente */}
                 <div className="flex-1">
-                    <BudgetCustomerForm/>
+                    {/* Pasamos la función al componente hijo */}
+                    <BudgetCustomerForm ref={formRef}/>
                 </div>
 
                 {/* Formulario de presupuesto */}
@@ -36,31 +53,37 @@ export const Budget = () => {
             {/* Tabla de presupuesto */}
             <BudgetTable/>
 
-            {/* GUARDADO*/}
+            {/* GUARDADO */}
             <div className="grid grid-cols-4 rounded-lg w-full bg-black-nav py-3 mt-6 gap-x-6">
                 <div className="content-center">
-                        <div className="font-bold text-right">
-                            Guardar como:
-                        </div>
+                    <div className="font-bold text-right">
+                        Guardar como:
                     </div>
+                </div>
 
-                    <div>
-                        <button className="text-base px-2 w-full border-solid border-2 border-orange-600  h-8 rounded-xl bg-transparent transition ease-in-out delay-150 hover:scale-105 hover:bg-orange-600 duration-300">
-                                <span className="flex items-center justify-center gap-x-2">
-                                    Pediente
-                                    <FaFileCircleExclamation className="h-5 w-5"/>
-                                </span>
-                        </button>
-                    </div>
+                <div>
+                    <button
+                        onClick={handleSaveAsPending}
+                        className="text-base px-2 w-full border-solid border-2 border-orange-600 h-8 rounded-xl bg-transparent transition ease-in-out delay-150 hover:scale-105 hover:bg-orange-600 duration-300"
+                    >
+                        <span className="flex items-center justify-center gap-x-2">
+                            Pendiente
+                            <FaFileCircleExclamation className="h-5 w-5"/>
+                        </span>
+                    </button>
+                </div>
 
-                    <div>
-                        <button className="text-base px-2 w-full border-solid border-2 border-blue-600  h-8 rounded-xl bg-transparent transition ease-in-out delay-150 hover:scale-105 hover:bg-blue-600 duration-300">
-                            <span className="flex items-center justify-center gap-x-2">
-                                Aceptado
-                                <FaFileCircleCheck  className="h-5 w-5"/>
-                            </span>
-                        </button>
-                    </div>
+                <div>
+                    <button
+                        onClick={handleSaveAsAccepted}
+                        className="text-base px-2 w-full border-solid border-2 border-blue-600 h-8 rounded-xl bg-transparent transition ease-in-out delay-150 hover:scale-105 hover:bg-blue-600 duration-300"
+                    >
+                        <span className="flex items-center justify-center gap-x-2">
+                            Aceptado
+                            <FaFileCircleCheck  className="h-5 w-5"/>
+                        </span>
+                    </button>
+                </div>
             </div>
 
         </div>
