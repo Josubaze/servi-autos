@@ -10,7 +10,6 @@ import { TableCustomers } from "../TableCustomers";
 import { Notification } from "src/components/Common/Notification";
 import { useImperativeHandle, forwardRef } from 'react';
 
-// Acepta la función onSubmitCustomerData como prop
 export const BudgetCustomerForm = forwardRef((props, ref) => {
     const { data: customers = [], isLoading: isLoadingCustomers, isError, isFetching, isSuccess } = useGetCustomersQuery();
     const [selectedCustomer, setSelectedCustomer] = useState<Customer>(CUSTOMERVOID);
@@ -18,8 +17,6 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
     const [createCustomer, { isError: isErrorCustomer }] = useCreateCustomerMutation();
     const [isNotification, setIsNotification] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [formState, setFormState] = useState({});
-    // React Hook Form Setup
     const { register, handleSubmit, formState: { errors }, reset , getValues, trigger} = useForm<Omit<Customer, '_id'>>({
         resolver: zodResolver(CustomerSchema),
         defaultValues: selectedCustomer,
@@ -38,13 +35,16 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
         setIsLoading(false);
     };
 
-    // Función que queremos exponer al padre para obtener los datos
-    const submitForm = () => {
-        const formData = getValues(); // Obtener todos los valores del formulario
-        return formData; // Devolver los datos al padre si lo necesita
+    const submitForm = async () => {
+        const formData = getValues(); 
+        const isFormValid = await trigger();
+        if (isFormValid) {
+            return formData;  
+        } else {
+            return null;
+        }
     };
 
-    // Usamos `useImperativeHandle` para exponer la función `submitForm` al padre
     useImperativeHandle(ref, () => ({
         submitForm,
     }));

@@ -18,10 +18,10 @@ export const Budget = () => {
 
     const formRef = useRef<BudgetCustomerFormHandle | null>(null);;
 
-    const handleSaveAsPending = () => {
+    const handleSaveAsPending = async () => {
         if (formRef.current) {
-            const data = formRef.current.submitForm(); // Llamamos a la función del hijo
-            console.log("Datos del formulario:", data); // Imprimir los datos en consola
+            const data = await formRef.current.submitForm(); // Usamos await para esperar la promesa
+            console.log("Datos del formulario:", data); // Ahora obtenemos el valor resuelto
         }
     };
 
