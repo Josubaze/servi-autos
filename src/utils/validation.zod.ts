@@ -1,4 +1,5 @@
 import { z } from "zod"
+import dayjs from 'dayjs';
 
 const roles = ["administrador", "lider"] as const;
 export type Roles = (typeof roles)[number];
@@ -98,4 +99,29 @@ export const ProviderSchema = z.object({
       .min(3, "El estado debe tener al menos 3 caracteres")
       .max(40, "El estado debe tener como máximo 40 caracteres"),
   }),
+});
+
+// Función para formatear la fecha con Day.js a dd/mm/yyyy
+const formatDayjsDate = (date: dayjs.Dayjs): string => {
+  return date.format('DD/MM/YYYY');
+};
+export const BudgetFormSchema = z.object({
+    number: z.string().regex(/^\d+$/, { message: "El número de presupuesto debe ser un entero positivo" }),
+    dateCreation: z.string().refine((value) => {
+        // Intenta parsear la fecha con Day.js y devuelve true si tiene éxito
+        const parsedDate = dayjs(value, 'DD/MM/YYYY', true);
+        return parsedDate.isValid();
+    }).transform((value) => {
+        // Transforma el valor a un formato específico después de la validación
+        return formatDayjsDate(dayjs(value, 'DD/MM/YYYY'));
+    }),
+    dateExpiration: z.string().refine((value) => {
+        // Intenta parsear la fecha con Day.js y devuelve true si tiene éxito
+        const parsedDate = dayjs(value, 'DD/MM/YYYY', true);
+        return parsedDate.isValid();
+    }).transform((value) => {
+        // Transforma el valor a un formato específico después de la validación
+        return formatDayjsDate(dayjs(value, 'DD/MM/YYYY'));
+    }),
+    currency: z.enum(["$", "Bs"]),
 });

@@ -43,6 +43,13 @@ interface Product {
     };
   }
 
+  interface BudgetForm{
+    n_budget: string;
+    dateCreation: Dayjs;
+    dateExpiration: Dayjs;
+    currency: string;
+  }
+
   interface TableBaseProps {
     searchTerm: string;
     isLoading: boolean;
