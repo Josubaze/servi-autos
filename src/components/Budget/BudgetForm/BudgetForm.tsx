@@ -1,44 +1,50 @@
 import { ThemeProvider } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { Select, MenuItem } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BudgetFormSchema } from 'src/utils/validation.zod';
 import { dateTheme } from "src/styles/themes/themeDate";
 import dayjs from "dayjs";
+import { forwardRef, useImperativeHandle } from "react";
 
-export const BudgetForm = () => {
-    const { register, handleSubmit, formState: { errors }, getValues , setValue} = useForm<BudgetForm>({
-        //resolver: zodResolver(BudgetFormSchema), hay que acomidar la validation de zod
+export const BudgetForm = forwardRef((props, ref) => {
+    const today = dayjs();
+    const expirationDate = today.add(14, 'day');
+    
+    const { register, formState: { errors }, getValues, setValue, trigger, watch } = useForm<BudgetForm>({
+        resolver: zodResolver(BudgetFormSchema), 
         defaultValues: {
-            dateCreation: null,
-            dateExpiration: null,
+            dateCreation: today,
+            dateExpiration: expirationDate,
+            currency: '$',
         }
     });
 
-    const onSubmit: SubmitHandler<BudgetForm> = (data) => {
-        console.log(data.n_budget);
-        console.log("Fecha de Creación:", data.dateCreation ? formatDayjsDate(data.dateCreation) : '');
-        console.log("Fecha de Vencimiento:", data.dateExpiration ? formatDayjsDate(data.dateExpiration) : '');
-        console.log(data.currency);
-        // Aquí puedes enviar los datos al componente padre o realizar otras acciones
+    const submitForm = async () => {
+        const formData = getValues(); 
+        const isFormValid = await trigger();
+        if (isFormValid) {
+            return formData;  
+        } else {
+            return null;
+        }
     };
 
-    // Función para formatear la fecha con Day.js a dd/mm/yyyy
-    const formatDayjsDate = (date: dayjs.Dayjs): string => {
-        return date.format('DD/MM/YYYY');
-    };
-
+    useImperativeHandle(ref, () => ({
+        submitForm,
+    }));
 
     return (
         <>
-            <form className="flex flex-col gap-y-2 pt-12 pl-4" onSubmit={handleSubmit(onSubmit)}>
+            <form className="flex flex-col gap-y-2 pt-12 pl-4">
                 <div className="flex flex-row justify-between items-center">
                     <div className="font-title font-bold flex-1">Presupuesto</div>
                     <div className="flex-1 text-right">
                         <input
                             placeholder="Nº de Presupuesto"
                             {...register("n_budget")}
-                            className="px-2 w-full border-solid border-2 rounded-xl bg-gray-800 focus:outline-none border-gray-500 focus:border-indigo-600 h-8 text-right"
+                            className="px-2 w-full border-solid border-2 rounded-xl bg-gray-800 focus:outline-none border-gray-500 focus:border-indigo-600 hover:border-gray-400 h-8 text-right"
                         />
                         {errors.n_budget && <p className="py-1 text-red-500">{errors.n_budget.message}</p>}
                     </div>
@@ -77,26 +83,55 @@ export const BudgetForm = () => {
                 <div className="flex flex-row justify-between items-center">
                     <div className="font-title font-bold flex-1">Cambiar Moneda</div>
                     <div className="font-title flex-1 text-right">
-                        <select
+                        <Select
                             {...register("currency")}
-                            className="px-2 w-3/4 border-solid border-2 rounded-xl bg-gray-800 focus:outline-none border-gray-500 focus:border-indigo-600 h-8 text-right"
+                            value={watch("currency")}
+                            MenuProps={{
+                                PaperProps: {
+                                    className: 'bg-gray-800 text-gray-100',
+                                },
+                                MenuListProps: {
+                                    sx: {
+                                        '& .MuiMenuItem-root.Mui-selected': {
+                                            backgroundColor: '#374151',
+                                            '&:hover': {
+                                                backgroundColor: '#374151',
+                                            },
+                                        },
+                                    },
+                                }
+                            }}
+                            sx={{
+                                px: 2,
+                                width: '100%',
+                                color: '#f3f4f6', 
+                                backgroundColor: '#1f2937', 
+                                border: '2px solid #6b7280', 
+                                borderRadius: '0.75rem', 
+                                height: '2rem', 
+                                textAlign: 'right',
+                                '&:hover': {
+                                    borderColor: '#9ca3af', 
+                                },
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    border: 'none', 
+                                },
+                                '&.Mui-focused': {
+                                    borderColor: '#4f46e5', 
+                                },
+                            }}
                         >
-                            <option value="$">$</option>
-                            <option value="Bs">Bs</option>
-                        </select>
+                            <MenuItem value="$" sx={{ '&:hover': { backgroundColor: '#4b5563' } }}>
+                                <span>$</span>
+                            </MenuItem>
+                            <MenuItem value="Bs" sx={{ '&:hover': { backgroundColor: '#4b5563' } }}>
+                                <span>Bs</span>
+                            </MenuItem>
+                        </Select>
                         {errors.currency && <p className="py-1 text-red-500">{errors.currency.message}</p>}
                     </div>
-                </div>
-
-                <div className="flex justify-end mt-4">
-                    <button
-                        type="submit"
-                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none"
-                    >
-                        Guardar
-                    </button>
                 </div>
             </form>
         </>
     );
-}
+})

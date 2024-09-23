@@ -1,5 +1,5 @@
 import { z } from "zod"
-import dayjs from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 
 const roles = ["administrador", "lider"] as const;
 export type Roles = (typeof roles)[number];
@@ -101,27 +101,17 @@ export const ProviderSchema = z.object({
   }),
 });
 
-// Función para formatear la fecha con Day.js a dd/mm/yyyy
-const formatDayjsDate = (date: dayjs.Dayjs): string => {
-  return date.format('DD/MM/YYYY');
-};
 export const BudgetFormSchema = z.object({
-    number: z.string().regex(/^\d+$/, { message: "El número de presupuesto debe ser un entero positivo" }),
-    dateCreation: z.string().refine((value) => {
-        // Intenta parsear la fecha con Day.js y devuelve true si tiene éxito
-        const parsedDate = dayjs(value, 'DD/MM/YYYY', true);
-        return parsedDate.isValid();
-    }).transform((value) => {
-        // Transforma el valor a un formato específico después de la validación
-        return formatDayjsDate(dayjs(value, 'DD/MM/YYYY'));
-    }),
-    dateExpiration: z.string().refine((value) => {
-        // Intenta parsear la fecha con Day.js y devuelve true si tiene éxito
-        const parsedDate = dayjs(value, 'DD/MM/YYYY', true);
-        return parsedDate.isValid();
-    }).transform((value) => {
-        // Transforma el valor a un formato específico después de la validación
-        return formatDayjsDate(dayjs(value, 'DD/MM/YYYY'));
-    }),
-    currency: z.enum(["$", "Bs"]),
+  n_budget: 
+    z.string().regex(/^\d+$/, { message: "El número de presupuesto debe ser un entero positivo" }),
+  dateCreation: 
+    z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), { message: 'Fecha de creación inválida' }),
+  dateExpiration: 
+    z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), { message: 'Fecha de vencimiento inválida' }),
+  currency: z.enum(["$", "Bs"], { message: "Moneda inválida" }),
+}).refine((data) => {
+  return data.dateExpiration.isSame(data.dateCreation) || data.dateExpiration.isAfter(data.dateCreation);
+}, {
+  message: "La fecha de vencimiento debe ser mayor o igual a la fecha de creación",
+  path: ["dateExpiration"],
 });

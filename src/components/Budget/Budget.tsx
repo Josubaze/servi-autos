@@ -16,12 +16,17 @@ interface BudgetCustomerFormHandle {
 
 export const Budget = () => {
 
-    const formRef = useRef<BudgetCustomerFormHandle | null>(null);;
+    const formCustomerRef = useRef<BudgetCustomerFormHandle | null>(null);
+    const formDateRef = useRef<BudgetCustomerFormHandle | null>(null);
 
     const handleSaveAsPending = async () => {
-        if (formRef.current) {
-            const data = await formRef.current.submitForm(); // Usamos await para esperar la promesa
-            console.log("Datos del formulario:", data); // Ahora obtenemos el valor resuelto
+        if (formCustomerRef.current) {
+            const customerData = await formCustomerRef.current.submitForm(); 
+            console.log("Datos del formulario:", customerData); // Ahora obtenemos el valor resuelto
+        }
+        if (formDateRef.current) {
+            const dateData = await formDateRef.current.submitForm(); 
+            console.log("Datos del formulario:", dateData); // Ahora obtenemos el valor resuelto
         }
     };
 
@@ -41,12 +46,12 @@ export const Budget = () => {
                 {/* Formulario de cliente */}
                 <div className="flex-1">
                     {/* Pasamos la función al componente hijo */}
-                    <BudgetCustomerForm ref={formRef}/>
+                    <BudgetCustomerForm ref={formCustomerRef}/>
                 </div>
 
                 {/* Formulario de presupuesto */}
                 <div className="flex-1">
-                    <BudgetForm/>
+                    <BudgetForm ref={formDateRef}/>
                 </div>
             </div>
 
