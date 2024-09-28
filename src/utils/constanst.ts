@@ -47,6 +47,7 @@ export const MENUCREATE= [
     { name: 'Almacén', href: '/manage/storehouse' },
     { name: 'Clientes', href: '/manage/clients', },
     { name: 'Proveedores', href: '/manage/providers', },
+    { name: 'Servicios', href: '/manage/services', },
   ];
   export const MENUCONTROL = [
     { name: 'Facturas', href: '/control/invoices' },
