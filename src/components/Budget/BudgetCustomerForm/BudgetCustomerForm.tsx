@@ -166,3 +166,6 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
         </>
     );
 });
+
+// Agrega el displayName para evitar el error de ESLint
+BudgetCustomerForm.displayName = 'BudgetCustomerForm';

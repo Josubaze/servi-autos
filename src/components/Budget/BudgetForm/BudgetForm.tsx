@@ -61,7 +61,7 @@ export const BudgetForm = forwardRef((props, ref) => {
                                 onChange={(newValue) => setValue("dateCreation", newValue)}                              
                             />
                         </ThemeProvider>
-                        {errors.dateCreation && <p className="py-1 text-red-500">{errors.dateCreation.message}</p>}
+                        {errors.dateCreation?.message && <p className="py-1 text-red-500">{String(errors.dateCreation.message)}</p>}
                     </div>
                 </div>
 
@@ -76,7 +76,7 @@ export const BudgetForm = forwardRef((props, ref) => {
                                 onChange={(newValue) => setValue("dateExpiration", newValue)} 
                             />
                         </ThemeProvider>
-                        {errors.dateExpiration && <p className="py-1 text-red-500">{errors.dateExpiration.message}</p>}
+                        {errors.dateExpiration?.message && <p className="py-1 text-red-500">{String(errors.dateExpiration.message)}</p>}
                     </div>
                 </div>
 
@@ -135,3 +135,7 @@ export const BudgetForm = forwardRef((props, ref) => {
         </>
     );
 })
+
+
+// Agrega el displayName para evitar el error de ESLint
+BudgetForm.displayName = 'BudgetForm';
