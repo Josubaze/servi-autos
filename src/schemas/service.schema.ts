@@ -1,7 +1,7 @@
 import { Schema, model, models } from 'mongoose';
 
 const serviceSchema = new Schema({
-  serviceName: {
+  name: {
     type: String,
     required: true,
     trim: true

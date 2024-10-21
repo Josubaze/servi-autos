@@ -31,6 +31,29 @@ interface Product {
     };
   }
 
+  interface ProductServ {
+    _id: string; 
+    name: string; 
+    category: string;
+    price: number; 
+}
+
+interface ProductInService {
+    product: ProductServ; 
+    quantity: number; 
+}
+
+interface Service {
+    _id: string; 
+    serviceName: string;
+    productsPrice: number;
+    servicePrice: number;
+    serviceQuantity: number;
+    totalPrice: number;
+    products: ProductInService[];
+}
+
+
   interface Customer {
     _id: string;
     id_card: string; 

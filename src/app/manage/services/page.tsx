@@ -1,5 +1,5 @@
 
-import CollapsibleTable from "src/components/Services/ServicesTable/ServicesTable"
-export default function storeHousePage(){
-  return <CollapsibleTable/>
+import {Services} from "src/components/Services/Services"
+export default function servicesPage(){
+  return <Services/>
 }
