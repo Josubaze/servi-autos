@@ -11,7 +11,7 @@ export const servicesApi = createApi({
             query: () => '/services',
             providesTags: ['Services'],
             transformResponse: (response: Service[]) => {
-                return response.sort((a, b) => a.serviceName.localeCompare(b.serviceName));
+                return response.sort((a, b) => a.name.localeCompare(b.name));
             },
             keepUnusedDataFor: 600,
         }),

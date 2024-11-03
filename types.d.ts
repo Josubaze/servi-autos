@@ -38,20 +38,41 @@ interface Product {
     price: number; 
 }
 
-interface ProductInService {
-    product: ProductServ; 
-    quantity: number; 
-}
+  interface ProductInService {
+      product: ProductServ; 
+      quantity: number; 
+  }
 
-interface Service {
-    _id: string; 
-    serviceName: string;
-    productsPrice: number;
-    servicePrice: number;
+
+  interface Service {
+    _id: string;
+    name: string;
     serviceQuantity: number;
+    servicePrice: number;
     totalPrice: number;
-    products: ProductInService[];
-}
+    products: Array<{ product: { _id: string; name: string; category: string; price: number }; quantity: number }>;
+  }
+
+
+  interface TableServicesProps {
+    data: Service[];
+    searchTerm: string;
+    isLoading: boolean;
+    isError: boolean;
+    isSuccess: boolean;
+    handleDelete: (id: string) => void;
+    handleEdit: (service: Service) => void;
+  }
+
+  interface RowProps {
+    row: Service;
+    handleEdit: (service: Service) => void;
+    handleDelete: (id: string) => void;
+  }
+
+  interface ProductRowProps {
+    product: { product: { _id: string; name: string; category: string; price: number }; quantity: number };
+  }
 
 
   interface Customer {

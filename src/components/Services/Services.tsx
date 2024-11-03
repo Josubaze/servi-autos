@@ -11,7 +11,7 @@ import { PageTitle } from '../Common/PageTitle';
 import { LottieProduct } from '../Dashboard/DashWidgets/DashWidgets';
 
 export const Services = () => {
-  const { data = [], isError, isLoading, isFetching, isSuccess } = useGetServicesQuery();
+  const { data = [], isError, isLoading, isSuccess } = useGetServicesQuery();
   const [deleteService, { isError: isErrorDelete }] = useDeleteServiceMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
@@ -45,7 +45,7 @@ export const Services = () => {
             </span>
           </button>
 
-          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder='Buscar por nombre, id, categoría..' />
+          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder='Buscar servicio por...' />
         </div>
 
         <TableServices
@@ -53,7 +53,6 @@ export const Services = () => {
           searchTerm={searchTerm}
           isLoading={isLoading}
           isError={isError}
-          isFetching={isFetching}
           isSuccess={isSuccess}
           handleDelete={handleDelete}
           handleEdit={handleEdit}

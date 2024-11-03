@@ -4,7 +4,7 @@ export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     background: {
-      paper: '#000000', 
+      paper: '#4f46e5', // Color de fondo del contenedor de la tabla(solo head en este caso luego se redefine)
     },
     text: {
       primary: '#ffffff',
@@ -12,16 +12,30 @@ export const darkTheme = createTheme({
     },
   },
   components: {
+    MuiTableCell: {
+      styleOverrides: {
+        head: {
+          backgroundColor: '#4f46e5 ', // Color de fondo de las celdas en la fila de encabezado
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#000000', // Color de fondo del contenedor principal
+        },
+      },
+    },
     MuiIconButton: {
       styleOverrides: {
         root: {
           '&:hover': {
             '& .MuiSvgIcon-root': {
               color: '#4f46e5',
-            }
-          }
-        }
-      }
-    }
-  }
+            },
+          },
+        },
+      },
+    },
+  },
 });
