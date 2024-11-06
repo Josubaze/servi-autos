@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { useState } from 'react';
 import { FaPlus } from "react-icons/fa6";
@@ -6,25 +6,26 @@ import { SearchBar } from 'src/components/Common/SearchBar';
 import { useDeleteServiceMutation, useGetServicesQuery } from 'src/redux/services/servicesApi';
 import { TableServices } from './TableServices';
 import { Notification } from '../Common/Notification';
-//import { SERVICEVOID } from 'src/utils/constanst';
 import { PageTitle } from '../Common/PageTitle';
 import { LottieProduct } from '../Dashboard/DashWidgets/DashWidgets';
+import { ServiceForm } from './ServiceForm';
 
 export const Services = () => {
   const { data = [], isError, isLoading, isSuccess } = useGetServicesQuery();
   const [deleteService, { isError: isErrorDelete }] = useDeleteServiceMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
-  const [showFormUpdate, setShowFormUpdate] = useState(false);
-  //const [currentService, setCurrentService] = useState(SERVICEVOID);
 
   const handleEdit = (service: Service) => {
-    //setCurrentService(service);
-    setShowFormUpdate(true);
+    setShowForm(true);
   };
 
   const handleDelete = async (serviceId: string) => {
     await deleteService(serviceId);
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
   };
 
   return (
@@ -68,7 +69,12 @@ export const Services = () => {
         {isErrorDelete &&
           <Notification message="Hubo un error al borrar el servicio" />
         }
-        
+
+        {showForm && (
+          <ServiceForm
+            onClose={handleCloseForm}
+          />
+        )}
       </div>
     </>
   );
