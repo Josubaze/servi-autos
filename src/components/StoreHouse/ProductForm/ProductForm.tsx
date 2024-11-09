@@ -44,12 +44,12 @@ export const FormProduct = ({
           </label>
           <input
             type="text"
-            id="vehicle_type"
-            {...register('vehicle_type')}
+            id="vehicleType"
+            {...register('vehicleType')}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {errors.vehicle_type?.message && <p className='text-red-500 pb-2'>{errors.vehicle_type.message}</p>}
+        {errors.vehicleType?.message && <p className='text-red-500 pb-2'>{errors.vehicleType.message}</p>}
 
         <div className="mb-4">
           <label className="block text-sm font-bold mb-2" htmlFor="description">

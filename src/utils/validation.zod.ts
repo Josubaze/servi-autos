@@ -122,24 +122,13 @@ export const ServiceSchema = z.object({
     .min(1, "El nombre es requerido")
     .max(100, "El nombre no puede exceder los 100 caracteres")
     .trim(),
-  productsPrice: z.number()
-    .nonnegative("El precio de los productos debe ser un número no negativo")
-    .default(0),
-  servicePrice: z.number()
-    .min(0, "El precio del servicio no puede ser negativo"),
-  serviceQuantity: z.number()
-    .min(1, "La cantidad de servicio debe ser al menos 1")
-    .default(1),
-  totalPrice: z.number()
-    .nonnegative("El precio total debe ser un número no negativo")
-    .default(0),
-  products: z.array(
-    z.object({
-      product: z.string()
-        .min(1, "El ID del producto es requerido"),
-      quantity: z.number()
-        .min(1, "La cantidad debe ser al menos 1")
-        .default(1)
-    })
-  ).optional(),
+  
+  servicePrice: z.union([
+    z.string()
+      .refine(price => !isNaN(parseFloat(price)) && parseFloat(price) > 0, { message: "El precio debe ser un número positivo" })
+      .transform(price => parseFloat(price)),
+    z.number()
+      .refine(price => price > 0, { message: "El precio debe ser un número positivo" })
+  ]),
+
 });

@@ -39,7 +39,7 @@ interface Product {
 }
 
   interface ProductInService {
-      product: ProductServ; 
+      product: string; 
       quantity: number; 
   }
 
@@ -47,10 +47,8 @@ interface Product {
   interface Service {
     _id: string;
     name: string;
-    serviceQuantity: number;
     servicePrice: number;
-    totalPrice: number;
-    products: Array<{ product: { _id: string; name: string; category: string; price: number }; quantity: number }>;
+    products: ProductInService[];
   }
 
 

@@ -5,29 +5,30 @@ import { ServiceSchema } from 'src/utils/validation.zod';
 import { useCreateServiceMutation } from 'src/redux/services/servicesApi'; 
 import { TableProducts } from '../TableProducts'; 
 import { useGetProductsQuery } from 'src/redux/services/productsApi'; 
-import Tooltip from '@mui/material/Tooltip'; 
-import { MdDelete } from "react-icons/md"; 
+import { Notification } from 'src/components/Common/Notification';
+import TextField from '@mui/material/TextField';
+import {  ThemeProvider } from "@mui/material/styles";
+import { TextFieldTheme } from 'src/styles/themes/themeTextField';
 
 type FormServiceProps = { onClose: () => void; };
 
 export const ServiceForm = ({ onClose }: FormServiceProps) => { 
-  const { register, handleSubmit, formState: { errors } } = useForm<Omit<Service, '_id'>>({ resolver: zodResolver(ServiceSchema) });
-
-  const { data = [], isError: isErrorProducts, isLoading, isFetching, isSuccess } = useGetProductsQuery(); 
+  const { register, handleSubmit, formState: { errors } } = useForm<Omit<Service, '_id'>>({
+    resolver: zodResolver(ServiceSchema),
+  });
+  const { data = [], isError: isErrorProducts } = useGetProductsQuery(); 
   const [createService, { isError }] = useCreateServiceMutation(); 
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]); 
   const [isProductTableVisible, setIsProductTableVisible] = useState(false); 
 
-  // Función para manejar la selección de productos
   const handleProductSelect = (product: Product) => { 
     if (!product.name) { 
       console.error("El producto seleccionado no tiene un 'name'"); 
     } 
-    setSelectedProducts((prev) => [...prev, { ...product, quantity: 1 }]); // Establecer cantidad inicial en 1
+    setSelectedProducts((prev) => [...prev, { ...product, quantity: 1 }]); 
     setIsProductTableVisible(false); 
   }; 
 
-  // Función para manejar el cambio en la cantidad
   const handleQuantityChange = (index: number, newQuantity: number) => { 
     const updatedProducts = [...selectedProducts]; 
     updatedProducts[index].quantity = newQuantity; 
@@ -35,11 +36,16 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
   }; 
 
   const onSubmit: SubmitHandler<Omit<Service, '_id'>> = async (data) => { 
-    // Aquí se procesaría la lógica de enviar los datos, como antes
-    // const serviceData = { ...data, products: selectedProducts };
-    // await createService(serviceData).unwrap();
-    // onClose(); 
-  }; 
+    const formData = {
+      ...data,
+      products: selectedProducts.map(product => ({
+        product: product._id,
+        quantity: product.quantity,
+      })),
+    };
+    await createService(formData).unwrap();
+    onClose();
+  };
 
   return ( 
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"> 
@@ -54,96 +60,64 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
           <h2 className="text-2xl text-center font-bold mb-6">Nuevo Servicio</h2> 
 
           <div className="mb-4"> 
-            <label className="block text-sm font-bold mb-2" htmlFor="name"> Nombre del Servicio </label> 
-            <input 
-              type="text" 
-              id="name" 
-              {...register('name')} 
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-            /> 
-            {errors.name && <p className="text-red-500">{errors.name.message}</p>} 
+            <ThemeProvider theme={TextFieldTheme}>
+              <TextField 
+                label="Nombre del Servicio" 
+                variant="outlined"
+                fullWidth
+                {...register('name')} 
+                error={!!errors.name}
+                helperText={errors.name?.message}
+              />
+            </ThemeProvider>
           </div>
 
           <div className="mb-4"> 
-            <label className="block text-sm font-bold mb-2" htmlFor="price"> Precio del Servicio </label> 
-            <input 
-              type="number" 
-              id="price" 
-              {...register('servicePrice')} 
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-            /> 
-            {errors.servicePrice && <p className="text-red-500">{errors.servicePrice.message}</p>} 
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Precio del Servicio" 
+                variant="outlined"
+                fullWidth
+                type="number" 
+                {...register('servicePrice')} 
+                error={!!errors.servicePrice}
+                helperText={errors.servicePrice?.message}  
+              />
+          </ThemeProvider>
           </div>
 
           <button 
             type="button" 
             onClick={() => setIsProductTableVisible(true)} 
-            className="bg-blue-500 text-white px-4 py-2 rounded" 
+            className="bg-gray-600 text-white px-4 py-2 rounded transition ease-in-out delay-150 hover:scale-110 hover:bg-blue-700 duration-300" 
           > 
             Seleccionar Productos 
           </button>
 
-          {/* Lista de productos seleccionados */}
           <div className="mt-4"> 
             <h3 className="font-bold text-xl mb-2">Productos Seleccionados:</h3> 
             {selectedProducts.length > 0 ? ( 
               <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md"> 
                 <table className="min-w-full table-auto text-gray-200"> 
-                  <thead> 
-                    <tr className="border-b border-gray-600"> 
-                      <th className="px-4 py-2 text-left">Nombre</th> 
-                      <th className="px-4 py-2 text-left">Cantidad</th> 
-                      <th className="px-4 py-2 text-left">Precio</th> 
-                      <th className="px-4 py-2 text-left">Total</th> 
-                      <th className="px-4 py-2 text-left">Acción</th> 
-                    </tr> 
-                  </thead> 
-                  <tbody> 
-                    {selectedProducts.map((product, index) => ( 
-                      <tr key={index} className="border-b border-gray-600"> 
-                        <td className="px-4 py-2">{product.name}</td> 
-                        <td className="px-4 py-2"> 
-                          <input 
-                            type="number" 
-                            min="1" 
-                            value={product.quantity} 
-                            onChange={(e) => handleQuantityChange(index, Number(e.target.value))} 
-                            className="bg-gray-700 text-white p-2 rounded-md w-20" 
-                          /> 
-                        </td> 
-                        <td className="px-4 py-2">${product.price.toFixed(2)}</td> 
-                        <td className="px-4 py-2">${product.quantity * product.price}</td> 
-                        <td className="px-4 py-2 text-center"> 
-                          <Tooltip title="Eliminar producto"> 
-                            <span> 
-                              <MdDelete 
-                                className="cursor-pointer text-2xl text-gray-600 hover:text-red-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-150 duration-300" 
-                                onClick={() => setSelectedProducts((prev) => prev.filter((_, i) => i !== index))} 
-                              /> 
-                            </span> 
-                          </Tooltip> 
-                        </td> 
-                      </tr> 
-                    ))} 
-                  </tbody> 
+                  {/* Tabla de productos seleccionados */}
                 </table> 
               </div> 
             ) : ( 
               <p>No hay productos seleccionados.</p> 
             )}
           </div>
-
+          {isErrorProducts && <Notification message='Error al cargar productos!' /> }
           <div className="flex justify-between mt-6"> 
             <button 
               type="submit" 
-              className="bg-green-500 text-white px-4 py-2 rounded" 
+              className="bg-green-600 text-white px-11 py-2 rounded transition ease-in-out delay-150 hover:scale-110 hover:bg-green-700 duration-300" 
             > 
               Crear Servicio 
             </button> 
             <button 
               type="button" 
               onClick={onClose} 
-              className="bg-gray-500 text-white px-4 py-2 rounded" 
+              className="bg-gray-600 text-white px-4 py-2 rounded transition ease-in-out delay-150 hover:scale-110 hover:bg-red-700 duration-300" 
             > 
               Cancelar 
             </button> 
