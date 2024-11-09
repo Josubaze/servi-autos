@@ -24,7 +24,7 @@ const productSchema = new Schema ({
         type: Number,
         required: true
     },
-    vehicle_type: { 
+    vehicleType: { 
         type: String,
         required: false,
         trim: true

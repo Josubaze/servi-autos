@@ -17,7 +17,7 @@ export const UpdateProductForm = ({
     defaultValues: {
       _id: product._id,
       name: product.name,
-      vehicle_type: product.vehicle_type,
+      vehicleType: product.vehicleType,
       description: product.description,
       category: product.category,
       quantity: product.quantity,
@@ -69,11 +69,11 @@ export const UpdateProductForm = ({
           <input
             type="text"
             id="vehicle_type"
-            {...register('vehicle_type')}
+            {...register('vehicleType')}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        {errors.vehicle_type?.message && <p className='text-red-500 pb-2'>{errors.vehicle_type.message}</p>}
+        {errors.vehicleType?.message && <p className='text-red-500 pb-2'>{errors.vehicleType.message}</p>}
 
 
         <div className="mb-4">

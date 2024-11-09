@@ -149,8 +149,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
 
             {/* Modal para la tabla de selección de clientes */}
             {isTableVisible && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-                    <div className="bg-gray-100 p-2 rounded-lg shadow-lg w-3/4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
                         <TableCustomers
                             data={customers}
                             isLoading={isLoadingCustomers}
@@ -160,7 +159,6 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
                             onSelectCustomer={handleCustomerSelect}
                             onCloseTable={() => setIsTableVisible(false)}
                         />
-                    </div>
                 </div>
             )}
         </>

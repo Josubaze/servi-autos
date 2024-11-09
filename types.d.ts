@@ -2,7 +2,7 @@ interface Product {
     _id: string;
     name: string;
     description: string;
-    vehicle_type: string;
+    vehicleType: string;
     category: string;
     quantity: number;
     price: number;

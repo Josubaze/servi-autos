@@ -18,16 +18,6 @@ export const useResponsiveColumns = (
   const isTablet = useMediaQuery('(min-width:601px) and (max-width:960px)');
 
   return columns.map(column => {
-    if (column.name === "_id") {
-      // Always hide the "ID" column
-      return {
-        ...column,
-        options: {
-          ...column.options,
-          display: false
-        }
-      };
-    }
 
     if (isMobile) {
       // In mobile view, show only specified columns
@@ -69,7 +59,7 @@ export const useResponsiveColumns = (
       };
     }
 
-    // For desktop, show all columns except "ID"
+    // For desktop, show all columns 
     return {
       ...column,
       options: {

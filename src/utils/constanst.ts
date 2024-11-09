@@ -1,7 +1,7 @@
 export const PRODUCTVOID = {
     _id: '',
     name: '',
-    vehicle_type: '',
+    vehicleType: '',
     description: '',
     category: '',
     price: 0,

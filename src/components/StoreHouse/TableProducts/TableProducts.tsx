@@ -32,7 +32,7 @@ export const TableProducts: React.FC<TableProductProps> = ({
       options: { filter: true, sort: true } 
     },
     { 
-      name: "vehicle_type", 
+      name: "vehicleType", 
       label: "Modelo de Vehículo", 
       options: { filter: true, sort: true } 
     },
@@ -68,7 +68,7 @@ export const TableProducts: React.FC<TableProductProps> = ({
           const product = {
             _id: rowData[0],
             name: rowData[1],
-            vehicle_type: rowData[2],
+            vehicleType: rowData[2],
             description: rowData[3],
             category: rowData[4],
             quantity: rowData[5],
@@ -100,18 +100,18 @@ export const TableProducts: React.FC<TableProductProps> = ({
   ];
 
   const mobileColumnsToShow = ['name', 'quantity', 'price'];
-  const tabletColumnsToShow = ['name', 'vehicle_type', 'quantity', 'price'];
+  const tabletColumnsToShow = ['name', 'vehicleType', 'quantity', 'price'];
   const responsiveColumns = useResponsiveColumns(
     columns,
     mobileColumnsToShow,
     tabletColumnsToShow
   );
 
-  const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'category', 'vehicle_type']);
+  const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'category', 'vehicleType']);
   const rows = filteredData.map(product => ({
     id: product._id,
     name: product.name,
-    vehicle_type: product.vehicle_type,
+    vehicleType: product.vehicleType,
     description: product.description,
     category: product.category,
     quantity: product.quantity,
