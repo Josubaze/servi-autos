@@ -31,26 +31,34 @@ interface Product {
     };
   }
 
-  interface ProductServ {
-    _id: string; 
-    name: string; 
-    category: string;
-    price: number; 
-}
+  // Tipo que puede ser solo `productId` o un objeto `Product` completo
+  type ProductReference = 
+  { 
+    productId: string; 
+  } | 
+  { 
+    product: {
+      _id: string;
+      name: string;
+      category: string;
+      price: number;
+    }; 
+  };
 
+  // Interfaz unificada de `ProductInService` con flexibilidad para referencias o datos completos
   interface ProductInService {
-      product: string; 
-      quantity: number; 
+    product: ProductReference;
+    quantity: number;
   }
-
-
+  
   interface Service {
     _id: string;
     name: string;
+    serviceQuantity: number;
     servicePrice: number;
     products: ProductInService[];
+    totalPrice: number;
   }
-
 
   interface TableServicesProps {
     data: Service[];
@@ -63,15 +71,22 @@ interface Product {
   }
 
   interface RowProps {
-    row: Service;
+    service: Service;
     handleEdit: (service: Service) => void;
     handleDelete: (id: string) => void;
   }
 
   interface ProductRowProps {
-    product: { product: { _id: string; name: string; category: string; price: number }; quantity: number };
+    product: { 
+      product: { 
+        _id: string; 
+        name: string; 
+        category: string; 
+        price: number 
+      }; 
+      quantity: number 
+    };
   }
-
 
   interface Customer {
     _id: string;

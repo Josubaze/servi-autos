@@ -31,7 +31,7 @@ export const StoreHouse = () => {
   const handleDelete = async (productId: string) => {
     await deleteProduct(productId);
   };
-  console.log(data);
+
   return (
     <>
       <div className="flex justify-center items-center">  

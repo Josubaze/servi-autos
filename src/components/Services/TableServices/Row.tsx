@@ -15,7 +15,7 @@ import { IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import Tooltip from '@mui/material/Tooltip';
 
-export const Row: React.FC<RowProps> = ({ row, handleEdit, handleDelete }) => {
+export const Row: React.FC<RowProps> = ({ service, handleEdit, handleDelete }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -26,10 +26,10 @@ export const Row: React.FC<RowProps> = ({ row, handleEdit, handleDelete }) => {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">{row.name}</TableCell>
-        <TableCell align="right">{row.serviceQuantity}</TableCell>
-        <TableCell align="right">{row.servicePrice}</TableCell>
-        <TableCell align="right">{row.totalPrice}</TableCell>
+        <TableCell component="th" scope="row">{service.name}</TableCell>
+        <TableCell align="right">{service.serviceQuantity}</TableCell>
+        <TableCell align="right">{service.servicePrice}</TableCell>
+        <TableCell align="right">{service.totalPrice}</TableCell>
         <TableCell>
           <div className='flex justify-end  py-2 gap-5'>
             <Tooltip title="Editar proveedor">
@@ -43,7 +43,7 @@ export const Row: React.FC<RowProps> = ({ row, handleEdit, handleDelete }) => {
               <span>
                 <MdDelete
                 className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-500 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-150 duration-300"
-                
+                onClick={() => handleDelete(service._id)}
                 />
               </span>
             </Tooltip>
@@ -66,9 +66,29 @@ export const Row: React.FC<RowProps> = ({ row, handleEdit, handleDelete }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.products.map((product) => (
-                    <ProductRow key={product.product._id} product={product} />
-                  ))}
+                  {service.products.map((productInService) => {
+                    // Verificamos si `productInService.product` es un objeto Product completo
+                    if ('product' in productInService.product) {
+                      // Ahora sabemos que `productInService.product` es un objeto Product
+                      const product = productInService.product.product; // Accedemos al objeto Product
+
+                      return (
+                        <ProductRow
+                          key={product._id}
+                          product={{
+                            _id: product._id,
+                            name: product.name,
+                            category: product.category,
+                            price: product.price,
+                          }}
+                          quantity={productInService.quantity}
+                        />
+                      );
+                    }
+                    
+                    // Si `productInService.product` es solo el ID, no renderizamos el producto.
+                    return null;
+                  })}
                 </TableBody>
               </Table>
             </Box>

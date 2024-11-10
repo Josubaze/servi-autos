@@ -9,6 +9,8 @@ import { Notification } from 'src/components/Common/Notification';
 import TextField from '@mui/material/TextField';
 import {  ThemeProvider } from "@mui/material/styles";
 import { TextFieldTheme } from 'src/styles/themes/themeTextField';
+import Tooltip from '@mui/material/Tooltip';
+import { MdDelete } from "react-icons/md";
 
 type FormServiceProps = { onClose: () => void; };
 
@@ -39,7 +41,7 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
     const formData = {
       ...data,
       products: selectedProducts.map(product => ({
-        product: product._id,
+        product: product._id, // Asegúrate de enviar solo el ID del producto, no el objeto con `productId`
         quantity: product.quantity,
       })),
     };
@@ -94,12 +96,49 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
             Seleccionar Productos 
           </button>
 
-          <div className="mt-4"> 
+           {/* Lista de productos seleccionados */}
+           <div className="mt-4"> 
             <h3 className="font-bold text-xl mb-2">Productos Seleccionados:</h3> 
             {selectedProducts.length > 0 ? ( 
               <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-md"> 
                 <table className="min-w-full table-auto text-gray-200"> 
-                  {/* Tabla de productos seleccionados */}
+                  <thead> 
+                    <tr className="border-b border-gray-600"> 
+                      <th className="px-4 py-2 text-left">Nombre</th> 
+                      <th className="px-4 py-2 text-left">Cantidad</th> 
+                      <th className="px-4 py-2 text-left">Precio</th> 
+                      <th className="px-4 py-2 text-left">Total</th> 
+                      <th className="px-4 py-2 text-left">Acción</th> 
+                    </tr> 
+                  </thead> 
+                  <tbody> 
+                    {selectedProducts.map((product, index) => ( 
+                      <tr key={index} className="border-b border-gray-600"> 
+                        <td className="px-4 py-2">{product.name}</td> 
+                        <td className="px-4 py-2"> 
+                          <input 
+                            type="number" 
+                            min="1" 
+                            value={product.quantity} 
+                            onChange={(e) => handleQuantityChange(index, Number(e.target.value))} 
+                            className="bg-gray-700 text-white p-2 rounded-md w-20" 
+                          /> 
+                        </td> 
+                        <td className="px-4 py-2">${product.price.toFixed(2)}</td> 
+                        <td className="px-4 py-2">${product.quantity * product.price}</td> 
+                        <td className="px-4 py-2 text-center"> 
+                          <Tooltip title="Eliminar producto"> 
+                            <span> 
+                              <MdDelete 
+                                className="cursor-pointer text-2xl text-gray-600 hover:text-red-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-150 duration-300" 
+                                onClick={() => setSelectedProducts((prev) => prev.filter((_, i) => i !== index))} 
+                              /> 
+                            </span> 
+                          </Tooltip> 
+                        </td> 
+                      </tr> 
+                    ))} 
+                  </tbody> 
                 </table> 
               </div> 
             ) : ( 

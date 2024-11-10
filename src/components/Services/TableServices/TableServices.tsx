@@ -108,13 +108,13 @@ export const TableServices: React.FC<TableServicesProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {rowsToShow.map((row: Service) => (
-              <Row key={row._id} row={row} handleEdit={handleEdit} handleDelete={handleDelete} />
+            {rowsToShow.map((service: Service) => (
+              <Row key={service._id} service={service} handleEdit={handleEdit} handleDelete={handleDelete} />
             ))}
           </TableBody>
         </Table>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 25, 50]}
           component="div"
           count={filteredData.length}
           rowsPerPage={rowsPerPage}
