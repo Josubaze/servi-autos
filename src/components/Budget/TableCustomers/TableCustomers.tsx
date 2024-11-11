@@ -142,7 +142,7 @@ export const TableCustomers: React.FC<{
       ) : isSuccess ? (
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={darkTheme}>
-          <div className="w-full">
+          <div className="w-full max-h-[750px] overflow-y-auto">
             <MUIDataTable
               title={"Lista de Clientes"}
               data={rows}

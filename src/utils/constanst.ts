@@ -32,6 +32,16 @@ export const PROVIDERVOID: Provider = {
   }
 };
 
+export const SERVICEVOID: Service = {
+  _id: '',
+  name: '',
+  servicePrice: 0,
+  serviceQuantity: 0,
+  totalPrice: 0,
+  products: [],
+}
+
+
 export const MENUPROFILE = [
   { name: 'Tu Perfil', href: '/profile' },
   { name: 'Cerrar Sesión', href: '/api/auth/signout' },

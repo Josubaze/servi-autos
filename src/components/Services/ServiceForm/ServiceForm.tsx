@@ -41,7 +41,7 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
     const formData = {
       ...data,
       products: selectedProducts.map(product => ({
-        product: product._id, // Asegúrate de enviar solo el ID del producto, no el objeto con `productId`
+        product: product._id, 
         quantity: product.quantity,
       })),
     };

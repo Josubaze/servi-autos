@@ -98,16 +98,17 @@ export const TableProducts: React.FC<{
   );
 
   return (
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={darkTheme}>
-        <div className="w-full">
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={darkTheme}>
+        <div className="w-full max-h-[750px] overflow-y-auto">
           <MUIDataTable 
             title={"Lista de Productos"} 
             data={data} 
             columns={responsiveColumns} 
-            options={options} /> 
+            options={options} 
+          />
         </div>
-        </ThemeProvider>
-      </StyledEngineProvider>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };

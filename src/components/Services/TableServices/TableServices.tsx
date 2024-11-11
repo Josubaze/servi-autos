@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import { useSortableData } from 'src/hooks/useSortableData';
 import { Loading } from 'src/components/Common/Loading';
 import { useDynamicFilter } from 'src/hooks/useProductFilter';
+import { useMediaQuery } from '@mui/material';
 
 export const TableServices: React.FC<TableServicesProps> = ({
   data,
@@ -29,7 +30,8 @@ export const TableServices: React.FC<TableServicesProps> = ({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'serviceQuantity', 'servicePrice', 'totalPrice']);
   const { sortedData, order, orderBy, handleRequestSort } = useSortableData(filteredData, 'serviceQuantity');
-  
+  const isMobile = useMediaQuery('(max-width:600px)');
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -68,6 +70,17 @@ export const TableServices: React.FC<TableServicesProps> = ({
           <TableHead>
             <TableRow>
               <TableCell />
+              {!isMobile && (
+                <TableCell>
+                  <TableSortLabel
+                    active={orderBy === '_id'}
+                    direction={orderBy === '_id' ? order : 'asc'}
+                    onClick={() => handleRequestSort('_id')}
+                  >
+                    ID
+                  </TableSortLabel>
+                </TableCell>
+              )}
               <TableCell>
                 <TableSortLabel
                   active={orderBy === 'name'}
@@ -75,15 +88,6 @@ export const TableServices: React.FC<TableServicesProps> = ({
                   onClick={() => handleRequestSort('name')}
                 >
                   Nombre
-                </TableSortLabel>
-              </TableCell>
-              <TableCell align="right">
-                <TableSortLabel
-                  active={orderBy === 'serviceQuantity'}
-                  direction={orderBy === 'serviceQuantity' ? order : 'asc'}
-                  onClick={() => handleRequestSort('serviceQuantity')}
-                >
-                  Cantidad
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">
@@ -121,6 +125,8 @@ export const TableServices: React.FC<TableServicesProps> = ({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage="Filas por página"
+          labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`} 
         />
       </TableContainer>
     </ThemeProvider>

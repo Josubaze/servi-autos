@@ -30,7 +30,7 @@ export const servicesApi = createApi({
             }),
             invalidatesTags: ['Services'],
         }),
-        updateService: builder.mutation<void, Service>({
+        updateService: builder.mutation<void, ServiceCreate>({
             query: (service) => ({
                 url: `/services/${service._id}`,
                 method: 'PUT',

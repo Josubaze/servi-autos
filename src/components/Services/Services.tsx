@@ -7,17 +7,23 @@ import { useDeleteServiceMutation, useGetServicesQuery } from 'src/redux/service
 import { TableServices } from './TableServices';
 import { Notification } from '../Common/Notification';
 import { PageTitle } from '../Common/PageTitle';
-import { LottieProduct } from '../Dashboard/DashWidgets/DashWidgets';
 import { ServiceForm } from './ServiceForm';
+import { UpdateServiceForm } from './UpdateServiceForm';
+import { SERVICEVOID } from 'src/utils/constanst';
+import dynamic from 'next/dynamic';
+export const LottieTools = dynamic(() => import("src/components/LottieIcon/LottieTools"), { ssr: false });
 
 export const Services = () => {
   const { data = [], isError, isLoading, isSuccess } = useGetServicesQuery();
   const [deleteService, { isError: isErrorDelete }] = useDeleteServiceMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
+  const [showFormUpdate, setShowFormUpdate] = useState(false);
+  const [currentService, setCurrentService] = useState(SERVICEVOID);
 
   const handleEdit = (service: Service) => {
-    setShowForm(true);
+    setCurrentService(service);
+    setShowFormUpdate(true);
   };
 
   const handleDelete = async (serviceId: string) => {
@@ -30,8 +36,8 @@ export const Services = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center">
-        <LottieProduct loop className="h-20 pt-2" />
+      <div className="flex justify-center items-center ">
+        <LottieTools loop className="h-24 pt-3" />
         <PageTitle title="Gestión de Servicios" />
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
@@ -75,6 +81,12 @@ export const Services = () => {
             onClose={handleCloseForm}
           />
         )}
+
+        {showFormUpdate && 
+          <UpdateServiceForm 
+            service={currentService} 
+            onClose={() => setShowFormUpdate(false)}
+          />}
       </div>
     </>
   );

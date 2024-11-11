@@ -22,7 +22,6 @@ export const StoreHouse = () => {
   const [showFormUpdate, setShowFormUpdate] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(PRODUCTVOID);
 
-  console.log(data);
   const handleEdit = (product: Product) => {
     setCurrentProduct(product);
     setShowFormUpdate(true);

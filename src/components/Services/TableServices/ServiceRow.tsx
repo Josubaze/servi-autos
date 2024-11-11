@@ -14,9 +14,11 @@ import { ProductRow } from './ProductRow';
 import { IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import Tooltip from '@mui/material/Tooltip';
+import { useMediaQuery } from '@mui/material';
 
 export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDelete }) => {
   const [open, setOpen] = React.useState(false);
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   return (
     <React.Fragment>
@@ -26,23 +28,33 @@ export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDele
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">{service.name}</TableCell>
-        <TableCell align="right">{service.serviceQuantity}</TableCell>
+        {!isMobile && 
+        <TableCell 
+          sx={{
+            maxWidth: '150px', 
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis', 
+            wordWrap: 'break-word',
+            padding: '4px 8px'
+          }}>
+          {service._id}
+        </TableCell>}
+        <TableCell >{service.name}</TableCell>
         <TableCell align="right">{service.servicePrice}</TableCell>
         <TableCell align="right">{service.totalPrice}</TableCell>
         <TableCell>
           <div className='flex justify-end  py-2 gap-5'>
-            <Tooltip title="Editar proveedor">
+            <Tooltip title="Modificar Servicio">
               <span>
-                <IoPencil className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-500 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-150 duration-300" 
-                
+                <IoPencil className="cursor-pointer text-2xl text-gray-600 hover:text-orange-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-150 duration-300" 
+                onClick={() => handleEdit(service)}
                 />
               </span>
             </Tooltip>
-            <Tooltip title="Eliminar proveedor">
+            <Tooltip title="Eliminar Servicio">
               <span>
                 <MdDelete
-                className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-500 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-150 duration-300"
+                className="cursor-pointer text-2xl text-gray-600 hover:text-red-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-150 duration-300"
                 onClick={() => handleDelete(service._id)}
                 />
               </span>
