@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import { darkTheme } from 'src/styles/themes/themeTable';
-import { Row } from './Row'; 
+import { ServiceRow } from './ServiceRow'; 
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import { useSortableData } from 'src/hooks/useSortableData';
@@ -109,7 +109,7 @@ export const TableServices: React.FC<TableServicesProps> = ({
           </TableHead>
           <TableBody>
             {rowsToShow.map((service: Service) => (
-              <Row key={service._id} service={service} handleEdit={handleEdit} handleDelete={handleDelete} />
+              <ServiceRow key={service._id} service={service} handleEdit={handleEdit} handleDelete={handleDelete} />
             ))}
           </TableBody>
         </Table>

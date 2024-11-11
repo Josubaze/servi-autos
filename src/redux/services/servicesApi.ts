@@ -22,7 +22,7 @@ export const servicesApi = createApi({
             }),
             invalidatesTags: ['Services'],
         }),
-        createService: builder.mutation<void, Omit<Service, '_id'>>({
+        createService: builder.mutation<void, Omit<ServiceCreate, '_id'>>({
             query: (newService) => ({
                 url: '/services',
                 method: 'POST',

@@ -15,7 +15,7 @@ import { IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import Tooltip from '@mui/material/Tooltip';
 
-export const Row: React.FC<RowProps> = ({ service, handleEdit, handleDelete }) => {
+export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDelete }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -66,29 +66,16 @@ export const Row: React.FC<RowProps> = ({ service, handleEdit, handleDelete }) =
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {service.products.map((productInService) => {
-                    // Verificamos si `productInService.product` es un objeto Product completo
-                    if ('product' in productInService.product) {
-                      // Ahora sabemos que `productInService.product` es un objeto Product
-                      const product = productInService.product.product; // Accedemos al objeto Product
-
+                  {service.products.map((product) => {                  
                       return (
                         <ProductRow
-                          key={product._id}
-                          product={{
-                            _id: product._id,
-                            name: product.name,
-                            category: product.category,
-                            price: product.price,
-                          }}
-                          quantity={productInService.quantity}
+                          key={product.product._id}
+                          product={product.product}
+                          quantity={product.quantity}
                         />
                       );
-                    }
-                    
-                    // Si `productInService.product` es solo el ID, no renderizamos el producto.
-                    return null;
-                  })}
+                    }                  
+                  )}
                 </TableBody>
               </Table>
             </Box>

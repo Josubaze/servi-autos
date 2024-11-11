@@ -146,6 +146,7 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
             )}
           </div>
           {isErrorProducts && <Notification message='Error al cargar productos!' /> }
+          {isError && <Notification message='Error al cargar el Servicio!' /> }
           <div className="flex justify-between mt-6"> 
             <button 
               type="submit" 
