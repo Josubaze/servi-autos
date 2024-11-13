@@ -126,20 +126,13 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
                         {errors.phone && <p className="py-1 text-red-500">{errors.phone.message}</p>}
                     </div>
 
-                    <div className="w-full flex flex-wrap gap-x-2">
+                    <div className="w-full">
                         <input
                             placeholder="Estado"
-                            {...register("address.state")}
+                            {...register("address")}
                             className="w-1/4 px-2 border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
                         />
-                        {errors.address?.state && <p className="my-2 text-red-500">{errors.address.state.message}</p>}
-                        
-                        <input
-                            placeholder="Ciudad"
-                            {...register("address.city")}
-                            className="w-2/5 px-2 border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
-                        />
-                        {errors.address?.city && <p className="py-1 text-red-500">{errors.address.city.message}</p>}         
+                        {errors.address && <p className="my-2 text-red-500">{errors.address.message}</p>}       
                     </div>
                     {isErrorCustomer && <p className='text-red-500 py-2 text-center'>Hubo un error al tratar de crear el cliente</p>}
                 </div>

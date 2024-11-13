@@ -1,6 +1,12 @@
 import { Schema, model, models } from 'mongoose'
 
 const providerSchema = new Schema({
+    id_card: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
     name: {
         type: String,
         required: true,

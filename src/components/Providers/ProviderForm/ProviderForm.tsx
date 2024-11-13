@@ -26,6 +26,20 @@ export const ProviderForm = ({ onClose }: FormProviderProps) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg mx-auto bg-black-nav p-8 rounded-md shadow-md border-2 border-x-gray-600">
         <h2 className="text-2xl text-center font-bold mb-6">Nuevo Proveedor</h2>
+
+        <div className="mb-4">
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Cédula | RIF" 
+                variant="outlined"
+                fullWidth
+                type="text" 
+                {...register('id_card')} 
+                error={!!errors.id_card}
+                helperText={errors.id_card?.message}  
+              />
+          </ThemeProvider>
+        </div>
         
         <div className="mb-4">
           <ThemeProvider theme={TextFieldTheme}>

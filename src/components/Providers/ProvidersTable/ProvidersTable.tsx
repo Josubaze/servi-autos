@@ -25,6 +25,11 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
       options: { filter: false, sort: true } 
     },
     { 
+      name: "id_card", 
+      label: "Cédula | RIF", 
+      options: { filter: false, sort: true } 
+    },
+    { 
       name: "name", 
       label: "Nombre", 
       options: { filter: true, sort: true } 
@@ -64,11 +69,12 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
           const rowData = tableMeta.rowData;
           const provider = { 
             _id: rowData[0],
-            name: rowData[1],
-            contactName: rowData[2],
-            email: rowData[3],
-            phone: rowData[4],
-            address: rowData[5],
+            id_card: rowData[1],
+            name: rowData[2],
+            contactName: rowData[3],
+            email: rowData[4],
+            phone: rowData[5],
+            address: rowData[6],
           };
           return (
             <div className='flex py-2 gap-5 justify-end'>
@@ -82,7 +88,7 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
   ];
 
   const mobileColumnsToShow = ['name', 'phone', 'options'];
-  const tabletColumnsToShow = ['name', 'contactName', 'email', 'phone', 'options'];
+  const tabletColumnsToShow = ['id_card','name', 'contactName', 'phone', 'options'];
   const responsiveColumns = useResponsiveColumns(
     columns,
     mobileColumnsToShow,
@@ -90,9 +96,10 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
     false
   );
 
-  const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'contactName', 'email']);
+  const filteredData = useDynamicFilter(data, searchTerm, ['id_card','_id', 'name', 'contactName', 'email', 'address']);
   const rows = filteredData.map(provider => ({
     _id: provider._id,
+    id_card: provider.id_card,
     name: provider.name,
     contactName: provider.contactName,
     email: provider.email,
