@@ -79,8 +79,7 @@ export const TableCustomers: React.FC<{
     name: customer.name,
     email: customer.email,
     phone: customer.phone,
-    city: customer.address.city, 
-    state: customer.address.state 
+    address: customer.address 
   }));
 
   const options = {
@@ -119,10 +118,7 @@ export const TableCustomers: React.FC<{
         name: rowData[2],
         email: rowData[3],
         phone: rowData[4],
-        address: {
-          city: rowData[5],
-          state: rowData[6],
-        },
+        address: rowData[5],
       };
       // Guardar el cliente seleccionado en el estado local
       onSelectCustomer(selectedCustomer);
