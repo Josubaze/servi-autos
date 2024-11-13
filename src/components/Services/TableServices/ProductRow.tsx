@@ -8,7 +8,7 @@ export const ProductRow: React.FC<ProductInService> = ( { product, quantity }) =
     <TableCell>{product.name}</TableCell>
     <TableCell>{product.category}</TableCell>
     <TableCell align="right">{quantity}</TableCell>
-    <TableCell align="right">{product.price}</TableCell>
+    <TableCell align="right">{product.price.toFixed(2)}</TableCell>
   </TableRow>
 );
 

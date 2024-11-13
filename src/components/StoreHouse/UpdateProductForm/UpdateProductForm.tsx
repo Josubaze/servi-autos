@@ -2,6 +2,10 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProductSchema } from 'src/utils/validation.zod';
 import { useUpdateProductMutation } from 'src/redux/services/productsApi';
+import TextField from '@mui/material/TextField';
+import {  ThemeProvider } from "@mui/material/styles";
+import { TextFieldTheme } from 'src/styles/themes/themeTextField';
+import { CloseButton } from 'src/components/Common/Buttons/CloseButton';
 
 type FormProductProps = {
   onClose: () => void;
@@ -34,118 +38,120 @@ export const UpdateProductForm = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg mx-auto bg-gray-900 p-8 rounded-md shadow-md border-2 border-x-gray-600 ">
-        <h2 className="text-2xl text-center font-bold mb-6">Editar Producto</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg mx-auto bg-black-nav p-8 rounded-md shadow-md border-2 border-x-gray-600 ">
+        <h2 className="text-2xl text-center font-bold mb-6">Modificar Producto</h2>
         <div className="mb-4">
-          <label className="flex items-center justify-center text-sm font-bold mb-2 gap-2" htmlFor="id">
-              ID:
-              <input
-              type="text"
-              id="id"
-              {...register('_id')}
-              className="border-none w-full py-2 px-3 bg-gray-900"
-              readOnly
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+              label="ID" 
+              variant="outlined"
+              fullWidth
+              type="text" 
+              {...register('_id')} 
+              error={!!errors._id}
+              helperText={errors._id?.message}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </ThemeProvider>
+        </div>
+
+        <div className="mb-4">
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Nombre" 
+                variant="outlined"
+                fullWidth
+                type="text" 
+                {...register('name')} 
+                error={!!errors.name}
+                helperText={errors.name?.message}  
               />
-          </label>
+          </ThemeProvider>
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="name">
-            Nombre
-          </label>
-          <input
-            type="text"
-            id="name"
-            {...register('name')}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Modelo de Vehículo" 
+                variant="outlined"
+                fullWidth
+                type="text" 
+                {...register('vehicleType')} 
+                error={!!errors.vehicleType}
+                helperText={errors.vehicleType?.message}  
+              />
+          </ThemeProvider>
         </div>
-        {errors.name?.message && <p className='text-red-500 pb-2'>{errors.name.message}</p>}
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="name">
-          Modelo de Vehículo
-          </label>
-          <input
-            type="text"
-            id="vehicle_type"
-            {...register('vehicleType')}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Descripción" 
+                variant="outlined"
+                fullWidth
+                type="text" 
+                {...register('description')} 
+                error={!!errors.description}
+                helperText={errors.description?.message}  
+              />
+          </ThemeProvider>
         </div>
-        {errors.vehicleType?.message && <p className='text-red-500 pb-2'>{errors.vehicleType.message}</p>}
-
+        
+        <div className="mb-4">
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Categoría" 
+                variant="outlined"
+                fullWidth
+                type="text" 
+                {...register('category')} 
+                error={!!errors.category}
+                helperText={errors.category?.message}  
+              />
+          </ThemeProvider>
+        </div>
+        
+        <div className="mb-4">
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Cantidad" 
+                variant="outlined"
+                fullWidth
+                type="number" 
+                {...register('quantity')} 
+                error={!!errors.quantity}
+                helperText={errors.quantity?.message}  
+              />
+          </ThemeProvider>
+        </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="description">
-            Descripción
-          </label>
-          <input
-            type="text"
-            id="description"
-            {...register('description')}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Precio" 
+                variant="outlined"
+                fullWidth
+                type="number" 
+                {...register('price')} 
+                error={!!errors.price}
+                helperText={errors.price?.message}  
+              />
+          </ThemeProvider>
         </div>
-        {errors.description?.message && <p className='text-red-500 pb-2'>{errors.description.message}</p>}
-
-        <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="category">
-            Categoría
-          </label>
-          <input
-            type="text"
-            id="category"
-            {...register('category')}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        {errors.category?.message && <p className='text-red-500 pb-2'>{errors.category.message}</p>}
-
-        <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="quantity">
-            Cantidad
-          </label>
-          <input
-            type="number"
-            id="quantity"
-            {...register('quantity')}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        {errors.quantity?.message && <p className='text-red-500 pb-2'>{errors.quantity.message}</p>}
-
-        <div className="mb-4">
-          <label className="block text-sm font-bold mb-2" htmlFor="price">
-            Precio
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="price"
-            {...register('price')}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-        {errors.price?.message && <p className='text-red-500 pb-2'>{errors.price.message}</p>}
 
         <div className="flex items-center justify-between">
           <button
             type="submit"
-            className="transition ease-in-out delay-150 bg-emerald-600 text-white px-4 py-2 rounded hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300"
+            className="bg-orange-600 text-white px-4 py-2 rounded transition ease-in-out delay-150 hover:scale-90 hover:bg-orange-700 duration-300"
           >
-            Actualizar
+            Modificar Producto
           </button>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="bg-red-600 hover:bg-indigo-600 transition ease-in-out delay-150 text-white px-4 py-2 rounded hover:-translate-y-1 hover:scale-110 duration-300"
-          >
-            Cancelar
-          </button>
+          <CloseButton onClose={() => onClose()}></CloseButton>
         </div>
-        {isError && <p className='text-red-500 pt-2 text-center'>Hubo un error al actualizar el producto</p>}
+        {isError && <p className='text-red-600 pt-2 text-center'>Hubo un error al actualizar el producto</p>}
       </form>
     </div>
   );

@@ -23,16 +23,9 @@ const providerSchema = new Schema({
         trim: true
     },
     address: {
-        city: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        state: {
-            type: String,
-            required: true,
-            trim: true
-        },
+        type: String,
+        required: true,
+        trim: true
     }
 }, {
     collection: 'providers',

@@ -25,12 +25,17 @@ interface Product {
     contactName: string;
     phone: string;
     email: string;
-    address: {
-      city: string
-      state: string; 
-    };
+    address: string;
   }
 
+  interface Customer {
+    _id: string;
+    id_card: string; 
+    name: string; 
+    email: string; 
+    phone: string;
+    address: string;
+  }
 
   interface ProductInService {
     product: {
@@ -89,18 +94,6 @@ interface Product {
       price: number 
     }; 
     quantity: number 
-  }
-
-  interface Customer {
-    _id: string;
-    id_card: string; 
-    name: string; 
-    email: string; 
-    phone: string;
-    address: {
-      city: string
-      state: string; 
-    };
   }
 
   interface BudgetForm{

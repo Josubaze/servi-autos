@@ -1,13 +1,12 @@
 
 import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
-import Tooltip from '@mui/material/Tooltip';
-import { IoPencil } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
 import { Loading } from 'src/components/Common/Loading';
 import { useDynamicFilter } from "src/hooks/useProductFilter";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { darkTheme } from "src/styles/themes/themeTable";
+import { UpdateButton } from "src/components/Common/Buttons/UpdateButton";
+import { DeleteButton } from "src/components/Common/Buttons/DeleteButton";
 
 export const TableProducts: React.FC<TableProductProps> = ({
   data,
@@ -58,11 +57,16 @@ export const TableProducts: React.FC<TableProductProps> = ({
     },
     
     {
-      name: "Acciones",
+      name: "options", 
       label: "Opciones",
       options: {
         sort: false,
         filter: false,
+        setCellHeaderProps: () => ({
+          style: {
+            textAlign: 'right',
+          },
+        }),
         customBodyRender: (value: any, tableMeta: any) => {
           const rowData = tableMeta.rowData;
           const product = {
@@ -76,22 +80,9 @@ export const TableProducts: React.FC<TableProductProps> = ({
             
           };      
           return (
-            <div className='flex py-2 gap-5'>
-              <Tooltip title="Editar producto">
-                <span>
-                  <IoPencil className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300" 
-                  onClick={() => handleEdit(product)}
-                  />
-                </span>
-              </Tooltip>
-              <Tooltip title="Eliminar producto">
-                <span>
-                  <MdDelete
-                  className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300"
-                  onClick={() => handleDelete(product._id)}
-                  />
-                </span>
-              </Tooltip>
+            <div className='flex py-2 gap-5 justify-end'>
+              <UpdateButton onClick={() => handleEdit(product)}></UpdateButton>
+              <DeleteButton onClick={() => handleDelete(product._id)}></DeleteButton>
             </div>
           );
         },
@@ -99,12 +90,12 @@ export const TableProducts: React.FC<TableProductProps> = ({
     }
   ];
 
-  const mobileColumnsToShow = ['name', 'quantity', 'price'];
-  const tabletColumnsToShow = ['name', 'vehicleType', 'quantity', 'price'];
+  const mobileColumnsToShow = ['name', 'quantity', 'price', 'options'];
+  const tabletColumnsToShow = ['id', 'name', 'vehicleType', 'quantity', 'price', 'options'];
   const responsiveColumns = useResponsiveColumns(
     columns,
     mobileColumnsToShow,
-    tabletColumnsToShow
+    tabletColumnsToShow,
   );
 
   const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'category', 'vehicleType']);

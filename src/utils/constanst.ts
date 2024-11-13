@@ -1,4 +1,4 @@
-export const PRODUCTVOID = {
+export const PRODUCTVOID: Product = {
     _id: '',
     name: '',
     vehicleType: '',
@@ -8,16 +8,13 @@ export const PRODUCTVOID = {
     quantity: 0,
 }
 
-export const CUSTOMERVOID = {
+export const CUSTOMERVOID : Customer= {
   _id: '',
   id_card: '',
   name: '',
   email: '',
   phone: '',
-  address: {
-    city: '',
-    state: ''
-  },
+  address: '',
 };
 
 export const PROVIDERVOID: Provider = {
@@ -26,10 +23,7 @@ export const PROVIDERVOID: Provider = {
   contactName: '',
   email: '',
   phone: '',
-  address: {
-    city: '',
-    state: ''
-  }
+  address: '',
 };
 
 export const SERVICEVOID: Service = {

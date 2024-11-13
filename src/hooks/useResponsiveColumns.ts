@@ -12,60 +12,70 @@ interface Column {
 export const useResponsiveColumns = (
   columns: Column[],
   mobileColumnsToShow: string[] = [],
-  tabletColumnsToShow: string[] = []
+  tabletColumnsToShow: string[] = [],
+  showIdColumn: boolean = true 
 ) => {
   const isMobile = useMediaQuery('(max-width:600px)');
   const isTablet = useMediaQuery('(min-width:601px) and (max-width:960px)');
 
-  return columns.map(column => {
+  return columns.map(column => { 
+    if (column.name === "_id") {
+      return {
+        ...column,
+        options: {
+          ...column.options,
+          display: showIdColumn, // Controlar si la columna _id se muestra o no
+        },
+      };
+    }
 
     if (isMobile) {
-      // In mobile view, show only specified columns
+      // En vista móvil, mostrar solo las columnas especificadas
       if (mobileColumnsToShow.includes(column.name)) {
         return {
           ...column,
           options: {
             ...column.options,
-            display: true
-          }
+            display: true,
+          },
         };
       }
       return {
         ...column,
         options: {
           ...column.options,
-          display: false
-        }
+          display: false,
+        },
       };
     }
 
     if (isTablet) {
-      // In tablet view, show only specified columns
+      // En vista tablet, mostrar solo las columnas especificadas
       if (tabletColumnsToShow.includes(column.name)) {
         return {
           ...column,
           options: {
             ...column.options,
-            display: true
-          }
+            display: true,
+          },
         };
       }
       return {
         ...column,
         options: {
           ...column.options,
-          display: false
-        }
+          display: false,
+        },
       };
     }
 
-    // For desktop, show all columns 
+    // Para escritorio, mostrar todas las columnas
     return {
       ...column,
       options: {
         ...column.options,
-        display: true
-      }
+        display: true,
+      },
     };
   });
 };

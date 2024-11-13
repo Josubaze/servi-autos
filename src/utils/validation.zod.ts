@@ -60,23 +60,15 @@ export const ProductSchema = z.object({
     email: z.string()
       .email({ message: "Debe ser un correo electrónico válido" })
       .trim(),
-    
+
     phone: z.string()
-      .min(3, { message: "El teléfono debe tener al menos 3 caracteres" })
-      .max(40, { message: "El teléfono no puede exceder los 40 caracteres" })
-      .trim(),
+      .regex(/^0\d{10}$/, "El teléfono debe estar en el formato 04140865757 y tener 11 dígitos")
+      .min(11, "El teléfono debe tener al menos 11 caracteres")
+      .max(11, "El teléfono debe tener como máximo 11 caracteres"),
     
-    address: z.object({
-      city: z.string()
-        .min(3, { message: "La ciudad debe tener al menos 3 caracteres" })
-        .max(40, { message: "La ciudad no puede exceder los 40 caracteres" })
-        .trim(),
-      
-      state: z.string()
-        .min(3, { message: "El estado debe tener al menos 3 caracteres" })
-        .max(40, { message: "El estado no puede exceder los 40 caracteres" })
-        .trim(),
-    })
+    address: z.string()
+      .min(3, "El nombre de contacto debe tener al menos 3 caracteres")
+      .max(40, "El nombre de contacto debe tener como máximo 40 caracteres"),
   });
   
 export const ProviderSchema = z.object({
@@ -89,16 +81,12 @@ export const ProviderSchema = z.object({
   email: z.string()
     .email("Correo electrónico inválido"),
   phone: z.string()
-    .min(3, "El teléfono debe tener al menos 3 caracteres")
-    .max(40, "El teléfono debe tener como máximo 40 caracteres"),
-  address: z.object({
-    city: z.string()
-      .min(3, "La ciudad debe tener al menos 3 caracteres")
-      .max(40, "La ciudad debe tener como máximo 40 caracteres"),
-    state: z.string()
-      .min(3, "El estado debe tener al menos 3 caracteres")
-      .max(40, "El estado debe tener como máximo 40 caracteres"),
-  }),
+    .regex(/^0\d{10}$/, "El teléfono debe estar en el formato 04140865757 y tener 11 dígitos")
+    .min(11, "El teléfono debe tener al menos 11 caracteres")
+    .max(11, "El teléfono debe tener como máximo 11 caracteres"),
+  address: z.string()
+    .min(3, "El nombre de contacto debe tener al menos 3 caracteres")
+    .max(40, "El nombre de contacto debe tener como máximo 40 caracteres"),
 });
 
 export const BudgetFormSchema = z.object({

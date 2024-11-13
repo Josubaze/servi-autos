@@ -1,0 +1,1 @@
+export { SelectedTableProducts } from './SelectedTableProducts'

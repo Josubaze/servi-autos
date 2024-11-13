@@ -12,6 +12,7 @@ import { UpdateServiceForm } from './UpdateServiceForm';
 import { SERVICEVOID } from 'src/utils/constanst';
 import dynamic from 'next/dynamic';
 export const LottieTools = dynamic(() => import("src/components/LottieIcon/LottieTools"), { ssr: false });
+import { FaTools } from "react-icons/fa";
 
 export const Services = () => {
   const { data = [], isError, isLoading, isSuccess } = useGetServicesQuery();
@@ -47,7 +48,7 @@ export const Services = () => {
             onClick={() => setShowForm(true)}
           >
             <span className='flex items-center gap-2 '>
-              <FaPlus />
+              <FaTools />
               Agregar Servicio
             </span>
           </button>

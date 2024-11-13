@@ -1,13 +1,11 @@
 import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
-import Tooltip from '@mui/material/Tooltip';
-import { IoPencil } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
 import { Loading } from 'src/components/Common/Loading';
 import { useDynamicFilter } from "src/hooks/useProductFilter";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { darkTheme } from "src/styles/themes/themeTable";
-import { FaDisplay } from "react-icons/fa6";
+import { UpdateButton } from "src/components/Common/Buttons/UpdateButton";
+import { DeleteButton } from "src/components/Common/Buttons/DeleteButton";
 
 export const CustomersTable: React.FC<TableCustomerProps> = ({
   data,
@@ -50,21 +48,21 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
       options: { filter: true, sort: false } 
     },
     { 
-      name: "city",
-      label: "Ciudad", 
-      options: { filter: true, sort: false }
-    },
-    { 
-      name: "state", 
-      label: "Estado", 
+      name: "address",
+      label: "Dirección", 
       options: { filter: true, sort: false }
     },
     {
-      name: "Acciones",
+      name: "options",
       label: "Opciones",
       options: {
         sort: false,
         filter: false,
+        setCellHeaderProps: () => ({
+          style: {
+            textAlign: 'right',
+          },
+        }),
         customBodyRender: (value: any, tableMeta: any) => {
           const rowData = tableMeta.rowData;
           const customer = {
@@ -73,29 +71,12 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
             name: rowData[2],
             email: rowData[3],
             phone: rowData[4],
-            address: {
-              city: rowData[5],
-              state: rowData[6],
-            },
+            address: rowData[5],
           };
           return (
-            <div className='flex py-2 gap-5'>
-              <Tooltip title="Editar cliente">
-                <span>
-                  <IoPencil 
-                    className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300" 
-                    onClick={() => handleEdit(customer)}
-                  />
-                </span>
-              </Tooltip>
-              <Tooltip title="Eliminar cliente">
-                <span>
-                  <MdDelete
-                    className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300"
-                    onClick={() => handleDelete(customer._id)}
-                  />
-                </span>
-              </Tooltip>
+            <div className='flex py-2 gap-5 justify-end'>
+              <UpdateButton onClick={() => handleEdit(customer)}></UpdateButton>
+              <DeleteButton onClick={() => handleDelete(customer._id)}></DeleteButton>
             </div>
           );
         },
@@ -103,12 +84,13 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
     }
   ];
 
-    const mobileColumnsToShow = ['name', 'phone', 'email'];
-    const tabletColumnsToShow = ['name', 'email', 'phone', 'city', 'state'];
+    const mobileColumnsToShow = ['id_card', 'phone', 'options'];
+    const tabletColumnsToShow = ['id_card', 'name', 'email', 'phone', 'options'];
     const responsiveColumns = useResponsiveColumns(
     columns,
     mobileColumnsToShow,
-    tabletColumnsToShow
+    tabletColumnsToShow,
+    false,   
     );
 
     const filteredData = useDynamicFilter(data, searchTerm, ['id_card', 'name', 'email']);
@@ -118,8 +100,7 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
       name: customer.name,
       email: customer.email,
       phone: customer.phone,
-      city: customer.address.city,
-      state: customer.address.state 
+      address: customer.address,
     }));
 
   const options = {

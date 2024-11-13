@@ -1,12 +1,11 @@
 import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
-import Tooltip from '@mui/material/Tooltip';
-import { IoPencil } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
 import { Loading } from 'src/components/Common/Loading';
 import { useDynamicFilter } from "src/hooks/useProductFilter";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { darkTheme } from "src/styles/themes/themeTable";
+import { DeleteButton } from "src/components/Common/Buttons/DeleteButton";
+import { UpdateButton } from "src/components/Common/Buttons/UpdateButton";
 
 export const ProvidersTable: React.FC<TableProviderProps> = ({
   data,
@@ -46,21 +45,21 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
       options: { filter: true, sort: false } 
     },
     { 
-      name: "city",
-      label: "Ciudad", 
-      options: { filter: true, sort: false }
-    },
-    { 
-      name: "state", 
-      label: "Estado", 
+      name: "address",  
+      label: "Dirección", 
       options: { filter: true, sort: false }
     },
     {
-      name: "Acciones",
+      name: "options", 
       label: "Opciones",
       options: {
         sort: false,
         filter: false,
+        setCellHeaderProps: () => ({
+          style: {
+            textAlign: 'right',
+          },
+        }),
         customBodyRender: (value: any, tableMeta: any) => {
           const rowData = tableMeta.rowData;
           const provider = { 
@@ -69,28 +68,12 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
             contactName: rowData[2],
             email: rowData[3],
             phone: rowData[4],
-            address: {
-              city: rowData[5],
-              state: rowData[6],
-            },
+            address: rowData[5],
           };
           return (
-            <div className='flex py-2 gap-5'>
-              <Tooltip title="Editar proveedor">
-                <span>
-                  <IoPencil className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300" 
-                  onClick={() => handleEdit(provider)}
-                  />
-                </span>
-              </Tooltip>
-              <Tooltip title="Eliminar proveedor">
-                <span>
-                  <MdDelete
-                  className="cursor-pointer text-2xl text-gray-600 hover:text-indigo-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-110 duration-300"
-                  onClick={() => handleDelete(provider._id)}
-                  />
-                </span>
-              </Tooltip>
+            <div className='flex py-2 gap-5 justify-end'>
+              <UpdateButton onClick={() => handleEdit(provider)}/>
+              <DeleteButton onClick={() => handleDelete(provider._id)}/>
             </div>
           );
         },
@@ -98,12 +81,13 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
     }
   ];
 
-  const mobileColumnsToShow = ['name', 'phone', 'email'];
-  const tabletColumnsToShow = ['name', 'contactName', 'email', 'phone'];
+  const mobileColumnsToShow = ['name', 'phone', 'options'];
+  const tabletColumnsToShow = ['name', 'contactName', 'email', 'phone', 'options'];
   const responsiveColumns = useResponsiveColumns(
     columns,
     mobileColumnsToShow,
-    tabletColumnsToShow
+    tabletColumnsToShow,
+    false
   );
 
   const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'contactName', 'email']);
@@ -113,8 +97,7 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
     contactName: provider.contactName,
     email: provider.email,
     phone: provider.phone,
-    city: provider.address.city,
-    state: provider.address.state
+    address: provider.address,
   }));
 
   const options = {

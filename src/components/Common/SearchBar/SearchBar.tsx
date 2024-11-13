@@ -1,20 +1,28 @@
-import TextField from '@mui/material/TextField';
+import { TextField, InputAdornment } from '@mui/material';
 import {  ThemeProvider } from "@mui/material/styles";
 import { TextFieldTheme } from 'src/styles/themes/themeTextField';
+import { BsSearch } from "react-icons/bs";
 
 export const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm, placeholder}) => {
   return (
+    <div className='sm:w-1/3 max-sm:w-full'>
       <ThemeProvider theme={TextFieldTheme}>
         <TextField 
-            label={placeholder}
             variant="outlined"
             fullWidth
-            type="number" 
+            type="string" 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className='sm:w-1/3 max-sm:w-full'
+            placeholder='Buscar'
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <BsSearch />
+                </InputAdornment>
+              ),
+            }}
           />
       </ThemeProvider>
-
+    </div>
   );
 };

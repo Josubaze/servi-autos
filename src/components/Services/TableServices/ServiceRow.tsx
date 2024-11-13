@@ -11,14 +11,16 @@ import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { ProductRow } from './ProductRow'; 
-import { IoPencil } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
-import Tooltip from '@mui/material/Tooltip';
 import { useMediaQuery } from '@mui/material';
+import { UpdateButton } from 'src/components/Common/Buttons/UpdateButton';
+import { DeleteButton } from 'src/components/Common/Buttons/DeleteButton';
 
 export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDelete }) => {
   const [open, setOpen] = React.useState(false);
   const isMobile = useMediaQuery('(max-width:600px)');
+  const totalProductos = service.products.reduce((total, product) => {
+    return total + product.product.price * product.quantity;
+  }, 0);
 
   return (
     <React.Fragment>
@@ -44,21 +46,8 @@ export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDele
         <TableCell align="right">{service.totalPrice}</TableCell>
         <TableCell>
           <div className='flex justify-end  py-2 gap-5'>
-            <Tooltip title="Modificar Servicio">
-              <span>
-                <IoPencil className="cursor-pointer text-2xl text-gray-600 hover:text-orange-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-150 duration-300" 
-                onClick={() => handleEdit(service)}
-                />
-              </span>
-            </Tooltip>
-            <Tooltip title="Eliminar Servicio">
-              <span>
-                <MdDelete
-                className="cursor-pointer text-2xl text-gray-600 hover:text-red-600 transition ease-in-out delay-150 rounded hover:-translate-y-1 hover:scale-150 duration-300"
-                onClick={() => handleDelete(service._id)}
-                />
-              </span>
-            </Tooltip>
+            <UpdateButton onClick={() => handleEdit(service)}></UpdateButton>
+            <DeleteButton onClick={() => handleDelete(service._id)}></DeleteButton>
           </div>
         </TableCell>
       </TableRow>
@@ -88,6 +77,14 @@ export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDele
                       );
                     }                  
                   )}
+                  <TableRow className='border-y-4 border-gray-600'>
+                    <TableCell colSpan={4} align="right" sx={{ fontWeight: 'bold' }}>
+                      Total de Productos
+                    </TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>
+                      {totalProductos.toFixed(2)}
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Box>
