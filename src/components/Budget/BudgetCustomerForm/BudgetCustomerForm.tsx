@@ -128,9 +128,9 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
 
                     <div className="w-full">
                         <input
-                            placeholder="Estado"
+                            placeholder="Dirección"
                             {...register("address")}
-                            className="w-1/4 px-2 border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
+                            className="w-1/2 px-2 border-solid border-2 border-gray-500 rounded-xl bg-gray-800 focus:outline-none focus:border-indigo-600 h-8"
                         />
                         {errors.address && <p className="my-2 text-red-500">{errors.address.message}</p>}       
                     </div>
