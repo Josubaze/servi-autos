@@ -54,19 +54,14 @@ export const TableCustomers: React.FC<{
       options: { filter: true, sort: false } 
     },
     { 
-      name: "city",
-      label: "Ciudad", 
+      name: "address", 
+      label: "Dirección",  
       options: { filter: true, sort: false }
     },
-    { 
-      name: "state", 
-      label: "Estado", 
-      options: { filter: true, sort: false }
-    }
   ];
 
   const mobileColumnsToShow = ['name', 'phone', 'email'];
-  const tabletColumnsToShow = ['name', 'email', 'phone', 'city', 'state'];
+  const tabletColumnsToShow = ['name', 'email', 'phone', 'address'];
   const responsiveColumns = useResponsiveColumns(
   columns,
   mobileColumnsToShow,
