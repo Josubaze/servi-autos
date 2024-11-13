@@ -61,13 +61,13 @@ export const CustomerUpdateForm = ({
         <div className="mb-4">
           <ThemeProvider theme={TextFieldTheme}>
             <TextField 
-                label="Nombre" 
+                label="Cédula | RIF" 
                 variant="outlined"
                 fullWidth
                 type="text" 
-                {...register('name')} 
-                error={!!errors.name}
-                helperText={errors.name?.message}  
+                {...register('id_card')} 
+                error={!!errors.id_card}
+                helperText={errors.id_card?.message}  
               />
           </ThemeProvider>
         </div>
@@ -75,13 +75,13 @@ export const CustomerUpdateForm = ({
         <div className="mb-4">
           <ThemeProvider theme={TextFieldTheme}>
             <TextField 
-                label="RIF o Cédula" 
+                label="Nombre" 
                 variant="outlined"
                 fullWidth
                 type="text" 
-                {...register('id_card')} 
-                error={!!errors.id_card}
-                helperText={errors.id_card?.message}  
+                {...register('name')} 
+                error={!!errors.name}
+                helperText={errors.name?.message}  
               />
           </ThemeProvider>
         </div>

@@ -51,10 +51,10 @@ export const ProductSchema = z.object({
       .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
       .max(40, { message: "El nombre no puede exceder los 40 caracteres" })
       .trim(),
-    
+  
     id_card: z.string().regex(
-      /^(V|E|J|G)\d{7,8}(\d)?$/,
-      "Formato inválido. Debe ser 'V1234567' para cédulas, o 'J12345678'"
+      /^(V|E)\d{6,9}$|^(J|G)\d{9}$/,
+      "Formato inválido. Debe ser 'V1234567' para cédulas, o 'J12345678' para RIF."
     ),
     
     email: z.string()
@@ -72,6 +72,10 @@ export const ProductSchema = z.object({
   });
   
 export const ProviderSchema = z.object({
+  id_card: z.string().regex(
+    /^(V|E)\d{6,9}$|^(J|G)\d{9}$/,
+    "Formato inválido. Debe ser 'V1234567' para cédulas, o 'J12345678' para RIF."
+  ),
   name: z.string()
     .min(3, "El nombre debe tener al menos 3 caracteres")
     .max(40, "El nombre debe tener como máximo 40 caracteres"),

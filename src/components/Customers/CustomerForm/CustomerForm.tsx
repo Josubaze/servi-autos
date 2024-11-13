@@ -46,7 +46,7 @@ export const CustomerForm = ({
         <div className="mb-4">
           <ThemeProvider theme={TextFieldTheme}>
             <TextField 
-                label="RIF o Cédula" 
+                label="Cédula | RIF" 
                 variant="outlined"
                 fullWidth
                 type="text" 

@@ -19,6 +19,7 @@ export const CUSTOMERVOID : Customer= {
 
 export const PROVIDERVOID: Provider = {
   _id: '',
+  id_card: '',
   name: '',
   contactName: '',
   email: '',

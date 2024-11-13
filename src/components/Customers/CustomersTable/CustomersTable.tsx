@@ -29,7 +29,7 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
     },
     { 
       name: "id_card", 
-      label: "Cédula o RIF", 
+      label: "Cédula | RIF", 
       options: { filter: false, sort: true} 
     },
     { 

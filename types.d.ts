@@ -21,6 +21,7 @@ interface Product {
 
   interface Provider {
     _id: string;
+    id_card: string;
     name: string;
     contactName: string;
     phone: string;
