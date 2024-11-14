@@ -1,12 +1,13 @@
 import { ThemeProvider } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useForm } from 'react-hook-form';
-import { Select, MenuItem } from '@mui/material';
+import { Select, MenuItem, TextField } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BudgetFormSchema } from 'src/utils/validation.zod';
-import { dateTheme } from "src/styles/themes/themeDate";
+import { TextFieldTheme } from "src/styles/themes/themeTextField";
 import dayjs from "dayjs";
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
+import { SelectBudgetButton } from "./SelectBudgetButton"; // Importa el nuevo componente
 
 export const BudgetForm = forwardRef((props, ref) => {
     const today = dayjs();
@@ -21,6 +22,8 @@ export const BudgetForm = forwardRef((props, ref) => {
         }
     });
 
+    const [isBudgetSelected, setIsBudgetSelected] = useState(false);
+
     const submitForm = async () => {
         const formData = getValues(); 
         const isFormValid = await trigger();
@@ -31,111 +34,95 @@ export const BudgetForm = forwardRef((props, ref) => {
         }
     };
 
+    const handleSelectBudget = () => {
+        // Aquí puedes agregar la lógica que deseas para seleccionar un presupuesto (por ejemplo, abrir un modal)
+        setIsBudgetSelected(true);
+        console.log("Presupuesto seleccionado");
+    };
+
     useImperativeHandle(ref, () => ({
         submitForm,
     }));
 
     return (
         <>
-            <form className="flex flex-col gap-y-2 pt-12 pl-4">
-                <div className="flex flex-row justify-between items-center">
-                    <div className="font-title font-bold flex-1">Presupuesto</div>
-                    <div className="flex-1 text-right">
-                        <input
-                            placeholder="Nº de Presupuesto"
+        <div className="flex items-center justify-end gap-3">
+            <p className="font-title font-bold">Presupuesto Existente</p>
+            <SelectBudgetButton onClick={handleSelectBudget} />
+        </div>
+
+        <form className="w-full pt-4 sm:pl-6">
+            <div className="grid gap-y-4 w-full">
+                <div className="w-full">
+                    <ThemeProvider theme={TextFieldTheme}>
+                        <TextField
+                            label="Nº de Presupuesto"
+                            fullWidth
                             {...register("n_budget")}
-                            className="px-2 w-full border-solid border-2 rounded-xl bg-gray-800 focus:outline-none border-gray-500 focus:border-indigo-600 hover:border-gray-400 h-8 text-right"
+                            error={!!errors.n_budget}
+                            helperText={errors.n_budget?.message}
                         />
-                        {errors.n_budget && <p className="py-1 text-red-500">{errors.n_budget.message}</p>}
-                    </div>
+                    </ThemeProvider>
                 </div>
-
-                <div className="flex flex-row justify-between items-center">
-                    <div className="font-title font-bold flex-1">Fecha de Creación</div>
-                    <div className="flex-1 text-right">
-                        <ThemeProvider theme={dateTheme}>
-                            <DatePicker
-                                value={getValues("dateCreation")}
-                                format="DD/MM/YYYY"
-                                {...register("dateCreation")}
-                                onChange={(newValue) => setValue("dateCreation", newValue)}                              
-                            />
+        
+                <div className="w-full flex flex-col sm:flex-row sm:items-center sm:gap-6">
+                    <div className="font-title font-bold sm:w-1/3 text-left sm:text-center">
+                        Fecha de Creación
+                    </div>
+                    <div className="sm:w-2/3 w-full">
+                        <ThemeProvider theme={TextFieldTheme}>
+                        <DatePicker
+                            value={getValues("dateCreation")}
+                            format="DD/MM/YYYY"
+                            onChange={(newValue) => setValue("dateCreation", newValue)}
+                            className="w-full"
+                        />
                         </ThemeProvider>
-                        {errors.dateCreation?.message && <p className="py-1 text-red-500">{String(errors.dateCreation.message)}</p>}
+                        {errors.dateCreation?.message && (
+                        <p className="py-1 text-red-500 text-sm">{String(errors.dateCreation.message)}</p>
+                        )}
                     </div>
                 </div>
 
-                <div className="flex flex-row justify-between items-center">
-                    <div className="font-title font-bold flex-1">Fecha de Vencimiento</div>
-                    <div className="font-title flex-1 text-right">
-                        <ThemeProvider theme={dateTheme}>
-                            <DatePicker
-                                value={getValues("dateExpiration")}
-                                format="DD/MM/YYYY"
-                                {...register("dateExpiration")}
-                                onChange={(newValue) => setValue("dateExpiration", newValue)} 
-                            />
+                <div className="w-full flex flex-col sm:flex-row sm:items-center sm:gap-6">
+                    <div className="font-title font-bold sm:w-1/3 text-left sm:text-center">
+                        Fecha de Vencimiento
+                    </div>
+                    <div className="sm:w-2/3 w-full">
+                        <ThemeProvider theme={TextFieldTheme}>
+                        <DatePicker
+                            value={getValues("dateExpiration")}
+                            format="DD/MM/YYYY"
+                            onChange={(newValue) => setValue("dateExpiration", newValue)}
+                            className="w-full"
+                        />
                         </ThemeProvider>
-                        {errors.dateExpiration?.message && <p className="py-1 text-red-500">{String(errors.dateExpiration.message)}</p>}
+                        {errors.dateExpiration?.message && (
+                        <p className="py-1 text-red-500 text-sm">{String(errors.dateExpiration.message)}</p>
+                        )}
                     </div>
                 </div>
 
-                <div className="flex flex-row justify-between items-center">
-                    <div className="font-title font-bold flex-1">Cambiar Moneda</div>
-                    <div className="font-title flex-1 text-right">
+                {/* Campo de moneda con tema personalizado */}
+                <div className="w-full">
+                    <ThemeProvider theme={TextFieldTheme}>
                         <Select
                             {...register("currency")}
                             value={watch("currency")}
-                            MenuProps={{
-                                PaperProps: {
-                                    className: 'bg-gray-800 text-gray-100',
-                                },
-                                MenuListProps: {
-                                    sx: {
-                                        '& .MuiMenuItem-root.Mui-selected': {
-                                            backgroundColor: '#374151',
-                                            '&:hover': {
-                                                backgroundColor: '#374151',
-                                            },
-                                        },
-                                    },
-                                }
-                            }}
-                            sx={{
-                                px: 2,
-                                width: '100%',
-                                color: '#f3f4f6', 
-                                backgroundColor: '#1f2937', 
-                                border: '2px solid #6b7280', 
-                                borderRadius: '0.75rem', 
-                                height: '2rem', 
-                                textAlign: 'right',
-                                '&:hover': {
-                                    borderColor: '#9ca3af', 
-                                },
-                                '& .MuiOutlinedInput-notchedOutline': {
-                                    border: 'none', 
-                                },
-                                '&.Mui-focused': {
-                                    borderColor: '#4f46e5', 
-                                },
-                            }}
+                            fullWidth
+                            
                         >
-                            <MenuItem value="$" sx={{ '&:hover': { backgroundColor: '#4b5563' } }}>
-                                <span>$</span>
-                            </MenuItem>
-                            <MenuItem value="Bs" sx={{ '&:hover': { backgroundColor: '#4b5563' } }}>
-                                <span>Bs</span>
-                            </MenuItem>
+                            <MenuItem value="$">USD ($)</MenuItem>
+                            <MenuItem value="Bs">Bolívar (Bs)</MenuItem>
                         </Select>
-                        {errors.currency && <p className="py-1 text-red-500">{errors.currency.message}</p>}
-                    </div>
+                    </ThemeProvider>
+                    {errors.currency && <p className="py-1 text-red-500">{errors.currency.message}</p>}
                 </div>
-            </form>
+            </div>
+        </form>
         </>
     );
-})
-
+});
 
 // Agrega el displayName para evitar el error de ESLint
 BudgetForm.displayName = 'BudgetForm';

@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { IoPersonAdd } from "react-icons/io5";
-import { IoPerson } from "react-icons/io5";
 import { useGetCustomersQuery, useCreateCustomerMutation } from "src/redux/services/customersApi";
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CustomerSchema } from 'src/utils/validation.zod';
 import { CUSTOMERVOID } from "src/utils/constanst";
-import { TableCustomers } from "../TableCustomers"; 
+import { TableCustomers } from "../TableCustomers";
 import { Notification } from "src/components/Common/Notification";
 import { useImperativeHandle, forwardRef } from 'react';
 import TextField from '@mui/material/TextField';
 import { ThemeProvider } from "@mui/material/styles";
 import { TextFieldTheme } from 'src/styles/themes/themeTextField';
+import { SelectCustomerButton } from "./SelectCustomerButton"; 
+import { CreateCustomerButton } from "./CreateCustomerButton";  
 
 export const BudgetCustomerForm = forwardRef((props, ref) => {
     const { data: customers = [], isLoading: isLoadingCustomers, isError, isFetching, isSuccess } = useGetCustomersQuery();
@@ -20,7 +20,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
     const [createCustomer, { isError: isErrorCustomer }] = useCreateCustomerMutation();
     const [isNotification, setIsNotification] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const { control, handleSubmit, formState: { errors }, reset, getValues, trigger, setValue } = useForm<Omit<Customer, '_id'>>({
+    const { control, handleSubmit, formState: { errors }, reset, getValues, trigger } = useForm<Omit<Customer, '_id'>>({
         resolver: zodResolver(CustomerSchema),
         defaultValues: selectedCustomer
     });
@@ -28,22 +28,25 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
     const handleCustomerSelect = (customer: Customer) => {
         setSelectedCustomer(customer);
         setIsTableVisible(false);
-        reset(customer); // cambiar los datos por los cargados
+        reset(customer);
     };
-    
 
     const onSubmit: SubmitHandler<Omit<Customer, '_id'>> = async (data) => {
         setIsLoading(true);
-        await createCustomer(data).unwrap();
-        setIsNotification(true);
-        setIsLoading(false);
+        try {
+            await createCustomer(data).unwrap();
+            setIsNotification(true);
+        } catch (error) {            
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const submitForm = async () => {
-        const formData = getValues(); 
+        const formData = getValues();
         const isFormValid = await trigger();
         if (isFormValid) {
-            return formData;  
+            return formData;
         } else {
             return null;
         }
@@ -56,44 +59,17 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
     return (
         <>
             {/* Botones para cargar cliente existente o crear nuevo */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
                 <p className="font-title font-bold">Presupuestar a</p>
-                <div className="relative">
-                    <button
-                        type="button"
-                        className="rounded-xl text-white flex items-center justify-center text-sm h-8 px-2 border-2 border-green-600 transition ease-in-out delay-150 hover:scale-110 hover:bg-green-600 duration-300"
-                        onClick={() => setIsTableVisible(true)} 
-                    >
-                        <span className="flex items-center justify-center gap-x-2">
-                            Cargar
-                            <IoPerson className="h-5 w-5"/>
-                        </span>
-                    </button>
-                </div>
 
-                {/* Botón que enviará el formulario de nuevo cliente */}
-                <div className="relative">
-                    <button
-                        type="button"
-                        disabled={isLoading}
-                        onClick={handleSubmit(onSubmit)}
-                        className={`rounded-xl text-white flex items-center justify-center text-sm h-8 px-2 border-2 border-blue-600 transition ease-in-out delay-150 hover:scale-110 hover:bg-blue-600 duration-300 ${
-                            isLoading ? 'cursor-not-allowed opacity-50' : ''
-                        }`}
-                    >
-                        {isLoading && (
-                            <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                            </svg>
-                        )}       
-                        {isLoading ? 'Procesando...' : 'Agregar'}
-                        {!isLoading && <IoPersonAdd className="h-5 w-5 ml-2" />} 
-                    </button>
-                </div>
+                {/* Botón de Seleccionar Cliente */}
+                <SelectCustomerButton onClick={() => setIsTableVisible(true)} />
+
+                {/* Botón de Crear Cliente */}
+                <CreateCustomerButton isLoading={isLoading} onClick={handleSubmit(onSubmit)} />
             </div>
 
-            <form className="w-full pt-4 sm:pr-4">
+            <form className="w-full pt-4 sm:pr-6">
                 <div className="grid gap-y-4 w-full">
                     <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 gap-x-6 w-full">
                         <div className="w-full">
@@ -201,6 +177,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
             </form>
 
             {isNotification && <Notification message="El cliente ha sido registrado exitosamente!" backgroundColor="bg-green-600" />}
+            {isErrorCustomer && <Notification message="Ha fallado el registro del cliente!" backgroundColor="bg-red-600" /> }
 
             {/* Modal para la tabla de selección de clientes */}
             {isTableVisible && (

@@ -44,7 +44,7 @@ export const Budget = () => {
             {/* Segmento de formularios */}
             <div className="flex flex-col sm:flex-row py-3 px-8">
                 {/* Formulario de cliente */}
-                <div className="flex-1">
+                <div className="flex-1 sm:border-r sm:border-white/30">
                     {/* Pasamos la función al componente hijo */}
                     <BudgetCustomerForm ref={formCustomerRef}/>
                 </div>
