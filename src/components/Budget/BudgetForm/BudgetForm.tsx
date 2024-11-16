@@ -53,7 +53,7 @@ export const BudgetForm = forwardRef((props, ref) => {
 
         <form className="w-full pt-4 sm:pl-6">
             <div className="grid gap-y-4 w-full">
-                <div className="w-full">
+                <div className="w-full bg-black-nav">
                     <ThemeProvider theme={TextFieldTheme}>
                         <TextField
                             label="Nº de Presupuesto"
@@ -69,7 +69,7 @@ export const BudgetForm = forwardRef((props, ref) => {
                     <div className="font-title font-bold sm:w-1/3 text-left sm:text-center">
                         Fecha de Creación
                     </div>
-                    <div className="sm:w-2/3 w-full">
+                    <div className="sm:w-2/3 w-full bg-black-nav">
                         <ThemeProvider theme={TextFieldTheme}>
                         <DatePicker
                             value={getValues("dateCreation")}
@@ -88,7 +88,7 @@ export const BudgetForm = forwardRef((props, ref) => {
                     <div className="font-title font-bold sm:w-1/3 text-left sm:text-center">
                         Fecha de Vencimiento
                     </div>
-                    <div className="sm:w-2/3 w-full">
+                    <div className="sm:w-2/3 w-full bg-black-nav">
                         <ThemeProvider theme={TextFieldTheme}>
                         <DatePicker
                             value={getValues("dateExpiration")}
@@ -104,7 +104,7 @@ export const BudgetForm = forwardRef((props, ref) => {
                 </div>
 
                 {/* Campo de moneda con tema personalizado */}
-                <div className="w-full">
+                <div className="w-full bg-black-nav">
                     <ThemeProvider theme={TextFieldTheme}>
                         <Select
                             {...register("currency")}

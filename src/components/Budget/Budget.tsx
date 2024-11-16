@@ -8,6 +8,7 @@ import { BudgetCustomerForm } from "./BudgetCustomerForm";
 import { BudgetForm } from "./BudgetForm";
 import { BudgetTable } from "./BudgetTable";
 import { useRef } from 'react';
+import { BudgetSummary } from "./BudgetSummary";
 
 // Define la interfaz que contiene la función submitForm
 interface BudgetCustomerFormHandle {
@@ -57,7 +58,10 @@ export const Budget = () => {
 
             {/* Tabla de presupuesto */}
             <BudgetTable/>
-
+            
+            {/* calculos del presupuesto */}
+            <BudgetSummary></BudgetSummary>
+            
             {/* GUARDADO */}
             <div className="grid grid-cols-4 rounded-lg w-full bg-black-nav py-3 mt-6 gap-x-6">
                 <div className="content-center">
