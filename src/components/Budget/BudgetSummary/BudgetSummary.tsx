@@ -3,6 +3,7 @@ import React from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
 import { TextField } from "@mui/material";
+import { NumericFormat } from "react-number-format";
 
 export const BudgetSummary = () => {
   return (
@@ -10,15 +11,21 @@ export const BudgetSummary = () => {
       {/* IVA */}
       <div className="grid grid-cols-4 rounded-lg w-full px-8 pt-4 gap-x-6">
         <div className="col-start-3 font-bold content-center text-right">
-          <label htmlFor="tax">I.V.A. % :</label>
+          <label htmlFor="tax">IVA % :</label>
         </div>
-        <div>
+        <div className="bg-black-nav">
           <ThemeProvider theme={TextFieldTheme}>
-            <TextField
+            <NumericFormat
+              customInput={TextField}
+              placeholder="IVA %"
               variant="outlined"
               fullWidth
-              type="number"
-              id="tax"
+              type="text"
+              allowNegative={false}
+              decimalScale={0}
+              fixedDecimalScale={false}
+              decimalSeparator=","
+              thousandSeparator="."
               sx={{ input: { textAlign: "right" } }}
             />
           </ThemeProvider>
@@ -28,15 +35,21 @@ export const BudgetSummary = () => {
       {/* SUBTOTAL */}
       <div className="grid grid-cols-4 rounded-lg w-full px-8 pt-4 gap-x-6">
         <div className="col-start-3 font-bold content-center text-right">
-          <label htmlFor="subtotal">SubTotal :</label>
+          <label htmlFor="subtotal">Subtotal :</label>
         </div>
-        <div>
+        <div className="bg-black-nav">
           <ThemeProvider theme={TextFieldTheme}>
-            <TextField
+            <NumericFormat
+              customInput={TextField}
+              placeholder="SubTotal" 
               variant="outlined"
               fullWidth
-              type="number"
-              id="subtotal"
+              type="text"
+              allowNegative={false}
+              decimalScale={0}
+              fixedDecimalScale={false}
+              decimalSeparator=","
+              thousandSeparator="."
               sx={{ input: { textAlign: "right" } }}
             />
           </ThemeProvider>
