@@ -97,6 +97,22 @@ interface Product {
     quantity: number 
   }
 
+  interface SelectTableServicesProps {
+    data: Service[];
+    searchTerm: string;
+    isLoading: boolean;
+    isError: boolean;
+    isSuccess: boolean;
+    handleSelect: (service: Service) => void;
+    onCloseTable: () => void,
+  }
+
+  interface SelectRowProps {
+    service: Service;
+    handleSelect: (service: Service) => void;
+  }
+
+
   interface BudgetForm{
     n_budget: string;
     dateCreation: Dayjs;

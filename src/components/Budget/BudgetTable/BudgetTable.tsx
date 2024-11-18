@@ -1,13 +1,14 @@
-// BudgetTable.tsx
 import React, { useState } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
 import { NumericFormat } from "react-number-format";
-import { BudgetProductTable } from "../BudgetProductTable";  
-import { BudgetAddLineButton } from "../BudgetAddLineButton";  
+import { BudgetProductTable } from "../BudgetProductTable";
+import { BudgetAddLineButton } from "../BudgetAddLineButton";
 import { TextField, Tooltip } from "@mui/material";
 import { MdDelete, MdVisibility } from "react-icons/md";
-
+import { useGetServicesQuery } from "src/redux/services/servicesApi"; // Importamos el query
+import { SelectTableServices } from "../SelectTableServices";
+import { SERVICEVOID } from "src/utils/constanst";
 
 interface Producto {
   id: number;
@@ -16,19 +17,30 @@ interface Producto {
   cantidad: number;
   precio: number;
 }
+
 export const BudgetTable = () => {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [showDetails, setShowDetails] = useState(false);
+  const [selectedService, setSelectedService] = useState(SERVICEVOID);
+  const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
 
-  const datosEjemplo: Producto[] = [
-    { id: 1, nombre: "Producto 1", categoria: "Categoría A", cantidad: 2, precio: 50 },
-    { id: 2, nombre: "Producto 2", categoria: "Categoría B", cantidad: 1, precio: 100 },
-  ];
+  const handleSelect = (service: Service) => {
+    console.log('Servicio seleccionado:', service);
+    setSelectedService(service); 
+  };
+
+  const { data = [], isLoading, isError, isSuccess } = useGetServicesQuery(); 
 
   const handleViewDetails = () => {
-    setProductos(datosEjemplo);
     setShowDetails((prev) => !prev);
   };
+
+  const handleServiceSelect = (service: Service) => {
+    setSelectedService(service);
+    setIsTableVisible(false);
+  };
+
+
 
   return (
     <>
@@ -127,11 +139,27 @@ export const BudgetTable = () => {
         </div>
       </div>
 
+
       {/* Tabla de productos */}
       {showDetails && <BudgetProductTable productos={productos} />}
 
+
+      {isTableVisible && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+          <SelectTableServices
+            data={data}
+            searchTerm=""
+            isLoading={isLoading}
+            isError={isError}
+            isSuccess={isSuccess}
+            handleSelect={handleSelect}
+            onCloseTable={() => setIsTableVisible(false)}
+          />
+        </div>
+      )}
+
       {/* Opciones de agregar línea de factura */}
-      <BudgetAddLineButton />
+      <BudgetAddLineButton setIsTableVisible={setIsTableVisible} />
     </>
   );
 };

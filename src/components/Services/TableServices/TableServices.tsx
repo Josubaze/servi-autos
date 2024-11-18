@@ -69,6 +69,13 @@ export const TableServices: React.FC<TableServicesProps> = ({
         <Table aria-label="collapsible table">
           <TableHead>
             <TableRow>
+                <TableCell colSpan={5} className='text-xl text-start bg-black-nav '>
+                    Lista de Servicios
+                </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableHead>
+            <TableRow>
               <TableCell />
               {!isMobile && (
                 <TableCell>

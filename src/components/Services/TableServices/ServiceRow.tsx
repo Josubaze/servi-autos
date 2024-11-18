@@ -24,7 +24,12 @@ export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDele
 
   return (
     <React.Fragment>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow sx={{
+                    '& > *': { borderBottom: 'unset' },
+                    '&:hover': {
+                        background: 'rgba(75, 85, 99, 0.3)', 
+                    }
+                }}>
         <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
