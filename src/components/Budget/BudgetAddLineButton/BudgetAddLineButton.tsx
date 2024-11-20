@@ -31,11 +31,11 @@ export const BudgetAddLineButton = ({ setIsTableVisible }: BudgetAddLineButtonPr
           </button>
         </Tooltip>
 
-        <Tooltip title="Agregar Producto">
+        {/* <Tooltip title="Agregar Producto">
           <button className="w-12 h-12 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 hover:text-white duration-300">
             <FaBoxes className="w-12 h-12 p-2 text-green-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
           </button>
-        </Tooltip>
+        </Tooltip> */}
 
         <div className="flex gap-x-2">
           <FaArrowLeftLong className="text-3xl animate-bounce" />

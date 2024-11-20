@@ -6,42 +6,138 @@ import { BudgetProductTable } from "../BudgetProductTable";
 import { BudgetAddLineButton } from "../BudgetAddLineButton";
 import { TextField, Tooltip } from "@mui/material";
 import { MdDelete, MdVisibility } from "react-icons/md";
-import { useGetServicesQuery } from "src/redux/services/servicesApi"; // Importamos el query
+import { useGetServicesQuery } from "src/redux/services/servicesApi";
 import { SelectTableServices } from "../SelectTableServices";
-import { SERVICEVOID } from "src/utils/constanst";
-
-interface Producto {
-  id: number;
-  nombre: string;
-  categoria: string;
-  cantidad: number;
-  precio: number;
-}
 
 export const BudgetTable = () => {
-  const [productos, setProductos] = useState<Producto[]>([]);
-  const [showDetails, setShowDetails] = useState(false);
-  const [selectedService, setSelectedService] = useState(SERVICEVOID);
+  const [selectedServices, setSelectedServices] = useState<Service[]>([]);
+  const [serviceDetailsVisible, setServiceDetailsVisible] = useState<{ [key: string]: boolean }>({});
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
+  const { data = [], isLoading, isError, isSuccess } = useGetServicesQuery();
 
+  // seleccionar servicio
   const handleSelect = (service: Service) => {
-    console.log('Servicio seleccionado:', service);
-    setSelectedService(service); 
-  };
-
-  const { data = [], isLoading, isError, isSuccess } = useGetServicesQuery(); 
-
-  const handleViewDetails = () => {
-    setShowDetails((prev) => !prev);
-  };
-
-  const handleServiceSelect = (service: Service) => {
-    setSelectedService(service);
+    setSelectedServices((prev) => [...prev, service]);
     setIsTableVisible(false);
   };
 
+  // ver los detalles de servicio
+  const handleViewDetails = (service: Service) => {
+    setServiceDetailsVisible((prev) => ({
+      ...prev,
+      [service._id]: !prev[service._id],
+    }));
+  };
 
+  // eliminar fila
+  const handleDeleteRow = (serviceId: string) => {
+    setSelectedServices((prev) => prev.filter((service) => service._id !== serviceId));
+    setServiceDetailsVisible((prev) => {
+      const newState = { ...prev };
+      delete newState[serviceId];
+      return newState;
+    });
+  };
 
+  // cambiar la cantidad de servicios
+  const handleQuantityChange = (value: string, serviceId: string) => {
+    const quantity = parseInt(value.replace(/\D/g, ""), 10) || 1;
+    setSelectedServices((prev) =>
+      prev.map((service) =>
+        service._id === serviceId
+          ? {
+              ...service,
+              serviceQuantity: quantity,
+              total: ((service.totalPrice || 0) * quantity).toFixed(2),
+            }
+          : service
+      )
+    );
+  };
+
+  // Función común para calcular los totales
+  const calculateServiceTotals = (service: Service) => {
+    const productTotal = service.products.reduce(
+      (sum: number, p: any) => sum + p.quantity * p.product.price,
+      0
+    );
+
+    const updatedTotalPrice = productTotal + (service.servicePrice || 0);
+    const updatedTotal = updatedTotalPrice * (service.serviceQuantity || 1);
+
+    return { updatedTotalPrice, updatedTotal };
+  };
+
+  // modificar costo mano de obra
+  const handleServicePriceChange = (serviceId: string, newPrice: number) => {
+    setSelectedServices((prevServices) =>
+      prevServices.map((service) => {
+        if (service._id === serviceId) {
+          const updatedService = {
+            ...service,
+            servicePrice: newPrice,
+          };
+          const { updatedTotalPrice, updatedTotal } = calculateServiceTotals(updatedService);
+          return {
+            ...updatedService,
+            totalPrice: updatedTotalPrice,
+            total: updatedTotal,
+          };
+        }
+        return service;
+      })
+    );
+  };
+  
+  
+
+  // modificar cantidad de productos
+  const handleProductQuantityChange = (serviceId: string, productId: string, newQuantity: number) => {
+    setSelectedServices((prevServices) =>
+      prevServices.map((service) => {
+        if (service._id === serviceId) {
+          const updatedProducts = service.products.map((p) =>
+            p.product._id === productId ? { ...p, quantity: newQuantity } : p
+          );
+          const updatedService = {
+            ...service,
+            products: updatedProducts,
+          };
+          const { updatedTotalPrice, updatedTotal } = calculateServiceTotals(updatedService);
+          return {
+            ...updatedService,
+            totalPrice: updatedTotalPrice,
+            total: updatedTotal,
+          };
+        }
+        return service;
+      })
+    );
+  };
+  
+  
+  // eliminar producto
+  const handleProductDelete = (productId: string) => {
+    setSelectedServices((prevServices) =>
+      prevServices.map((service) => {
+        const updatedProducts = service.products.filter(
+          (product) => product.product._id !== productId
+        );
+        const updatedService = {
+          ...service,
+          products: updatedProducts,
+        };
+        const { updatedTotalPrice, updatedTotal } = calculateServiceTotals(updatedService);
+        return {
+          ...updatedService,
+          totalPrice: updatedTotalPrice,
+          total: updatedTotal,
+        };
+      })
+    );
+  };
+  
+  
   return (
     <>
       <div className="grid grid-cols-6 rounded-lg w-full bg-indigo-700 px-8 py-3">
@@ -52,97 +148,119 @@ export const BudgetTable = () => {
         <div className="font-bold text-center">Acciones</div>
       </div>
 
-      <div className="grid grid-cols-6 rounded-lg w-full px-8 py-2 mt-4 gap-x-6">
-      <div className="col-span-2 bg-black-nav">
-          <ThemeProvider theme={TextFieldTheme}>
-            <TextField
-              placeholder="Descripción"
-              variant="outlined"
-              fullWidth
-              type="text"
-              className="text-right"
-            />
-          </ThemeProvider>
-        </div>
+      {selectedServices.map((service) => (
+        <div key={service._id}>
+          {/* Fila de servicio */}
+          <div className="grid grid-cols-6 rounded-lg w-full px-8 py-2 mt-4 gap-x-6">
+            <div className="col-span-2 bg-black-nav">
+              <ThemeProvider theme={TextFieldTheme}>
+                <TextField
+                  value={service.name}
+                  variant="outlined"
+                  fullWidth
+                  type="text"
+                  className="text-right"
+                />
+              </ThemeProvider>
+            </div>
 
-        <div className="bg-black-nav">
-          <ThemeProvider theme={TextFieldTheme}>
-            <NumericFormat
-              customInput={TextField}
-              placeholder="Cantidad"
-              variant="outlined"
-              fullWidth
-              type="text"
-              allowNegative={false}
-              decimalScale={0}
-              fixedDecimalScale={false}
-              decimalSeparator=","
-              thousandSeparator="."
-              sx={{ input: { textAlign: "right" } }}
-            />
-          </ThemeProvider>
-        </div>
+            <div className="bg-black-nav">
+              <ThemeProvider theme={TextFieldTheme}>
+                <NumericFormat
+                  value={service.serviceQuantity}
+                  customInput={TextField}
+                  variant="outlined"
+                  fullWidth
+                  type="text"
+                  allowNegative={false}
+                  decimalScale={0}
+                  fixedDecimalScale={false}
+                  decimalSeparator=","
+                  thousandSeparator="."
+                  sx={{ input: { textAlign: "right" } }}
+                  onValueChange={({ value }) => handleQuantityChange(value, service._id)}
+                  isAllowed={(values) => {
+                    const { floatValue } = values;
+                    return floatValue !== undefined && floatValue > 0;
+                  }}
+                />
+              </ThemeProvider>
+            </div>
 
-        <div className="bg-black-nav">
-          <ThemeProvider theme={TextFieldTheme}>
-            <NumericFormat
-              customInput={TextField}
-              placeholder="Precio Unitario"
-              variant="outlined"
-              fullWidth
-              type="text"
-              decimalSeparator=","
-              thousandSeparator="."
-              decimalScale={2}
-              fixedDecimalScale
-              allowNegative={false}
-              sx={{ input: { textAlign: "right" } }}
-            />
-          </ThemeProvider>
-        </div>
+            <div className="bg-black-nav">
+              <ThemeProvider theme={TextFieldTheme}>
+                <NumericFormat
+                  value={service.totalPrice.toFixed(2)}
+                  customInput={TextField}
+                  variant="outlined"
+                  fullWidth
+                  type="text"
+                  decimalSeparator=","
+                  thousandSeparator="."
+                  decimalScale={2}
+                  fixedDecimalScale
+                  allowNegative={false}
+                  sx={{ input: { textAlign: "right" } }}
+                  disabled
+                />
+              </ThemeProvider>
+            </div>
 
-        <div className="bg-black-nav">
-          <ThemeProvider theme={TextFieldTheme}>
-            <NumericFormat
-              customInput={TextField}
-              placeholder="Precio Total"
-              variant="outlined"
-              fullWidth
-              type="text"
-              decimalSeparator=","
-              thousandSeparator="."
-              decimalScale={2}
-              fixedDecimalScale
-              allowNegative={false}
-              sx={{ input: { textAlign: "right" } }}
-            />
-          </ThemeProvider>
-        </div>
+            <div className="bg-black-nav">
+              <ThemeProvider theme={TextFieldTheme}>
+                <NumericFormat
+                  value={(service.totalPrice * service.serviceQuantity).toFixed(2)}
+                  customInput={TextField}
+                  variant="outlined"
+                  fullWidth
+                  type="text"
+                  decimalSeparator=","
+                  thousandSeparator="."
+                  decimalScale={2}
+                  fixedDecimalScale
+                  allowNegative={false}
+                  sx={{ input: { textAlign: "right" } }}
+                  disabled
+                />
+              </ThemeProvider>
+            </div>
 
-
-        {/* Columna de botones */}
-        <div className="flex justify-center items-center gap-4">
-          {/* Botón Ver Detalles */}
-            <Tooltip title="Ver Detalles" arrow>
-                <button className="w-12 h-12 rounded-full bg-transparent border-2 border-blue-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-blue-600 hover:text-white duration-300">
-                    <MdVisibility className="w-12 h-12 p-2 text-blue-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" 
-                    onClick={handleViewDetails}/>
+            <div className="flex justify-center items-center gap-4">
+              <Tooltip title="Ver Detalles" arrow>
+                <button
+                  className="w-12 h-12 rounded-full bg-transparent border-2 border-blue-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-blue-600 hover:text-white duration-300"
+                  onClick={() => handleViewDetails(service)}
+                >
+                  <MdVisibility className="w-12 h-12 p-2 text-blue-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
                 </button>
-            </Tooltip>
+              </Tooltip>
+              <Tooltip title="Eliminar Fila" arrow>
+                <button
+                  className="w-12 h-12 rounded-full bg-transparent border-2 border-red-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-red-600 hover:text-white duration-300"
+                  onClick={() => handleDeleteRow(service._id)}
+                >
+                  <MdDelete className="w-12 h-12 p-2 text-red-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
+                </button>
+              </Tooltip>
+            </div>
+          </div>
 
-          {/* Botón Eliminar */}
-          <Tooltip title="Eliminar Fila" arrow>
-            <button className="w-12 h-12 rounded-full bg-transparent border-2 border-red-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-red-600 hover:text-white duration-300">
-              <MdDelete className="w-12 h-12 p-2 text-red-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
-            </button>
-          </Tooltip>
+          {/* Aquí va la tabla de detalles para cada servicio */}
+          {serviceDetailsVisible[service._id] && (
+            <BudgetProductTable
+              productos={service.products}
+              servicePrice={service.servicePrice || 0}
+              onServicePriceChange={(newPrice) =>
+                handleServicePriceChange(service._id, newPrice)
+              }
+              onProductQuantityChange={(productId, newQuantity) =>
+                handleProductQuantityChange(service._id, productId, newQuantity)
+              }
+              onProductDelete={( productId) => handleProductDelete( productId)}
+            />
+          )}
         </div>
-      </div>
-
-
-      {/* Tabla de productos */}
-      {showDetails && <BudgetProductTable productos={productos} />}
-
+      ))}
 
       {isTableVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
@@ -158,7 +276,6 @@ export const BudgetTable = () => {
         </div>
       )}
 
-      {/* Opciones de agregar línea de factura */}
       <BudgetAddLineButton setIsTableVisible={setIsTableVisible} />
     </>
   );

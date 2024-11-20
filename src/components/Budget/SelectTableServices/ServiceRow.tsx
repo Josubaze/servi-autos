@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -12,9 +11,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { ProductRow } from '../../Services/TableServices/ProductRow'; 
 import { useMediaQuery } from '@mui/material';
+import { useState } from 'react';
 
 export const ServiceRow: React.FC<SelectRowProps> = ({ service, handleSelect }) => {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const isMobile = useMediaQuery('(max-width:600px)');
     const totalProductos = service.products.reduce((total, product) => {
         return total + product.product.price * product.quantity;
@@ -23,7 +23,7 @@ export const ServiceRow: React.FC<SelectRowProps> = ({ service, handleSelect }) 
         handleSelect(service); 
     };
     return (
-    <React.Fragment>
+    <>
         <TableRow
                 sx={{
                     '& > *': { borderBottom: 'unset' },
@@ -94,7 +94,7 @@ export const ServiceRow: React.FC<SelectRowProps> = ({ service, handleSelect }) 
             </Collapse>
             </TableCell>
         </TableRow>
-        </React.Fragment>
+        </>
     );
 };
 
