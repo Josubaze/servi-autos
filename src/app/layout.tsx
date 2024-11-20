@@ -8,6 +8,7 @@ import { Suspense } from "react";
 import "./globals.css";
 import { Disclosure } from "@headlessui/react";
 import { LocalizationMuiProvider } from "src/context/LocalizationProvider";
+import { knewave } from "src/utils/fonts";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,7 +35,7 @@ export default async function RootLayout({
                 <Suspense fallback={<Disclosure as="nav" className="bg-black-nav"></Disclosure>}>
                   <Navbar />
                 </Suspense>
-                <main>
+                <main className={`${knewave.variable}`}>
                   {children}
                 </main>
                 <Footer />

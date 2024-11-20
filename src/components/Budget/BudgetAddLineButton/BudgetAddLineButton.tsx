@@ -2,6 +2,7 @@ import React from "react";
 import { FaPlus, FaTools, FaBoxes } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import Tooltip from "@mui/material/Tooltip";
+import { motion } from "framer-motion";
 
 // Se añade la propiedad setIsTableVisible
 interface BudgetAddLineButtonProps {
@@ -37,9 +38,21 @@ export const BudgetAddLineButton = ({ setIsTableVisible }: BudgetAddLineButtonPr
           </button>
         </Tooltip> */}
 
-        <div className="flex gap-x-2">
-          <FaArrowLeftLong className="text-3xl animate-bounce" />
-          <span className="text-lg font-semibold text-green-600">Agregar</span>
+        <div>
+          <motion.div
+            animate={{
+              x: ["0px", "20px", "0px"], 
+            }}
+            transition={{
+              duration: 1, 
+              repeat: 5,
+              ease: "easeInOut",
+            }}
+            className="flex gap-x-2 justify-center items-center"
+          >
+            <FaArrowLeftLong className="text-3xl" />
+            <span className="font-knewave text-4xl">AGREGAR</span>
+          </motion.div> 
         </div>
       </div>
     </div>

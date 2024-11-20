@@ -9,29 +9,12 @@ import {
   Paper,
   Tooltip,
   ThemeProvider,
+  Typography,
 } from "@mui/material";
 import { MdDelete } from "react-icons/md";
 import { motion } from "framer-motion";
 import { darkTheme } from "src/styles/themes/themeTable";
 import { NumericFormat } from "react-number-format";
-
-interface ProductInService {
-  product: {
-    _id: string;
-    name: string;
-    category: string;
-    price: number;
-  };
-  quantity: number;
-}
-
-interface ProductTableProps {
-  productos: ProductInService[];
-  servicePrice: number;
-  onServicePriceChange: (newPrice: number) => void;
-  onProductQuantityChange: (productId: string, newQuantity: number) => void;
-  onProductDelete: (productId: string) => void;
-}
 
 export const BudgetProductTable = ({
   productos,
@@ -51,6 +34,7 @@ export const BudgetProductTable = ({
             transition={{ duration: 0.5 }}
             style={{ overflow: "hidden" }}
           >
+            <Typography className="pl-4" variant="h6" component="div">Detalles del Servicio</Typography>
             <Table size="small">
               <TableHead>
                 <TableRow>

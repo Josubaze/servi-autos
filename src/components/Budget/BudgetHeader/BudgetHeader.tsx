@@ -12,7 +12,7 @@ export const BudgetHeader = () => {
                 </div>
             </div>
 
-            <div className="text-white px-8 font-title font-bold text-5xl mt-5 sm:mt-0">Presupuesto</div>
+            <div className="font-knewave px-8 font-title text-5xl mt-5 sm:mt-0">Presupuesto</div>
         </div>
     );
 }

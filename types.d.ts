@@ -164,6 +164,14 @@ interface Product {
   }
 
 
+  
+interface ProductTableProps {
+  productos: ProductInService[];
+  servicePrice: number;
+  onServicePriceChange: (newPrice: number) => void;
+  onProductQuantityChange: (productId: string, newQuantity: number) => void;
+  onProductDelete: (productId: string) => void;
+}
 
 
 declare module 'mui-datatables';

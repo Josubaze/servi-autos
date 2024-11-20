@@ -35,9 +35,17 @@ export const ServiceRow: React.FC<SelectRowProps> = ({ service, handleSelect }) 
                 onClick={handleRowClick} 
         >
             <TableCell>
-            <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
+                {/* IconButton para expandir la fila */}
+                <IconButton
+                    aria-label="expand row"
+                    size="small"
+                    onClick={(e) => {
+                        e.stopPropagation(); // Evita que el click se propague al TableRow
+                        setOpen(!open); // Cambia el estado de "open"
+                    }}
+                >
+                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </IconButton>
             </TableCell>
             {!isMobile && 
             <TableCell 
