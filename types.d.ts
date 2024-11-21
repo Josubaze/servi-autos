@@ -97,7 +97,7 @@ interface Product {
     quantity: number 
   }
 
-  interface SelectTableServicesProps {
+  interface SelectServicesProps {
     data: Service[];
     isLoading: boolean;
     isError: boolean;

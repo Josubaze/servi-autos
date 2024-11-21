@@ -20,11 +20,7 @@ export const ServiceRow: React.FC<SelectRowProps> = ({ service, handleSelect }) 
         return total + product.product.price * product.quantity;
     }, 0);
     const handleRowClick = () => {
-        if (handleSelect) {
-            handleSelect(service);
-        } else {
-            console.error('handleServiceSelect no está definido');
-        }
+        handleSelect(service); 
     };
     return (
     <>

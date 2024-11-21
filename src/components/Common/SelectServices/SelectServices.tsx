@@ -21,7 +21,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Tooltip from "@mui/material/Tooltip";
 
 
-export const SelectTableServices: React.FC<SelectServicesProps> = ({
+export const SelectServices: React.FC<SelectServicesProps> = ({
     data,
     isLoading,
     isError,
