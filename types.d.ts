@@ -99,7 +99,6 @@ interface Product {
 
   interface SelectTableServicesProps {
     data: Service[];
-    searchTerm: string;
     isLoading: boolean;
     isError: boolean;
     isSuccess: boolean;
@@ -171,6 +170,7 @@ interface ProductTableProps {
   onServicePriceChange: (newPrice: number) => void;
   onProductQuantityChange: (productId: string, newQuantity: number) => void;
   onProductDelete: (productId: string) => void;
+  onProductTableVisible: () => void,
 }
 
 

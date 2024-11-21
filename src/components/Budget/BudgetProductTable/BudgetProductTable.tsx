@@ -15,6 +15,7 @@ import { MdDelete } from "react-icons/md";
 import { motion } from "framer-motion";
 import { darkTheme } from "src/styles/themes/themeTable";
 import { NumericFormat } from "react-number-format";
+import { FaPlus } from "react-icons/fa6";
 
 export const BudgetProductTable = ({
   productos,
@@ -22,7 +23,9 @@ export const BudgetProductTable = ({
   onServicePriceChange,
   onProductQuantityChange,
   onProductDelete,
+  onProductTableVisible
 }: ProductTableProps) => {
+  
   return (
     <div className="px-12">
       <ThemeProvider theme={darkTheme}>
@@ -134,6 +137,15 @@ export const BudgetProductTable = ({
           </motion.div>
         </TableContainer>
       </ThemeProvider>
+      <div className="flex items-center justify-center pt-2">
+        <Tooltip title="Agregar Fila" arrow>
+            <button className="w-8 h-8 rounded-full bg-transparent border-2 border-gray-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:border-green-600 hover:bg-green-600 hover:text-white duration-300">
+              <FaPlus className="w-6 h-6 p-1 text-gray-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" 
+              onClick={onProductTableVisible}
+              />
+            </button>
+        </Tooltip>
+      </div>
     </div>
   );
 };

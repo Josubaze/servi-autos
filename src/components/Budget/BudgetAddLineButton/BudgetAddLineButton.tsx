@@ -6,13 +6,10 @@ import { motion } from "framer-motion";
 
 // Se añade la propiedad setIsTableVisible
 interface BudgetAddLineButtonProps {
-  setIsTableVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  onTableVisible: () => void;
 }
 
-export const BudgetAddLineButton = ({ setIsTableVisible }: BudgetAddLineButtonProps) => {
-  const handleShowServiceTable = () => {
-    setIsTableVisible(true); // Cambia el estado para mostrar la tabla
-  };
+export const BudgetAddLineButton: React.FC<BudgetAddLineButtonProps> = ({onTableVisible}) => {
 
   return (
     <div className="grid grid-cols-6 rounded-lg w-full px-8 pt-4 gap-x-6">
@@ -26,7 +23,7 @@ export const BudgetAddLineButton = ({ setIsTableVisible }: BudgetAddLineButtonPr
         <Tooltip title="Agregar Servicio">
           <button
             className="w-12 h-12 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 hover:text-white duration-300"
-            onClick={handleShowServiceTable} // Llama a la función para mostrar la tabla
+            onClick={onTableVisible} // Llama a la función para mostrar la tabla
           >
             <FaTools className="w-12 h-12 p-2 text-green-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
           </button>

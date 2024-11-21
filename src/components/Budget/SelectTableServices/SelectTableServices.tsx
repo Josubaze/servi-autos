@@ -23,7 +23,6 @@ import Tooltip from "@mui/material/Tooltip";
 
 export const SelectTableServices: React.FC<SelectTableServicesProps> = ({
     data,
-    searchTerm,
     isLoading,
     isError,
     isSuccess,
@@ -32,8 +31,7 @@ export const SelectTableServices: React.FC<SelectTableServicesProps> = ({
 }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'serviceQuantity', 'servicePrice', 'totalPrice']);
-    const { sortedData, order, orderBy, handleRequestSort } = useSortableData(filteredData, 'serviceQuantity');
+    const { sortedData, order, orderBy, handleRequestSort } = useSortableData(data, 'serviceQuantity');
     const isMobile = useMediaQuery('(max-width:600px)');
 
     const handleChangePage = (event: unknown, newPage: number) => {
@@ -143,7 +141,7 @@ export const SelectTableServices: React.FC<SelectTableServicesProps> = ({
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 25, 50]}
                         component="div"
-                        count={filteredData.length}
+                        count={data.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}

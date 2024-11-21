@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
 import { NumericFormat } from "react-number-format";
@@ -8,12 +8,18 @@ import { TextField, Tooltip } from "@mui/material";
 import { MdDelete, MdVisibility } from "react-icons/md";
 import { useGetServicesQuery } from "src/redux/services/servicesApi";
 import { SelectTableServices } from "../SelectTableServices";
+import { useGetProductsQuery } from "src/redux/services/productsApi";
+import { TableProducts } from "src/components/Services/TableProducts";
+import { toast } from 'react-toastify';
 
 export const BudgetTable = () => {
   const [selectedServices, setSelectedServices] = useState<Service[]>([]);
   const [serviceDetailsVisible, setServiceDetailsVisible] = useState<{ [key: string]: boolean }>({});
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
-  const { data = [], isLoading, isError, isSuccess } = useGetServicesQuery();
+  const [isProductTableVisible, setIsProductTableVisible] = useState<boolean>(false);
+  const { data: services = [], isLoading, isError, isSuccess } = useGetServicesQuery();
+  const { data: products = [], isError: isErrorProducts} = useGetProductsQuery();
+  const [activeServiceId, setActiveServiceId] = useState<string | null>(null);
 
   // seleccionar servicio
   const handleSelect = (service: Service) => {
@@ -40,7 +46,7 @@ export const BudgetTable = () => {
   };
 
   // cambiar la cantidad de servicios
-  const handleQuantityChange = (value: string, serviceId: string) => {
+  const handleServiceQuantityChange = (value: string, serviceId: string) => {
     const quantity = parseInt(value.replace(/\D/g, ""), 10) || 1;
     setSelectedServices((prev) =>
       prev.map((service) =>
@@ -136,6 +142,46 @@ export const BudgetTable = () => {
       })
     );
   };
+  // agregar producto
+  const [productExists, setProductExists] = useState(false);
+
+  const handleAddProduct = (product: Product) => {
+    if (activeServiceId) {
+      setSelectedServices((prevServices) =>
+        prevServices.map((service) => {
+          if (service._id === activeServiceId) {
+            const existingProduct = service.products.find(
+              (p) => p.product._id === product._id
+            );
+
+            if (existingProduct) {
+              setProductExists(true); // Marca que existe el producto
+              setIsProductTableVisible(false);
+              return service;
+            }
+
+            const updatedProducts = [
+              ...service.products,
+              { product, quantity: 1 },
+            ];
+            const updatedService = { ...service, products: updatedProducts };
+            const { updatedTotalPrice, updatedTotal } =
+              calculateServiceTotals(updatedService);
+            return { ...updatedService, totalPrice: updatedTotalPrice, total: updatedTotal };
+          }
+          return service;
+        })
+      );
+    }
+    setIsProductTableVisible(false);
+  };
+
+  useEffect(() => {
+    if (productExists) {
+      toast.info('El producto ya está agregado!');
+      setProductExists(false); 
+    }
+  }, [productExists]);
   
   
   return (
@@ -178,7 +224,7 @@ export const BudgetTable = () => {
                   decimalSeparator=","
                   thousandSeparator="."
                   sx={{ input: { textAlign: "right" } }}
-                  onValueChange={({ value }) => handleQuantityChange(value, service._id)}
+                  onValueChange={({ value }) => handleServiceQuantityChange(value, service._id)}
                   isAllowed={(values) => {
                     const { floatValue } = values;
                     return floatValue !== undefined && floatValue > 0;
@@ -257,26 +303,40 @@ export const BudgetTable = () => {
                 handleProductQuantityChange(service._id, productId, newQuantity)
               }
               onProductDelete={( productId) => handleProductDelete( productId)}
+              onProductTableVisible={() => {
+                setActiveServiceId(service._id); // Guardamos el ID del servicio activo
+                setIsProductTableVisible(true);
+              }}
             />
           )}
         </div>
       ))}
 
+      <BudgetAddLineButton onTableVisible={() => setIsTableVisible(true)} />
+
       {isTableVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
           <SelectTableServices
-            data={data}
-            searchTerm=""
+            data={services}
             isLoading={isLoading}
             isError={isError}
             isSuccess={isSuccess}
             handleSelect={handleSelect}
             onCloseTable={() => setIsTableVisible(false)}
           />
-        </div>
+        </div>      
       )}
-
-      <BudgetAddLineButton setIsTableVisible={setIsTableVisible} />
+  
+      {isProductTableVisible && ( 
+          <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"> 
+          <TableProducts 
+            data={products} 
+            isError={isErrorProducts}
+            onAddProduct={handleAddProduct} 
+            onCloseTable={() => setIsProductTableVisible(false)} 
+          /> 
+          </div>
+      )}     
     </>
   );
 };

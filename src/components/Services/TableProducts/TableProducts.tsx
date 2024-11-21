@@ -4,12 +4,14 @@ import { darkTheme } from "src/styles/themes/themeTable";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
+import { Typography } from "@mui/material";
 
 export const TableProducts: React.FC<{
   data: Product[],
-  onSelectProduct: (product: Product) => void,
+  onAddProduct: (product: Product) => void,
   onCloseTable: () => void,
-}> = ({ data, onSelectProduct, onCloseTable }) => {
+  isError: boolean,
+}> = ({ data, onAddProduct, onCloseTable, isError }) => {
 
   const columns = [
     { 
@@ -65,7 +67,7 @@ export const TableProducts: React.FC<{
         quantity: rowData[5],
         price: rowData[6],
       };
-      onSelectProduct(selectedProduct);
+      onAddProduct(selectedProduct);
     },
     textLabels: {
       body: {
@@ -108,6 +110,11 @@ export const TableProducts: React.FC<{
             options={options} 
           />
         </div>
+        {isError && (
+          <Typography variant="h4" color="error">
+            Hubo un error al cargar la lista de productos. Por favor, intente nuevamente.
+          </Typography>
+        )}
       </ThemeProvider>
     </StyledEngineProvider>
   );

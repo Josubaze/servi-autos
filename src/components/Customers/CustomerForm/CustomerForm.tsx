@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import {  ThemeProvider } from "@mui/material/styles";
 import { TextFieldTheme } from 'src/styles/themes/themeTextField';
 import { CloseButton } from 'src/components/Common/Buttons/CloseButton';
+import { toast } from 'react-toastify';
 
 type FormCustomerProps = {
   onClose: () => void;
@@ -17,10 +18,11 @@ export const CustomerForm = ({
   const { register, handleSubmit, formState: { errors } } = useForm<Omit<Customer, '_id'>>({
     resolver: zodResolver(CustomerSchema),
   });
-  const [createCustomer, { isError }] = useCreateCustomerMutation();
+  const [createCustomer, { isError, isSuccess }] = useCreateCustomerMutation();
 
   const onSubmit: SubmitHandler<Omit<Customer, '_id'>> = async (data) => {
     await createCustomer(data).unwrap();
+    toast.success('Cliente Registrado con Exito!')
     onClose();
   };
 

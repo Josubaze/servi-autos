@@ -1,3 +1,4 @@
+
 import { Inter } from "next/font/google";
 import { Navbar } from "src/components/Common/Nabvar/Nabvar";
 import { Footer } from "src/components/Common/Footer";
@@ -9,6 +10,7 @@ import "./globals.css";
 import { Disclosure } from "@headlessui/react";
 import { LocalizationMuiProvider } from "src/context/LocalizationProvider";
 import { knewave } from "src/utils/fonts";
+import ToasterProvider from "src/context/ToasterProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,18 +33,21 @@ export default async function RootLayout({
         <SessionAuthProvider session={session}>
           <StoreProvider>
             <LocalizationMuiProvider>
-              <div className="grid min-h-screen grid-rows-[auto,1fr,auto]">
-                <Suspense fallback={<Disclosure as="nav" className="bg-black-nav"></Disclosure>}>
-                  <Navbar />
-                </Suspense>
-                <main className={`${knewave.variable}`}>
-                  {children}
-                </main>
-                <Footer />
-              </div>
+              <ToasterProvider>
+                <div className="grid min-h-screen grid-rows-[auto,1fr,auto]">
+                  <Suspense fallback={<Disclosure as="nav" className="bg-black-nav"></Disclosure>}>
+                    <Navbar />
+                  </Suspense>
+                  <main className={`${knewave.variable}`}>
+                    {children}
+                  </main>               
+                  <Footer />
+                </div>
+              </ToasterProvider>
             </LocalizationMuiProvider>
           </StoreProvider>
         </SessionAuthProvider>
+
       </body>
     </html>
   );
