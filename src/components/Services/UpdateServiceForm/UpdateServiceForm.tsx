@@ -3,7 +3,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ServiceSchema } from 'src/utils/validation.zod';
 import { useUpdateServiceMutation } from 'src/redux/services/servicesApi';
-import { TableProducts } from '../TableProducts';
 import { useGetProductsQuery } from 'src/redux/services/productsApi';
 import TextField from '@mui/material/TextField';
 import {  ThemeProvider } from "@mui/material/styles";
@@ -11,6 +10,7 @@ import { TextFieldTheme } from 'src/styles/themes/themeTextField';
 import { Notification } from 'src/components/Common/Notification';
 import { CloseButton } from 'src/components/Common/Buttons/CloseButton';
 import { SelectedTableProducts } from '../SelectedTableProducts';
+import { SelectProducts } from 'src/components/Common/SelectProducts';
 
 type FormServiceProps = {
   onClose: () => void;
@@ -70,9 +70,10 @@ export const UpdateServiceForm = ({ onClose, service }: FormServiceProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
         {isProductTableVisible ? (
-            <TableProducts 
+            <SelectProducts 
             data={productsData}
-            onSelectProduct={handleProductSelect}
+            isError={isErrorProducts}
+            onAddProduct={handleProductSelect}
             onCloseTable={() => setIsProductTableVisible(false)}
         />
         ) : (

@@ -3,7 +3,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'; 
 import { ServiceSchema } from 'src/utils/validation.zod'; 
 import { useCreateServiceMutation } from 'src/redux/services/servicesApi'; 
-import { TableProducts } from '../TableProducts'; 
 import { useGetProductsQuery } from 'src/redux/services/productsApi'; 
 import { Notification } from 'src/components/Common/Notification';
 import TextField from '@mui/material/TextField';
@@ -11,6 +10,7 @@ import {  ThemeProvider } from "@mui/material/styles";
 import { TextFieldTheme } from 'src/styles/themes/themeTextField';
 import { CloseButton } from 'src/components/Common/Buttons/CloseButton';
 import { SelectedTableProducts } from '../SelectedTableProducts';
+import { SelectProducts } from 'src/components/Common/SelectProducts';
 
 type FormServiceProps = { onClose: () => void; };
 
@@ -24,9 +24,6 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
   const [isProductTableVisible, setIsProductTableVisible] = useState(false); 
 
   const handleProductSelect = (product: Product) => { 
-    if (!product.name) { 
-      console.error("El producto seleccionado no tiene un 'name'"); 
-    } 
     setSelectedProducts((prev) => [...prev, { ...product, quantity: 1 }]); 
     setIsProductTableVisible(false); 
   }; 
@@ -52,9 +49,10 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
   return ( 
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"> 
       {isProductTableVisible ? ( 
-        <TableProducts 
+        <SelectProducts 
           data={data} 
-          onSelectProduct={handleProductSelect} 
+          onAddProduct={handleProductSelect} 
+          isError={isErrorProducts}
           onCloseTable={() => setIsProductTableVisible(false)} 
         /> 
       ) : ( 

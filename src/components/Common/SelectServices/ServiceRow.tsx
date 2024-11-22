@@ -13,15 +13,12 @@ import { ProductRow } from '../../Services/TableServices/ProductRow';
 import { useMediaQuery } from '@mui/material';
 import { useState } from 'react';
 
-export const ServiceRow: React.FC<SelectRowProps> = ({ service, handleSelect }) => {
+export const ServiceRow: React.FC<SelectRowProps> = ({ service, onServiceSelect }) => {
     const [open, setOpen] = useState(false);
     const isMobile = useMediaQuery('(max-width:600px)');
     const totalProductos = service.products.reduce((total, product) => {
         return total + product.product.price * product.quantity;
     }, 0);
-    const handleRowClick = () => {
-        handleSelect(service); 
-    };
     return (
     <>
         <TableRow
@@ -32,7 +29,7 @@ export const ServiceRow: React.FC<SelectRowProps> = ({ service, handleSelect }) 
                         background: 'rgba(75, 85, 99, 0.3)', 
                     }
                 }}
-                onClick={handleRowClick} 
+                onClick={() => onServiceSelect(service)} 
         >
             <TableCell>
                 {/* IconButton para expandir la fila */}

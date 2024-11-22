@@ -14,7 +14,6 @@ import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import { useSortableData } from 'src/hooks/useSortableData';
 import { Loading } from 'src/components/Common/Loading';
-import { useDynamicFilter } from 'src/hooks/useProductFilter';
 import { useMediaQuery } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -26,7 +25,7 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
     isLoading,
     isError,
     isSuccess,
-    handleSelect,
+    onServiceSelect,
     onCloseTable,
 }) => {
     const [page, setPage] = useState(0);
@@ -133,8 +132,10 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
 
                         <TableBody>
                             {rowsToShow.map((service: Service) => (
-                            <ServiceRow key={service._id} 
-                                service={service} handleSelect={handleSelect}/>
+                            <ServiceRow 
+                                key={service._id} 
+                                service={service} 
+                                onServiceSelect={onServiceSelect}/>
                             ))}
                         </TableBody>
                     </Table>

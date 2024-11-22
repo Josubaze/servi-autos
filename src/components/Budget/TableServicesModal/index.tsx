@@ -1,1 +1,0 @@
-export { TableServiceModal } from './TableServicesModal';

@@ -1,1 +1,0 @@
-export { TableProducts } from './TableProducts';

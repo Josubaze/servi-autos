@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { Typography } from "@mui/material";
 
-export const TableProducts: React.FC<{
+export const SelectProducts: React.FC<{
   data: Product[],
   onAddProduct: (product: Product) => void,
   onCloseTable: () => void,

@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 
-export const TableCustomers: React.FC<{
+export const SelectCustomers: React.FC<{
   data: Customer[],
   isLoading: boolean,
   isError: boolean,

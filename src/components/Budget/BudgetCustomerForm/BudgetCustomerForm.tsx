@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useGetCustomersQuery, useCreateCustomerMutation } from "src/redux/services/customersApi";
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CustomerSchema } from 'src/utils/validation.zod';
 import { CUSTOMERVOID } from "src/utils/constanst";
-import { TableCustomers } from "../TableCustomers";
 import { Notification } from "src/components/Common/Notification";
 import { useImperativeHandle, forwardRef } from 'react';
 import TextField from '@mui/material/TextField';
@@ -12,6 +11,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { TextFieldTheme } from 'src/styles/themes/themeTextField';
 import { SelectCustomerButton } from "./SelectCustomerButton"; 
 import { CreateCustomerButton } from "./CreateCustomerButton";  
+import { SelectCustomers } from "src/components/Common/SelectCustomers";
 
 export const BudgetCustomerForm = forwardRef((props, ref) => {
     const { data: customers = [], isLoading: isLoadingCustomers, isError, isFetching, isSuccess } = useGetCustomersQuery();
@@ -182,7 +182,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
             {/* Modal para la tabla de selección de clientes */}
             {isTableVisible && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-                    <TableCustomers
+                    <SelectCustomers
                         data={customers}
                         isLoading={isLoadingCustomers}
                         isError={isError}

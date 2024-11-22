@@ -7,15 +7,17 @@ import { motion } from "framer-motion";
 // Se añade la propiedad setIsTableVisible
 interface BudgetAddLineButtonProps {
   onTableVisible: () => void;
+  onAddEmptyService: () => void;
 }
 
-export const BudgetAddLineButton: React.FC<BudgetAddLineButtonProps> = ({onTableVisible}) => {
+export const BudgetAddLineButton: React.FC<BudgetAddLineButtonProps> = ({onTableVisible, onAddEmptyService}) => {
 
   return (
     <div className="grid grid-cols-6 rounded-lg w-full px-8 pt-4 gap-x-6">
       <div className="col-span-2 gap-x-4 flex justify-center items-center">
         <Tooltip title="Agregar Fila">
-          <button className="w-12 h-12 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 hover:text-white duration-300">
+          <button className="w-12 h-12 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 hover:text-white duration-300"
+          onClick={onAddEmptyService}>
             <FaPlus className="w-12 h-12 p-2 text-green-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
           </button>
         </Tooltip>
@@ -23,17 +25,11 @@ export const BudgetAddLineButton: React.FC<BudgetAddLineButtonProps> = ({onTable
         <Tooltip title="Agregar Servicio">
           <button
             className="w-12 h-12 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 hover:text-white duration-300"
-            onClick={onTableVisible} // Llama a la función para mostrar la tabla
+            onClick={onTableVisible} 
           >
             <FaTools className="w-12 h-12 p-2 text-green-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
           </button>
         </Tooltip>
-
-        {/* <Tooltip title="Agregar Producto">
-          <button className="w-12 h-12 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 hover:text-white duration-300">
-            <FaBoxes className="w-12 h-12 p-2 text-green-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
-          </button>
-        </Tooltip> */}
 
         <div>
           <motion.div

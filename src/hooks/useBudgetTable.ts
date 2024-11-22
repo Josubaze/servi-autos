@@ -3,22 +3,33 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useGetServicesQuery } from "src/redux/services/servicesApi";
 import { useGetProductsQuery } from "src/redux/services/productsApi";
+import { v4 as uuidv4 } from "uuid";
+import { SERVICEVOID } from "src/utils/constanst";
 
 export const useBudgetTable = () => {
   const [selectedServices, setSelectedServices] = useState<Service[]>([]);
   const [serviceDetailsVisible, setServiceDetailsVisible] = useState<{ [key: string]: boolean }>({});
-  const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
+  const [isServiceTableVisible, setIsServiceTableVisible] = useState<boolean>(false);
   const [isProductTableVisible, setIsProductTableVisible] = useState<boolean>(false);
   const [activeServiceId, setActiveServiceId] = useState<string | null>(null);
-  const [productExists, setProductExists] = useState(false);
+  const [Exists, setExists] = useState(false);
 
   const { data: services = [], isLoading, isError, isSuccess } = useGetServicesQuery();
   const { data: products = [], isError: isErrorProducts } = useGetProductsQuery();
 
   // Seleccionar servicio
-  const handleSelect = (service: Service) => {
-    setSelectedServices((prev) => [...prev, service]);
-    setIsTableVisible(false);
+  const handleServiceSelect = (service: Service) => {
+    setSelectedServices((prev) => {
+      const alreadyExists = prev.some((selectedService) => selectedService._id === service._id);
+  
+      if (alreadyExists) {
+        setExists(true);
+        return prev; 
+      }
+  
+      return [...prev, service];
+    });
+    setIsServiceTableVisible(false);
   };
 
   // Ver detalles del servicio
@@ -29,6 +40,18 @@ export const useBudgetTable = () => {
     }));
   };
 
+  //agregar fila vacia
+  const handleAddEmptyService = () => {
+    setSelectedServices((prevServices) => [
+      ...prevServices,
+      { ...SERVICEVOID,
+        _id: uuidv4(),
+      name: "Nuevo Servicio",
+      totalPrice: 0,
+      serviceQuantity: 1 },
+    ]);
+  };
+
   // Eliminar fila
   const handleDeleteRow = (serviceId: string) => {
     setSelectedServices((prev) => prev.filter((service) => service._id !== serviceId));
@@ -37,6 +60,15 @@ export const useBudgetTable = () => {
       delete newState[serviceId];
       return newState;
     });
+  };
+
+  // Cambiar nombre del servicio
+  const handleNameChange = (id: string, newName: string) => {
+    setSelectedServices((prevServices) =>
+      prevServices.map((service) =>
+        service._id === id ? { ...service, name: newName } : service
+      )
+    );
   };
 
   // Cambiar la cantidad de servicios
@@ -149,7 +181,7 @@ export const useBudgetTable = () => {
             );
 
             if (existingProduct) {
-              setProductExists(true);
+              setExists(true);
               setIsProductTableVisible(false);
               return service;
             }
@@ -171,17 +203,17 @@ export const useBudgetTable = () => {
   };
 
   useEffect(() => {
-    if (productExists) {
-      toast.info("El producto ya está agregado!");
-      setProductExists(false);
+    if (Exists) {
+      toast.info("Ya esta agregado!");
+      setExists(false);
     }
-  }, [productExists]);
+  }, [Exists]);
 
   return {
     services,
     products,
     selectedServices,
-    isTableVisible,
+    isServiceTableVisible,
     isProductTableVisible,
     activeServiceId,
     serviceDetailsVisible,
@@ -189,15 +221,17 @@ export const useBudgetTable = () => {
     isError,
     isSuccess,
     isErrorProducts,
-    handleSelect,
+    handleServiceSelect,
     handleViewDetails,
+    handleAddEmptyService,
     handleDeleteRow,
+    handleNameChange,
     handleServiceQuantityChange,
     handleServicePriceChange,
     handleProductQuantityChange,
     handleProductDelete,
     handleAddProduct,
-    setIsTableVisible,
+    setIsServiceTableVisible,
     setIsProductTableVisible,
     setActiveServiceId,
   };

@@ -1,1 +1,0 @@
-export { SelectTableServices } from './SelectTableServices';

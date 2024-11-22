@@ -102,13 +102,13 @@ interface Product {
     isLoading: boolean;
     isError: boolean;
     isSuccess: boolean;
-    handleSelect: (service: Service) => void;
+    onServiceSelect: (service: Service) => void;
     onCloseTable: () => void,
   }
 
   interface SelectRowProps {
     service: Service;
-    handleSelect: (service: Service) => void;
+    onServiceSelect: (service: Service) => void;
   }
 
 

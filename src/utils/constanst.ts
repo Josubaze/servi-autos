@@ -36,7 +36,6 @@ export const SERVICEVOID: Service = {
   products: [],
 }
 
-
 export const MENUPROFILE = [
   { name: 'Tu Perfil', href: '/profile' },
   { name: 'Cerrar Sesión', href: '/api/auth/signout' },
