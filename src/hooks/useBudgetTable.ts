@@ -6,30 +6,37 @@ import { useGetProductsQuery } from "src/redux/services/productsApi";
 import { v4 as uuidv4 } from "uuid";
 import { SERVICEVOID } from "src/utils/constanst";
 
-export const useBudgetTable = () => {
-  const [selectedServices, setSelectedServices] = useState<Service[]>([]);
+export const useBudgetTable = ({ selectedServices, setSelectedServices }: { 
+  selectedServices: Service[]; 
+  setSelectedServices: React.Dispatch<React.SetStateAction<Service[]>>; 
+}) => {
   const [serviceDetailsVisible, setServiceDetailsVisible] = useState<{ [key: string]: boolean }>({});
   const [isServiceTableVisible, setIsServiceTableVisible] = useState<boolean>(false);
   const [isProductTableVisible, setIsProductTableVisible] = useState<boolean>(false);
   const [activeServiceId, setActiveServiceId] = useState<string | null>(null);
-  const [Exists, setExists] = useState(false);
-
   const { data: services = [], isLoading, isError, isSuccess } = useGetServicesQuery();
   const { data: products = [], isError: isErrorProducts } = useGetProductsQuery();
 
   // Seleccionar servicio
   const handleServiceSelect = (service: Service) => {
+    let isRepeated = false;
+  
     setSelectedServices((prev) => {
       const alreadyExists = prev.some((selectedService) => selectedService._id === service._id);
   
       if (alreadyExists) {
-        setExists(true);
-        return prev; 
+        isRepeated = true; 
+        return prev;
       }
   
       return [...prev, service];
     });
+  
     setIsServiceTableVisible(false);
+  
+    if (isRepeated) {
+      toast.info("¡Este servicio ya está agregado!");
+    }
   };
 
   // Ver detalles del servicio
@@ -172,7 +179,8 @@ export const useBudgetTable = () => {
 
   // Agregar producto
   const handleAddProduct = (product: any) => {
-    if (activeServiceId) {
+    let isRepeated = false;
+    if (activeServiceId) { // si tengo el id del servicio seleccionado
       setSelectedServices((prevServices) =>
         prevServices.map((service) => {
           if (service._id === activeServiceId) {
@@ -181,8 +189,7 @@ export const useBudgetTable = () => {
             );
 
             if (existingProduct) {
-              setExists(true);
-              setIsProductTableVisible(false);
+              isRepeated = true;
               return service;
             }
 
@@ -200,14 +207,11 @@ export const useBudgetTable = () => {
       );
     }
     setIsProductTableVisible(false);
+    if (isRepeated) {
+      toast.info("¡Este producto ya está agregado!");
+    }
   };
 
-  useEffect(() => {
-    if (Exists) {
-      toast.info("Ya esta agregado!");
-      setExists(false);
-    }
-  }, [Exists]);
 
   return {
     services,

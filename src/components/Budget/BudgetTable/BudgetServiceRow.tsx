@@ -30,8 +30,8 @@ export const BudgetServiceRow: React.FC<{
 }) => {
   return (
     <div>
-        <div className="grid grid-cols-6 rounded-lg w-full px-8 py-2 mt-4 gap-x-6">
-            <div className="col-span-2 bg-black-nav">
+        <div className="grid grid-cols-12 rounded-lg w-full px-8 pt-4 gap-x-4">
+            <div className="col-span-5 bg-black-nav">
               <ThemeProvider theme={TextFieldTheme}>
                 <TextField
                   value={service.name}
@@ -44,7 +44,7 @@ export const BudgetServiceRow: React.FC<{
               </ThemeProvider>
             </div>
 
-            <div className="bg-black-nav">
+            <div className="bg-black-nav col-span-2">
               <ThemeProvider theme={TextFieldTheme}>
                 <NumericFormat
                   value={service.serviceQuantity}
@@ -67,7 +67,7 @@ export const BudgetServiceRow: React.FC<{
               </ThemeProvider>
             </div>
 
-            <div className="bg-black-nav">
+            <div className="bg-black-nav col-span-2">
               <ThemeProvider theme={TextFieldTheme}>
                 <NumericFormat
                   value={service.totalPrice.toFixed(2)}
@@ -86,7 +86,7 @@ export const BudgetServiceRow: React.FC<{
               </ThemeProvider>
             </div>
 
-            <div className="bg-black-nav">
+            <div className="bg-black-nav col-span-2">
               <ThemeProvider theme={TextFieldTheme}>
                 <NumericFormat
                   value={(service.totalPrice * service.serviceQuantity).toFixed(2)}
@@ -105,7 +105,7 @@ export const BudgetServiceRow: React.FC<{
               </ThemeProvider>
             </div>
 
-            <div className="flex justify-center items-center gap-4">
+            <div className="flex justify-center items-center gap-4 ">
               <Tooltip title="Ver Detalles" arrow>
                 <button
                   className="w-12 h-12 rounded-full bg-transparent border-2 border-blue-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-blue-600 hover:text-white duration-300"

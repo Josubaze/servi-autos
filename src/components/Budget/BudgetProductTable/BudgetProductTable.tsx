@@ -88,7 +88,7 @@ export const BudgetProductTable = ({
                       }).format(productInService.product.price * productInService.quantity)}
                     </TableCell>
                     <TableCell align="center">
-                      <Tooltip title="Eliminar Producto">
+                      <Tooltip title="Eliminar Producto" arrow>
                         <button
                           className="w-6 h-6 rounded-full bg-transparent border border-red-600 flex justify-center items-center text-red-600 transition-all ease-in-out delay-150 hover:bg-red-600 hover:text-white"
                           onClick={() => onProductDelete(productInService.product._id)}

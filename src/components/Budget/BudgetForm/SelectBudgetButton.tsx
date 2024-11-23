@@ -1,15 +1,16 @@
 // SelectBudgetButton.tsx
 import { FaFilePowerpoint } from "react-icons/fa6";
-
+import Tooltip from "@mui/material/Tooltip";
 interface SelectBudgetButtonProps {
     onClick: () => void;
 }
 
 export const SelectBudgetButton = ({ onClick }: SelectBudgetButtonProps) => (
     <div className="relative">
+        <Tooltip title="Cargar Presupuesto" arrow>
         <button
             type="button"
-            className="rounded-xl text-white flex items-center justify-center text-sm py-1 px-2 border-2 border-gray-600 transition ease-in-out delay-150 hover:scale-110 hover:bg-gray-600 duration-300"
+            className="py-1 px-2 rounded-full text-white flex items-center justify-center text-sm border-2 border-gray-600 transition ease-in-out delay-150 hover:scale-110 hover:bg-gray-600 duration-300"
             onClick={onClick}
         >
             <span className="flex items-center justify-center gap-x-2">
@@ -17,5 +18,6 @@ export const SelectBudgetButton = ({ onClick }: SelectBudgetButtonProps) => (
                 <FaFilePowerpoint className="h-5 w-5" />
             </span>
         </button>
+        </Tooltip>
     </div>
 );

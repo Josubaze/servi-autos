@@ -6,11 +6,14 @@ import { BudgetAddLineButton } from "../BudgetAddLineButton";
 import { SelectServices } from "src/components/Common/SelectServices";
 import { SelectProducts } from "src/components/Common/SelectProducts";
 
-export const BudgetTable: React.FC = () => {
+interface BudgetTableProps {
+  selectedServices: Service[];
+  setSelectedServices: React.Dispatch<React.SetStateAction<Service[]>>;
+}
+export const BudgetTable = ({ selectedServices, setSelectedServices }: BudgetTableProps) => {
   const {
     services,
     products,
-    selectedServices,
     isServiceTableVisible,
     isProductTableVisible,
     serviceDetailsVisible,
@@ -31,7 +34,7 @@ export const BudgetTable: React.FC = () => {
     setIsServiceTableVisible,
     setIsProductTableVisible,
     setActiveServiceId,
-  } = useBudgetTable();
+  } = useBudgetTable({ selectedServices, setSelectedServices});
 
   return (
     <>

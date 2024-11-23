@@ -7,8 +7,9 @@ import { BudgetHeader } from "./BudgetHeader";
 import { BudgetCustomerForm } from "./BudgetCustomerForm";
 import { BudgetForm } from "./BudgetForm";
 import { BudgetTable } from "./BudgetTable";
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { BudgetSummary } from "./BudgetSummary";
+import { useBudgetSubtotal } from "src/hooks/useBudgetSubtotal";
 
 // Define la interfaz que contiene la función submitForm
 interface BudgetCustomerFormHandle {
@@ -16,9 +17,10 @@ interface BudgetCustomerFormHandle {
 }
 
 export const Budget = () => {
-
     const formCustomerRef = useRef<BudgetCustomerFormHandle | null>(null);
     const formDateRef = useRef<BudgetCustomerFormHandle | null>(null);
+    const [selectedServices, setSelectedServices] = useState<Service[]>([]);
+    const subtotal = useBudgetSubtotal(selectedServices);
 
     const handleSaveAsPending = async () => {
         if (formCustomerRef.current) {
@@ -43,7 +45,7 @@ export const Budget = () => {
             <BudgetHeader/>
 
             {/* Segmento de formularios */}
-            <div className="flex flex-col sm:flex-row py-3 px-8">
+            <div className="flex flex-col sm:flex-row py-4 px-8">
                 {/* Formulario de cliente */}
                 <div className="flex-1 sm:border-r sm:border-white/30">
                     {/* Pasamos la función al componente hijo */}
@@ -57,10 +59,10 @@ export const Budget = () => {
             </div>
 
             {/* Tabla de presupuesto */}
-            <BudgetTable/>
+            <BudgetTable selectedServices={selectedServices} setSelectedServices={setSelectedServices} />
             
             {/* calculos del presupuesto */}
-            <BudgetSummary></BudgetSummary>
+            <BudgetSummary subtotal={subtotal}></BudgetSummary>
             
             {/* GUARDADO */}
             <div className="grid grid-cols-4 rounded-lg w-full bg-black-nav py-3 mt-6 gap-x-6">

@@ -1,4 +1,5 @@
 import { IoPersonAdd } from "react-icons/io5";
+import Tooltip from "@mui/material/Tooltip";
 
 interface CreateCustomerButtonProps {
     isLoading: boolean;
@@ -7,11 +8,12 @@ interface CreateCustomerButtonProps {
 
 export const CreateCustomerButton = ({ isLoading, onClick }: CreateCustomerButtonProps) => (
     <div className="relative">
+        <Tooltip title="Agregar Cliente" arrow>
         <button
             type="button"
             disabled={isLoading}
             onClick={onClick}
-            className={`rounded-xl text-white flex items-center justify-center text-sm py-1 px-2 border-2 border-blue-600 transition ease-in-out delay-150 hover:scale-110 hover:bg-blue-600 duration-300 
+            className={`py-1 px-2 rounded-full text-white flex items-center justify-center text-sm border-2 border-blue-600 transition ease-in-out delay-150 hover:scale-110 hover:bg-blue-600 duration-300 
                 ${
                 isLoading ? 'cursor-not-allowed opacity-50' : ''
             }`}
@@ -25,5 +27,6 @@ export const CreateCustomerButton = ({ isLoading, onClick }: CreateCustomerButto
             {isLoading ? 'Procesando...' : 'Agregar'}
             {!isLoading && <IoPersonAdd className="h-5 w-5 ml-2" />}
         </button>
+        </Tooltip>
     </div>
 );
