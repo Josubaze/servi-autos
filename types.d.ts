@@ -117,6 +117,7 @@ interface Product {
     dateCreation: Dayjs;
     dateExpiration: Dayjs;
     currency: string;
+    exchangeRate: number;
   }
 
   interface TableBaseProps {

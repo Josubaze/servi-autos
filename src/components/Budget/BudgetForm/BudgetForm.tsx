@@ -6,23 +6,27 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BudgetFormSchema } from 'src/utils/validation.zod';
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
 import dayjs from "dayjs";
-import { forwardRef, useImperativeHandle, useState } from "react";
-import { SelectBudgetButton } from "./SelectBudgetButton"; // Importa el nuevo componente
+import { forwardRef, useEffect, useImperativeHandle } from "react";
+import { SelectBudgetButton } from "./SelectBudgetButton"; 
+import { NumericFormat } from "react-number-format";
+import { motion } from "framer-motion"; 
 
-export const BudgetForm = forwardRef((props, ref) => {
+interface BudgetFormProps {
+    setCurrency: (currency: string) => void; 
+    currency: string;
+  }
+export const BudgetForm = forwardRef(({currency, setCurrency}: BudgetFormProps, ref) => {
     const today = dayjs();
     const expirationDate = today.add(14, 'day');
-    
     const { register, formState: { errors }, getValues, setValue, trigger, watch } = useForm<BudgetForm>({
         resolver: zodResolver(BudgetFormSchema), 
         defaultValues: {
             dateCreation: today,
             dateExpiration: expirationDate,
-            currency: '$',
+            currency: currency,
+            exchangeRate: 0,
         }
     });
-
-    const [isBudgetSelected, setIsBudgetSelected] = useState(false);
 
     const submitForm = async () => {
         const formData = getValues(); 
@@ -35,14 +39,18 @@ export const BudgetForm = forwardRef((props, ref) => {
     };
 
     const handleSelectBudget = () => {
-        // Aquí puedes agregar la lógica que deseas para seleccionar un presupuesto (por ejemplo, abrir un modal)
-        setIsBudgetSelected(true);
         console.log("Presupuesto seleccionado");
     };
 
+
     useImperativeHandle(ref, () => ({
-        submitForm,
+        submitForm,   
     }));
+
+    // Sincronizar el valor de currency del padre con el formulario del hijo
+    useEffect(() => {
+        setValue("currency", currency); 
+    }, [currency, setValue]);
 
     return (
         <>
@@ -103,21 +111,66 @@ export const BudgetForm = forwardRef((props, ref) => {
                     </div>
                 </div>
 
-                {/* Campo de moneda con tema personalizado */}
-                <div className="w-full bg-black-nav">
-                    <ThemeProvider theme={TextFieldTheme}>
-                        <Select
-                            {...register("currency")}
-                            value={watch("currency")}
-                            fullWidth
-                            
-                        >
-                            <MenuItem value="$">USD ($)</MenuItem>
-                            <MenuItem value="Bs">Bolívar (Bs)</MenuItem>
-                        </Select>
-                    </ThemeProvider>
-                    {errors.currency && <p className="py-1 text-red-500">{errors.currency.message}</p>}
+            {/* Conversion de moneda */}
+            <div className="grid grid-cols-12 gap-x-6 items-center w-full rounded-lg">
+            {/* Select para la moneda */}
+            <motion.div
+                className={`${
+                    currency === "$" ? "col-span-12" : "col-span-4"
+                } bg-black-nav`}
+                layout
+                transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                }}
+            >
+                <ThemeProvider theme={TextFieldTheme}>
+                <Select
+                    {...register("currency")}
+                    value={watch("currency")}
+                    fullWidth
+                    variant="outlined"
+                    onChange={(e) => setCurrency(e.target.value)}
+                >
+                    <MenuItem value="$">USD ($)</MenuItem>
+                    <MenuItem value="Bs">Bolívar (Bs)</MenuItem>
+                </Select>
+                </ThemeProvider>
+                {errors.currency && (
+                <p className="py-1 text-red-500">{errors.currency.message}</p>
+                )}
+            </motion.div>
+
+            {/* TextField para la tasa de cambio */}
+            {watch("currency") === "Bs" && (
+                <div className="col-span-8 ms-2 bg-black-nav">
+                <ThemeProvider theme={TextFieldTheme}>
+                    <NumericFormat
+                    customInput={TextField}
+                    value={watch("exchangeRate")}
+                    onValueChange={({ floatValue }) => {
+                        setValue("exchangeRate", floatValue || 0, { shouldValidate: true });
+                    }}
+                    variant="outlined"
+                    fullWidth
+                    type="text"
+                    allowNegative={false}
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                    decimalSeparator=","
+                    thousandSeparator="."
+                    label="Tasa de cambio"
+                    disabled={watch("currency") === "$"}
+                    sx={{ input: { textAlign: "right" } }}
+                    />
+                </ThemeProvider>
+                {errors.exchangeRate && (
+                    <p className="py-1 text-red-500">{errors.exchangeRate.message}</p>
+                )}
                 </div>
+            )}
+            </div>
             </div>
         </form>
         </>

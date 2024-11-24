@@ -101,11 +101,21 @@ export const BudgetFormSchema = z.object({
   dateExpiration: 
     z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), { message: 'Fecha de vencimiento inválida' }),
   currency: z.enum(["$", "Bs"], { message: "Moneda inválida" }),
-}).refine((data) => {
-  return data.dateExpiration.isSame(data.dateCreation) || data.dateExpiration.isAfter(data.dateCreation);
-}, {
-  message: "La fecha de vencimiento debe ser mayor o igual a la fecha de creación",
-  path: ["dateExpiration"],
+
+  exchangeRate: z.union([
+    z.string()
+      .refine(price => !isNaN(parseFloat(price)) && parseFloat(price) > 0, { message: "El precio debe ser un número positivo" })
+      .transform(price => parseFloat(price)),
+    z.number()
+      .refine(price => price > 0, { message: "El precio debe ser un número positivo" })
+  ]),
+
+  }).refine((data) => {
+    return data.dateExpiration.isSame(data.dateCreation) || data.dateExpiration.isAfter(data.dateCreation);
+  }, {
+    message: "La fecha de vencimiento debe ser mayor o igual a la fecha de creación",
+    path: ["dateExpiration"],
+  
 });
 
 

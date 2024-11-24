@@ -12,16 +12,23 @@ import { BudgetSummary } from "./BudgetSummary";
 import { useBudgetSubtotal } from "src/hooks/useBudgetSubtotal";
 
 // Define la interfaz que contiene la función submitForm
-interface BudgetCustomerFormHandle {
-    submitForm: () => any; // Ajusta el tipo de retorno si es necesario
+interface BudgetFormHandle {
+    submitForm: () => any;
+    getCurrency: () => string; 
 }
 
 export const Budget = () => {
-    const formCustomerRef = useRef<BudgetCustomerFormHandle | null>(null);
-    const formDateRef = useRef<BudgetCustomerFormHandle | null>(null);
+    const formCustomerRef = useRef<BudgetFormHandle | null>(null);
+    const formDateRef = useRef<BudgetFormHandle | null>(null);
     const [selectedServices, setSelectedServices] = useState<Service[]>([]);
     const subtotal = useBudgetSubtotal(selectedServices);
+    const [currency, setCurrency] = useState<string>('$');
 
+    const handleChangeCurrency =  async () => {
+        if (formDateRef.current){
+            return await formDateRef.current.getCurrency() || '$';
+        }
+    }
     const handleSaveAsPending = async () => {
         if (formCustomerRef.current) {
             const customerData = await formCustomerRef.current.submitForm(); 
@@ -31,6 +38,8 @@ export const Budget = () => {
             const dateData = await formDateRef.current.submitForm(); 
             console.log("Datos del formulario:", dateData); // Ahora obtenemos el valor resuelto
         }
+        console.log('Opcion del select:', currency);
+        
     };
 
     const handleSaveAsAccepted = () => {
@@ -54,7 +63,11 @@ export const Budget = () => {
 
                 {/* Formulario de presupuesto */}
                 <div className="flex-1">
-                    <BudgetForm ref={formDateRef}/>
+                    <BudgetForm 
+                        ref={formDateRef}
+                        setCurrency={setCurrency}
+                        currency={currency}
+                    />
                 </div>
             </div>
 
@@ -62,7 +75,7 @@ export const Budget = () => {
             <BudgetTable selectedServices={selectedServices} setSelectedServices={setSelectedServices} />
             
             {/* calculos del presupuesto */}
-            <BudgetSummary subtotal={subtotal}></BudgetSummary>
+            <BudgetSummary currency={currency} subtotal={subtotal}></BudgetSummary>
             
             {/* GUARDADO */}
             <div className="grid grid-cols-4 rounded-lg w-full bg-black-nav py-3 mt-6 gap-x-6">
