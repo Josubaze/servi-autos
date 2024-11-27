@@ -14,7 +14,6 @@ import { useBudgetSubtotal } from "src/hooks/useBudgetSubtotal";
 // Define la interfaz que contiene la función submitForm
 interface BudgetFormHandle {
     submitForm: () => any;
-    getCurrency: () => string; 
 }
 
 export const Budget = () => {
@@ -23,12 +22,8 @@ export const Budget = () => {
     const [selectedServices, setSelectedServices] = useState<Service[]>([]);
     const subtotal = useBudgetSubtotal(selectedServices);
     const [currency, setCurrency] = useState<string>('$');
+    const [exchangeRate, setExchangeRate] = useState<number>(1);
 
-    const handleChangeCurrency =  async () => {
-        if (formDateRef.current){
-            return await formDateRef.current.getCurrency() || '$';
-        }
-    }
     const handleSaveAsPending = async () => {
         if (formCustomerRef.current) {
             const customerData = await formCustomerRef.current.submitForm(); 
@@ -39,6 +34,7 @@ export const Budget = () => {
             console.log("Datos del formulario:", dateData); // Ahora obtenemos el valor resuelto
         }
         console.log('Opcion del select:', currency);
+        console.log('Opcion del textExchange:', exchangeRate);
         
     };
 
@@ -67,13 +63,20 @@ export const Budget = () => {
                         ref={formDateRef}
                         setCurrency={setCurrency}
                         currency={currency}
+                        exchangeRate={exchangeRate}
+                        setExchangeRate={setExchangeRate}
                     />
                 </div>
             </div>
 
             {/* Tabla de presupuesto */}
-            <BudgetTable selectedServices={selectedServices} setSelectedServices={setSelectedServices} />
-            
+            <BudgetTable 
+                selectedServices={selectedServices} 
+                setSelectedServices={setSelectedServices} 
+                currency={currency}
+                exchangeRate={exchangeRate}
+            />
+
             {/* calculos del presupuesto */}
             <BudgetSummary currency={currency} subtotal={subtotal}></BudgetSummary>
             

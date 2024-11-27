@@ -27,7 +27,7 @@ export const BudgetProductTable = ({
 }: ProductTableProps) => {
   
   return (
-    <div className="px-12">
+    <div className="px-12 pt-2">
       <ThemeProvider theme={darkTheme}>
         <TableContainer component={Paper}>
           <motion.div
@@ -76,16 +76,28 @@ export const BudgetProductTable = ({
                       />
                     </TableCell>
                     <TableCell>
-                      {new Intl.NumberFormat("es-ES", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                      }).format(productInService.product.price)}
+                      <NumericFormat
+                        value={productInService.product.price}
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        allowNegative={false}
+                        decimalScale={2} // Mantener 2 decimales
+                        fixedDecimalScale
+                        className="bg-transparent"
+                        displayType="text"
+                      />
                     </TableCell>
                     <TableCell>
-                      {new Intl.NumberFormat("es-ES", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      }).format(productInService.product.price * productInService.quantity)}
+                      <NumericFormat
+                        value={productInService.product.price * productInService.quantity}
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        allowNegative={false}
+                        decimalScale={2} // Mantener 2 decimales
+                        fixedDecimalScale
+                        className="bg-transparent"
+                        displayType="text"
+                      />
                     </TableCell>
                     <TableCell align="center">
                       <Tooltip title="Eliminar Producto" arrow>
@@ -125,10 +137,16 @@ export const BudgetProductTable = ({
                   </ThemeProvider>
                   </TableCell>
                   <TableCell>
-                    {new Intl.NumberFormat("es-ES", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(servicePrice)}
+                    <NumericFormat
+                      value={servicePrice}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      allowNegative={false}
+                      decimalScale={2} // Mantener 2 decimales
+                      fixedDecimalScale
+                      className="bg-transparent"
+                      displayType="text"
+                    />
                   </TableCell>
                   <TableCell></TableCell>
                 </motion.tr>

@@ -72,7 +72,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
             <form className="w-full pt-4 sm:pr-6">
                 <div className="grid gap-y-4 w-full">
                     <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 gap-x-6 w-full">
-                        <div className="w-full bg-black-nav">
+                        <div className="w-full">
                             <ThemeProvider theme={TextFieldTheme}>
                                 <Controller
                                     control={control}
@@ -92,7 +92,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
                             </ThemeProvider>
                         </div>
 
-                        <div className="w-full bg-black-nav">
+                        <div className="w-full">
                             <ThemeProvider theme={TextFieldTheme}>
                                 <Controller
                                     control={control}
@@ -114,7 +114,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
                     </div>
 
                     {/* Campos individuales */}
-                    <div className="w-full bg-black-nav">
+                    <div className="w-full">
                         <ThemeProvider theme={TextFieldTheme}>
                             <Controller
                                 control={control}
@@ -134,7 +134,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
                         </ThemeProvider>
                     </div>
 
-                    <div className="w-full bg-black-nav">
+                    <div className="w-full">
                         <ThemeProvider theme={TextFieldTheme}>
                             <Controller
                                 control={control}
@@ -154,7 +154,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
                         </ThemeProvider>
                     </div>
 
-                    <div className="w-full bg-black-nav">
+                    <div className="w-full">
                         <ThemeProvider theme={TextFieldTheme}>
                             <Controller
                                 control={control}

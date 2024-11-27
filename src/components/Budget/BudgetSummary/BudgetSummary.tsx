@@ -23,6 +23,31 @@ export const BudgetSummary = ({ subtotal, currency }: BudgetSummaryProps) => {
 
   return (
     <>
+      {/* Subtotal */}
+      <div className="grid grid-cols-4 rounded-lg w-full px-8 pt-4 gap-x-6">
+        <div className="col-start-3 font-bold content-center text-right">
+          <label htmlFor="subtotal">Subtotal :</label>
+        </div>
+        <div className="bg-black-nav">
+          <ThemeProvider theme={TextFieldTheme}>
+            <NumericFormat
+              customInput={TextField}
+              value={subtotal} 
+              variant="outlined"
+              fullWidth
+              type="text"
+              allowNegative={false}
+              decimalScale={2}
+              fixedDecimalScale={true}
+              decimalSeparator=","
+              thousandSeparator="."
+              sx={{ input: { textAlign: "right" } }}
+              disabled
+            />
+          </ThemeProvider>
+        </div>
+      </div>
+
       {/* IVA % */}
       <div className="grid grid-cols-12 rounded-lg w-full px-8 pt-4 gap-x-6">
         <div className="col-start-9 font-bold content-center text-right">
@@ -122,31 +147,6 @@ export const BudgetSummary = ({ subtotal, currency }: BudgetSummaryProps) => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Subtotal */}
-      <div className="grid grid-cols-4 rounded-lg w-full px-8 pt-4 gap-x-6">
-        <div className="col-start-3 font-bold content-center text-right">
-          <label htmlFor="subtotal">Subtotal :</label>
-        </div>
-        <div className="bg-black-nav">
-          <ThemeProvider theme={TextFieldTheme}>
-            <NumericFormat
-              customInput={TextField}
-              value={subtotal} 
-              variant="outlined"
-              fullWidth
-              type="text"
-              allowNegative={false}
-              decimalScale={2}
-              fixedDecimalScale={true}
-              decimalSeparator=","
-              thousandSeparator="."
-              sx={{ input: { textAlign: "right" } }}
-              disabled
-            />
-          </ThemeProvider>
-        </div>
-      </div>
 
       <div className="grid grid-cols-4 w-full pt-4">
         <div className="col-start-3 col-span-2 py-3 pr-8 gap-x-6 bg-indigo-700 rounded-lg grid grid-cols-2">
