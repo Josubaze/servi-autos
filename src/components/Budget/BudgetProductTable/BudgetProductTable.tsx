@@ -27,7 +27,7 @@ export const BudgetProductTable = ({
 }: ProductTableProps) => {
   
   return (
-    <div className="px-12 pt-2">
+    <div className="ps-12 pe-44 pt-2">
       <ThemeProvider theme={darkTheme}>
         <TableContainer component={Paper}>
           <motion.div

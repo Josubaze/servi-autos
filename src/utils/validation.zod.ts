@@ -134,3 +134,28 @@ export const ServiceSchema = z.object({
   ]),
 
 });
+
+export const CompanySchema = z.object({
+  name: z.string()
+    .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
+    .max(40, { message: "El nombre no puede exceder los 40 caracteres" })
+    .trim(),
+
+  id_card: z.string().regex(
+    /^(V|E)\d{6,9}$|^(J|G)\d{9}$/,
+    "Formato inválido. Debe ser 'V1234567' para cédulas, o 'J12345678' para RIF."
+  ),
+  
+  email: z.string()
+    .email({ message: "Debe ser un correo electrónico válido" })
+    .trim(),
+
+  phone: z.string()
+    .regex(/^0\d{10}$/, "El teléfono debe estar en el formato 04140865757 y tener 11 dígitos")
+    .min(11, "El teléfono debe tener al menos 11 caracteres")
+    .max(11, "El teléfono debe tener como máximo 11 caracteres"),
+  
+  address: z.string()
+    .min(3, "El nombre de contacto debe tener al menos 3 caracteres")
+    .max(40, "El nombre de contacto debe tener como máximo 40 caracteres"),
+});

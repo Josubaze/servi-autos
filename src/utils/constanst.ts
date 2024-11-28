@@ -8,6 +8,15 @@ export const PRODUCTVOID: Product = {
     quantity: 0,
 }
 
+export const COMPANYVOID : Company= {
+  _id: '',
+  id_card: '',
+  name: '',
+  email: '',
+  phone: '',
+  address: '',
+};
+
 export const CUSTOMERVOID : Customer= {
   _id: '',
   id_card: '',

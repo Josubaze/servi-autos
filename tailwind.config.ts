@@ -9,19 +9,29 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'black-nav': '#161616', 
+        'black-nav': '#161616',
       },
       backgroundImage: {
         'custom-gradient': 'linear-gradient(90deg, #000000, #0a0010, #140020, #0a0010, #000000)',
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       fontFamily: {
-        knewave: ['var(--font-Knewave)'],  // Aquí agregamos Knewave
+        knewave: ['var(--font-Knewave)'], // Aquí agregamos Knewave
+      },
+      animation: {
+        gradient: "gradient-move 5s infinite",
+      },
+      keyframes: {
+        "gradient-move": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
       },
     },
   },
   plugins: [],
 };
+
 export default config;

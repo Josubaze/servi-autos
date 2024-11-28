@@ -8,6 +8,15 @@ interface Product {
     price: number;
   }
 
+  interface Company {
+    _id: string;
+    id_card: string;
+    name: string;
+    address: string;
+    email: string;
+    phone: string;
+  }
+
   interface User {
     _id: string;
     username: string;

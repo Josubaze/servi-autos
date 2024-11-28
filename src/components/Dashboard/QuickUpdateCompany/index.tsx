@@ -1,0 +1,1 @@
+export { QuickUpdateCompany } from './QuickUpdateCompany'

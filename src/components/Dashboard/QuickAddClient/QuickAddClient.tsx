@@ -1,70 +1,109 @@
 
 import { SectionTitle } from "src/components/Common/SectionTitle";
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CompanySchema, CustomerSchema } from 'src/utils/validation.zod'; 
+import { useUpdateCustomerMutation } from 'src/redux/services/customersApi'; 
+import TextField from '@mui/material/TextField';
+import {  ThemeProvider } from "@mui/material/styles";
+import { TextFieldTheme } from 'src/styles/themes/themeTextField';
+import { CloseButton } from 'src/components/Common/Buttons/CloseButton';
+import { useGetCompanyQuery } from "src/redux/services/company.Api";
+
 
 export const QuickAddClient = () => {
+  const { register, handleSubmit, formState: { errors } } = useForm<Company>({
+    resolver: zodResolver(CompanySchema),
+  });
 
+  const onSubmit: SubmitHandler<Customer> = async (data) => {
+
+  };
   return (
     <div className="bg-black-nav rounded-xl p-4 mt-4">
     <SectionTitle > Agregar Cliente </SectionTitle>
-    <div className="flex mt-2">
-        <div className="h-14 w-14 cursor-pointer primary-self-text flex justify-center items-center overflow-hidden  rounded-xl  border-dashed border-2 border-indigo-600 ">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-indigo-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg pt-2 mx-auto bg-black-nav rounded-md ">
+        <div className="mb-4">
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Cédula | RIF" 
+                variant="outlined"
+                fullWidth
+                type="text" 
+                {...register('id_card')} 
+                error={!!errors.id_card}
+                helperText={errors.id_card?.message}  
               />
-            </svg>
+          </ThemeProvider>
         </div>
-        <div className="flex-1 pl-3">
-            <input
-              placeholder="Nombre del Cliente"
-              className="bg-black-nav border-solid border-2 border-gray-700 h-14 pl-2 w-full rounded-md cursor-text focus:outline-none"
-            />
-        </div>
-    </div>
 
-    <div className="flex mt-2">
-      <div className="flex-1">
-          <input
-            placeholder="Correo Electrónico"
-            className="bg-black-nav border-solid border-2 border-gray-700 h-14 pl-2 w-full rounded-md cursor-text focus:outline-none"
-          />
-      </div>
-    </div>
-
-    <>
-      <div className="flex mt-2">
-        <div className="flex-1">
-            <input
-              placeholder="Nº de Móvil"
-              className="bg-black-nav border-solid border-2 border-gray-700 h-14 pl-2 w-full rounded-md cursor-text focus:outline-none"
-            />
+        <div className="mb-4">
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Nombre" 
+                variant="outlined"
+                fullWidth
+                type="text" 
+                {...register('name')} 
+                error={!!errors.name}
+                helperText={errors.name?.message}  
+              />
+          </ThemeProvider>
         </div>
-      </div>
-      <div className="flex mt-2">
-        <div className="flex-1">
-          
-            <input
-              placeholder="Dirección de Facturación"
-              className="bg-black-nav border-solid border-2 border-gray-700 h-14 pl-2 w-full rounded-md cursor-text focus:outline-none"
-            />
-        </div>
-      </div>
-    </>
 
-    <div className="mt-3">
-      <button  className="rounded-xl font-titl flex flex-row items-center justify-center w-full  h-12 px-4 transition ease-in-out delay-150 bg-indigo-600 text-white rounded-s-lg hover:-translate-y-1 hover:scale-110 hover:bg-indigo-700 duration-300">
-        Enviar 
-      </button>
-    </div>
+        <div className="mb-4">
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Correo Electrónico" 
+                variant="outlined"
+                fullWidth
+                type="text" 
+                {...register('email')} 
+                error={!!errors.email}
+                helperText={errors.email?.message}  
+              />
+          </ThemeProvider>
+        </div>
+        
+        <div className="mb-4">
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Telefono" 
+                variant="outlined"
+                fullWidth
+                type="text" 
+                {...register('phone')} 
+                error={!!errors.phone}
+                helperText={errors.phone?.message}  
+              />
+          </ThemeProvider>
+        </div>
+
+        <div className="mb-4">
+          <ThemeProvider theme={TextFieldTheme}>
+            <TextField 
+                label="Dirección" 
+                variant="outlined"
+                fullWidth
+                type="text" 
+                {...register('address')} 
+                error={!!errors.address}
+                helperText={errors.address?.message}  
+              />
+          </ThemeProvider>
+        </div>
+        <div className="flex items-center justify-between">
+          <button
+            type="submit"
+            className="bg-green-600 text-white px-4 py-2 w-full rounded-full transition ease-in-out delay-150 hover:scale-90 hover:bg-green-700 duration-300"
+          >
+            Agregar Cliente
+          </button>
+        
+        </div>
+        {/* {isErrorUpdate && <p className='text-red-500 pt-2 text-center'>Hubo un error al actualizar la Empresa</p>} */}
+
+      </form>
   </div>
   );
 }

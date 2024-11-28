@@ -1,5 +1,5 @@
 import React from "react";
-import { useBudgetTable } from "src/hooks/useBudgetTable";
+import { useBudgetTable } from "src/hooks/Budget/useBudgetTable";
 import { BudgetTableHeader } from "./BudgetTableHeader";
 import { BudgetServiceRow } from "./BudgetServiceRow";
 import { BudgetAddLineButton } from "../BudgetAddLineButton";

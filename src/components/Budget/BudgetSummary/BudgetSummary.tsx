@@ -3,9 +3,9 @@ import { ThemeProvider } from "@mui/material/styles";
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
 import { TextField } from "@mui/material";
 import { NumericFormat } from "react-number-format";
-import { useIva } from "src/hooks/useIva";
-import { useTotal } from "src/hooks/useTotal";
-import { useIgft } from "src/hooks/useIgtf";
+import { useIva } from "src/hooks/Budget/useIva";
+import { useTotal } from "src/hooks/Budget/useTotal";
+import { useIgft } from "src/hooks/Budget/useIgtf";
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface BudgetSummaryProps {

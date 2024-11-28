@@ -3,12 +3,16 @@
 import { PageTitle } from "src/components/Common/PageTitle";
 import { DashWidgets } from "src/components/Dashboard/DashWidgets";
 import { InvoiceIcon } from "src/components/Icons/InvoiceIcon";
-import { QuickEditCompany } from "./QuickEditCompany";
+import { QuickUpdateCompany } from "./QuickUpdateCompany";
 import { QuickAddClient } from "./QuickAddClient";
 import { InvoiceTable } from "src/components/Dashboard/InvoiceTable/InvoiceTable";
 import { ClientTable } from "src/components/Dashboard/Client/ClientTable";
+import { useGetCompanyQuery } from "src/redux/services/company.Api";
+import { COMPANYVOID } from "src/utils/constanst";
 
 export const Dashboard = () => {
+
+  const { data: company, isError: isErrorCompany, isLoading: isLoadingCompany} = useGetCompanyQuery();
   return (
     <div>
       <div className="p-4">
@@ -37,7 +41,7 @@ export const Dashboard = () => {
             </button>
           </div>
           <div className="mt-4">
-            <QuickEditCompany /> 
+            <QuickUpdateCompany company={ company || COMPANYVOID } isLoadingCompany={isLoadingCompany} isErrorCompany={isErrorCompany} /> 
           </div>
           <div className="mt-4">
             <QuickAddClient /> 

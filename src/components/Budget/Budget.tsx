@@ -1,7 +1,7 @@
 'use client'
 
-import { FaFileCircleExclamation } from "react-icons/fa6";
-import { FaFileCircleCheck } from "react-icons/fa6";
+import { LuSaveAll } from "react-icons/lu";
+import { motion } from "framer-motion";
 import { BudgetOptions } from "./BudgetOptions";
 import { BudgetHeader } from "./BudgetHeader";
 import { BudgetCustomerForm } from "./BudgetCustomerForm";
@@ -9,7 +9,10 @@ import { BudgetForm } from "./BudgetForm";
 import { BudgetTable } from "./BudgetTable";
 import { useRef, useState } from 'react';
 import { BudgetSummary } from "./BudgetSummary";
-import { useBudgetSubtotal } from "src/hooks/useBudgetSubtotal";
+import { useBudgetSubtotal } from "src/hooks/Budget/useBudgetSubtotal";
+import Tooltip from "@mui/material/Tooltip";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { RiDraftLine } from "react-icons/ri";
 
 // Define la interfaz que contiene la función submitForm
 interface BudgetFormHandle {
@@ -35,6 +38,7 @@ export const Budget = () => {
         }
         console.log('Opcion del select:', currency);
         console.log('Opcion del textExchange:', exchangeRate);
+        console.log(selectedServices);
         
     };
 
@@ -81,38 +85,43 @@ export const Budget = () => {
             <BudgetSummary currency={currency} subtotal={subtotal}></BudgetSummary>
             
             {/* GUARDADO */}
-            <div className="grid grid-cols-4 rounded-lg w-full bg-black-nav py-3 mt-6 gap-x-6">
-                <div className="content-center">
-                    <div className="font-bold text-right">
-                        Guardar como:
-                    </div>
-                </div>
+            <div className="grid grid-cols-4 rounded-lg w-full py-3 mt-6">
+                <div className="col-start-3 flex justify-end items-center">
+                        <div>
+                            <motion.div
+                                animate={{
+                                x: ["0px", "20px", "0px"], 
+                                }}
+                                transition={{
+                                duration: 1, 
+                                repeat: 5,
+                                ease: "easeInOut",
+                                }}
+                                className="flex gap-x-2 justify-center items-center"
+                            >
+                                <span className="font-knewave text-4xl">GUARDAR</span>
+                                <FaArrowRightLong className="text-3xl" />
+                            </motion.div> 
+                        </div>
+                    </div>         
 
-                <div>
-                    <button
-                        onClick={handleSaveAsPending}
-                        className="text-base px-2 w-full border-solid border-2 border-orange-600 h-8 rounded-xl bg-transparent transition ease-in-out delay-150 hover:scale-105 hover:bg-orange-600 duration-300"
-                    >
-                        <span className="flex items-center justify-center gap-x-2">
-                            Pendiente
-                            <FaFileCircleExclamation className="h-5 w-5"/>
-                        </span>
-                    </button>
-                </div>
-
-                <div>
-                    <button
-                        onClick={handleSaveAsAccepted}
-                        className="text-base px-2 w-full border-solid border-2 border-blue-600 h-8 rounded-xl bg-transparent transition ease-in-out delay-150 hover:scale-105 hover:bg-blue-600 duration-300"
-                    >
-                        <span className="flex items-center justify-center gap-x-2">
-                            Aceptado
-                            <FaFileCircleCheck  className="h-5 w-5"/>
-                        </span>
-                    </button>
-                </div>
+                    <div className="flex items-center justify-center gap-x-12 ">                  
+                    <Tooltip title="Borrador" arrow>
+                        <button className="w-16 h-16 rounded-full bg-transparent border-2 border-indigo-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-gray-600 hover:border-gray-600 hover:text-white duration-300"
+                        onClick={handleSaveAsPending}>
+                            <RiDraftLine className="w-16 h-16 p-2 transition-all ease-in-out delay-150 hover:scale-110" />
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="Guardar" arrow>
+                        <button className="w-16 h-16 rounded-full bg-transparent border-2 border-indigo-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 hover:border-green-600 hover:text-white duration-300"
+                        onClick={handleSaveAsPending}>
+                            <LuSaveAll className="w-16 h-16 p-2 transition-all ease-in-out delay-150 hover:scale-110" />
+                        </button>
+                    </Tooltip>
+                </div>        
             </div>
 
+                
         </div>
     );
 }

@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 
 export const SectionTitle = ({ children, className }: any) => {
   const classes = useMemo(() => {
-    const defaultClassName = "primary-self-text text-lg font-title";
+    const defaultClassName = "font-knewave primary-self-text text-2xl text-center";
 
     if (className) {
       return defaultClassName + " " + className;
