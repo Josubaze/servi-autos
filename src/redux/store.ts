@@ -8,6 +8,7 @@ import { providersApi } from './services/providersApi';
 import customerFormSlice from './features/customerFormSlice';
 import { servicesApi } from './services/servicesApi';
 import { companyApi } from './services/company.Api';
+import companySlice  from './features/companySlice';
 
 export const makeStore = () => {
   return configureStore({
@@ -15,6 +16,7 @@ export const makeStore = () => {
       counter: counterSlice,
       loading: loadingSlice,
       customerForm: customerFormSlice,
+      company: companySlice,
       [productsApi.reducerPath]: productsApi.reducer,
       [usersApi.reducerPath]: usersApi.reducer,
       [customersApi.reducerPath]: customersApi.reducer,
@@ -38,4 +40,3 @@ export type AppStore = ReturnType<typeof makeStore>
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<AppStore['getState']>
 export type AppDispatch = AppStore['dispatch']
-

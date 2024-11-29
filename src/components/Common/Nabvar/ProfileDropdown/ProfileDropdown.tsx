@@ -2,6 +2,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { BellIcon} from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import Link from 'next/link';
 import { MENUPROFILE } from 'src/utils/constanst'
 
 interface ProfileDropdownProps {
@@ -39,12 +40,12 @@ export const ProfileDropdown = ({ image }: ProfileDropdownProps ) => {
                     <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     {MENUPROFILE.map((item) => (
                         <MenuItem key={item.name}>
-                        <a
+                        <Link
                             href={item.href}
                             className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                         >
                             {item.name}
-                        </a>
+                        </Link>
                         </MenuItem>
                     ))}
                     </MenuItems>

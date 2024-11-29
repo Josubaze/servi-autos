@@ -1,6 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { MENUCONTROL, MENUCREATE, MENUMANAGE, NAVITEMS } from 'src/utils/constanst';
 import { usePathname } from 'next/navigation'
+import Link from 'next/link';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
@@ -30,7 +31,7 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                           const isCurrent = pathname === item.href;
                           return (
                             <MenuItem key={item.name}>
-                              <a
+                              <Link
                                 href={item.href}
                                 aria-current={isCurrent ? 'page' : undefined}
                                 className={classNames(
@@ -39,7 +40,7 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                                 )}
                               >
                                 {item.name}
-                              </a>
+                              </Link>
                             </MenuItem>
                           );
                         })}
@@ -60,7 +61,7 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                           const isCurrent = pathname === item.href;
                           return (
                             <MenuItem key={item.name}>
-                              <a
+                              <Link
                                 href={item.href}
                                 aria-current={isCurrent ? 'page' : undefined}
                                 className={classNames(
@@ -69,7 +70,7 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                                 )}
                               >
                                 {item.name}
-                              </a>
+                              </Link>
                             </MenuItem>
                           );
                         })}
@@ -90,7 +91,7 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                           const isCurrent = pathname === item.href;
                           return (
                             <MenuItem key={item.name}>
-                              <a
+                              <Link
                                 href={item.href}
                                 aria-current={isCurrent ? 'page' : undefined}
                                 className={classNames(
@@ -99,7 +100,7 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                                 )}
                               >
                                 {item.name}
-                              </a>
+                              </Link>
                             </MenuItem>
                             
                           );
@@ -107,11 +108,11 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                       </MenuItems>
                     </Menu>
                       
-                    <a href="/market" className={classNames(
+                    <Link href="/market" className={classNames(
                         'text-gray-100 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium', 
                         pathname === '/market' ? 'bg-gray-700' : ''
                       )}
-                    aria-current={pathname === '/market' ? 'page' : undefined}>Consultar Mercado</a>
+                    aria-current={pathname === '/market' ? 'page' : undefined}>Consultar Mercado</Link>
                   </>
                 ) : (
                   <>  
@@ -119,7 +120,7 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                       NAVITEMS.map((item) => {
                       const isCurrent = pathname === item.href;
                       return (
-                        <a
+                        <Link
                           key={item.name}
                           href={item.href}
                           className={classNames(
@@ -129,7 +130,7 @@ export const OptionsDesktop: React.FC<OptionsMenuProps> = ({ session }) => {
                           aria-current={isCurrent ? 'page' : undefined}
                         >
                           {item.name}
-                        </a>
+                        </Link>
                       );
                     })}
                   </>

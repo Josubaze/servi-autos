@@ -22,6 +22,6 @@
       "src/*": ["./src/*"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/api/auth/[...nextauth]/route.js", "src/utils/authOptions.js","types.d.ts", "src/app/profile/page.tsx", "src/app/api/upload/route.js", "src/components/Profile/Upload/UploadImage/index.jsx", "src/components/Profile/Upload/UploadImage/UploadImage.jsx", "node_modules/@types/react-redux", "src/redux/providers.tsx", "src/redux/hooks.ts", "src/redux/features/productSlice.ts", "src/redux/store.ts", "src/app/prueba/page.tsx", "src/components/Customers/CustomersTable/index.tss"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/api/auth/[...nextauth]/route.js", "src/utils/authOptions.js","types.d.ts", "src/app/profile/page.tsx", "src/app/api/upload/route.js", "src/components/Profile/Upload/UploadImage/index.jsx", "src/components/Profile/Upload/UploadImage/UploadImage.jsx", "node_modules/@types/react-redux", "src/redux/providers.tsx", "src/redux/hooks.ts", "src/redux/features/productSlice.ts", "src/redux/store.ts", "src/app/prueba/page.tsx", "src/components/Customers/CustomersTable/index.tss", "src/app/StoreProvider.tsx", "src/redux/features/companySlice.js", "src/redux/features/couterSlice.ts"],
   "exclude": ["node_modules"]
 }

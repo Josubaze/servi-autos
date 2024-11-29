@@ -1,4 +1,5 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
+import Link from 'next/link';
 import { usePathname } from 'next/navigation'
 import { MENUCONTROL, MENUCREATE, MENUMANAGE, NAVITEMS } from 'src/utils/constanst';
 function classNames(...classes: any) {
@@ -28,7 +29,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                     </DisclosureButton>
                     <DisclosurePanel className="pl-4">
                         {MENUCREATE.map((item) => (
-                        <a
+                        <Link
                             key={item.href}
                             href={item.href}
                             className={classNames(
@@ -37,7 +38,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                             )}
                         >
                             {item.name}
-                        </a>
+                        </Link>
                         ))}
                     </DisclosurePanel>
                 </Disclosure>
@@ -52,7 +53,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                     </DisclosureButton>
                     <DisclosurePanel className="pl-4">
                         {MENUCONTROL.map((item) => (
-                        <a
+                        <Link
                             key={item.href}
                             href={item.href}
                             className={classNames(
@@ -61,7 +62,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                             )}
                         >
                             {item.name}
-                        </a>
+                        </Link>
                         ))}
                     </DisclosurePanel>
                 </Disclosure>
@@ -76,7 +77,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                     </DisclosureButton>
                     <DisclosurePanel className="pl-4">
                         {MENUMANAGE.map((item) => (
-                        <a
+                        <Link
                             key={item.href}
                             href={item.href}
                             className={classNames(
@@ -85,17 +86,24 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                             )}
                         >
                             {item.name}
-                        </a>
+                        </Link>
                         ))}
                     </DisclosurePanel>
                 </Disclosure>
 
                 {/* Opción Consultar Mercado */}
-                <DisclosureButton as="a" href="/market" className={classNames(
-                'block w-full rounded-md  px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700',
-                pathname === '/market' ? 'bg-gray-700' : ''
-                )}
-                aria-current={pathname === '/market' ? 'page' : undefined}>Consultar Mercado</DisclosureButton>
+                <DisclosureButton
+                    as="div"
+                    className={classNames(
+                        'block w-full rounded-md px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700',
+                        pathname === '/market' ? 'bg-gray-700' : ''
+                    )}
+                    aria-current={pathname === '/market' ? 'page' : undefined}
+                    >
+                    <Link href="/market" className="block w-full">
+                        Consultar Mercado
+                    </Link>
+                </DisclosureButton>
 
             </>
             ) : (
@@ -104,16 +112,17 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                 const isCurrent = pathname === item.href;
                 return (
                     <DisclosureButton
-                    key={item.name}
-                    as="a"
-                    href={item.href}
-                    className={classNames(
-                        'block w-full rounded-md  px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700',
-                        isCurrent ? 'bg-gray-700' : ''
-                    )}
-                    aria-current={isCurrent ? 'page' : undefined}
-                    >
-                    {item.name}
+                        key={item.name}
+                        as="div" 
+                        className={classNames(
+                            'block w-full rounded-md px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700',
+                            isCurrent ? 'bg-gray-700' : ''
+                        )}
+                        aria-current={isCurrent ? 'page' : undefined}
+                        >
+                        <Link href={item.href} className="block w-full">
+                            {item.name}
+                        </Link>
                     </DisclosureButton>
                 );
                 })}

@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { Navbar } from "src/components/Common/Nabvar/Nabvar";
 import { Footer } from "src/components/Common/Footer";
 import SessionAuthProvider from "src/context/SessionAuthProvider";
-import StoreProvider from "../redux/providers";
+import StoreProvider from "./StoreProvider";
 import { getServerSession } from "next-auth/next";
 import { Suspense } from "react";
 import "./globals.css";
@@ -47,7 +47,6 @@ export default async function RootLayout({
             </LocalizationMuiProvider>
           </StoreProvider>
         </SessionAuthProvider>
-
       </body>
     </html>
   );
