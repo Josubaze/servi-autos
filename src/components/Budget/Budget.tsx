@@ -1,7 +1,5 @@
 'use client'
 
-import { LuSaveAll } from "react-icons/lu";
-import { motion } from "framer-motion";
 import { BudgetOptions } from "./BudgetOptions";
 import { BudgetHeader } from "./BudgetHeader";
 import { BudgetCustomerForm } from "./BudgetCustomerForm";
@@ -10,9 +8,11 @@ import { BudgetTable } from "./BudgetTable";
 import { useRef, useState } from 'react';
 import { BudgetSummary } from "./BudgetSummary";
 import { useBudgetSubtotal } from "src/hooks/Budget/useBudgetSubtotal";
-import Tooltip from "@mui/material/Tooltip";
-import { FaArrowRightLong } from "react-icons/fa6";
-import { RiDraftLine } from "react-icons/ri";
+import { BudgetActions } from "./BudgetActions";
+import { useGetCompanyQuery } from "src/redux/services/company.Api";
+import { useCreateBudgetMutation } from "src/redux/services/budgets.Api";
+import dayjs from "dayjs";
+import { toast } from "react-toastify";
 
 // Define la interfaz que contiene la función submitForm
 interface BudgetFormHandle {
@@ -26,32 +26,99 @@ export const Budget = () => {
     const subtotal = useBudgetSubtotal(selectedServices);
     const [currency, setCurrency] = useState<string>('$');
     const [exchangeRate, setExchangeRate] = useState<number>(1);
+    const [description, setDescription] = useState<string>("");
+    const { data: company, isLoading, isError } = useGetCompanyQuery();
+    const [createBudget, { isError: isErrorBudget }] = useCreateBudgetMutation();
 
-    const handleSaveAsPending = async () => {
-        if (formCustomerRef.current) {
-            const customerData = await formCustomerRef.current.submitForm(); 
-            console.log("Datos del formulario:", customerData); // Ahora obtenemos el valor resuelto
+    const handleSave = async (action: "draft" | "save") => {
+        // Obtener datos del formulario de cliente
+        const customerData = formCustomerRef.current
+            ? await formCustomerRef.current.submitForm()
+            : null;
+    
+        // Obtener datos del formulario de presupuesto
+        const dateData = formDateRef.current
+            ? await formDateRef.current.submitForm()
+            : null;
+    
+        // Verificar que exista información en company
+        if (!company) {
+            console.error("Faltan datos de la empresa");
+            return;
         }
-        if (formDateRef.current) {
-            const dateData = await formDateRef.current.submitForm(); 
-            console.log("Datos del formulario:", dateData); // Ahora obtenemos el valor resuelto
+    
+        // Verificar que los datos de cliente y fecha estén presentes
+        if (!customerData || !dateData) {
+            console.error("Faltan datos requeridos");
+            return;
         }
-        console.log('Opcion del select:', currency);
-        console.log('Opcion del textExchange:', exchangeRate);
-        console.log(selectedServices);
-        
+    
+        // Construir el objeto de presupuesto
+        const budget: Omit<Budget, "_id"> = {
+            n_budget: dateData.n_budget,
+            dateCreation: dayjs(dateData.dateCreation).toDate(),
+            dateExpiration: dayjs(dateData.dateExpiration).toDate(),
+            currency: dateData.currency,
+            exchangeRate: dateData.exchangeRate,
+            company: {
+                _id: company._id,
+                id_card: company.id_card,
+                name: company.name,
+                address: company.address,
+                email: company.email,
+                phone: company.phone,
+            },
+            customer: {
+                _id: customerData._id,
+                id_card: customerData.id_card,
+                name: customerData.name,
+                email: customerData.email,
+                phone: customerData.phone,
+                address: customerData.address,
+            },
+            services: selectedServices.map(service => ({
+                _id: service._id,
+                name: service.name,
+                serviceQuantity: service.serviceQuantity,
+                servicePrice: service.servicePrice,
+                products: service.products.map(product => ({
+                    product: {
+                        _id: product.product._id,
+                        name: product.product.name,
+                        category: product.product.category,
+                        price: product.product.price,
+                    },
+                    quantity: product.quantity,
+                })),
+                totalPrice: service.totalPrice,
+            })),
+            description,
+            state: action,
+        };
+    
+        // Llamar al endpoint de RTK Query con el tipo adecuado
+        try {
+            // Aquí pasamos el objeto `budget` que corresponde con el tipo Omit<Budget, '_id'>
+            await createBudget(budget).unwrap();
+            toast.success('Presupuesto Creado Exitosamente!');
+        } catch (error) {
+            toast.error('Ha ocurrido un error al intentar crear!');
+        }
     };
-
-    const handleSaveAsAccepted = () => {
-        
-    };
+    
+    
+    
     return (
         <div className='relative flex flex-col py-6 px-0 sm:px-12'>   
             {/* opciones */}
             <BudgetOptions/>
 
             {/* Header del presupuesto */}    
-            <BudgetHeader/>
+            <BudgetHeader
+                company={company || null}
+                isError={isError}
+                isLoading={isLoading}
+            />
 
             {/* Segmento de formularios */}
             <div className="flex flex-col sm:flex-row py-4 px-8">
@@ -85,43 +152,12 @@ export const Budget = () => {
             <BudgetSummary currency={currency} subtotal={subtotal}></BudgetSummary>
             
             {/* GUARDADO */}
-            <div className="grid grid-cols-4 rounded-lg w-full py-3 mt-6">
-                <div className="col-start-3 flex justify-end items-center">
-                        <div>
-                            <motion.div
-                                animate={{
-                                x: ["0px", "20px", "0px"], 
-                                }}
-                                transition={{
-                                duration: 1, 
-                                repeat: 5,
-                                ease: "easeInOut",
-                                }}
-                                className="flex gap-x-2 justify-center items-center"
-                            >
-                                <span className="font-knewave text-4xl">GUARDAR</span>
-                                <FaArrowRightLong className="text-3xl" />
-                            </motion.div> 
-                        </div>
-                    </div>         
-
-                    <div className="flex items-center justify-center gap-x-12 ">                  
-                    <Tooltip title="Borrador" arrow>
-                        <button className="w-16 h-16 rounded-full bg-transparent border-2 border-indigo-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-gray-600 hover:border-gray-600 hover:text-white duration-300"
-                        onClick={handleSaveAsPending}>
-                            <RiDraftLine className="w-16 h-16 p-2 transition-all ease-in-out delay-150 hover:scale-110" />
-                        </button>
-                    </Tooltip>
-                    <Tooltip title="Guardar" arrow>
-                        <button className="w-16 h-16 rounded-full bg-transparent border-2 border-indigo-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 hover:border-green-600 hover:text-white duration-300"
-                        onClick={handleSaveAsPending}>
-                            <LuSaveAll className="w-16 h-16 p-2 transition-all ease-in-out delay-150 hover:scale-110" />
-                        </button>
-                    </Tooltip>
-                </div>        
-            </div>
-
-                
+            <BudgetActions
+                description={description}
+                setDescription={setDescription}
+                handleSave={handleSave}
+            />
+            
         </div>
     );
 }

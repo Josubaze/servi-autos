@@ -57,7 +57,7 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
             ? Math.max(...budgets.map(budget => budget.n_budget)) // Obtener el mayor valor de n_budget
             : 1; 
             // Actualizamos el valor de n_budget utilizando setValue 
-            setValue('n_budget', maxBudget);    
+            setValue('n_budget', maxBudget + 1 );    
         }
     }, [budgets, isSuccess]);
     

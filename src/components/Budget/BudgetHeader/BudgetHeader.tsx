@@ -1,10 +1,13 @@
 'use client';
 
 import React from 'react';
-import { useGetCompanyQuery } from 'src/redux/services/company.Api'; 
 
-export const BudgetHeader = () => {
-  const { data: company, isLoading, isError } = useGetCompanyQuery();
+interface BudgetHeaderProps {
+  company: Company | null; // Puede ser `null` mientras se cargan los datos.
+  isLoading: boolean;
+  isError: boolean;
+}
+export const BudgetHeader: React.FC<BudgetHeaderProps> = ({ company, isLoading, isError }) => {
 
   return (
     <div className="py-9 bg-center bg-black-nav rounded-xl flex flex-col sm:flex-row justify-between items-center">

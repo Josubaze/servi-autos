@@ -62,7 +62,7 @@ export const ProductSchema = z.object({
       .trim(),
 
     phone: z.string()
-      .regex(/^0\d{10}$/, "El teléfono debe estar en el formato 04140865757 y tener 11 dígitos")
+      .regex(/^0\d{10}$/, "El teléfono debe estar en el formato 04141234567 y tener 11 dígitos")
       .min(11, "El teléfono debe tener al menos 11 caracteres")
       .max(11, "El teléfono debe tener como máximo 11 caracteres"),
     
@@ -85,7 +85,7 @@ export const ProviderSchema = z.object({
   email: z.string()
     .email("Correo electrónico inválido"),
   phone: z.string()
-    .regex(/^0\d{10}$/, "El teléfono debe estar en el formato 04140865757 y tener 11 dígitos")
+    .regex(/^0\d{10}$/, "El teléfono debe estar en el formato 04141234567 y tener 11 dígitos")
     .min(11, "El teléfono debe tener al menos 11 caracteres")
     .max(11, "El teléfono debe tener como máximo 11 caracteres"),
   address: z.string()
@@ -157,7 +157,7 @@ export const CompanySchema = z.object({
     .trim(),
 
   phone: z.string()
-    .regex(/^0\d{10}$/, "El teléfono debe estar en el formato 04140865757 y tener 11 dígitos")
+    .regex(/^0\d{10}$/, "El teléfono debe estar en el formato 04141234567 y tener 11 dígitos")
     .min(11, "El teléfono debe tener al menos 11 caracteres")
     .max(11, "El teléfono debe tener como máximo 11 caracteres"),
   

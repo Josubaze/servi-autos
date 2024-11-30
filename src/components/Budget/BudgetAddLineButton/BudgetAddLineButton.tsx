@@ -1,6 +1,6 @@
 import React from "react";
 import { FaPlus, FaTools } from "react-icons/fa";
-import { FaArrowLeftLong } from "react-icons/fa6";
+import { TbArrowBadgeLeftFilled } from "react-icons/tb";
 import Tooltip from "@mui/material/Tooltip";
 import { motion } from "framer-motion";
 
@@ -13,20 +13,20 @@ interface BudgetAddLineButtonProps {
 export const BudgetAddLineButton: React.FC<BudgetAddLineButtonProps> = ({onTableVisible, onAddEmptyService}) => {
 
   return (
-      <div className="gap-x-4 flex justify-start items-center px-8 pt-4">
-        <Tooltip title="Agregar Fila" arrow>
-          <button className="w-12 h-12 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 hover:text-white duration-300"
+      <div className="gap-x-4 flex justify-start items-center py-4 px-8">
+        <Tooltip title="Agregar Fila" arrow color="bg-green-600">
+          <button className="w-16 h-16 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600  duration-300"
           onClick={onAddEmptyService}>
-            <FaPlus className="w-12 h-12 p-2 text-green-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
+            <FaPlus className="w-16 h-16 p-4" />
           </button>
         </Tooltip>
 
         <Tooltip title="Agregar Servicio" arrow>
           <button
-            className="w-12 h-12 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 hover:text-white duration-300"
+            className="w-16 h-16 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 duration-300"
             onClick={onTableVisible} 
           >
-            <FaTools className="w-12 h-12 p-2 text-green-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
+            <FaTools className="w-16 h-16 p-4" />
           </button>
         </Tooltip>
 
@@ -42,7 +42,7 @@ export const BudgetAddLineButton: React.FC<BudgetAddLineButtonProps> = ({onTable
             }}
             className="flex gap-x-2 justify-center items-center"
           >
-            <FaArrowLeftLong className="text-3xl" />
+            <TbArrowBadgeLeftFilled className="text-5xl" />
             <span className="font-knewave text-4xl">AGREGAR</span>
           </motion.div> 
         </div>
