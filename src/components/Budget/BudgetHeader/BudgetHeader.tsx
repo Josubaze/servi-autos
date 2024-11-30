@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useGetCompanyQuery } from 'src/redux/services/company.Api'; // Asegúrate de importar tu servicio
-import { COMPANYVOID } from 'src/utils/constanst';
+import { useGetCompanyQuery } from 'src/redux/services/company.Api'; 
 
 export const BudgetHeader = () => {
   const { data: company, isLoading, isError } = useGetCompanyQuery();

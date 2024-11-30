@@ -95,7 +95,13 @@ export const ProviderSchema = z.object({
 
 export const BudgetFormSchema = z.object({
   n_budget: 
-    z.string().regex(/^\d+$/, { message: "El número de presupuesto debe ser un entero positivo" }),
+    z.union([
+      z.string()
+        .refine(quantity => /^[0-9]+$/.test(quantity) && parseInt(quantity, 10) > 0, { message: "La cantidad debe ser un número entero positivo" })
+        .transform(quantity => parseInt(quantity, 10)),
+      z.number()
+        .refine(quantity => Number.isInteger(quantity) && quantity > 0, { message: "La cantidad debe ser un número entero positivo" })
+    ]),
   dateCreation: 
     z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), { message: 'Fecha de creación inválida' }),
   dateExpiration: 

@@ -9,6 +9,7 @@ import customerFormSlice from './features/customerFormSlice';
 import { servicesApi } from './services/servicesApi';
 import { companyApi } from './services/company.Api';
 import companySlice  from './features/companySlice';
+import { budgetsApi } from './services/budgets.Api';
 
 export const makeStore = () => {
   return configureStore({
@@ -23,6 +24,7 @@ export const makeStore = () => {
       [providersApi.reducerPath]: providersApi.reducer,
       [servicesApi.reducerPath]: servicesApi.reducer,
       [companyApi.reducerPath]: companyApi.reducer,
+      [budgetsApi.reducerPath]: budgetsApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
@@ -31,7 +33,8 @@ export const makeStore = () => {
         .concat(customersApi.middleware)
         .concat(providersApi.middleware)
         .concat(servicesApi.middleware)
-        .concat(companyApi.middleware),
+        .concat(companyApi.middleware)
+        .concat(budgetsApi.middleware),
   });
 }
 

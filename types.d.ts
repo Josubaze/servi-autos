@@ -80,6 +80,20 @@ interface Product {
     totalPrice: number;
   }
 
+  interface Budget {
+    _id: string;
+    n_budget: number;
+    dateCreation: Date;
+    dateExpiration: Date;
+    currency: string;
+    exchangeRate: number;
+    company: Company;
+    customer: Customer;
+    services: Service[];
+    description: string;
+    state: string;
+  }
+
   interface TableServicesProps {
     data: Service[];
     searchTerm: string;
@@ -122,7 +136,7 @@ interface Product {
 
 
   interface BudgetForm{
-    n_budget: string;
+    n_budget: number;
     dateCreation: Dayjs;
     dateExpiration: Dayjs;
     currency: string;

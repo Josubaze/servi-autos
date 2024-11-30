@@ -1,15 +1,17 @@
 import { ThemeProvider } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Select, MenuItem, TextField } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BudgetFormSchema } from 'src/utils/validation.zod';
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
 import dayjs from "dayjs";
-import { forwardRef, useEffect, useImperativeHandle } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { SelectBudgetButton } from "./SelectBudgetButton"; 
 import { NumericFormat } from "react-number-format";
 import { motion } from "framer-motion"; 
+import { useGetBudgetsQuery } from "src/redux/services/budgets.Api";
+import { text } from "stream/consumers";
 
 interface BudgetFormProps {
     setCurrency: (currency: string) => void; 
@@ -21,6 +23,7 @@ interface BudgetFormProps {
 export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, setExchangeRate }: BudgetFormProps, ref) => {
     const today = dayjs();
     const expirationDate = today.add(14, 'day');
+    const { data: budgets = [], isSuccess } = useGetBudgetsQuery(); 
 
     const { 
         register, 
@@ -32,6 +35,7 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
     } = useForm<BudgetForm>({
         resolver: zodResolver(BudgetFormSchema), 
         defaultValues: {
+            n_budget: 1, 
             dateCreation: today,
             dateExpiration: expirationDate,
             currency, // Sincroniza con el estado del padre
@@ -47,6 +51,17 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
 
     useImperativeHandle(ref, () => ({ submitForm }));
 
+    useEffect(() => {
+        if (isSuccess) {
+            const maxBudget = budgets.length > 0
+            ? Math.max(...budgets.map(budget => budget.n_budget)) // Obtener el mayor valor de n_budget
+            : 1; 
+            // Actualizamos el valor de n_budget utilizando setValue 
+            setValue('n_budget', maxBudget);    
+        }
+    }, [budgets, isSuccess]);
+    
+
     return (
         <>
         <div className="flex items-center justify-end gap-3">
@@ -60,15 +75,21 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
                 <div className="w-full">
                     <ThemeProvider theme={TextFieldTheme}>
                         <TextField
-                            label="Nº de Presupuesto"
                             fullWidth
-                            {...register("n_budget")}
+                            {...register("n_budget")} 
+                            value={watch("n_budget")} 
                             error={!!errors.n_budget}
-                            helperText={errors.n_budget?.message}                           
+                            helperText={errors.n_budget?.message}
+                            InputProps={{
+                                inputProps: {
+                                    style: { textAlign: "right", paddingRight: "20px" },
+                                },
+                                startAdornment: <span style={{ opacity: 0.5, marginRight: "10px", width: "300px" }}>Nº de Presupuesto</span>,
+                            }}
                         />
                     </ThemeProvider>
                 </div>
-        
+                
                 {/* Fecha de creación */}
                 <div className="w-full flex flex-col sm:flex-row sm:items-center sm:gap-6">
                     <div className="font-title font-bold sm:w-1/3 text-left sm:text-center">

@@ -9,8 +9,7 @@ const companySchema = new Schema({
   id_card: {
     type: String,
     required: true,
-    unique: true,
-    trim: true
+    trim: true,
   },
   address: {
     type: String,
@@ -20,13 +19,11 @@ const companySchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
     trim: true
   },
   phone: {
     type: String,
     required: true,
-    unique: true,
     trim: true
   }
 }, {
