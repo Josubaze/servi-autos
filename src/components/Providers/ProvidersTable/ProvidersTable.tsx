@@ -134,7 +134,7 @@ export const ProvidersTable: React.FC<TableProviderProps> = ({
   return (
     <>
       {isLoading || isFetching ? (
-        <Loading color="#3730a3" size={100} justify="center" pt={32} />
+        <Loading/>
       ) : isError ? (
         <p className="text-red-600">Error al cargar los proveedores..</p>
       ) : isSuccess ? (

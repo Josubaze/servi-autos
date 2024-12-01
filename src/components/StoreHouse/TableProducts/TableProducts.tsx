@@ -136,7 +136,7 @@ export const TableProducts: React.FC<TableProductProps> = ({
   return (
     <>
       {isLoading || isFetching ? (
-        <Loading color="#3730a3" size={100} justify="center" pt={32} />
+        <Loading />
       ) : isError ? (
         <p className="text-red-600 text-center mt-10">Error al cargar los productos..</p>
       ) : isSuccess ? (

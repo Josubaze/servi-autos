@@ -46,7 +46,7 @@ export const TableServices: React.FC<TableServicesProps> = ({
   if (isLoading) {
     return (
       <div style={{ textAlign: 'center', margin: '20px' }}>
-        <Loading color="#3730a3" size={100} justify="center" pt={32} />
+        <Loading/>
       </div>
     );
   }

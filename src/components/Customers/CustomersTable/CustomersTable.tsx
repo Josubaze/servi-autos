@@ -130,7 +130,7 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
   return (
     <>
       {isLoading || isFetching ? (
-        <Loading color="#3730a3" size={100} justify="center" pt={32} />
+        <Loading/>
       ) : isError ? (
         <p className="text-red-600">Error al cargar los clientes..</p>
       ) : isSuccess ? (

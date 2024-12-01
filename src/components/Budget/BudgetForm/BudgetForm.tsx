@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Select, MenuItem, TextField } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BudgetFormSchema } from 'src/utils/validation.zod';
@@ -11,7 +11,6 @@ import { SelectBudgetButton } from "./SelectBudgetButton";
 import { NumericFormat } from "react-number-format";
 import { motion } from "framer-motion"; 
 import { useGetBudgetsQuery } from "src/redux/services/budgets.Api";
-import { text } from "stream/consumers";
 
 interface BudgetFormProps {
     setCurrency: (currency: string) => void; 
@@ -59,7 +58,7 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
             // Actualizamos el valor de n_budget utilizando setValue 
             setValue('n_budget', maxBudget + 1 );    
         }
-    }, [budgets, isSuccess]);
+    }, [budgets, isSuccess, setValue]); 
     
 
     return (
@@ -82,10 +81,11 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
                             helperText={errors.n_budget?.message}
                             InputProps={{
                                 inputProps: {
-                                    style: { textAlign: "right", paddingRight: "20px" },
+                                    style: { textAlign: "right", paddingRight: "20px"},
                                 },
-                                startAdornment: <span style={{ opacity: 0.5, marginRight: "10px", width: "300px" }}>Nº de Presupuesto</span>,
+                                startAdornment: <span style={{ marginRight: "10px", width: "300px" }}>Nº de Presupuesto</span>,
                             }}
+                            disabled
                         />
                     </ThemeProvider>
                 </div>

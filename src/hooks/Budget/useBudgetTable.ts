@@ -29,7 +29,7 @@ export const useBudgetTable = ({ selectedServices, setSelectedServices, currency
   
   useEffect(() => {
     setOriginalServices(originalServicesMemo);
-  }, [originalServicesMemo]);
+  }, [originalServicesMemo, selectedServices])
   
   const convertedServices = useMemo(() => {
     if (originalServices.length === 0) return [];
@@ -56,6 +56,7 @@ export const useBudgetTable = ({ selectedServices, setSelectedServices, currency
   
   useEffect(() => {
     setSelectedServices(convertedServices);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [convertedServices]);
   
   

@@ -127,7 +127,7 @@ export const SelectCustomers: React.FC<{
   return (
     <>
       {isLoading || isFetching ? (
-        <Loading color="#3730a3" size={80} justify="center" pt={12} />
+        <Loading/>
       ) : isError ? (
         <p className="text-red-600">Error al cargar los clientes.</p>
       ) : isSuccess ? (

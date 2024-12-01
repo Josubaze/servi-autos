@@ -52,8 +52,14 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
         }
     };
 
+    const resetForm = () => {
+        // Reinicia los campos del formulario al estado inicial
+        reset(CUSTOMERVOID);
+    };
+
     useImperativeHandle(ref, () => ({
         submitForm,
+        resetForm
     }));
 
     return (
