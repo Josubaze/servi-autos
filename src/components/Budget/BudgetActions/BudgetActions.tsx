@@ -4,7 +4,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { RiDraftLine } from "react-icons/ri";
 import { ThemeProvider, TextField } from "@mui/material";
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TbArrowBadgeRightFilled } from "react-icons/tb";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { IoMdCheckmark } from "react-icons/io";

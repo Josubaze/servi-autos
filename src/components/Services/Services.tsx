@@ -53,7 +53,7 @@ export const Services = () => {
             </span>
           </button>
 
-          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder='Buscar servicio por...' />
+          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
 
         <TableServices

@@ -64,7 +64,7 @@ export const TableProducts: React.FC<TableProductProps> = ({
         filter: false,
         setCellHeaderProps: () => ({
           style: {
-            textAlign: 'right',
+            textAlign: 'center',
           },
         }),
         customBodyRender: (value: any, tableMeta: any) => {
@@ -80,7 +80,7 @@ export const TableProducts: React.FC<TableProductProps> = ({
             
           };      
           return (
-            <div className='flex py-2 gap-5 justify-end'>
+            <div className='flex gap-x-5 justify-center'>
               <UpdateButton onClick={() => handleEdit(product)}></UpdateButton>
               <DeleteButton onClick={() => handleDelete(product._id)}></DeleteButton>
             </div>

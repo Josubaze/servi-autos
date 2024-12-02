@@ -105,7 +105,7 @@ export const useBudgetFecth = () => {
                     })),
                 })),
                 description,
-                state: action,
+                state: action === 'draft' ? 'Borrador' : action === 'save' ? 'Aceptado' : '',
             };
 
             await createBudget(budget).unwrap();

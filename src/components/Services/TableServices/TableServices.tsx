@@ -66,7 +66,7 @@ export const TableServices: React.FC<TableServicesProps> = ({
   return (
     <ThemeProvider theme={darkTheme}>
       <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
+        <Table aria-label="collapsible table" className='p-4'>
           <TableHead>
             <TableRow>
                 <TableCell colSpan={5} className='text-xl text-start bg-black-nav '>
@@ -115,7 +115,7 @@ export const TableServices: React.FC<TableServicesProps> = ({
                   Precio Total
                 </TableSortLabel>
               </TableCell>
-              <TableCell align="right">Acciones</TableCell>
+              <TableCell align="center">Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

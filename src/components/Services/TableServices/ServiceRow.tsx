@@ -50,7 +50,7 @@ export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDele
         <TableCell align="right">{service.servicePrice}</TableCell>
         <TableCell align="right">{service.totalPrice}</TableCell>
         <TableCell>
-          <div className='flex justify-end  py-2 gap-5'>
+          <div className='flex gap-x-5 justify-center'>
             <UpdateButton onClick={() => handleEdit(service)}></UpdateButton>
             <DeleteButton onClick={() => handleDelete(service._id)}></DeleteButton>
           </div>
@@ -59,7 +59,7 @@ export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDele
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
+            <Box sx={{ padding: '40px'}}>
               <Typography variant="h6" gutterBottom component="div">Detalles del Servicio</Typography>
               <Table size="small" aria-label="productos">
                 <TableHead>

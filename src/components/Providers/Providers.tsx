@@ -49,7 +49,7 @@ export const Providers = () => {
           </span>
         </button>
 
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder='Buscar por id, nombre o correo..' />
+        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
 
       <ProvidersTable

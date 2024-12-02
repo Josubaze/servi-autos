@@ -1,8 +1,5 @@
+import { ControlBudget } from "src/components/ControlBudget";
 
 export default function createBugetsPage(){
-  return (
-    <div>
-        Control Bugets
-    </div>
-);
+  return <ControlBudget/>
 }

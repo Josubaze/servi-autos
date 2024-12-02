@@ -162,6 +162,12 @@ interface Product {
     handleDelete: (customerId: string) => void;
     handleEdit: (customer: Customer) => void;
   }
+
+  interface TableControlBudgetProps extends TableBaseProps {
+    data: Budget[]; 
+    handleDelete: (budgetId: string) => void;
+    handleEdit: (budget: Budget) => void;
+  }
   
   interface TableProviderProps extends TableBaseProps {
     data: Provider[]; 
@@ -176,7 +182,6 @@ interface Product {
   interface SearchBarProps {
     searchTerm: string;
     setSearchTerm: (value: string) => void;
-    placeholder: string;
   }
 
 

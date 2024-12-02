@@ -60,7 +60,7 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
         filter: false,
         setCellHeaderProps: () => ({
           style: {
-            textAlign: 'right',
+            textAlign: 'center',
           },
         }),
         customBodyRender: (value: any, tableMeta: any) => {
@@ -74,7 +74,7 @@ export const CustomersTable: React.FC<TableCustomerProps> = ({
             address: rowData[5],
           };
           return (
-            <div className='flex py-2 gap-5 justify-end'>
+            <div className='flex gap-x-5 justify-center'>
               <UpdateButton onClick={() => handleEdit(customer)}></UpdateButton>
               <DeleteButton onClick={() => handleDelete(customer._id)}></DeleteButton>
             </div>

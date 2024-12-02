@@ -34,7 +34,7 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
     } = useForm<BudgetForm>({
         resolver: zodResolver(BudgetFormSchema), 
         defaultValues: {
-            n_budget: 1, 
+            n_budget: 0, 
             dateCreation: today,
             dateExpiration: expirationDate,
             currency, // Sincroniza con el estado del padre
@@ -54,7 +54,7 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
         if (isSuccess) {
             const maxBudget = budgets.length > 0
             ? Math.max(...budgets.map(budget => budget.n_budget)) // Obtener el mayor valor de n_budget
-            : 1; 
+            : 0; 
             // Actualizamos el valor de n_budget utilizando setValue 
             setValue('n_budget', maxBudget + 1 );    
         }
