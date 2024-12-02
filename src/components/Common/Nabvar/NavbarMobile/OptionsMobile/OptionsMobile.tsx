@@ -14,7 +14,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
             {session?.user ? (
             <>
                 <DisclosureButton as="a" href="/dashboard" className={classNames(
-                'block rounded-md px-3 py-2 text-base font-medium text-gray-100 hover:bg-gray-700', 
+                'block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-700', 
                 pathname === '/dashboard' ? 'bg-gray-700' : ''
                 )}
                 aria-current={pathname === '/dashboard' ? 'page' : undefined}>Panel</DisclosureButton>
@@ -22,7 +22,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                 {/* Menú Crear */}
                 <Disclosure>
                     <DisclosureButton className={classNames(
-                        'block w-full rounded-md  px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700', 
+                        'block w-full rounded-md  px-3 py-2 text-start font-medium hover:bg-gray-700', 
                         MENUCREATE.some(item => pathname === item.href) ? 'bg-gray-700' : ''
                     )}>
                         Crear
@@ -33,7 +33,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                             key={item.href}
                             href={item.href}
                             className={classNames(
-                            'block w-full rounded-md  px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700',
+                            'block w-full rounded-md  px-3 py-2 text-start font-medium hover:bg-gray-700',
                             pathname === item.href ? 'bg-gray-700' : ''
                             )}
                         >
@@ -46,8 +46,8 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                 {/* Menú Control */}
                 <Disclosure>
                     <DisclosureButton className={classNames(
-                        'block w-full rounded-md  px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700',
-                        MENUCONTROL.some(item => pathname === item.href) ? 'bg-gray-700 text-white' : ''
+                        'block w-full rounded-md  px-3 py-2 text-start font-medium hover:bg-gray-700',
+                        MENUCONTROL.some(item => pathname === item.href) ? 'bg-gray-700' : ''
                     )}>
                         Control
                     </DisclosureButton>
@@ -57,7 +57,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                             key={item.href}
                             href={item.href}
                             className={classNames(
-                            'block w-full rounded-md  px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700',
+                            'block w-full rounded-md  px-3 py-2 text-start font-medium hover:bg-gray-700',
                             pathname === item.href ? 'bg-gray-700' : ''
                             )}
                         >
@@ -70,7 +70,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                 {/* Menú Gestionar */}
                 <Disclosure>
                     <DisclosureButton className={classNames(
-                        'block w-full rounded-md  px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700',
+                        'block w-full rounded-md  px-3 py-2 text-start font-medium hover:bg-gray-700',
                         MENUMANAGE.some(item => pathname === item.href) ? 'bg-gray-700' : ''
                     )}>
                         Gestionar
@@ -81,7 +81,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                             key={item.href}
                             href={item.href}
                             className={classNames(
-                            'block w-full rounded-md  px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700',
+                            'block w-full rounded-md  px-3 py-2 text-start font-medium hover:bg-gray-700',
                             pathname === item.href ? 'bg-gray-700' : ''
                             )}
                         >
@@ -95,7 +95,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                 <DisclosureButton
                     as="div"
                     className={classNames(
-                        'block w-full rounded-md px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700',
+                        'block w-full rounded-md px-3 py-2 text-start font-medium hover:bg-gray-700',
                         pathname === '/market' ? 'bg-gray-700' : ''
                     )}
                     aria-current={pathname === '/market' ? 'page' : undefined}
@@ -115,7 +115,7 @@ export const OptionsMobile: React.FC<OptionsMenuProps> = ({ session }) => {
                         key={item.name}
                         as="div" 
                         className={classNames(
-                            'block w-full rounded-md px-3 py-2 text-start font-medium text-gray-100 hover:bg-gray-700',
+                            'block w-full rounded-md px-3 py-2 text-start font-medium hover:bg-gray-700',
                             isCurrent ? 'bg-gray-700' : ''
                         )}
                         aria-current={isCurrent ? 'page' : undefined}

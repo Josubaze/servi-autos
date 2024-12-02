@@ -19,13 +19,13 @@ export const Navbar = () => {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex items-center font-medium text-sm text-gray-200">
               <Image
-                  src="/svg/auto.svg"
+                  src="/images/logo.png"
                   alt="Your Company"
                   width={60}
                   height={60}
               />
             </div>
-            <div className="hidden sm:ml-6 sm:block">
+            <div className="hidden sm:ml-6 sm:flex sm:items-center sm:justify-center">
               <OptionsDesktop session={session}/>
             </div>
           </div>
