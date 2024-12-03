@@ -12,7 +12,7 @@ import { OptionsDesktop } from './OptionsDesktop';
 export const Navbar = () => {
   const { data: session } = useSession();  
   return (
-    <Disclosure as="nav" className="bg-black-nav">
+    <Disclosure as="nav" className="bg-indigo-950">
       <div className="mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <ButtonMenu />

@@ -69,127 +69,129 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
         </div>
 
         <form className="w-full pt-4 sm:pl-6">
-            <div className="grid gap-y-4 w-full">
-                {/* Nº de Presupuesto */}
-                <div className="w-full">
-                    <ThemeProvider theme={TextFieldTheme}>
-                        <TextField
-                            fullWidth
-                            {...register("n_budget")} 
-                            value={watch("n_budget")} 
-                            error={!!errors.n_budget}
-                            helperText={errors.n_budget?.message}
-                            InputProps={{
-                                inputProps: {
-                                    style: { textAlign: "right", paddingRight: "20px"},
-                                },
-                                startAdornment: <span style={{ marginRight: "10px", width: "300px" }}>Nº de Presupuesto</span>,
-                            }}
-                            disabled
-                        />
-                    </ThemeProvider>
-                </div>
-                
-                {/* Fecha de creación */}
-                <div className="w-full flex flex-col sm:flex-row sm:items-center sm:gap-6">
-                    <div className="font-title font-bold sm:w-1/3 text-left sm:text-center">
-                        Fecha de Creación
-                    </div>
-                    <div className="sm:w-2/3 w-full">
+            <div className="bg-black-nav rounded-lg border-y-2 border-gray-500 p-4">
+                <div className="grid gap-y-4 w-full">
+                    {/* Nº de Presupuesto */}
+                    <div className="w-full">
                         <ThemeProvider theme={TextFieldTheme}>
-                            <DatePicker
-                                value={watch("dateCreation")}
-                                format="DD/MM/YYYY"
-                                onChange={(newValue) => setValue("dateCreation", newValue)}
-                                className="w-full"
+                            <TextField
+                                fullWidth
+                                {...register("n_budget")} 
+                                value={watch("n_budget")} 
+                                error={!!errors.n_budget}
+                                helperText={errors.n_budget?.message}
+                                InputProps={{
+                                    inputProps: {
+                                        style: { textAlign: "right", paddingRight: "20px"},
+                                    },
+                                    startAdornment: <span style={{ marginRight: "10px", width: "300px" }}>Nº de Presupuesto</span>,
+                                }}
+                                disabled
                             />
                         </ThemeProvider>
-                        {errors.dateCreation?.message && (
-                            <p className="py-1 text-red-500 text-sm">{String(errors.dateCreation.message)}</p>
-                        )}
                     </div>
-                </div>
-
-                 {/* Fecha de vencimiento */}        
-                <div className="w-full flex flex-col sm:flex-row sm:items-center sm:gap-6">
-                    <div className="font-title font-bold sm:w-1/3 text-left sm:text-center">
-                        Fecha de Vencimiento
-                    </div>
-                    <div className="sm:w-2/3 w-full">
-                        <ThemeProvider theme={TextFieldTheme}>
-                        <DatePicker
-                            value={getValues("dateExpiration")}
-                            format="DD/MM/YYYY"
-                            onChange={(newValue) => setValue("dateExpiration", newValue)}
-                            className="w-full"
-                        />
-                        </ThemeProvider>
-                        {errors.dateExpiration?.message && (
-                        <p className="py-1 text-red-500 text-sm">{String(errors.dateExpiration.message)}</p>
-                        )}
-                    </div>
-                </div>
-
-                {/* Moneda y Tasa de Cambio */}
-                <div className="grid grid-cols-3 gap-x-4 items-center w-full rounded-lg">
-                    {/* Select para la moneda */}
-                    <motion.div
-                        className={`${
-                            watch("currency") === "$" ? "col-span-3" : "col-span-1"
-                        }`}
-                        layout
-                        transition={{
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 30,
-                        }}
-                    >
-                        <ThemeProvider theme={TextFieldTheme}>
-                            <Select
-                                {...register("currency")}
-                                value={watch("currency")}
-                                fullWidth
-                                onChange={(e) => {
-                                    setCurrency(e.target.value);
-                                    setValue("currency", e.target.value);
-                                }}
-                            >
-                                <MenuItem value="$">USD ($)</MenuItem>
-                                <MenuItem value="Bs">Bolívar (Bs)</MenuItem>
-                            </Select>
-                        </ThemeProvider>
-                        {errors.currency && (
-                            <p className="py-1 text-red-500">{errors.currency.message}</p>
-                        )}
-                    </motion.div>
-
-                    {/* Tasa de Cambio */}
-                    {watch("currency") === "Bs" && (
-                        <div className="col-span-2">
+                    
+                    {/* Fecha de creación */}
+                    <div className="w-full flex flex-col sm:flex-row sm:items-center sm:gap-6">
+                        <div className="font-title font-bold sm:w-1/3 text-left sm:text-center">
+                            Fecha de Creación
+                        </div>
+                        <div className="sm:w-2/3 w-full">
                             <ThemeProvider theme={TextFieldTheme}>
-                                <NumericFormat
-                                    customInput={TextField}
-                                    value={watch("exchangeRate")}
-                                    onValueChange={({ floatValue }) => {
-                                        setExchangeRate(floatValue || 0);
-                                        setValue("exchangeRate", floatValue || 0, { shouldValidate: true });
-                                    }}
-                                    variant="outlined"
-                                    fullWidth
-                                    allowNegative={false}
-                                    decimalScale={2}
-                                    fixedDecimalScale
-                                    decimalSeparator=","
-                                    thousandSeparator="."
-                                    label="Tasa de cambio"
-                                    sx={{ input: { textAlign: "right" } }}
+                                <DatePicker
+                                    value={watch("dateCreation")}
+                                    format="DD/MM/YYYY"
+                                    onChange={(newValue) => setValue("dateCreation", newValue)}
+                                    className="w-full"
                                 />
                             </ThemeProvider>
+                            {errors.dateCreation?.message && (
+                                <p className="py-1 text-red-500 text-sm">{String(errors.dateCreation.message)}</p>
+                            )}
                         </div>
-                    )}
-                    {errors.exchangeRate && (
-                        <p className="col-span-3 py-1 text-red-500">{errors.exchangeRate.message}</p>
-                    )}
+                    </div>
+
+                    {/* Fecha de vencimiento */}        
+                    <div className="w-full flex flex-col sm:flex-row sm:items-center sm:gap-6">
+                        <div className="font-title font-bold sm:w-1/3 text-left sm:text-center">
+                            Fecha de Vencimiento
+                        </div>
+                        <div className="sm:w-2/3 w-full">
+                            <ThemeProvider theme={TextFieldTheme}>
+                            <DatePicker
+                                value={getValues("dateExpiration")}
+                                format="DD/MM/YYYY"
+                                onChange={(newValue) => setValue("dateExpiration", newValue)}
+                                className="w-full"
+                            />
+                            </ThemeProvider>
+                            {errors.dateExpiration?.message && (
+                            <p className="py-1 text-red-500 text-sm">{String(errors.dateExpiration.message)}</p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Moneda y Tasa de Cambio */}
+                    <div className="grid grid-cols-3 gap-x-4 items-center w-full rounded-lg">
+                        {/* Select para la moneda */}
+                        <motion.div
+                            className={`${
+                                watch("currency") === "$" ? "col-span-3" : "col-span-1"
+                            }`}
+                            layout
+                            transition={{
+                                type: "spring",
+                                stiffness: 300,
+                                damping: 30,
+                            }}
+                        >
+                            <ThemeProvider theme={TextFieldTheme}>
+                                <Select
+                                    {...register("currency")}
+                                    value={watch("currency")}
+                                    fullWidth
+                                    onChange={(e) => {
+                                        setCurrency(e.target.value);
+                                        setValue("currency", e.target.value);
+                                    }}
+                                >
+                                    <MenuItem value="$">USD ($)</MenuItem>
+                                    <MenuItem value="Bs">Bolívar (Bs)</MenuItem>
+                                </Select>
+                            </ThemeProvider>
+                            {errors.currency && (
+                                <p className="py-1 text-red-500">{errors.currency.message}</p>
+                            )}
+                        </motion.div>
+
+                        {/* Tasa de Cambio */}
+                        {watch("currency") === "Bs" && (
+                            <div className="col-span-2">
+                                <ThemeProvider theme={TextFieldTheme}>
+                                    <NumericFormat
+                                        customInput={TextField}
+                                        value={watch("exchangeRate")}
+                                        onValueChange={({ floatValue }) => {
+                                            setExchangeRate(floatValue || 0);
+                                            setValue("exchangeRate", floatValue || 0, { shouldValidate: true });
+                                        }}
+                                        variant="outlined"
+                                        fullWidth
+                                        allowNegative={false}
+                                        decimalScale={2}
+                                        fixedDecimalScale
+                                        decimalSeparator=","
+                                        thousandSeparator="."
+                                        label="Tasa de cambio"
+                                        sx={{ input: { textAlign: "right" } }}
+                                    />
+                                </ThemeProvider>
+                            </div>
+                        )}
+                        {errors.exchangeRate && (
+                            <p className="col-span-3 py-1 text-red-500">{errors.exchangeRate.message}</p>
+                        )}
+                    </div>
                 </div>
             </div>
         </form>

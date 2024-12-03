@@ -27,9 +27,10 @@ export const BudgetProductTable = ({
 }: ProductTableProps) => {
   
   return (
-    <div className="ps-12 pe-44 pt-2">
+    <div className="">
       <ThemeProvider theme={darkTheme}>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} 
+            className=" border-b-2 border-gray-500 rounded-none rounded-bl-lg rounded-br-lg">
           <motion.div
             initial={{ maxHeight: 0, opacity: 0 }}
             animate={{ maxHeight: "500px", opacity: 1 }}

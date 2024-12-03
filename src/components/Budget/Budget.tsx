@@ -40,7 +40,7 @@ export const Budget = () => {
             <BudgetOptions />
             <BudgetHeader company={company || null} isError={isError} isLoading={isLoading} />
             <div className="flex flex-col sm:flex-row py-4 px-8">
-                <div className="flex-1 sm:border-r sm:border-white/30">
+                <div className="flex-1">
                     <BudgetCustomerForm ref={formCustomerRef} />
                 </div>
                 <div className="flex-1">

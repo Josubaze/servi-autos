@@ -29,9 +29,12 @@ export const BudgetServiceRow: React.FC<{
   onShowProductTable,
 }) => {
   return (
-    <div>
-        <div className="grid grid-cols-12 rounded-lg w-full px-8 pt-4 gap-x-4">
-            <div className="col-span-5 bg-black-nav">
+    <div className="px-8 pt-4">
+      <div  className=" bg-black-nav rounded-none rounded-tl-lg rounded-tr-lg p-4 border-t-2 border-gray-500  ">
+
+        <div className="grid grid-cols-12 rounded-lg w-full gap-x-4">
+
+            <div className="col-span-5">
               <ThemeProvider theme={TextFieldTheme}>
                 <TextField
                   value={service.name}
@@ -44,7 +47,7 @@ export const BudgetServiceRow: React.FC<{
               </ThemeProvider>
             </div>
 
-            <div className="bg-black-nav col-span-2">
+            <div className="col-span-2">
               <ThemeProvider theme={TextFieldTheme}>
                 <NumericFormat
                   value={service.serviceQuantity}
@@ -67,7 +70,7 @@ export const BudgetServiceRow: React.FC<{
               </ThemeProvider>
             </div>
 
-            <div className="bg-black-nav col-span-2">
+            <div className="col-span-2">
               <ThemeProvider theme={TextFieldTheme}>
                 <NumericFormat
                   value={service.totalPrice.toFixed(2)}
@@ -86,7 +89,7 @@ export const BudgetServiceRow: React.FC<{
               </ThemeProvider>
             </div>
 
-            <div className="bg-black-nav col-span-2">
+            <div className="col-span-2">
               <ThemeProvider theme={TextFieldTheme}>
                 <NumericFormat
                   value={(service.totalPrice * service.serviceQuantity).toFixed(2)}
@@ -105,25 +108,26 @@ export const BudgetServiceRow: React.FC<{
               </ThemeProvider>
             </div>
 
-            <div className="flex justify-center items-center gap-4 ">
+            <div className="flex justify-center items-center gap-x-2 ">
               <Tooltip title="Ver Detalles" arrow>
                 <button
-                  className="w-12 h-12 rounded-full bg-transparent border-2 border-blue-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-blue-600 hover:text-white duration-300"
+                  className="w-10 h-10 xl:w-12 xl:h-12 rounded-full bg-transparent border-2 border-blue-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-blue-600 hover:text-white duration-300"
                   onClick={() => onViewDetails(service)}
                 >
-                  <MdVisibility className="w-12 h-12 p-2 text-blue-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
+                  <MdVisibility className="w-10 h-10 xl:w-12 xl:h-12 p-1 xl:p-2 text-blue-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
                 </button>
               </Tooltip>
               <Tooltip title="Eliminar Fila" arrow>
                 <button
-                  className="w-12 h-12 rounded-full bg-transparent border-2 border-red-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-red-600 hover:text-white duration-300"
+                  className="w-10 h-10 xl:w-12 xl:h-12 rounded-full bg-transparent border-2 border-red-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-red-600 hover:text-white duration-300"
                   onClick={() => onDeleteRow(service._id)}
                 >
-                  <MdDelete className="w-12 h-12 p-2 text-red-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
+                  <MdDelete className="w-10 h-10 xl:w-12 xl:h-12 p-1 xl:p-2 text-red-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
                 </button>
               </Tooltip>
             </div>
         </div>
+      </div>
 
       {serviceDetailsVisible && (
         <BudgetProductTable

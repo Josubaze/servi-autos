@@ -12,7 +12,7 @@ const config: Config = {
         'black-nav': '#161616',
       },
       backgroundImage: {
-        'custom-gradient': 'linear-gradient(90deg, #000020, #0a0210, #140020, #0a0210, #000020)',
+        'custom-gradient': 'linear-gradient(90deg, #000020, #0a0210, #180020, #0a0210, #000020)',
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },

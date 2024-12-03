@@ -76,22 +76,65 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
             </div>
 
             <form className="w-full pt-4 sm:pr-6">
-                <div className="grid gap-y-4 w-full">
-                    <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 gap-x-6 w-full">
+                <div className="bg-black-nav rounded-lg border-y-2 border-gray-500 p-4">
+                    <div className="grid gap-y-4 w-full">
+                        <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 gap-x-6 w-full">
+                            <div className="w-full">
+                                <ThemeProvider theme={TextFieldTheme}>
+                                    <Controller
+                                        control={control}
+                                        name="id_card"
+                                        render={({ field }) => (
+                                            <TextField
+                                                label="Cédula | RIF"
+                                                variant="outlined"
+                                                fullWidth
+                                                type="text"
+                                                {...field}
+                                                error={!!errors.id_card}
+                                                helperText={errors.id_card?.message}
+                                            />
+                                        )}
+                                    />
+                                </ThemeProvider>
+                            </div>
+
+                            <div className="w-full">
+                                <ThemeProvider theme={TextFieldTheme}>
+                                    <Controller
+                                        control={control}
+                                        name="phone"
+                                        render={({ field }) => (
+                                            <TextField
+                                                label="Teléfono"
+                                                variant="outlined"
+                                                fullWidth
+                                                type="text"
+                                                {...field}
+                                                error={!!errors.phone}
+                                                helperText={errors.phone?.message}
+                                            />
+                                        )}
+                                    />
+                                </ThemeProvider>
+                            </div>
+                        </div>
+
+                        {/* Campos individuales */}
                         <div className="w-full">
                             <ThemeProvider theme={TextFieldTheme}>
                                 <Controller
                                     control={control}
-                                    name="id_card"
+                                    name="name"
                                     render={({ field }) => (
                                         <TextField
-                                            label="Cédula | RIF"
+                                            label="Nombre"
                                             variant="outlined"
                                             fullWidth
                                             type="text"
                                             {...field}
-                                            error={!!errors.id_card}
-                                            helperText={errors.id_card?.message}
+                                            error={!!errors.name}
+                                            helperText={errors.name?.message}
                                         />
                                     )}
                                 />
@@ -102,82 +145,41 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
                             <ThemeProvider theme={TextFieldTheme}>
                                 <Controller
                                     control={control}
-                                    name="phone"
+                                    name="email"
                                     render={({ field }) => (
                                         <TextField
-                                            label="Teléfono"
+                                            label="Correo Electrónico"
                                             variant="outlined"
                                             fullWidth
                                             type="text"
                                             {...field}
-                                            error={!!errors.phone}
-                                            helperText={errors.phone?.message}
+                                            error={!!errors.email}
+                                            helperText={errors.email?.message}
                                         />
                                     )}
                                 />
                             </ThemeProvider>
                         </div>
-                    </div>
 
-                    {/* Campos individuales */}
-                    <div className="w-full">
-                        <ThemeProvider theme={TextFieldTheme}>
-                            <Controller
-                                control={control}
-                                name="name"
-                                render={({ field }) => (
-                                    <TextField
-                                        label="Nombre"
-                                        variant="outlined"
-                                        fullWidth
-                                        type="text"
-                                        {...field}
-                                        error={!!errors.name}
-                                        helperText={errors.name?.message}
-                                    />
-                                )}
-                            />
-                        </ThemeProvider>
-                    </div>
-
-                    <div className="w-full">
-                        <ThemeProvider theme={TextFieldTheme}>
-                            <Controller
-                                control={control}
-                                name="email"
-                                render={({ field }) => (
-                                    <TextField
-                                        label="Correo Electrónico"
-                                        variant="outlined"
-                                        fullWidth
-                                        type="text"
-                                        {...field}
-                                        error={!!errors.email}
-                                        helperText={errors.email?.message}
-                                    />
-                                )}
-                            />
-                        </ThemeProvider>
-                    </div>
-
-                    <div className="w-full">
-                        <ThemeProvider theme={TextFieldTheme}>
-                            <Controller
-                                control={control}
-                                name="address"
-                                render={({ field }) => (
-                                    <TextField
-                                        label="Dirección"
-                                        variant="outlined"
-                                        fullWidth
-                                        type="text"
-                                        {...field}
-                                        error={!!errors.address}
-                                        helperText={errors.address?.message}
-                                    />
-                                )}
-                            />
-                        </ThemeProvider>
+                        <div className="w-full">
+                            <ThemeProvider theme={TextFieldTheme}>
+                                <Controller
+                                    control={control}
+                                    name="address"
+                                    render={({ field }) => (
+                                        <TextField
+                                            label="Dirección"
+                                            variant="outlined"
+                                            fullWidth
+                                            type="text"
+                                            {...field}
+                                            error={!!errors.address}
+                                            helperText={errors.address?.message}
+                                        />
+                                    )}
+                                />
+                            </ThemeProvider>
+                        </div>
                     </div>
                 </div>
             </form>
