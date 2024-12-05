@@ -3,11 +3,13 @@ import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { useCreateBudgetMutation } from "src/redux/services/budgets.Api";
 import { toast } from "react-toastify";
 import { useBudgetSubtotal } from "src/hooks/Budget/useBudgetSubtotal";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 interface BudgetFormHandle {
     submitForm: () => any;
     resetForm: () => void;
+    setFormDate: ( budgetForm : BudgetForm ) => void;
+    setFormCustomer: ( customer: Customer ) => void;
 }
 
 export const useBudgetFecth = () => {
@@ -29,6 +31,15 @@ export const useBudgetFecth = () => {
             formCustomerRef.current.resetForm();
         }
     };
+
+    const handleSetFormDate = (budgetForm : BudgetForm) => {
+        formDateRef.current?.setFormDate(budgetForm);
+    };
+
+    const handleSetFormCustomer = (customer : Customer) => {
+        formCustomerRef.current?.setFormCustomer(customer);
+    };
+    
 
     // Función para validar los datos del presupuesto
     const validateBudget = async () => {
@@ -90,11 +101,13 @@ export const useBudgetFecth = () => {
             } = await validateBudget();
 
             const budget: Omit<Budget, "_id"> = {
-                n_budget: dateData.n_budget,
-                dateCreation: dayjs(dateData.dateCreation).toDate(),
-                dateExpiration: dayjs(dateData.dateExpiration).toDate(),
-                currency,
-                exchangeRate,
+                budgetForm: {
+                    n_budget: dateData.n_budget,
+                    dateCreation: dayjs(dateData.dateCreation).toDate(),
+                    dateExpiration: dayjs(dateData.dateExpiration).toDate(),
+                    currency,
+                    exchangeRate,
+                },
                 company: { ...company },
                 customer: { ...customerData },
                 services: selectedServices.map(service => ({
@@ -112,9 +125,7 @@ export const useBudgetFecth = () => {
             toast.success("Presupuesto creado exitosamente!");
             resetValues();
         } catch (error) {
-            if (error instanceof Error) {
-                console.error(error.message);
-            }
+            toast.error('Ha ocurrido un error');
         } finally {
             setIsSaving(false);
         }
@@ -136,6 +147,8 @@ export const useBudgetFecth = () => {
         isLoading,
         isError,
         isSaving,
+        handleSetFormDate,
+        handleSetFormCustomer,
         handleSave,
     };
 };

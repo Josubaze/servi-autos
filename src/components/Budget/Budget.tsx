@@ -9,8 +9,14 @@ import { BudgetSummary } from "./BudgetSummary";
 import { BudgetActions } from "./BudgetActions";
 import { Loading } from "../Common/Loading";
 import { useBudgetFecth } from "src/hooks/Budget/useBudgetFetch";
+import { useEffect } from "react";
 
-export const Budget = () => {
+    interface BudgetProps {
+        mode?: "create" | "edit";
+        budgetData?: Budget | null; // Opcional y puede ser null
+    }
+
+    export const Budget: React.FC<BudgetProps> = ({ mode = "create", budgetData= null }) => {
     const {
         formCustomerRef,
         formDateRef,
@@ -28,7 +34,21 @@ export const Budget = () => {
         isError,
         isSaving,
         handleSave,
+        handleSetFormDate,
+        handleSetFormCustomer,
     } = useBudgetFecth();
+
+    // Inicializar datos si el modo es "edit"
+    useEffect(() => {
+        console.log("budgetData recibido:", budgetData);
+        if (mode === "edit" && budgetData) {
+            handleSetFormDate( budgetData.budgetForm);
+            handleSetFormCustomer(budgetData.customer)
+            setSelectedServices(budgetData.services);
+            setDescription(budgetData.description);
+        }
+    }, [mode, budgetData]);
+
 
     return (
         <div className="relative flex flex-col py-6 px-0 sm:px-12">
@@ -50,6 +70,7 @@ export const Budget = () => {
                         currency={currency}
                         exchangeRate={exchangeRate}
                         setExchangeRate={setExchangeRate}
+                        mode={mode}
                     />
                 </div>
             </div>
@@ -60,11 +81,21 @@ export const Budget = () => {
                 exchangeRate={exchangeRate}
             />
             <BudgetSummary currency={currency} subtotal={subtotal} />
-            <BudgetActions
+
+            {mode === 'create' && (
+                <BudgetActions
                 description={description}
                 setDescription={setDescription}
                 handleSave={handleSave}
             />
+            )}
+
+            {mode === 'edit' && (
+                <div>Modo Modificar</div>
+            )}
+
+            
+            
         </div>
     );
 };

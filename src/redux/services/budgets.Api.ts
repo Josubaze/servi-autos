@@ -13,9 +13,14 @@ export const budgetsApi = createApi({
             query: () => '/budgets',
             providesTags: ['Budgets'],
             transformResponse: (response: Budget[]) => {
-                return response.sort((a, b) => dayjs(b.dateCreation).isBefore(dayjs(a.dateCreation)) ? 1 : -1);
+                return response.sort((a, b) => dayjs(b.budgetForm.dateExpiration).isBefore(dayjs(a.budgetForm.dateCreation)) ? 1 : -1);
             },
             keepUnusedDataFor: 600, 
+        }),
+        // Obtener un presupuesto por ID
+        getBudgetById: builder.query<Budget, string>({
+            query: (id) => `/budgets/${id}`,
+            providesTags: ['Budgets'],
         }),
         // Eliminar un presupuesto
         deleteBudget: builder.mutation<void, string>({
@@ -48,6 +53,7 @@ export const budgetsApi = createApi({
 
 export const {
     useGetBudgetsQuery,
+    useGetBudgetByIdQuery,
     useDeleteBudgetMutation,
     useCreateBudgetMutation,
     useUpdateBudgetMutation

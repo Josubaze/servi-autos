@@ -3,26 +3,32 @@ import dayjs from 'dayjs';
 
 const budgetSchema = new Schema(
   {
-    n_budget: {
-        type: Number,
-        required: true,
-        unique: true,
-    },
-    dateCreation: {
-        type: Date,
-        required: true,
-        default: () => dayjs().toDate(),
-    },
-    dateExpiration: {
-        type: Date,
-        required: true,
-    },
-    currency: {
-        type: String,
-        required: true,
-    },
-    exchangeRate: {
-        type: Number,
+    budgetForm: {
+        type: {
+            n_budget: {
+                type: Number,
+                required: true,
+                unique: true,
+            },
+            dateCreation: {
+                type: Date,
+                required: true,
+                default: () => dayjs().toDate(),
+            },
+            dateExpiration: {
+                type: Date,
+                required: true,
+                default: () => dayjs().toDate(),
+            },
+            currency: {
+                type: String,
+                required: true,
+            },
+            exchangeRate: {
+                type: Number,
+                required: true,
+            },
+        },
         required: true,
     },
     company: {

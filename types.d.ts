@@ -82,11 +82,7 @@ interface Product {
 
   interface Budget {
     _id: string;
-    n_budget: number;
-    dateCreation: Date;
-    dateExpiration: Date;
-    currency: string;
-    exchangeRate: number;
+    budgetForm : BudgetForm;
     company: Company;
     customer: Customer;
     services: Service[];

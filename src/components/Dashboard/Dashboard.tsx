@@ -9,10 +9,6 @@ import { InvoiceTable } from "src/components/Dashboard/InvoiceTable/InvoiceTable
 import { ClientTable } from "src/components/Dashboard/Client/ClientTable";
 import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { COMPANYVOID } from "src/utils/constanst";
-import { useAppDispatch } from "src/redux/hooks";
-import { useEffect } from "react";
-import { setCompany } from "src/redux/features/companySlice";
-
 export const Dashboard = () => {
 
   const { data: company, isError: isErrorCompany, isLoading: isLoadingCompany} = useGetCompanyQuery();

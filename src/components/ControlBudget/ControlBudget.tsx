@@ -9,19 +9,20 @@ import { HiDocumentPlus } from "react-icons/hi2";
 import { useDeleteBudgetMutation, useGetBudgetsQuery } from 'src/redux/services/budgets.Api';
 import { ControlBudgetTable } from './ControlBudgetTable/ControlBudgetTable';
 import { toast } from 'react-toastify';
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export const ControlBudget = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetBudgetsQuery();
-  const [deleteBudget, { isError: isErrorDelete }] = useDeleteBudgetMutation();
+  const [deleteBudget] = useDeleteBudgetMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [showForm, setShowForm] = useState(false);
-  const [showFormUpdate, setShowFormUpdate] = useState(false);
-  const pathname = usePathname(); // Obtenemos el pathname actual
-  //const [currentBudget, setCurrentBudget] = useState(BUDGETVOID);
+
+
+  const router = useRouter();
 
   const handleEdit = (budget: Budget) => {
-    console.log(budget);
+    if (budget._id){
+      router.push(`/update/budget/${budget._id}`);
+    }
   };
 
   const handleDelete = async (budgetId: string) => {
@@ -67,16 +68,10 @@ export const ControlBudget = () => {
 
         <button
           className="bg-emerald-600 hover:bg-emerald-800 text-3xl text-white p-5 rounded-full fixed bottom-0 right-0 mr-8 mb-12 shadow-2xl shadow-emerald-400 sm:hidden z-50"
-          onClick={() => setShowForm(true)}
+          onClick={() => router.push("/create/budget")}
         >
           <FaPlus />
         </button>
-
-        {isErrorDelete && 
-          toast.error("Hubo un error al borrar el cliente")
-        }
-        {/* {showForm && <CustomerForm onClose={() => setShowForm(false)} />}
-        {showFormUpdate && <CustomerUpdateForm customer={currentCustomer} onClose={() => setShowFormUpdate(false)} />} */}
       </div>
     </>
   );

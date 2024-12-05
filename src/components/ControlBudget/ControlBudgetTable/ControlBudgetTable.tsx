@@ -16,9 +16,9 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     }) => {
     // Mapea los datos para mostrar solo las columnas necesarias
     const rows = data.map(budget => ({
-        n_budget: budget.n_budget,
+        n_budget: budget.budgetForm.n_budget,
         description: budget.description,
-        dateCreation: new Date(budget.dateCreation).toLocaleDateString(),
+        dateCreation: new Date(budget.budgetForm.dateCreation).toLocaleDateString(),
         state: budget.state,
         budget: budget, // Incluye el objeto completo como propiedad oculta
     }));

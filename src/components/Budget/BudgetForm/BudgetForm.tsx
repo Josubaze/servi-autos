@@ -5,7 +5,7 @@ import { Select, MenuItem, TextField } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BudgetFormSchema } from 'src/utils/validation.zod';
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { SelectBudgetButton } from "./SelectBudgetButton"; 
 import { NumericFormat } from "react-number-format";
@@ -17,9 +17,10 @@ interface BudgetFormProps {
     currency: string;
     exchangeRate: number;
     setExchangeRate: (currency: number) => void; 
+    mode: string;
 }
 
-export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, setExchangeRate }: BudgetFormProps, ref) => {
+export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, setExchangeRate, mode }: BudgetFormProps, ref) => {
     const today = dayjs();
     const expirationDate = today.add(14, 'day');
     const { data: budgets = [], isSuccess } = useGetBudgetsQuery(); 
@@ -48,17 +49,34 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
         return isFormValid ? getValues() : null;
     };
 
-    useImperativeHandle(ref, () => ({ submitForm }));
+    // Función setFormDate para actualizar los datos
+    const setFormDate = ( budgetForm : BudgetForm ) => {
+        setValue("n_budget", budgetForm.n_budget);
+        setValue("dateCreation", dayjs(budgetForm.dateCreation));
+        setValue("dateExpiration", dayjs(budgetForm.dateExpiration));
+        setValue("currency", budgetForm.currency);
+        setValue("exchangeRate", budgetForm.exchangeRate);
+    };
+    
+    useImperativeHandle(ref, () => ({
+        setFormDate, // Este es el nombre que usaremos en el padre
+        submitForm,
+    }));
+    
 
     useEffect(() => {
+        // Si el modo es "edit", no ejecutamos este efecto
+        if (mode === "edit") return;
+    
         if (isSuccess) {
             const maxBudget = budgets.length > 0
-            ? Math.max(...budgets.map(budget => budget.n_budget)) // Obtener el mayor valor de n_budget
+            ? Math.max(...budgets.map(budget => budget.budgetForm.n_budget)) // Obtener el mayor valor de n_budget
             : 0; 
             // Actualizamos el valor de n_budget utilizando setValue 
             setValue('n_budget', maxBudget + 1 );    
         }
-    }, [budgets, isSuccess, setValue]); 
+    }, [mode, budgets, isSuccess, setValue]);
+    
     
 
     return (

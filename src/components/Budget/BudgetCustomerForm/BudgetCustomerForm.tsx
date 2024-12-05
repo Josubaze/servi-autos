@@ -20,7 +20,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
     const [createCustomer, { isError: isErrorCustomer }] = useCreateCustomerMutation();
     const [isNotification, setIsNotification] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const { control, handleSubmit, formState: { errors }, reset, getValues, trigger } = useForm<Omit<Customer, '_id'>>({
+    const { control, handleSubmit, formState: { errors }, reset, getValues, trigger, setValue } = useForm<Omit<Customer, '_id'>>({
         resolver: zodResolver(CustomerSchema),
         defaultValues: selectedCustomer
     });
@@ -52,6 +52,15 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
         }
     };
 
+     // Función para actualizar los datos
+    const setFormCustomer = (customer: Customer ) => {
+        setValue("id_card", customer.id_card);
+        setValue("name", customer.name);
+        setValue("email", customer.email);
+        setValue("phone", customer.phone);
+        setValue("address", customer.address);
+    };
+
     const resetForm = () => {
         // Reinicia los campos del formulario al estado inicial
         reset(CUSTOMERVOID);
@@ -59,6 +68,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
 
     useImperativeHandle(ref, () => ({
         submitForm,
+        setFormCustomer,
         resetForm
     }));
 
