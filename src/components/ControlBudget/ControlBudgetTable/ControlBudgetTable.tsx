@@ -4,23 +4,28 @@ import { Loading } from 'src/components/Common/Loading';
 import { darkTheme } from "src/styles/themes/themeTable";
 import { UpdateButton } from "src/components/Common/Buttons/UpdateButton";
 import { DeleteButton } from "src/components/Common/Buttons/DeleteButton";
+import { useDynamicFilter } from "src/hooks/useProductFilter";
+import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 
 export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     data,
+    searchTerm,
     isLoading,
     isError,
     isFetching,
     isSuccess,
     handleDelete,
-    handleEdit,
+    handleUpdate,
     }) => {
-    // Mapea los datos para mostrar solo las columnas necesarias
-    const rows = data.map(budget => ({
+    
+    const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'budgetForm.n_budget']);
+    const rows = filteredData.map(budget => ({
         n_budget: budget.budgetForm.n_budget,
         description: budget.description,
         dateCreation: new Date(budget.budgetForm.dateCreation).toLocaleDateString(),
+        dateUpdate: budget.budgetForm.dateUpdate ? new Date(budget.budgetForm.dateUpdate).toLocaleDateString() : "", 
         state: budget.state,
-        budget: budget, // Incluye el objeto completo como propiedad oculta
+        budgetId: budget._id, 
     }));
 
     const columns = [
@@ -51,7 +56,24 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 )
             },
         },
-
+    },
+    {
+        name: "dateUpdate",
+        label: "Fecha de Actualización",
+        options: { 
+            filter: false, 
+            sort: false ,
+            setCellHeaderProps: () => ({
+                style: { textAlign: 'center' },
+            }),
+            customBodyRender: (value: string) => {
+                return (
+                    <div className="flex justify-center">
+                        {value}
+                    </div>
+                )
+            },
+        },
     },
     {
         name: "state",
@@ -66,7 +88,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 const bgColor = value === "Borrador" ? "bg-gray-600" : value === "Aceptado" ? "bg-green-600" : "bg-red-600";
                 return (
                     <div className="flex justify-center"> 
-                        <div className={`rounded-full px-4 py-1 text-center w-2/5 text-sm ${bgColor}`}>
+                        <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor}`}>
                             {value}
                         </div>     
                     </div>
@@ -84,17 +106,25 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
             style: { textAlign: 'center' },
             }),
             customBodyRender: (value: any, tableMeta: any) => {
-            const fullBudget = rows[tableMeta.rowIndex].budget; // Accede al objeto completo
+            const budgetId = rows[tableMeta.rowIndex].budgetId; // Accede al objeto completo
             return (
                 <div className='flex gap-x-5 justify-center'>
-                <UpdateButton onClick={() => handleEdit(fullBudget)} />
-                <DeleteButton onClick={() => handleDelete(fullBudget._id)} />
+                    <UpdateButton onClick={() => handleUpdate(budgetId)} />
+                    <DeleteButton onClick={() => handleDelete(budgetId)} />
                 </div>
             );
             },
         },
         },
     ];
+
+    const mobileColumnsToShow = ['n_budget', 'dateCreation', 'state', 'options'];
+    const tabletColumnsToShow = ['n_budget', 'dateCreation', 'dateUpdate', 'state', 'options'];
+    const responsiveColumns = useResponsiveColumns(
+      columns,
+      mobileColumnsToShow,
+      tabletColumnsToShow,
+    );
 
     // Opciones de la tabla
     const options = {
@@ -133,7 +163,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 <MUIDataTable
                 title={"Lista de Presupuestos"}
                 data={rows}
-                columns={columns}
+                columns={responsiveColumns}
                 options={options}
                 />
             </ThemeProvider>

@@ -135,6 +135,7 @@ interface Product {
     n_budget: number;
     dateCreation: Dayjs;
     dateExpiration: Dayjs;
+    dateUpdate: Dayjs;
     currency: string;
     exchangeRate: number;
   }
@@ -162,7 +163,7 @@ interface Product {
   interface TableControlBudgetProps extends TableBaseProps {
     data: Budget[]; 
     handleDelete: (budgetId: string) => void;
-    handleEdit: (budget: Budget) => void;
+    handleUpdate: (budgetId: string) => void;
   }
   
   interface TableProviderProps extends TableBaseProps {

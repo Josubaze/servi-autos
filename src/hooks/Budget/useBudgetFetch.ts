@@ -1,9 +1,10 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGetCompanyQuery } from "src/redux/services/company.Api";
-import { useCreateBudgetMutation } from "src/redux/services/budgets.Api";
+import { useCreateBudgetMutation, useUpdateBudgetMutation } from "src/redux/services/budgets.Api";
 import { toast } from "react-toastify";
 import { useBudgetSubtotal } from "src/hooks/Budget/useBudgetSubtotal";
 import dayjs, { Dayjs } from "dayjs";
+import { useRouter } from 'next/navigation';
 
 interface BudgetFormHandle {
     submitForm: () => any;
@@ -12,7 +13,12 @@ interface BudgetFormHandle {
     setFormCustomer: ( customer: Customer ) => void;
 }
 
-export const useBudgetFecth = () => {
+interface UseBudgetFetchProps {
+    mode?: "create" | "update";
+    budgetData?: Budget | null;
+}
+
+export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudgetFetchProps) => {
     const formCustomerRef = useRef<BudgetFormHandle | null>(null);
     const formDateRef = useRef<BudgetFormHandle | null>(null);
     const [selectedServices, setSelectedServices] = useState<Service[]>([]);
@@ -23,6 +29,20 @@ export const useBudgetFecth = () => {
     const { data: company, isLoading, isError } = useGetCompanyQuery();
     const [createBudget] = useCreateBudgetMutation();
     const [isSaving, setIsSaving] = useState<boolean>(false);
+    const [updateBudget] = useUpdateBudgetMutation();
+    const [dateUpdate, setDateUpdate] = useState<Dayjs | null>(null);
+    const router = useRouter();
+
+    // Inicializar datos si el modo es "update"
+    useEffect(() => {
+        if (mode === "update" && budgetData) {
+            handleSetFormDate(budgetData.budgetForm);
+            handleSetFormCustomer(budgetData.customer);
+            setSelectedServices(budgetData.services);
+            setDescription(budgetData.description);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mode, budgetData]);
 
     const resetValues = () => {
         setSelectedServices([]);
@@ -87,7 +107,7 @@ export const useBudgetFecth = () => {
     };
 
     // Función principal para guardar el presupuesto
-    const handleSave = async (action: "draft" | "save") => {
+    const handleSave = async (action: "draft" | "accepted", mode: "create" | "update", budget_id : string) => {
         setIsSaving(true);
         try {
             const {
@@ -99,12 +119,14 @@ export const useBudgetFecth = () => {
                 currency,
                 exchangeRate,
             } = await validateBudget();
-
+    
+            // Construcción del objeto `budget`
             const budget: Omit<Budget, "_id"> = {
                 budgetForm: {
                     n_budget: dateData.n_budget,
                     dateCreation: dayjs(dateData.dateCreation).toDate(),
                     dateExpiration: dayjs(dateData.dateExpiration).toDate(),
+                    dateUpdate: null,
                     currency,
                     exchangeRate,
                 },
@@ -118,18 +140,36 @@ export const useBudgetFecth = () => {
                     })),
                 })),
                 description,
-                state: action === 'draft' ? 'Borrador' : action === 'save' ? 'Aceptado' : '',
+                state: action === "draft" ? "Borrador" : action === "accepted" ? "Aceptado" : "",
             };
-
-            await createBudget(budget).unwrap();
-            toast.success("Presupuesto creado exitosamente!");
+    
+            // Crear o Actualizar según `mode`
+            if (mode === "create") {
+                await createBudget(budget).unwrap();
+                toast.success("Presupuesto creado exitosamente!");
+            } else if (mode === "update") {
+                const budgetWithId = {
+                    ...budget,
+                    _id: budget_id,
+                    budgetForm: {
+                        ...budget.budgetForm, // Asegúrate de mantener las propiedades existentes de `budgetForm`
+                        dateUpdate: dayjs().toDate(), // Actualiza la fecha
+                    }
+                };
+                
+                await updateBudget(budgetWithId).unwrap(); // Aquí usas la mutación de actualización
+                router.push("/control/budgets");
+                toast.success("Presupuesto actualizado exitosamente!");
+            }
+    
             resetValues();
         } catch (error) {
-            toast.error('Ha ocurrido un error');
+            toast.error("Ha ocurrido un error");
         } finally {
             setIsSaving(false);
         }
     };
+    
 
     return {
         formCustomerRef,
@@ -144,6 +184,8 @@ export const useBudgetFecth = () => {
         description,
         setDescription,
         company,
+        dateUpdate,
+        setDateUpdate,
         isLoading,
         isError,
         isSaving,

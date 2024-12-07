@@ -9,10 +9,9 @@ import { BudgetSummary } from "./BudgetSummary";
 import { BudgetActions } from "./BudgetActions";
 import { Loading } from "../Common/Loading";
 import { useBudgetFecth } from "src/hooks/Budget/useBudgetFetch";
-import { useEffect } from "react";
 
     interface BudgetProps {
-        mode?: "create" | "edit";
+        mode?: "create" | "update";
         budgetData?: Budget | null; // Opcional y puede ser null
     }
 
@@ -34,21 +33,7 @@ import { useEffect } from "react";
         isError,
         isSaving,
         handleSave,
-        handleSetFormDate,
-        handleSetFormCustomer,
-    } = useBudgetFecth();
-
-    // Inicializar datos si el modo es "edit"
-    useEffect(() => {
-        console.log("budgetData recibido:", budgetData);
-        if (mode === "edit" && budgetData) {
-            handleSetFormDate( budgetData.budgetForm);
-            handleSetFormCustomer(budgetData.customer)
-            setSelectedServices(budgetData.services);
-            setDescription(budgetData.description);
-        }
-    }, [mode, budgetData]);
-
+    } = useBudgetFecth({ mode, budgetData });
 
     return (
         <div className="relative flex flex-col py-6 px-0 sm:px-12">
@@ -82,20 +67,12 @@ import { useEffect } from "react";
             />
             <BudgetSummary currency={currency} subtotal={subtotal} />
 
-            {mode === 'create' && (
-                <BudgetActions
+            <BudgetActions
                 description={description}
                 setDescription={setDescription}
-                handleSave={handleSave}
+                handleButtonType={(action: "draft" | "accepted") => handleSave(action, mode, budgetData?._id || '')} 
+                mode={mode}              
             />
-            )}
-
-            {mode === 'edit' && (
-                <div>Modo Modificar</div>
-            )}
-
-            
-            
         </div>
     );
 };

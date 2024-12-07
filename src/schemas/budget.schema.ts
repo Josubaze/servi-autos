@@ -20,6 +20,10 @@ const budgetSchema = new Schema(
                 required: true,
                 default: () => dayjs().toDate(),
             },
+            dateUpdate: {
+                type: Date,
+                default: null,
+            },
             currency: {
                 type: String,
                 required: true,

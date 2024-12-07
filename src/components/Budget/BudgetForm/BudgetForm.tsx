@@ -5,7 +5,7 @@ import { Select, MenuItem, TextField } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BudgetFormSchema } from 'src/utils/validation.zod';
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { SelectBudgetButton } from "./SelectBudgetButton"; 
 import { NumericFormat } from "react-number-format";
@@ -54,6 +54,7 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
         setValue("n_budget", budgetForm.n_budget);
         setValue("dateCreation", dayjs(budgetForm.dateCreation));
         setValue("dateExpiration", dayjs(budgetForm.dateExpiration));
+        setValue("dateUpdate", dayjs(budgetForm.dateUpdate)); 
         setValue("currency", budgetForm.currency);
         setValue("exchangeRate", budgetForm.exchangeRate);
     };
@@ -65,8 +66,8 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
     
 
     useEffect(() => {
-        // Si el modo es "edit", no ejecutamos este efecto
-        if (mode === "edit") return;
+        // Si el modo es "update", no ejecutamos este efecto
+        if (mode === "update") return;
     
         if (isSuccess) {
             const maxBudget = budgets.length > 0

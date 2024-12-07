@@ -21,7 +21,7 @@ export const BudgetUpdate = ({ id }: { id: string }) => {
 
   return (
     <div>
-      <Budget mode="edit" budgetData={budget} />
+      <Budget mode="update" budgetData={budget} />
       {isLoading && (
         <div className='h-full'>
           <Loading/>
