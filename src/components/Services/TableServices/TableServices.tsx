@@ -69,7 +69,11 @@ export const TableServices: React.FC<TableServicesProps> = ({
         <Table aria-label="collapsible table" className='p-4'>
           <TableHead>
             <TableRow>
-                <TableCell colSpan={5} className='text-xl text-start bg-black-nav '>
+                <TableCell colSpan={6} sx={{
+                  fontSize: '1.25rem',
+                  textAlign: 'left', 
+                  backgroundColor: '#161616', 
+                }}>
                     Lista de Servicios
                 </TableCell>
             </TableRow>

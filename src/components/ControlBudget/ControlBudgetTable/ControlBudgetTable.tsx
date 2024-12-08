@@ -6,10 +6,12 @@ import { UpdateButton } from "src/components/Common/Buttons/UpdateButton";
 import { DeleteButton } from "src/components/Common/Buttons/DeleteButton";
 import { useDynamicFilter } from "src/hooks/useProductFilter";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
+import { useDateRangeFilter } from "src/hooks/useDateRangeFilter";
 
 export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     data,
     searchTerm,
+    selectedRange,
     isLoading,
     isError,
     isFetching,
@@ -19,7 +21,8 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     }) => {
     
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'budgetForm.n_budget']);
-    const rows = filteredData.map(budget => ({
+    const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
+    const rows = filteredByDateRange.map(budget => ({
         n_budget: budget.budgetForm.n_budget,
         description: budget.description,
         dateCreation: new Date(budget.budgetForm.dateCreation).toLocaleDateString(),

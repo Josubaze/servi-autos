@@ -11,6 +11,8 @@ import { Disclosure } from "@headlessui/react";
 import { LocalizationMuiProvider } from "src/context/LocalizationProvider";
 import { knewave } from "src/utils/fonts";
 import ToasterProvider from "src/context/ToasterProvider";
+import { NextUiProvider } from "src/context/NextUIProvider";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,22 +30,24 @@ export default async function RootLayout({
   const session = await getServerSession();
 
   return (
-    <html lang="en">
+    <html lang="en" className='dark'>
       <body className={inter.className}>
         <SessionAuthProvider session={session}>
           <StoreProvider>
             <LocalizationMuiProvider>
-              <ToasterProvider>
-                <div className="grid min-h-screen grid-rows-[auto,1fr,auto]">
-                  <Suspense fallback={<Disclosure as="nav" className="bg-black-nav"></Disclosure>}>
-                    <Navbar />
-                  </Suspense>
-                  <main className={`${knewave.variable}`}>
-                    {children}
-                  </main>               
-                  <Footer />
-                </div>
-              </ToasterProvider>
+              <NextUiProvider>
+                <ToasterProvider>
+                  <div className="grid min-h-screen grid-rows-[auto,1fr,auto]">
+                    <Suspense fallback={<Disclosure as="nav" className="bg-black-nav"></Disclosure>}>
+                      <Navbar />
+                    </Suspense>
+                    <main className={`${knewave.variable}`}>
+                      {children}
+                    </main>               
+                    <Footer />
+                  </div>
+                </ToasterProvider>
+              </NextUiProvider>
             </LocalizationMuiProvider>
           </StoreProvider>
         </SessionAuthProvider>

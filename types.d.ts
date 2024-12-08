@@ -162,6 +162,7 @@ interface Product {
 
   interface TableControlBudgetProps extends TableBaseProps {
     data: Budget[]; 
+    selectedRange: RangeValue<DateValue> | null;
     handleDelete: (budgetId: string) => void;
     handleUpdate: (budgetId: string) => void;
   }

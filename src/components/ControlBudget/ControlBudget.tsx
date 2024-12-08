@@ -10,12 +10,19 @@ import { useDeleteBudgetMutation, useGetBudgetsQuery } from 'src/redux/services/
 import { ControlBudgetTable } from './ControlBudgetTable/ControlBudgetTable';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { DateRangePicker, RangeValue, DateValue } from '@nextui-org/react';
+import { I18nProvider } from '@react-aria/i18n';
 
 export const ControlBudget = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetBudgetsQuery();
   const [deleteBudget] = useDeleteBudgetMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const router = useRouter();
+  const [selectedRange, setSelectedRange] = useState<RangeValue<DateValue> | null>(null);
+  const handleDateRangeChange = (value: RangeValue<DateValue> | null) => {
+    setSelectedRange(value);
+    console.log('Rango de fechas seleccionado:', value);
+  };
 
   const handleUpdate = (budgetId: string) => {
     if (budgetId){
@@ -49,13 +56,24 @@ export const ControlBudget = () => {
               Agregar Presupuesto
             </span>
           </button>
-
-          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <div className='flex gap-x-4'>
+            {/* Envolvemos el DateRangePicker con I18nProvider para cambiar localizacion*/}
+            <I18nProvider locale="es">
+              <DateRangePicker
+                className="max-w-[260px]"
+                label="Rango de Fechas"
+                value={selectedRange}
+                onChange={handleDateRangeChange}
+              />
+            </I18nProvider>
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          </div>
         </div>
 
         <ControlBudgetTable
           data={data}
           searchTerm={searchTerm}
+          selectedRange={selectedRange}
           isLoading={isLoading}
           isError={isError}
           isFetching={isFetching}
