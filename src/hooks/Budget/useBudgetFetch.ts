@@ -5,6 +5,9 @@ import { toast } from "react-toastify";
 import { useBudgetSubtotal } from "src/hooks/Budget/useBudgetSubtotal";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from 'next/navigation';
+import { useIva } from "./useIva";
+import { useIgft } from "./useIgtf";
+import { useTotal } from "./useTotal";
 
 interface BudgetFormHandle {
     submitForm: () => any;
@@ -32,6 +35,14 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
     const [updateBudget] = useUpdateBudgetMutation();
     const [dateUpdate, setDateUpdate] = useState<Dayjs | null>(null);
     const router = useRouter();
+    const [customerData, setCustomerData] = useState<Customer | null>(null);
+    const [budgetForm, setBudgetForm] = useState<BudgetForm | null>(null);
+    const [ivaPercentage, setIvaPercentage] = useState<number>(16); // IVA predeterminado al 16%
+    const [igtfPercentage, setIgtfPercentage] = useState<number>(3); // IGTF predeterminado al 3%
+    const calculatedIva = useIva(subtotal, ivaPercentage);
+    const calculatedIgtf = useIgft((subtotal+calculatedIva), igtfPercentage);
+    const total = useTotal((subtotal), calculatedIva, 0);
+    const totalWithIgft = useTotal((subtotal), calculatedIva, calculatedIgtf);
 
     // Inicializar datos si el modo es "update"
     useEffect(() => {
@@ -59,16 +70,25 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
     const handleSetFormCustomer = (customer : Customer) => {
         formCustomerRef.current?.setFormCustomer(customer);
     };
+
+    const extractFormData = async () => {
+        const extractedCustomerData = formCustomerRef.current
+            ? await formCustomerRef.current.submitForm()
+            : null;
+    
+        const extractedDateData = formDateRef.current
+            ? await formDateRef.current.submitForm()
+            : null;
+    
+        // Actualizamos los estados
+        setCustomerData(extractedCustomerData);
+        setBudgetForm(extractedDateData);
+    };
     
 
     // Función para validar los datos del presupuesto
     const validateBudget = async () => {
-        const customerData = formCustomerRef.current
-            ? await formCustomerRef.current.submitForm()
-            : null;
-        const dateData = formDateRef.current
-            ? await formDateRef.current.submitForm()
-            : null;
+        await extractFormData(); // Actualiza customerData y dateData
 
         if (!company) {
             toast.error("Faltan datos de la empresa");
@@ -80,7 +100,7 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
             throw new Error("Datos del cliente incompletos");
         }
 
-        if (!dateData) {
+        if (!budgetForm) {
             toast.error("Faltan datos de las fechas");
             throw new Error("Datos de las fechas incompletos");
         }
@@ -97,7 +117,7 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
 
         return {
             customerData,
-            dateData,
+            budgetForm,
             company,
             selectedServices,
             description,
@@ -112,7 +132,7 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
         try {
             const {
                 customerData,
-                dateData,
+                budgetForm,
                 company,
                 selectedServices,
                 description,
@@ -123,9 +143,9 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
             // Construcción del objeto `budget`
             const budget: Omit<Budget, "_id"> = {
                 budgetForm: {
-                    n_budget: dateData.n_budget,
-                    dateCreation: dayjs(dateData.dateCreation).toDate(),
-                    dateExpiration: dayjs(dateData.dateExpiration).toDate(),
+                    n_budget: budgetForm.n_budget,
+                    dateCreation: dayjs(budgetForm.dateCreation).toDate(),
+                    dateExpiration: dayjs(budgetForm.dateExpiration).toDate(),
                     dateUpdate: null,
                     currency,
                     exchangeRate,
@@ -174,6 +194,8 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
     return {
         formCustomerRef,
         formDateRef,
+        budgetForm,
+        customerData,
         selectedServices,
         setSelectedServices,
         subtotal,
@@ -186,11 +208,20 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
         company,
         dateUpdate,
         setDateUpdate,
+        ivaPercentage, 
+        setIvaPercentage,
+        igtfPercentage, 
+        setIgtfPercentage,
+        calculatedIva,
+        calculatedIgtf,
+        total,
+        totalWithIgft,
         isLoading,
         isError,
         isSaving,
         handleSetFormDate,
         handleSetFormCustomer,
         handleSave,
+        extractFormData
     };
 };

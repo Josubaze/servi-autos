@@ -19,6 +19,8 @@ import { useBudgetFecth } from "src/hooks/Budget/useBudgetFetch";
     const {
         formCustomerRef,
         formDateRef,
+        budgetForm,
+        customerData,
         selectedServices,
         setSelectedServices,
         subtotal,
@@ -33,7 +35,17 @@ import { useBudgetFecth } from "src/hooks/Budget/useBudgetFetch";
         isError,
         isSaving,
         handleSave,
+        extractFormData,
+        ivaPercentage,
+        igtfPercentage,
+        calculatedIva,
+        calculatedIgtf,
+        total,
+        totalWithIgft,
+        setIvaPercentage,
+        setIgtfPercentage,
     } = useBudgetFecth({ mode, budgetData });
+    
 
     return (
         <div className="relative flex flex-col py-6 px-0 sm:px-12">
@@ -42,7 +54,20 @@ import { useBudgetFecth } from "src/hooks/Budget/useBudgetFetch";
                     <Loading />
                 </div>
             )}
-            <BudgetOptions />
+            <BudgetOptions 
+                budgetForm={budgetForm}
+                customer={customerData}  
+                company={company}
+                selectedServices={selectedServices}
+                extractFormData={extractFormData}
+                subtotal={subtotal}
+                ivaPercentage={ivaPercentage}
+                igtfPercentage={igtfPercentage}
+                calculatedIva={calculatedIva}
+                calculatedIgtf={calculatedIgtf}
+                total={total}
+                totalWithIgft={totalWithIgft}
+            />
             <BudgetHeader company={company || null} isError={isError} isLoading={isLoading} />
             <div className="flex flex-col sm:flex-row py-4 px-8">
                 <div className="flex-1">
@@ -65,7 +90,19 @@ import { useBudgetFecth } from "src/hooks/Budget/useBudgetFetch";
                 currency={currency}
                 exchangeRate={exchangeRate}
             />
-            <BudgetSummary currency={currency} subtotal={subtotal} />
+
+            <BudgetSummary
+                subtotal={subtotal}
+                currency={currency}
+                ivaPercentage={ivaPercentage}
+                igtfPercentage={igtfPercentage}
+                calculatedIva={calculatedIva}
+                calculatedIgtf={calculatedIgtf}
+                total={total}
+                totalWithIgft={totalWithIgft}
+                setIvaPercentage={setIvaPercentage}
+                setIgtfPercentage={setIgtfPercentage}
+            />
 
             <BudgetActions
                 description={description}

@@ -9,17 +9,30 @@ import { useIgft } from "src/hooks/Budget/useIgtf";
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface BudgetSummaryProps {
-  subtotal: number; 
-  currency: string; 
+  subtotal: number;
+  currency: string;
+  ivaPercentage: number;
+  igtfPercentage: number;
+  calculatedIva: number;
+  calculatedIgtf: number;
+  total: number;
+  totalWithIgft: number;
+  setIvaPercentage: React.Dispatch<React.SetStateAction<number>>;  
+  setIgtfPercentage: React.Dispatch<React.SetStateAction<number>>;  
 }
 
-export const BudgetSummary = ({ subtotal, currency }: BudgetSummaryProps) => {
-  const [ivaPercentage, setIvaPercentage] = useState<number>(16); // IVA predeterminado al 16%
-  const [igtfPercentage, setIgtfPercentage] = useState<number>(3); // IGTF predeterminado al 3%
-  const calculatedIva = useIva(subtotal, ivaPercentage);
-  const calculatedIgtf = useIgft((subtotal+calculatedIva), igtfPercentage);
-  const total = useTotal((subtotal), calculatedIva, 0);
-  const totalWithIgft = useTotal((subtotal), calculatedIva, calculatedIgtf);
+export const BudgetSummary = ({
+  subtotal,
+  currency,
+  ivaPercentage,
+  igtfPercentage,
+  calculatedIva,
+  calculatedIgtf,
+  total,
+  totalWithIgft,
+  setIvaPercentage,
+  setIgtfPercentage,
+}: BudgetSummaryProps) => {
 
   return (
     <>
