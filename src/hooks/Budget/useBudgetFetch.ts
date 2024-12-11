@@ -72,23 +72,21 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
     };
 
     const extractFormData = async () => {
-        const extractedCustomerData = formCustomerRef.current
+        const customerData = formCustomerRef.current
             ? await formCustomerRef.current.submitForm()
             : null;
     
-        const extractedDateData = formDateRef.current
+        const budgetForm = formDateRef.current
             ? await formDateRef.current.submitForm()
             : null;
     
-        // Actualizamos los estados
-        setCustomerData(extractedCustomerData);
-        setBudgetForm(extractedDateData);
+        return { customerData, budgetForm }; // Devuelve los datos
     };
     
 
     // Función para validar los datos del presupuesto
     const validateBudget = async () => {
-        await extractFormData(); // Actualiza customerData y dateData
+        const { customerData, budgetForm } = await extractFormData();
 
         if (!company) {
             toast.error("Faltan datos de la empresa");
@@ -194,8 +192,6 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
     return {
         formCustomerRef,
         formDateRef,
-        budgetForm,
-        customerData,
         selectedServices,
         setSelectedServices,
         subtotal,

@@ -1,30 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs'; // Importa dayjs
 import { NumericFormat } from 'react-number-format';
 import { IoExitOutline } from "react-icons/io5";
+import { toast } from 'react-toastify';
 
 interface BudgetPreviewProps {
-  isOpen: boolean;
-  onClose: () => void;
-  company: Company | undefined;
-  customer: Customer | null;
-  budgetForm: BudgetForm | null;
-  selectedServices: Service[];
-  subtotal: number;
-  ivaPercentage: number;
-  igtfPercentage: number;
-  calculatedIva: number;
-  calculatedIgtf: number;
-  total: number;
-  totalWithIgft: number;
+    isOpen: boolean;
+    onClose: () => void;
+    company: Company | undefined;
+    extractFormData: () => Promise<{
+        customerData: Customer;
+        budgetForm: BudgetForm;
+    }>
+    selectedServices: Service[];
+    subtotal: number;
+    ivaPercentage: number;
+    igtfPercentage: number;
+    calculatedIva: number;
+    calculatedIgtf: number;
+    total: number;
+    totalWithIgft: number;
 }
 
 export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
   isOpen,
   onClose,
   company,
-  customer,
-  budgetForm,
+  extractFormData,
   selectedServices,
   subtotal,
   ivaPercentage,
@@ -34,12 +36,32 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
   total,
   totalWithIgft,
 }) => {
-  if (!isOpen) return null; // No renderizar si el modal está cerrado
+    const [customer, setCustomer] = useState<Customer | null>(null);
+    const [budgetForm, setBudgetForm] = useState<BudgetForm | null>(null);
 
-  // Función para formatear fechas con dayjs
+  // Llama a extractFormData cuando el modal se abre
+    useEffect(() => {
+        if (isOpen) {
+        const fetchData = async () => {
+            try {
+            const { customerData, budgetForm } = await extractFormData();
+            setCustomer(customerData);
+            setBudgetForm(budgetForm);
+            } catch (error) {
+            toast.error("Error al obtener los datos del formulario:");
+            }
+        };
+
+        fetchData();
+    }
+  }, [isOpen, extractFormData]); 
+
+  if (!isOpen) return null; 
+
   const formatDate = (date: any) => {
     return date ? dayjs(date).format('DD/MM/YYYY') : 'No disponible';
   };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     onClick={onClose}>

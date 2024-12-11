@@ -12,15 +12,13 @@ import { useBudgetFecth } from "src/hooks/Budget/useBudgetFetch";
 
     interface BudgetProps {
         mode?: "create" | "update";
-        budgetData?: Budget | null; // Opcional y puede ser null
+        budgetData?: Budget | null;
     }
 
     export const Budget: React.FC<BudgetProps> = ({ mode = "create", budgetData= null }) => {
     const {
         formCustomerRef,
         formDateRef,
-        budgetForm,
-        customerData,
         selectedServices,
         setSelectedServices,
         subtotal,
@@ -54,9 +52,7 @@ import { useBudgetFecth } from "src/hooks/Budget/useBudgetFetch";
                     <Loading />
                 </div>
             )}
-            <BudgetOptions 
-                budgetForm={budgetForm}
-                customer={customerData}  
+            <BudgetOptions  
                 company={company}
                 selectedServices={selectedServices}
                 extractFormData={extractFormData}
