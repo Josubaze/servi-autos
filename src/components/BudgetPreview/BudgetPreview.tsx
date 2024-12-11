@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import dayjs from 'dayjs'; // Importa dayjs
+import dayjs from 'dayjs';
 import { NumericFormat } from 'react-number-format';
 import { IoExitOutline } from "react-icons/io5";
 import { toast } from 'react-toastify';
@@ -66,7 +66,7 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     onClick={onClose}>
       {/* Modal Container */}
-        <div className="bg-white rounded-lg shadow-lg max-w-screen-lg w-full p-6 overflow-y-auto"
+        <div className="bg-white rounded-lg shadow-lg max-w-screen-lg w-full p-6 max-h-screen overflow-y-auto"
         onClick={(e) => e.stopPropagation()}>
             {/* Botón Cerrar */}
             <button
@@ -126,112 +126,235 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
                 </div>
             </div>
 
+            {/* Columnas de Servicios */}
             <div className="grid grid-cols-5 rounded-lg w-full bg-black-nav px-8 py-3">
-                    <div className="font-bold text-start pl-3 col-span-2">Descripción</div>
-                    <div className="font-bold text-end pr-6 col-span-1">Cantidad</div>
-                    <div className="font-bold text-end pr-4 col-span-1">Precio Unitario</div>
-                    <div className="font-bold text-end pr-3 col-span-1">Precio Total</div>
+                <div className="font-bold text-start col-span-2 pl-2">Descripción</div>
+                <div className="font-bold text-end col-span-1">Cantidad</div>
+                <div className="font-bold text-end col-span-1">Precio Unitario</div>
+                <div className="font-bold text-end col-span-1 pr-2">Precio Total</div>
             </div>
 
             {/* Filas de Servicios */}
+            <div className="space-y-6 px-4 py-2">
             {selectedServices.map((service) => (
-            <div key={service._id} className="grid grid-cols-5 items-center text-gray-700 py-2 px-8">
-                <div className="text-start pl-3 col-span-2">{service.name}</div>
-                <div className="text-end pr-6 col-span-1">
-                <NumericFormat 
-                    value={service.serviceQuantity} 
-                    displayType="text" 
-                    thousandSeparator="." 
-                    decimalSeparator="," 
-                />
+                <div
+                key={service._id}
+                className="rounded-lg"
+                >
+                {/* Encabezado del Servicio */}
+                <div className="grid grid-cols-5 text-gray-700 rounded-t-lg bg-gray-200/60 px-6 py-3">
+                    <div className="font-bold text-start col-span-2">{service.name}</div>
+                    <div className="font-bold text-end col-span-1">
+                    <NumericFormat
+                        value={service.serviceQuantity}
+                        displayType="text"
+                        thousandSeparator="."
+                        decimalSeparator=","
+                    />
+                    </div>
+                    <div className="font-bold text-end col-span-1">
+                    <NumericFormat
+                        value={service.totalPrice}
+                        displayType="text"
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        decimalScale={2}
+                        fixedDecimalScale
+                    />
+                    </div>
+                    <div className="font-bold text-end col-span-1">
+                    <NumericFormat
+                        value={service.totalPrice * service.serviceQuantity}
+                        displayType="text"
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        decimalScale={2}
+                        fixedDecimalScale
+                    />
+                    </div>
                 </div>
-                <div className="text-end pr-4 col-span-1">
-                <NumericFormat 
-                    value={service.totalPrice} 
-                    displayType="text" 
-                    thousandSeparator="." 
-                    decimalSeparator="," 
-                    decimalScale={2} 
-                    fixedDecimalScale 
-                />
+
+                {/* Tabla de Productos (Detalles del Servicio) */}
+                <div className="bg-gray-50 px-6 py-4 rounded-b-lg">
+                    <div className="font-bold text-gray-700 mb-2">Detalles del Servicio</div>
+                    {service.products && service.products.length > 0 ? (
+                    <div className="space-y-2">
+                        {/* Columnas de Productos */}
+                        <div className="grid grid-cols-5 font-semibold text-gray-600 border-b pb-2">
+                        <div className="text-start col-span-1">Producto</div>
+                        <div className="text-end col-span-1">Categoría</div>
+                        <div className="text-end col-span-1">Cantidad</div>
+                        <div className="text-end col-span-1">Precio Unitario</div>
+                        <div className="text-end col-span-1">Precio Total</div>
+                        </div>
+
+                        {/* Filas de Productos */}
+                        {service.products.map((product) => (
+                        <div
+                            key={product.product._id}
+                            className="grid grid-cols-5 items-center text-gray-700 py-1"
+                        >
+                            <div className="text-start col-span-1">{product.product.name}</div>
+                            <div className="text-end col-span-1">{product.product.category}</div>
+                            <div className="text-end col-span-1">
+                            <NumericFormat
+                                value={product.quantity}
+                                displayType="text"
+                                thousandSeparator="."
+                                decimalSeparator=","
+                            />
+                            </div>
+                            <div className="text-end col-span-1">
+                            <NumericFormat
+                                value={product.product.price}
+                                displayType="text"
+                                thousandSeparator="."
+                                decimalSeparator=","
+                                decimalScale={2}
+                                fixedDecimalScale
+                            />
+                            </div>
+                            <div className="text-end col-span-1">
+                            <NumericFormat
+                                value={product.product.price * product.quantity}
+                                displayType="text"
+                                thousandSeparator="."
+                                decimalSeparator=","
+                                decimalScale={2}
+                                fixedDecimalScale
+                            />
+                            </div>
+                        </div>
+                        ))}
+
+                        {/* Fila de Mano de Obra */}
+                        <div className="grid grid-cols-5 items-center text-gray-700">
+                        <div className="text-start col-span-2">Mano de obra</div>
+                        <div className="text-end col-span-1">1</div>
+                        <div className="text-end col-span-1">
+                            <NumericFormat
+                            value={service.servicePrice}
+                            displayType="text"
+                            thousandSeparator="."
+                            decimalSeparator=","
+                            decimalScale={2}
+                            fixedDecimalScale
+                            />
+                        </div>
+                        <div className="text-end col-span-1">
+                            <NumericFormat
+                            value={service.servicePrice}
+                            displayType="text"
+                            thousandSeparator="."
+                            decimalSeparator=","
+                            decimalScale={2}
+                            fixedDecimalScale
+                            />
+                        </div>
+                        </div>
+                    </div>
+                    ) : (
+                    <div className="text-center py-2 text-gray-500">
+                        No hay productos para este servicio.
+                    </div>
+                    )}
                 </div>
-                <div className="text-end pr-3 col-span-1">
-                <NumericFormat 
-                    value={service.totalPrice * service.serviceQuantity} 
-                    displayType="text" 
-                    thousandSeparator="." 
-                    decimalSeparator="," 
-                    decimalScale={2} 
-                    fixedDecimalScale 
-                />
+                </div>
+            ))}
+            </div>
+
+
+
+            {/* Contenedor Principal para Resumen y Condiciones */}
+            <div className="flex flex-col md:flex-row w-full pl-4 pr-6 mt-6 gap-8 text-gray-700">
+            
+                {/* Condiciones de la Oferta (lado izquierdo) */}
+                <div className="w-full md:w-1/2 rounded-lg p-4 bg-gray-50">
+                    <h3 className="text-lg font-bold mb-2">Condiciones de la Oferta:</h3>
+                    <p className="mb-1">
+                        <span className="font-semibold">Moneda:</span> El monto está establecido en {budgetForm?.currency === '$' ? 'dólares' : 'Bolívares'}.
+                    </p>
+                    {budgetForm?.currency !== '$' && (
+                        <p className="mb-1">
+                        <span className="font-semibold">Pagadero a tasa de BCV:</span> A la fecha de su cancelación.
+                        </p>
+                    )}
+                    <p className="mb-1">
+                        <span className="font-semibold">Tiempo de entrega:</span> Inmediata.
+                    </p>
+                    <p className="mb-0">
+                        <span className="font-semibold">Nota:</span> Precio sujeto a cambio sin previo aviso.
+                    </p>
+                </div>
+
+
+            {/* Resumen de Totales (lado derecho) */}
+            <div className="w-full md:w-1/2">
+                {/* Summary Section */}
+                <div className="flex flex-col items-end w-full text-gray-700">
+                    {/* Subtotal */}
+                    <div className="flex justify-between w-full max-w-md py-1 pr-3">
+                        <span className="font-bold">Subtotal:</span>
+                        <span>
+                        <NumericFormat 
+                            value={subtotal} 
+                            displayType="text" 
+                            thousandSeparator="." 
+                            decimalSeparator="," 
+                            decimalScale={2} 
+                            fixedDecimalScale 
+                        />
+                        </span>
+                    </div>
+
+                    {/* IVA */}
+                    <div className="flex justify-between w-full max-w-md py-1 pr-3">
+                        <span className="font-bold">IVA ({ivaPercentage}%):</span>
+                        <span>
+                        <NumericFormat 
+                            value={calculatedIva} 
+                            displayType="text" 
+                            thousandSeparator="." 
+                            decimalSeparator="," 
+                            decimalScale={2} 
+                            fixedDecimalScale 
+                        />
+                        </span>
+                    </div>
+
+                    {/* IGTF (si la moneda es USD) */}
+                    {budgetForm?.currency === '$' && (
+                        <div className="flex justify-between w-full max-w-md py-1 pr-3">
+                        <span className="font-bold">IGTF ({igtfPercentage}%):</span>
+                        <span>
+                            <NumericFormat 
+                            value={calculatedIgtf} 
+                            displayType="text" 
+                            thousandSeparator="." 
+                            decimalSeparator="," 
+                            decimalScale={2} 
+                            fixedDecimalScale 
+                            />
+                        </span>
+                        </div>
+                    )}
+
+                    {/* Total */}
+                    <div className="flex justify-between w-full max-w-md py-2 mt-2 pr-2 border-t border-gray-300">
+                        <span className="font-bold text-lg">Total:</span>
+                        <span className="font-bold text-lg">
+                        <NumericFormat 
+                            value={budgetForm?.currency === '$' ? totalWithIgft : total} 
+                            displayType="text" 
+                            thousandSeparator="." 
+                            decimalSeparator="," 
+                            decimalScale={2} 
+                            fixedDecimalScale 
+                        />
+                        </span>
+                    </div>
                 </div>
             </div>
-            ))}
-
-
-            {/* Summary Section */}
-            <div className="flex flex-col items-end w-full px-8 mt-6 text-gray-700">
-                {/* Subtotal */}
-                <div className="flex justify-between w-full max-w-md py-1 pr-3">
-                    <span className="font-bold">Subtotal:</span>
-                    <span>
-                    <NumericFormat 
-                        value={subtotal} 
-                        displayType="text" 
-                        thousandSeparator="." 
-                        decimalSeparator="," 
-                        decimalScale={2} 
-                        fixedDecimalScale 
-                    />
-                    </span>
-                </div>
-
-                {/* IVA */}
-                <div className="flex justify-between w-full max-w-md py-1 pr-3">
-                    <span className="font-bold">IVA ({ivaPercentage}%):</span>
-                    <span>
-                    <NumericFormat 
-                        value={calculatedIva} 
-                        displayType="text" 
-                        thousandSeparator="." 
-                        decimalSeparator="," 
-                        decimalScale={2} 
-                        fixedDecimalScale 
-                    />
-                    </span>
-                </div>
-
-                {/* IGTF (si la moneda es USD) */}
-                {budgetForm?.currency === '$' && (
-                    <div className="flex justify-between w-full max-w-md py-1 pr-3">
-                    <span className="font-bold">IGTF ({igtfPercentage}%):</span>
-                    <span>
-                        <NumericFormat 
-                        value={calculatedIgtf} 
-                        displayType="text" 
-                        thousandSeparator="." 
-                        decimalSeparator="," 
-                        decimalScale={2} 
-                        fixedDecimalScale 
-                        />
-                    </span>
-                    </div>
-                )}
-
-                {/* Total */}
-                <div className="flex justify-between w-full max-w-md py-2 mt-2 pr-2 border-t border-gray-300">
-                    <span className="font-bold text-lg">Total:</span>
-                    <span className="font-bold text-lg">
-                    <NumericFormat 
-                        value={budgetForm?.currency === '$' ? totalWithIgft : total} 
-                        displayType="text" 
-                        thousandSeparator="." 
-                        decimalSeparator="," 
-                        decimalScale={2} 
-                        fixedDecimalScale 
-                    />
-                    </span>
-                </div>
             </div>
         </div>
     </div>
