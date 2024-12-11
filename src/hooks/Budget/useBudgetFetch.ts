@@ -35,8 +35,6 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
     const [updateBudget] = useUpdateBudgetMutation();
     const [dateUpdate, setDateUpdate] = useState<Dayjs | null>(null);
     const router = useRouter();
-    const [customerData, setCustomerData] = useState<Customer | null>(null);
-    const [budgetForm, setBudgetForm] = useState<BudgetForm | null>(null);
     const [ivaPercentage, setIvaPercentage] = useState<number>(16); // IVA predeterminado al 16%
     const [igtfPercentage, setIgtfPercentage] = useState<number>(3); // IGTF predeterminado al 3%
     const calculatedIva = useIva(subtotal, ivaPercentage);
