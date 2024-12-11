@@ -73,7 +73,7 @@ export const BudgetServiceRow: React.FC<{
             <div className="col-span-2">
               <ThemeProvider theme={TextFieldTheme}>
                 <NumericFormat
-                  value={service.totalPrice.toFixed(2)}
+                  value={service.totalPrice}
                   customInput={TextField}
                   variant="outlined"
                   fullWidth
@@ -92,7 +92,7 @@ export const BudgetServiceRow: React.FC<{
             <div className="col-span-2">
               <ThemeProvider theme={TextFieldTheme}>
                 <NumericFormat
-                  value={(service.totalPrice * service.serviceQuantity).toFixed(2)}
+                  value={(service.totalPrice * service.serviceQuantity)}
                   customInput={TextField}
                   variant="outlined"
                   fullWidth

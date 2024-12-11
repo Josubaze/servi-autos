@@ -211,15 +211,14 @@ const removeServiceFromState = (
   };
 
 
-  // Calcular totales de servicios
-  const calculateServiceTotals = (service: Service) => {
+  // Calcular total unitario de servicios
+  const calculateServiceUnitTotals = (service: Service) => {
     const productTotal = service.products.reduce(
       (sum, p) => sum + p.quantity * p.product.price,
       0
     );
 
-    const updatedTotalProductWithService = productTotal + (service.servicePrice || 0);
-    const updatedTotal = updatedTotalProductWithService * (service.serviceQuantity || 1);
+    const updatedTotal = productTotal + (service.servicePrice || 0);
 
     return { updatedTotal };
   };
@@ -237,7 +236,7 @@ const removeServiceFromState = (
             ...service,
             servicePrice: newPrice,
           };
-          const { updatedTotal } = calculateServiceTotals(updatedService);
+          const { updatedTotal } = calculateServiceUnitTotals(updatedService);
           return {
             ...updatedService,
             totalPrice: updatedTotal,
@@ -276,7 +275,7 @@ const removeServiceFromState = (
             ...service,
             products: updatedProducts,
           };
-          const { updatedTotal } = calculateServiceTotals(updatedService);
+          const { updatedTotal } = calculateServiceUnitTotals(updatedService);
           return {
             ...updatedService,
             totalPrice: updatedTotal,
@@ -315,7 +314,7 @@ const removeServiceFromState = (
           ...service,
           products: updatedProducts,
         };
-        const { updatedTotal } = calculateServiceTotals(updatedService);
+        const { updatedTotal } = calculateServiceUnitTotals(updatedService);
         return {
           ...updatedService,
           totalPrice: updatedTotal,
@@ -371,7 +370,7 @@ const removeServiceFromState = (
           ];
 
           const updatedService = { ...service, products: updatedProducts };
-          const { updatedTotal } = calculateServiceTotals(updatedService);
+          const { updatedTotal } = calculateServiceUnitTotals(updatedService);
           return {
             ...updatedService,
             totalPrice: updatedTotal,
