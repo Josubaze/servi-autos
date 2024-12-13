@@ -1,10 +1,12 @@
-import { useRef, useState } from "react";
+import { useState, useRef } from "react";
 import { FaRegEye } from "react-icons/fa";
 import { FaFilePdf } from "react-icons/fa6";
 import { BudgetPreview } from "src/components/BudgetPreview";
 import { BudgetPDF } from "src/components/BudgetPDF";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
+import { Loading } from "src/components/Common/Loading"; // Asegúrate de que este componente está importado
+import { toast } from "react-toastify";
 
 interface BudgetOptionsProps {
     company: Company | undefined;
@@ -36,47 +38,78 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
 }) => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [showHiddenPDF, setShowHiddenPDF] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Estado para el loading
     const printRef = useRef<HTMLDivElement | null>(null);
 
+    // Función de retraso
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     const handlePDFGeneration = async () => {
-        setShowHiddenPDF(true); // Mostrar componente oculto
+
+        setIsLoading(true);
+        setShowHiddenPDF(true);
     
-        setTimeout(async () => {
+        try {
+            // Retraso para esperar la extracción de datos
+            await sleep(300);  // 300ms de espera antes de continuar
+            const { budgetForm } = await extractFormData();
             if (!printRef.current) return;
     
-            const element = printRef.current;
-            const canvas = await html2canvas(element, {
-                scale: 2, 
+            // Capturar todo el contenido como un canvas
+            const fullCanvas = await html2canvas(printRef.current, {
+                scale: 1.2,
                 backgroundColor: "#ffffff",
             });
     
-            const imgData = canvas.toDataURL("image/png");
             const pdf = new jsPDF("p", "mm", "a4");
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const margin = 10;
+            const imgWidth = pageWidth - margin * 2;
+            const visibleHeight = pageHeight - margin * 2;
     
-            const imgWidth = 210; // Ancho A4 en mm
-            const pageHeight = 297; // Alto A4 en mm
-            const imgHeight = (canvas.height * imgWidth) / canvas.width; // Mantener proporción
+            let yOffset = 0;
     
-            let heightLeft = imgHeight;
-            let position = 0;
+            // Crear las páginas dinámicamente
+            while (yOffset < fullCanvas.height) {
+                const remainingHeight = Math.min(
+                    fullCanvas.height - yOffset,
+                    visibleHeight * (fullCanvas.width / imgWidth)
+                );
     
-            // Añadir la imagen en la primera página (sin margen superior)
-            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight); 
-            heightLeft -= pageHeight;
+                // Crear y llenar el canvas temporal
+                const partCanvas = document.createElement("canvas");
+                partCanvas.width = fullCanvas.width;
+                partCanvas.height = remainingHeight;
     
-            // Añadir las siguientes páginas
-            while (heightLeft > 0) {
-                position -= pageHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
+                const context = partCanvas.getContext("2d");
+                if (!context) return;
+    
+                context.drawImage(
+                    fullCanvas,
+                    0, yOffset,
+                    fullCanvas.width, remainingHeight,
+                    0, 0,
+                    partCanvas.width, remainingHeight
+                );
+    
+                const partImgData = partCanvas.toDataURL("image/png");
+    
+                // Añadir la imagen al PDF
+                pdf.addImage(partImgData, "PNG", margin, margin, imgWidth, (remainingHeight / fullCanvas.width) * imgWidth);
+    
+                yOffset += remainingHeight;
+    
+                if (yOffset < fullCanvas.height) pdf.addPage();
             }
     
-            pdf.save("Budget.pdf");
-            setShowHiddenPDF(false); // Ocultar componente
-        }, 100);
+            pdf.save(`Budget_${budgetForm.n_budget}.pdf`);
+        } catch (error) {
+            toast.error("Error al generar el PDF:");
+        } finally {
+            setShowHiddenPDF(false);
+            setIsLoading(false);
+        }
     };
-    
     
     
     return (
@@ -127,19 +160,27 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
 
             {/* Componente oculto para PDF */}
             {showHiddenPDF && (
+            <div className="absolute top-[-9999px] left-[-9999px]">
                 <BudgetPDF
-                    ref={printRef}
-                    company={company}
-                    extractFormData={extractFormData}
-                    selectedServices={selectedServices}
-                    subtotal={subtotal}
-                    ivaPercentage={ivaPercentage}
-                    igtfPercentage={igtfPercentage}
-                    calculatedIva={calculatedIva}
-                    calculatedIgtf={calculatedIgtf}
-                    total={total}
-                    totalWithIgft={totalWithIgft}
+                ref={printRef}
+                company={company}
+                extractFormData={extractFormData}
+                selectedServices={selectedServices}
+                subtotal={subtotal}
+                ivaPercentage={ivaPercentage}
+                igtfPercentage={igtfPercentage}
+                calculatedIva={calculatedIva}
+                calculatedIgtf={calculatedIgtf}
+                total={total}
+                totalWithIgft={totalWithIgft}
                 />
+            </div>
+            )}
+
+            {isLoading && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+                    <Loading /> 
+                </div>
             )}
         </div>
     );

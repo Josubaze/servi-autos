@@ -43,15 +43,13 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>(
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-    >
+    <>
       {/* Modal Container */}
         <div className="bg-white rounded-lg shadow-lg max-w-screen-lg w-full p-6 min-h-screen overflow-y-auto" ref={ref}>
-
             {/* Header */}
             <div className="py-9 bg-center bg-black-nav rounded-xl  flex flex-col sm:flex-row justify-between items-center">
                 <div className="flex flex-col px-8 sm:flex-row items-center">
-                    <div className="text-gray-100 font-title text-center sm:text-left">
+                    <div className="text-white font-title text-center sm:text-left">
                         {company ? (
                             <>
                                 <p><strong>Nombre:</strong> {company.name || 'No disponible'}</p>
@@ -65,7 +63,7 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>(
                         )}
                     </div>
                 </div>
-                <div className="font-knewave px-8 font-title text-5xl mt-5 sm:mt-0">Presupuesto</div>
+                <div className="font-knewave text-white px-8 font-title text-5xl mt-5 sm:mt-0">Presupuesto</div>
             </div>
             {/* Contenido Principal */}
             <div className="flex flex-col sm:flex-row py-4 px-8">
@@ -97,7 +95,7 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>(
             </div>
 
             {/* Columnas de Servicios */}
-            <div className="grid grid-cols-5 rounded-lg w-full bg-black-nav px-8 py-3">
+            <div className="grid grid-cols-5 text-white rounded-lg w-full bg-black-nav px-8 py-3">
                 <div className="font-bold text-start col-span-2 pl-2">Descripción</div>
                 <div className="font-bold text-end col-span-1">Cantidad</div>
                 <div className="font-bold text-end col-span-1">Precio Unitario</div>
@@ -327,6 +325,6 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>(
             </div>
             </div>
         </div>
-    </div>
+    </>
   );
 });
