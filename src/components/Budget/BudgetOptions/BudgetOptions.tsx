@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { FaRegEye } from "react-icons/fa";
-import { FaFilePdf } from "react-icons/fa6";
+import { PiFilePdfBold } from "react-icons/pi";
+import { PiPrinterFill } from "react-icons/pi";
 import { BudgetPreview } from "src/components/BudgetPreview";
 import { BudgetPDF } from "src/components/BudgetPDF";
 import html2canvas from "html2canvas";
@@ -43,6 +44,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
 
     // Función de retraso
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
     const handlePDFGeneration = async () => {
 
         setIsLoading(true);
@@ -110,10 +112,140 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
             setIsLoading(false);
         }
     };
+
+    const handlePrint = async () => {
+        setIsLoading(true);
+        setShowHiddenPDF(true);
+    
+        try {
+            await sleep(300); // Pequeña espera para garantizar que todo esté cargado
+            if (!printRef.current) return;
+    
+            // Capturar todo el contenido como un canvas
+            const fullCanvas = await html2canvas(printRef.current, {
+                scale: 1.2, // Mejor resolución
+                backgroundColor: "#ffffff",
+            });
+    
+            const printWindow = window.open("", "_blank");
+            if (!printWindow) return;
+    
+            // Cambiar el título de la ventana a algo más apropiado
+            printWindow.document.title = "Imprimir contenido";
+    
+            const pageHeight = 1122; // Altura A4 en px (96 DPI)
+            const pageWidth = 794; // Ancho A4 en px
+            const margin = 37.8; // Márgenes laterales
+            const imgWidth = pageWidth - margin * 2; // Ancho de la imagen
+            const visibleHeight = pageHeight - margin * 2; // Altura visible por página
+    
+            let yOffset = 0;
+    
+            // Generar HTML dinámico para impresión
+            let printContent = `
+                <html>
+                    <head>
+                        <title>Imprimir</title>
+                        <style>
+                            body {
+                                margin: 0;
+                                padding: 0;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                            }
+                            img {
+                                display: block;
+                                margin: ${margin}px auto;
+                                width: ${imgWidth}px;
+                            }
+                            .page-break {
+                                page-break-after: always;
+                            }
+    
+                            /* Para quitar el numerador de página */
+                            @page {
+                                margin: 0;
+                                size: A4;
+                            }
+                            /* Para eliminar cualquier borde o texto adicional */
+                            * {
+                                -webkit-print-color-adjust: exact;
+                            }
+                        </style>
+                    </head>
+                    <body>
+            `;
+    
+            while (yOffset < fullCanvas.height) {
+                const remainingHeight = Math.min(
+                    fullCanvas.height - yOffset,
+                    visibleHeight * (fullCanvas.width / imgWidth)
+                );
+    
+                // Crear canvas temporal para cada fragmento
+                const partCanvas = document.createElement("canvas");
+                partCanvas.width = fullCanvas.width;
+                partCanvas.height = remainingHeight;
+    
+                const context = partCanvas.getContext("2d");
+                if (!context) return;
+    
+                context.drawImage(
+                    fullCanvas,
+                    0, yOffset, // Punto de inicio del canvas original
+                    fullCanvas.width, remainingHeight, // Tamaño del fragmento
+                    0, 0, // Posición en el nuevo canvas
+                    partCanvas.width, remainingHeight // Dimensiones del nuevo canvas
+                );
+    
+                const partImgData = partCanvas.toDataURL("image/png");
+    
+                // Añadir la imagen al contenido HTML
+                printContent += `
+                    <div>
+                        <img src="${partImgData}" />
+                    </div>
+                    <div class="page-break"></div>
+                `;
+    
+                yOffset += remainingHeight;
+            }
+    
+            printContent += `
+                    </body>
+                </html>
+            `;
+    
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+    
+            // Imprimir automáticamente
+            printWindow.onload = () => {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+            };
+        } catch (error) {
+            toast.error("Error al generar la impresión:");
+        } finally {
+            setShowHiddenPDF(false);
+            setIsLoading(false);
+        }
+    };
+    
+    
+    
+    
+
+    
+    
+    
+    
     
     
     return (
-        <div className="grid grid-cols-4 rounded-lg w-full h-12 mb-4 gap-x-4 bg-gradient-to-r from-indigo-600 via-black-nav to-indigo-600 animate-gradient bg-[length:200%]">
+        <div className="grid grid-cols-6 rounded-lg w-full h-12 mb-4 gap-x-4 bg-gradient-to-r from-indigo-600 via-black-nav to-indigo-600 animate-gradient bg-[length:200%]">
             {/* Botón de vista previa */}
             <div className="col-span-2">
                 <button
@@ -122,7 +254,19 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
                 >
                     <span className="flex items-center justify-center gap-x-2 h-full">
                         Modo Vista
-                        <FaRegEye className="h-5 w-5" />
+                        <FaRegEye className="h-6 w-6" />
+                    </span>
+                </button>
+            </div>
+
+            <div className="col-span-2">
+                <button
+                    className="text-base px-6 w-full h-full rounded-xl bg-transparent transition ease-in-out delay-150 hover:bg-indigo-600 duration-300"
+                    onClick={handlePrint}
+                >
+                    <span className="flex items-center justify-center gap-x-2 h-full">
+                        Imprimir
+                        <PiPrinterFill className="h-6 w-6" />
                     </span>
                 </button>
             </div>
@@ -134,8 +278,8 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
                     onClick={handlePDFGeneration}
                 >
                     <span className="flex items-center justify-center gap-x-2 h-full">
-                        Exportar PDF
-                        <FaFilePdf className="h-5 w-5" />
+                        Exportar
+                        <PiFilePdfBold className="h-6 w-6" />
                     </span>
                 </button>
             </div>

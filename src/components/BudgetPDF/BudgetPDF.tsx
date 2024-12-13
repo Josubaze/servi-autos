@@ -45,7 +45,7 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>(
   return (
     <>
       {/* Modal Container */}
-        <div className="bg-white rounded-lg shadow-lg max-w-screen-lg w-full p-6 min-h-screen overflow-y-auto" ref={ref}>
+        <div className="bg-white rounded-lg shadow-lg max-w-screen-lg w-full min-h-screen overflow-y-auto" ref={ref}>
             {/* Header */}
             <div className="py-9 bg-center bg-black-nav rounded-xl  flex flex-col sm:flex-row justify-between items-center">
                 <div className="flex flex-col px-8 sm:flex-row items-center">
