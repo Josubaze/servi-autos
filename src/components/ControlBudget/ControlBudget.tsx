@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { DateRangePicker, RangeValue, DateValue } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { Budget } from '../Budget';
+import { BudgetPreview } from '../BudgetPreview';
 
 export const ControlBudget = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetBudgetsQuery();
@@ -21,6 +22,7 @@ export const ControlBudget = () => {
   const router = useRouter();
   const [selectedRange, setSelectedRange] = useState<RangeValue<DateValue> | null>(null);
   const [showHiddenPDF, setShowHiddenPDF] = useState<boolean>(false);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [isRenderBudget, setIsRenderBudget] = useState<boolean>(false);
   const [budgetCopy, setBudgetCopy] = useState<Budget>();
   const handleDateRangeChange = (value: RangeValue<DateValue> | null) => {
@@ -44,12 +46,12 @@ export const ControlBudget = () => {
     }
   };
   
-  const handlePrint = async (budget: Budget) => {
+  const handleView = async (budget: Budget) => {
     try {
-      setIsRenderBudget(true);
       if(budget){
         setBudgetCopy(budget);
       }
+      setIsOpenModal(true);
     } catch (error) {
       toast.error('Hubo un error al imprimir el presupuesto');
     }
@@ -98,9 +100,10 @@ export const ControlBudget = () => {
           isError={isError}
           isFetching={isFetching}
           isSuccess={isSuccess}
+          handleView={handleView}
           handleDelete={handleDelete}
           handleUpdate={handleUpdate}
-          handlePrint={handlePrint}
+          handlePrint={handleView}
           handleExport={handleExport}
         />
 
@@ -134,6 +137,25 @@ export const ControlBudget = () => {
               totalWithIgft={totalWithIgft}
             /> */}
           </div>
+        )}
+
+        {/* Modal para vista previa */}
+        {isOpenModal && (
+          <BudgetPreview
+            isOpen={isOpenModal}
+            onClose={() => setIsOpenModal(false)}
+            company={budgetCopy?.company}
+            customer={budgetCopy?.customer}
+            budgetForm={budgetCopy?.budgetForm}
+            selectedServices={budgetCopy?.services}
+            subtotal={budgetCopy?.subtotal}
+            ivaPercentage={budgetCopy?.ivaPercentage}
+            igtfPercentage={budgetCopy?.igtfPercentage}
+            calculatedIva={budgetCopy?.calculatedIva}
+            calculatedIgtf={budgetCopy?.calculatedIgtf}
+            total={budgetCopy?.total}
+            totalWithIgft={budgetCopy?.totalWithIgft}
+          />
         )}
     </>
   );

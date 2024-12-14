@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import dayjs from 'dayjs';
 import { NumericFormat } from 'react-number-format';
 import { IoExitOutline } from "react-icons/io5";
-import { toast } from 'react-toastify';
 
 interface BudgetPreviewProps {
     isOpen: boolean;
     onClose: () => void;
     company: Company | undefined;
-    extractFormData: () => Promise<{
-        customerData: Customer;
-        budgetForm: BudgetForm;
-    }>
-    selectedServices: Service[];
-    subtotal: number;
-    ivaPercentage: number;
-    igtfPercentage: number;
-    calculatedIva: number;
-    calculatedIgtf: number;
-    total: number;
-    totalWithIgft: number;
+    customer: Customer | undefined;
+    budgetForm: BudgetForm | undefined;
+    selectedServices: Service[] | undefined;
+    subtotal: number | undefined;
+    ivaPercentage: number | undefined;
+    igtfPercentage: number | undefined;
+    calculatedIva: number | undefined;
+    calculatedIgtf: number | undefined;
+    total: number   | undefined;
+    totalWithIgft: number | undefined;
 }
 
 export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
   isOpen,
   onClose,
   company,
-  extractFormData,
+  customer,
+  budgetForm,
   selectedServices,
   subtotal,
   ivaPercentage,
@@ -36,25 +34,6 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
   total,
   totalWithIgft,
 }) => {
-    const [customer, setCustomer] = useState<Customer | null>(null);
-    const [budgetForm, setBudgetForm] = useState<BudgetForm | null>(null);
-
-  // Llama a extractFormData cuando el modal se abre
-    useEffect(() => {
-        if (isOpen) {
-        const fetchData = async () => {
-            try {
-            const { customerData, budgetForm } = await extractFormData();
-            setCustomer(customerData);
-            setBudgetForm(budgetForm);
-            } catch (error) {
-            toast.error("Error al obtener los datos del formulario:");
-            }
-        };
-
-        fetchData();
-    }
-  }, [isOpen, extractFormData]); 
 
   if (!isOpen) return null; 
 
@@ -136,7 +115,7 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
 
             {/* Filas de Servicios */}
             <div className="space-y-6 px-4 py-2">
-            {selectedServices.map((service) => (
+            {selectedServices?.map((service) => (
                 <div
                 key={service._id}
                 className="rounded-lg"

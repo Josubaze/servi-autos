@@ -5,10 +5,8 @@ import { toast } from 'react-toastify';
 
 interface BudgetPDFProps {
     company: Company | undefined;
-    extractFormData: () => Promise<{
-        customerData: Customer;
-        budgetForm: BudgetForm;
-    }>
+    customer: Customer | undefined;
+    budgetForm: BudgetForm | undefined;
     selectedServices: Service[];
     subtotal: number;
     ivaPercentage: number;
@@ -19,28 +17,25 @@ interface BudgetPDFProps {
     totalWithIgft: number;
 }
 
-export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>(
-    ({ company, extractFormData, selectedServices, subtotal, ivaPercentage, igtfPercentage, calculatedIva, calculatedIgtf, total, totalWithIgft }, ref) => {
-    const [customer, setCustomer] = useState<Customer | null>(null);
-    const [budgetForm, setBudgetForm] = useState<BudgetForm | null>(null);
+export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
+    { 
+    company,
+    budgetForm,
+    customer,
+    selectedServices, 
+    subtotal, 
+    ivaPercentage, 
+    igtfPercentage, 
+    calculatedIva, 
+    calculatedIgtf, 
+    total, 
+    totalWithIgft },
+    ref
+    ) => {
 
-  // Llama a extractFormData cuando el modal se abre
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-            const { customerData, budgetForm } = await extractFormData();
-            setCustomer(customerData);
-            setBudgetForm(budgetForm);
-            } catch (error) {
-            toast.error("Error al obtener los datos del formulario:");
-            }
-        };
-        fetchData();
-  }, [extractFormData]); 
-
-  const formatDate = (date: any) => {
-    return date ? dayjs(date).format('DD/MM/YYYY') : 'No disponible';
-  };
+    const formatDate = (date: any) => {
+        return date ? dayjs(date).format('DD/MM/YYYY') : 'No disponible';
+    };
 
   return (
     <>

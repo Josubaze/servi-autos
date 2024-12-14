@@ -34,17 +34,22 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
   total,
   totalWithIgft,
 }) => {
+
+
   const {
-    isModalOpen,
-    setModalOpen,
-    showHiddenPDF,
-    setShowHiddenPDF,
-    isLoading,
-    printRef,
-    handlePDFGeneration,
-    handlePrint,
+      isModalOpen,
+      setModalOpen,
+      showHiddenPDF,
+      setShowHiddenPDF,
+      isLoading,
+      printRef,
+      handlePDFGeneration,
+      handlePrint,
+      handlePreview,
+      budgetForm,
+      customer,
   } = useBudgetOptions({
-    extractFormData,
+      extractFormData,  // Pasamos el estado actualizado aquí
   });
 
   return (
@@ -53,7 +58,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
       <div className="col-span-2">
         <button
           className="text-base px-6 w-full h-full rounded-xl bg-transparent transition ease-in-out delay-150 hover:bg-indigo-600/80 duration-300"
-          onClick={() => setModalOpen(true)}
+          onClick={handlePreview}
         >
           <span className="flex items-center justify-center gap-x-2 h-full">
             Modo Vista
@@ -94,7 +99,8 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
           isOpen={isModalOpen}
           onClose={() => setModalOpen(false)}
           company={company}
-          extractFormData={extractFormData}
+          customer={customer}
+          budgetForm={budgetForm}
           selectedServices={selectedServices}
           subtotal={subtotal}
           ivaPercentage={ivaPercentage}
@@ -112,7 +118,8 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
           <BudgetPDF
             ref={printRef}
             company={company}
-            extractFormData={extractFormData}
+            customer={customer}
+            budgetForm={budgetForm}
             selectedServices={selectedServices}
             subtotal={subtotal}
             ivaPercentage={ivaPercentage}

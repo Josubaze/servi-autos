@@ -9,6 +9,7 @@ import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { useDateRangeFilter } from "src/hooks/useDateRangeFilter";
 import { ExportButton } from "src/components/Common/Buttons/ExportButton";
 import { PrintButton } from "src/components/Common/Buttons/PrintButton";
+import { ViewButton } from "src/components/Common/Buttons/ViewButton/ViewButton";
 
 export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     data,
@@ -18,6 +19,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     isError,
     isFetching,
     isSuccess,
+    handleView,
     handleDelete,
     handleUpdate,
     handlePrint,
@@ -117,10 +119,11 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
             const budget = rows[tableMeta.rowIndex].budget
             return (
                 <div className='flex gap-x-5 justify-center'>
+                    <ViewButton onClick={() => handleView(budget)}/>
                     <UpdateButton onClick={() => handleUpdate(budget._id)} />
-                    <DeleteButton onClick={() => handleDelete(budget._id)} />
                     <ExportButton onClick={() => handleExport()} />
                     <PrintButton onClick={() => handlePrint(budget)} />
+                    <DeleteButton onClick={() => handleDelete(budget._id)} />
                 </div>
             );
             },

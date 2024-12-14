@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { toast } from "react-toastify";
@@ -17,16 +17,29 @@ export const useBudgetOptions = ({
   const [showHiddenPDF, setShowHiddenPDF] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const printRef = useRef<HTMLDivElement | null>(null);
-
+  const [ customer , setCustomer] = useState<Customer>();
+  const [budgetForm, setBudgetForm] = useState<BudgetForm>();
   const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+  // Función que se ejecuta en cada acción de impresión o PDF
+  const updateCustomerAndBudget = async () => {
+    try {
+      const { customerData, budgetForm } = await extractFormData();
+      setCustomer(customerData);
+      setBudgetForm(budgetForm);
+    } catch (error) {
+      console.error("Error al extraer los datos del formulario:", error);
+    }
+  };
 
   const handlePDFGeneration = async () => {
     setIsLoading(true);
     setShowHiddenPDF(true);
+    // Actualizamos los estados antes de generar el PDF
+    await updateCustomerAndBudget();
 
     try {
       await sleep(300);
-      const { budgetForm } = await extractFormData();
       if (!printRef.current) return;
 
       const fullCanvas = await html2canvas(printRef.current, {
@@ -73,7 +86,7 @@ export const useBudgetOptions = ({
         if (yOffset < fullCanvas.height) pdf.addPage();
       }
 
-      pdf.save(`Budget_${budgetForm.n_budget}.pdf`);
+      pdf.save(`Budget_${budgetForm?.n_budget}.pdf`);
     } catch (error) {
       toast.error("Error al generar el PDF:");
     } finally {
@@ -85,6 +98,8 @@ export const useBudgetOptions = ({
   const handlePrint = async () => {
     setIsLoading(true);
     setShowHiddenPDF(true);
+    // Actualizamos los estados antes de generar el PDF
+    await updateCustomerAndBudget();
 
     try {
       await sleep(300);
@@ -195,6 +210,12 @@ export const useBudgetOptions = ({
     }
   };
 
+  const handlePreview = async () => {
+    // Actualizamos los estados antes de generar el PDF
+    await updateCustomerAndBudget();
+    setModalOpen(!isModalOpen);
+  };
+
   return {
     isModalOpen,
     setModalOpen,
@@ -204,5 +225,8 @@ export const useBudgetOptions = ({
     printRef,
     handlePDFGeneration,
     handlePrint,
+    handlePreview,
+    customer,
+    budgetForm,
   };
 };
