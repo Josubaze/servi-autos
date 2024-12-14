@@ -7,6 +7,8 @@ import { DeleteButton } from "src/components/Common/Buttons/DeleteButton";
 import { useDynamicFilter } from "src/hooks/useProductFilter";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { useDateRangeFilter } from "src/hooks/useDateRangeFilter";
+import { ExportButton } from "src/components/Common/Buttons/ExportButton";
+import { PrintButton } from "src/components/Common/Buttons/PrintButton";
 
 export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     data,
@@ -18,6 +20,8 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     isSuccess,
     handleDelete,
     handleUpdate,
+    handlePrint,
+    handleExport,
     }) => {
     
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'budgetForm.n_budget']);
@@ -29,6 +33,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         dateUpdate: budget.budgetForm.dateUpdate ? new Date(budget.budgetForm.dateUpdate).toLocaleDateString() : "", 
         state: budget.state,
         budgetId: budget._id, 
+        budget: budget,
     }));
 
     const columns = [
@@ -108,12 +113,14 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
             setCellHeaderProps: () => ({
             style: { textAlign: 'center' },
             }),
-            customBodyRender: (value: any, tableMeta: any) => {
-            const budgetId = rows[tableMeta.rowIndex].budgetId; // Accede al objeto completo
+            customBodyRender: (value: any, tableMeta: any) => { // Accede al objeto completo
+            const budget = rows[tableMeta.rowIndex].budget
             return (
                 <div className='flex gap-x-5 justify-center'>
-                    <UpdateButton onClick={() => handleUpdate(budgetId)} />
-                    <DeleteButton onClick={() => handleDelete(budgetId)} />
+                    <UpdateButton onClick={() => handleUpdate(budget._id)} />
+                    <DeleteButton onClick={() => handleDelete(budget._id)} />
+                    <ExportButton onClick={() => handleExport()} />
+                    <PrintButton onClick={() => handlePrint(budget)} />
                 </div>
             );
             },

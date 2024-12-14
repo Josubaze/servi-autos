@@ -49,6 +49,8 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
             handleSetFormCustomer(budgetData.customer);
             setSelectedServices(budgetData.services);
             setDescription(budgetData.description);
+            setIvaPercentage(budgetData.ivaPercentage || 16);
+            setIgtfPercentage(budgetData.igtfPercentage || 3);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, budgetData]);
@@ -59,6 +61,8 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
         if (formCustomerRef.current) {
             formCustomerRef.current.resetForm();
         }
+        setIvaPercentage(16);
+        setIgtfPercentage(3);
     };
 
     const handleSetFormDate = (budgetForm : BudgetForm) => {
@@ -111,6 +115,16 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
             throw new Error("Descripción vacía");
         }
 
+        if (ivaPercentage <= 0) {
+            toast.error("El IVA debe ser mayor a 0");
+            throw new Error("IVA inválido");
+        }
+
+        if (igtfPercentage <= 0) {
+            toast.error("El IGTF debe ser mayor a 0");
+            throw new Error("IGTF inválido");
+        }
+
         return {
             customerData,
             budgetForm,
@@ -157,6 +171,13 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
                 })),
                 description,
                 state: action === "draft" ? "Borrador" : action === "accepted" ? "Aceptado" : "",
+                subtotal,
+                ivaPercentage,
+                igtfPercentage,
+                calculatedIva,
+                calculatedIgtf,
+                total,
+                totalWithIgft,
             };
     
             // Crear o Actualizar según `mode`
@@ -185,7 +206,6 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
             setIsSaving(false);
         }
     };
-    
 
     return {
         formCustomerRef,

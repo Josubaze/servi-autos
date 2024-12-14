@@ -82,13 +82,21 @@ interface Product {
 
   interface Budget {
     _id: string;
-    budgetForm : BudgetForm;
+    budgetForm: BudgetForm;
     company: Company;
     customer: Customer;
     services: Service[];
     description: string;
     state: string;
+    subtotal: number;
+    ivaPercentage: number;
+    igtfPercentage: number;
+    calculatedIva: number;
+    calculatedIgtf: number;
+    total: number;
+    totalWithIgft: number;
   }
+  
 
   interface TableServicesProps {
     data: Service[];
@@ -165,6 +173,8 @@ interface Product {
     selectedRange: RangeValue<DateValue> | null;
     handleDelete: (budgetId: string) => void;
     handleUpdate: (budgetId: string) => void;
+    handlePrint: (budget: Budget) => void;
+    handleExport: () => void;
   }
   
   interface TableProviderProps extends TableBaseProps {

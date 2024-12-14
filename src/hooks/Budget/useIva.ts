@@ -5,7 +5,8 @@ export const useIva = (subtotal: number, ivaPercentage: number) => {
   const [calculatedIva, setCalculatedIva] = useState<number>(0);
 
   useEffect(() => {
-    setCalculatedIva((subtotal * ivaPercentage) / 100);
+    const roundedIva = Number(((subtotal * ivaPercentage) / 100).toFixed(2));
+    setCalculatedIva(roundedIva);
   }, [subtotal, ivaPercentage]);
 
   return calculatedIva;

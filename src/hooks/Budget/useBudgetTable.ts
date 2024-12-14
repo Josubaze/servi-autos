@@ -20,45 +20,36 @@ export const useBudgetTable = ({ selectedServices, setSelectedServices, currency
   const { data: services = [], isLoading, isError, isSuccess } = useGetServicesQuery();
   const { data: products = [], isError: isErrorProducts } = useGetProductsQuery();
 
-  const originalServicesMemo = useMemo(() => {
+  useEffect(() => {
     if (selectedServices.length > 0 && originalServices.length === 0) {
-      return [...selectedServices]; // Clonar la lista solo si es necesario
+      setOriginalServices([...selectedServices]); // Clonar solo si es necesario
+    } else if (selectedServices.length === 0 && originalServices.length > 0) {
+      setOriginalServices([]); // Reiniciar originalServices si selectedServices está vacío
     }
-    return originalServices; // Retorna el valor existente si no cambia
-  }, [selectedServices, originalServices]);
+  }, [selectedServices]); // Solo depende de selectedServices
   
   useEffect(() => {
-    setOriginalServices(originalServicesMemo);
-  }, [originalServicesMemo, selectedServices])
-  
-  const convertedServices = useMemo(() => {
-    if (originalServices.length === 0) return [];
-  
     if (currency === "Bs") {
-      return originalServices.map((service) => ({
-        ...service,
-        totalPrice: parseFloat((service.totalPrice * exchangeRate).toFixed(2)),
-        servicePrice: parseFloat((service.servicePrice * exchangeRate).toFixed(2)),
-        products: service.products.map((product) => ({
-          ...product,
-          product: {
-            ...product.product,
-            price: parseFloat((product.product.price * exchangeRate).toFixed(2)),
-          },
-        })),
-      }));
+      setSelectedServices(
+        originalServices.map((service) => ({
+          ...service,
+          totalPrice: parseFloat((service.totalPrice * exchangeRate).toFixed(2)),
+          servicePrice: parseFloat((service.servicePrice * exchangeRate).toFixed(2)),
+          products: service.products.map((product) => ({
+            ...product,
+            product: {
+              ...product.product,
+              price: parseFloat((product.product.price * exchangeRate).toFixed(2)),
+            },
+          })),
+        }))
+      );
     } else if (currency === "$") {
-      return [...originalServices]; // Restablece valores originales
+      setSelectedServices([...originalServices]); // Restablece valores originales
+    } else {
+      setSelectedServices(originalServices);
     }
-  
-    return originalServices; // Retorna por defecto
   }, [currency, exchangeRate, originalServices]);
-  
-  useEffect(() => {
-    setSelectedServices(convertedServices);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [convertedServices]);
-  
   
   const handleServiceSelect = (service: Service) => {
     let isRepeated = false;

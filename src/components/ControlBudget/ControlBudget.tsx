@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { DateRangePicker, RangeValue, DateValue } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
+import { Budget } from '../Budget';
 
 export const ControlBudget = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetBudgetsQuery();
@@ -19,6 +20,9 @@ export const ControlBudget = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const router = useRouter();
   const [selectedRange, setSelectedRange] = useState<RangeValue<DateValue> | null>(null);
+  const [showHiddenPDF, setShowHiddenPDF] = useState<boolean>(false);
+  const [isRenderBudget, setIsRenderBudget] = useState<boolean>(false);
+  const [budgetCopy, setBudgetCopy] = useState<Budget>();
   const handleDateRangeChange = (value: RangeValue<DateValue> | null) => {
     setSelectedRange(value);
     console.log('Rango de fechas seleccionado:', value);
@@ -39,6 +43,22 @@ export const ControlBudget = () => {
       toast.success('Presupuesto eliminado exitosamente');
     }
   };
+  
+  const handlePrint = async (budget: Budget) => {
+    try {
+      setIsRenderBudget(true);
+      if(budget){
+        setBudgetCopy(budget);
+      }
+    } catch (error) {
+      toast.error('Hubo un error al imprimir el presupuesto');
+    }
+  }
+
+
+  const handleExport = async () => {}
+
+  
   return (
     <>
       <div className="flex justify-center items-center">  
@@ -80,6 +100,8 @@ export const ControlBudget = () => {
           isSuccess={isSuccess}
           handleDelete={handleDelete}
           handleUpdate={handleUpdate}
+          handlePrint={handlePrint}
+          handleExport={handleExport}
         />
 
         <button
@@ -89,6 +111,30 @@ export const ControlBudget = () => {
           <FaPlus />
         </button>
       </div>
+
+      {isRenderBudget && (
+        <Budget mode="update" budgetData={budgetCopy} />
+      )}
+
+
+      {/* Componente oculto para PDF */}
+        {showHiddenPDF && (
+          <div className="absolute top-[-9999px] left-[-9999px]">
+            {/* <BudgetPDF
+              ref={printRef}
+              company={company}
+              extractFormData={extractFormData}
+              selectedServices={selectedServices}
+              subtotal={subtotal}
+              ivaPercentage={ivaPercentage}
+              igtfPercentage={igtfPercentage}
+              calculatedIva={calculatedIva}
+              calculatedIgtf={calculatedIgtf}
+              total={total}
+              totalWithIgft={totalWithIgft}
+            /> */}
+          </div>
+        )}
     </>
   );
 };
