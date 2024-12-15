@@ -1,66 +1,43 @@
 'use client';
 
-import { useState } from 'react';
 import { FaPlus } from "react-icons/fa6";
 import { SearchBar } from 'src/components/Common/SearchBar';
 import { PageTitle } from '../Common/PageTitle';
 import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
 import { HiDocumentPlus } from "react-icons/hi2";
-import { useDeleteBudgetMutation, useGetBudgetsQuery } from 'src/redux/services/budgets.Api';
 import { ControlBudgetTable } from './ControlBudgetTable/ControlBudgetTable';
-import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
-import { DateRangePicker, RangeValue, DateValue } from '@nextui-org/react';
+import { DateRangePicker } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
-import { Budget } from '../Budget';
 import { BudgetPreview } from '../BudgetPreview';
+import { BudgetPDF } from '../BudgetPDF';
+import { Loading } from '../Common/Loading';
+import { useControlBudget } from 'src/hooks/ControlBudget/useControlBudget';
 
 export const ControlBudget = () => {
-  const { data = [], isError, isLoading, isFetching, isSuccess } = useGetBudgetsQuery();
-  const [deleteBudget] = useDeleteBudgetMutation();
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const router = useRouter();
-  const [selectedRange, setSelectedRange] = useState<RangeValue<DateValue> | null>(null);
-  const [showHiddenPDF, setShowHiddenPDF] = useState<boolean>(false);
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [isRenderBudget, setIsRenderBudget] = useState<boolean>(false);
-  const [budgetCopy, setBudgetCopy] = useState<Budget>();
-  const handleDateRangeChange = (value: RangeValue<DateValue> | null) => {
-    setSelectedRange(value);
-    console.log('Rango de fechas seleccionado:', value);
-  };
+  const {
+    data,
+    isError,
+    isLoadingBudget,
+    isFetching,
+    isSuccess,
+    searchTerm,
+    setSearchTerm,
+    selectedRange,
+    handleDateRangeChange,
+    handleUpdate,
+    handleDelete,
+    handleView,
+    handlePrint,
+    handleExportPDF,
+    isOpenPdf,
+    isOpenPreview,
+    setIsOpenPreview,
+    router,
+    budgetCopy,
+    printRef,
+    isLoadingPDF,
+  } = useControlBudget();
 
-  const handleUpdate = (budgetId: string) => {
-    if (budgetId){
-      router.push(`/update/budget/${budgetId}`);
-    }
-  };
-
-  const handleDelete = async (budgetId: string) => {
-    try {
-      await deleteBudget(budgetId); 
-    } catch (error) {
-      toast.error('Hubo un error al eliminar el presupuesto');
-    } finally {
-      toast.success('Presupuesto eliminado exitosamente');
-    }
-  };
-  
-  const handleView = async (budget: Budget) => {
-    try {
-      if(budget){
-        setBudgetCopy(budget);
-      }
-      setIsOpenModal(true);
-    } catch (error) {
-      toast.error('Hubo un error al imprimir el presupuesto');
-    }
-  }
-
-
-  const handleExport = async () => {}
-
-  
   return (
     <>
       <div className="flex justify-center items-center">  
@@ -96,15 +73,15 @@ export const ControlBudget = () => {
           data={data}
           searchTerm={searchTerm}
           selectedRange={selectedRange}
-          isLoading={isLoading}
+          isLoading={isLoadingBudget}
           isError={isError}
           isFetching={isFetching}
           isSuccess={isSuccess}
           handleView={handleView}
           handleDelete={handleDelete}
           handleUpdate={handleUpdate}
-          handlePrint={handleView}
-          handleExport={handleExport}
+          handlePrint={handlePrint}
+          handleExportPDF={handleExportPDF}
         />
 
         <button
@@ -115,35 +92,31 @@ export const ControlBudget = () => {
         </button>
       </div>
 
-      {isRenderBudget && (
-        <Budget mode="update" budgetData={budgetCopy} />
-      )}
-
-
       {/* Componente oculto para PDF */}
-        {showHiddenPDF && (
+        {isOpenPdf && (
           <div className="absolute top-[-9999px] left-[-9999px]">
-            {/* <BudgetPDF
+            <BudgetPDF
               ref={printRef}
-              company={company}
-              extractFormData={extractFormData}
-              selectedServices={selectedServices}
-              subtotal={subtotal}
-              ivaPercentage={ivaPercentage}
-              igtfPercentage={igtfPercentage}
-              calculatedIva={calculatedIva}
-              calculatedIgtf={calculatedIgtf}
-              total={total}
-              totalWithIgft={totalWithIgft}
-            /> */}
+              company={budgetCopy?.company}
+              customer={budgetCopy?.customer}
+              budgetForm={budgetCopy?.budgetForm}
+              selectedServices={budgetCopy?.services}
+              subtotal={budgetCopy?.subtotal}
+              ivaPercentage={budgetCopy?.ivaPercentage}
+              igtfPercentage={budgetCopy?.igtfPercentage}
+              calculatedIva={budgetCopy?.calculatedIva}
+              calculatedIgtf={budgetCopy?.calculatedIgtf}
+              total={budgetCopy?.total}
+              totalWithIgft={budgetCopy?.totalWithIgft}
+            /> 
           </div>
         )}
 
         {/* Modal para vista previa */}
-        {isOpenModal && (
+        {isOpenPreview && (
           <BudgetPreview
-            isOpen={isOpenModal}
-            onClose={() => setIsOpenModal(false)}
+            isOpen={isOpenPreview}
+            onClose={() => setIsOpenPreview(false)}
             company={budgetCopy?.company}
             customer={budgetCopy?.customer}
             budgetForm={budgetCopy?.budgetForm}
@@ -156,6 +129,12 @@ export const ControlBudget = () => {
             total={budgetCopy?.total}
             totalWithIgft={budgetCopy?.totalWithIgft}
           />
+        )}
+
+        {isLoadingPDF && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+            <Loading />
+          </div>
         )}
     </>
   );

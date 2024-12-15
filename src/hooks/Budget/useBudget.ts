@@ -2,12 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { useCreateBudgetMutation, useUpdateBudgetMutation } from "src/redux/services/budgets.Api";
 import { toast } from "react-toastify";
-import { useBudgetSubtotal } from "src/hooks/Budget/useBudgetSubtotal";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from 'next/navigation';
-import { useIva } from "./useIva";
-import { useIgft } from "./useIgtf";
-import { useTotal } from "./useTotal";
+import {useBudgetSummary} from './useBudgetSummary'
+
 
 interface BudgetFormHandle {
     submitForm: () => any;
@@ -16,16 +14,17 @@ interface BudgetFormHandle {
     setFormCustomer: ( customer: Customer ) => void;
 }
 
-interface UseBudgetFetchProps {
+interface UseBudgetProps {
     mode?: "create" | "update";
     budgetData?: Budget | null;
 }
 
-export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudgetFetchProps) => {
+export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps) => {
+
+    const { calculateIgft, calculateIva, calculateTotal, calculateSubtotal } = useBudgetSummary();
     const formCustomerRef = useRef<BudgetFormHandle | null>(null);
     const formDateRef = useRef<BudgetFormHandle | null>(null);
     const [selectedServices, setSelectedServices] = useState<Service[]>([]);
-    const subtotal = useBudgetSubtotal(selectedServices);
     const [currency, setCurrency] = useState<string>("$");
     const [exchangeRate, setExchangeRate] = useState<number>(1);
     const [description, setDescription] = useState<string>("");
@@ -37,11 +36,11 @@ export const useBudgetFecth = ({ mode = "create", budgetData = null }: UseBudget
     const router = useRouter();
     const [ivaPercentage, setIvaPercentage] = useState<number>(16); // IVA predeterminado al 16%
     const [igtfPercentage, setIgtfPercentage] = useState<number>(3); // IGTF predeterminado al 3%
-    const calculatedIva = useIva(subtotal, ivaPercentage);
-    const calculatedIgtf = useIgft((subtotal+calculatedIva), igtfPercentage);
-    const total = useTotal((subtotal), calculatedIva, 0);
-    const totalWithIgft = useTotal((subtotal), calculatedIva, calculatedIgtf);
-
+    const subtotal = calculateSubtotal(selectedServices);
+    const calculatedIva = calculateIva(subtotal, ivaPercentage);
+    const calculatedIgtf = calculateIgft((subtotal+calculatedIva), igtfPercentage);
+    const total = calculateTotal((subtotal), calculatedIva, 0);
+    const totalWithIgft = calculateTotal((subtotal), calculatedIva, calculatedIgtf);
     // Inicializar datos si el modo es "update"
     useEffect(() => {
         if (mode === "update" && budgetData) {

@@ -35,7 +35,7 @@ export const darkTheme = createTheme({
         root: {
           '&:hover': {
             '& .MuiSvgIcon-root': {
-              color: '#4f46e5', // Color al pasar el cursor
+              color: '#6366f1', // Color al pasar el cursor
             },
           },
         },

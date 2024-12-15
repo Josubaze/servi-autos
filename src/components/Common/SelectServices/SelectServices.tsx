@@ -15,9 +15,8 @@ import Typography from '@mui/material/Typography';
 import { useSortableData } from 'src/hooks/useSortableData';
 import { Loading } from 'src/components/Common/Loading';
 import { useMediaQuery } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Tooltip from "@mui/material/Tooltip";
+import { Tooltip } from '@mui/material';
+import { IoExitOutline } from "react-icons/io5";
 
 
 export const SelectServices: React.FC<SelectServicesProps> = ({
@@ -65,93 +64,104 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
     }
 
     return (
-        <ThemeProvider theme={darkTheme}>
-            <div className="relative w-full max-h-[750px] overflow-y-auto">
-                <Tooltip title="Cerrar">
-                    <IconButton
-                        onClick={onCloseTable}
-                        className='absolute top-2 right-2 z-50 bg-black-nav'
-                    >
-                        <CloseIcon/>
-                    </IconButton>
-                </Tooltip>
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+            {/* Botón Cerrar */}
+            <Tooltip title='Salir'>
+                <button
+                    onClick={onCloseTable}
+                    className="absolute top-4 right-4 shadow-xl shadow-gray-600 bg-black-nav hover:bg-black-nav/80 rounded-full w-10 h-10 flex items-center justify-center hover:scale-110 transition-colors duration-200"
+                    aria-label="Cerrar"
+                    title="Cerrar"
+                >
+                    <span className="text-xl"><IoExitOutline className='flex w-6 h-6'/></span> {/* Icono X */}
+                </button>
+            </Tooltip>
 
-                <TableContainer component={Paper}>
-                    <Table aria-label="collapsible table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell colSpan={5} className='text-xl text-start bg-black-nav '>
-                                    Lista de Servicios
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
+            <ThemeProvider theme={darkTheme}>
+                <div className="relative w-full max-h-[700px] overflow-y-auto">
+                    <TableContainer component={Paper}>
+                        <Table aria-label="collapsible table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell  
+                                        colSpan={6} 
+                                        sx={{
+                                            fontSize: '1.25rem',
+                                            textAlign: 'left', 
+                                            backgroundColor: '#161616',                            
+                                        }}>
+                                            <span>Lista de Servicios</span>        
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
 
-                        <TableHead>
-                            <TableRow>
-                                <TableCell />
-                                {!isMobile && (
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell />
+                                    {!isMobile && (
+                                        <TableCell>
+                                            <TableSortLabel
+                                                active={orderBy === '_id'}
+                                                direction={orderBy === '_id' ? order : 'asc'}
+                                                onClick={() => handleRequestSort('_id')}
+                                            >
+                                                ID
+                                            </TableSortLabel>
+                                        </TableCell>
+                                    )}
                                     <TableCell>
                                         <TableSortLabel
-                                            active={orderBy === '_id'}
-                                            direction={orderBy === '_id' ? order : 'asc'}
-                                            onClick={() => handleRequestSort('_id')}
+                                            active={orderBy === 'name'}
+                                            direction={orderBy === 'name' ? order : 'asc'}
+                                            onClick={() => handleRequestSort('name')}
                                         >
-                                            ID
+                                            Nombre
                                         </TableSortLabel>
                                     </TableCell>
-                                )}
-                                <TableCell>
-                                    <TableSortLabel
-                                        active={orderBy === 'name'}
-                                        direction={orderBy === 'name' ? order : 'asc'}
-                                        onClick={() => handleRequestSort('name')}
-                                    >
-                                        Nombre
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <TableSortLabel
-                                        active={orderBy === 'servicePrice'}
-                                        direction={orderBy === 'servicePrice' ? order : 'asc'}
-                                        onClick={() => handleRequestSort('servicePrice')}
-                                    >
-                                        Precio por Servicio
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <TableSortLabel
-                                        active={orderBy === 'totalPrice'}
-                                        direction={orderBy === 'totalPrice' ? order : 'asc'}
-                                        onClick={() => handleRequestSort('totalPrice')}
-                                    >
-                                        Precio Total
-                                    </TableSortLabel>
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
+                                    <TableCell align="right">
+                                        <TableSortLabel
+                                            active={orderBy === 'servicePrice'}
+                                            direction={orderBy === 'servicePrice' ? order : 'asc'}
+                                            onClick={() => handleRequestSort('servicePrice')}
+                                        >
+                                            Precio por Servicio
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <TableSortLabel
+                                            active={orderBy === 'totalPrice'}
+                                            direction={orderBy === 'totalPrice' ? order : 'asc'}
+                                            onClick={() => handleRequestSort('totalPrice')}
+                                        >
+                                            Precio Total
+                                        </TableSortLabel>
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
 
-                        <TableBody>
-                            {rowsToShow.map((service: Service) => (
-                            <ServiceRow 
-                                key={service._id} 
-                                service={service} 
-                                onServiceSelect={onServiceSelect}/>
-                            ))}
-                        </TableBody>
-                    </Table>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25, 50]}
-                        component="div"
-                        count={data.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        labelRowsPerPage="Filas por página"
-                        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`} 
-                    />
-                </TableContainer>
-            </div>
-        </ThemeProvider>
+                            <TableBody>
+                                {rowsToShow.map((service: Service) => (
+                                <ServiceRow 
+                                    key={service._id} 
+                                    service={service} 
+                                    onServiceSelect={onServiceSelect}/>
+                                ))}
+                            </TableBody>
+                        </Table>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25, 50]}
+                            component="div"
+                            count={data.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            labelRowsPerPage="Filas por página"
+                            labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`} 
+                        />
+                    </TableContainer>
+                </div>
+            </ThemeProvider>
+        </div>
     );
 };

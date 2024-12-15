@@ -26,6 +26,7 @@ export const useBudgetTable = ({ selectedServices, setSelectedServices, currency
     } else if (selectedServices.length === 0 && originalServices.length > 0) {
       setOriginalServices([]); // Reiniciar originalServices si selectedServices está vacío
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedServices]); // Solo depende de selectedServices
   
   useEffect(() => {
@@ -49,6 +50,7 @@ export const useBudgetTable = ({ selectedServices, setSelectedServices, currency
     } else {
       setSelectedServices(originalServices);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currency, exchangeRate, originalServices]);
   
   const handleServiceSelect = (service: Service) => {

@@ -60,15 +60,12 @@ export const BudgetTable = ({ selectedServices, setSelectedServices, currency, e
         />
       ))}
 
-      
       <BudgetAddLineButton
         onTableVisible={() => setIsServiceTableVisible(true)} 
         onAddEmptyService={handleAddEmptyService}
       />
 
-
       {isServiceTableVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
           <SelectServices
             data={services}
             isLoading={isLoading}
@@ -77,7 +74,6 @@ export const BudgetTable = ({ selectedServices, setSelectedServices, currency, e
             onServiceSelect={handleServiceSelect}
             onCloseTable={() => setIsServiceTableVisible(false)}
           />
-        </div>      
       )}
   
       {isProductTableVisible && ( 

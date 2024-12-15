@@ -23,7 +23,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     handleDelete,
     handleUpdate,
     handlePrint,
-    handleExport,
+    handleExportPDF,
     }) => {
     
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'budgetForm.n_budget']);
@@ -121,7 +121,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 <div className='flex gap-x-5 justify-center'>
                     <ViewButton onClick={() => handleView(budget)}/>
                     <UpdateButton onClick={() => handleUpdate(budget._id)} />
-                    <ExportButton onClick={() => handleExport()} />
+                    <ExportButton onClick={() => handleExportPDF(budget)} />
                     <PrintButton onClick={() => handlePrint(budget)} />
                     <DeleteButton onClick={() => handleDelete(budget._id)} />
                 </div>

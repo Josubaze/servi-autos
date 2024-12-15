@@ -40,7 +40,6 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
       isModalOpen,
       setModalOpen,
       showHiddenPDF,
-      setShowHiddenPDF,
       isLoading,
       printRef,
       handlePDFGeneration,

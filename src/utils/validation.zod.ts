@@ -67,8 +67,8 @@ export const ProductSchema = z.object({
       .max(11, "El teléfono debe tener como máximo 11 caracteres"),
     
     address: z.string()
-      .min(3, "El nombre de contacto debe tener al menos 3 caracteres")
-      .max(40, "El nombre de contacto debe tener como máximo 40 caracteres"),
+      .min(3, "La dirección debe tener al menos 3 caracteres")
+      .max(40, "La dirección debe tener como máximo 40 caracteres"),
   });
   
 export const ProviderSchema = z.object({
@@ -89,8 +89,8 @@ export const ProviderSchema = z.object({
     .min(11, "El teléfono debe tener al menos 11 caracteres")
     .max(11, "El teléfono debe tener como máximo 11 caracteres"),
   address: z.string()
-    .min(3, "El nombre de contacto debe tener al menos 3 caracteres")
-    .max(40, "El nombre de contacto debe tener como máximo 40 caracteres"),
+    .min(3, "La dirección debe tener al menos 3 caracteres")
+    .max(40, "La dirección debe tener como máximo 40 caracteres"),
 });
 
 export const BudgetFormSchema = z.object({
@@ -162,6 +162,6 @@ export const CompanySchema = z.object({
     .max(11, "El teléfono debe tener como máximo 11 caracteres"),
   
   address: z.string()
-    .min(3, "El nombre de contacto debe tener al menos 3 caracteres")
-    .max(40, "El nombre de contacto debe tener como máximo 40 caracteres"),
+    .min(3, "La dirección debe tener al menos 3 caracteres")
+    .max(40, "La dirección debe tener como máximo 40 caracteres"),
 });

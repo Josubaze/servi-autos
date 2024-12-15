@@ -10,7 +10,7 @@ export const UpdateButton: React.FC<UpdateButtonProps> = ({ onClick }) => {
   return (
     <Tooltip title="Modificar" arrow>
       <button
-              className="w-8 h-8 rounded-full bg-transparent border-2 border-indigo-600 flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 hover:bg-orange-600 hover:border-gray-100 duration-300"
+              className="w-9 h-9 rounded-full bg-transparent flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 hover:bg-gray-600/20 hover:text-indigo-500 duration-300"
               onClick={onClick}
             >
               <IoPencil className="w-8 h-8 p-1" />

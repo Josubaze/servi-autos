@@ -8,7 +8,7 @@ import { BudgetTable } from "./BudgetTable";
 import { BudgetSummary } from "./BudgetSummary";
 import { BudgetActions } from "./BudgetActions";
 import { Loading } from "../Common/Loading";
-import { useBudgetFecth } from "src/hooks/Budget/useBudgetFetch";
+import { useBudget } from "src/hooks/Budget/useBudget";
 
     interface BudgetProps {
         mode?: "create" | "update";
@@ -42,7 +42,7 @@ import { useBudgetFecth } from "src/hooks/Budget/useBudgetFetch";
         totalWithIgft,
         setIvaPercentage,
         setIgtfPercentage,
-    } = useBudgetFecth({ mode, budgetData });
+    } = useBudget({ mode, budgetData });
     
 
     return (

@@ -2,6 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { NumericFormat } from 'react-number-format';
 import { IoExitOutline } from "react-icons/io5";
+import { Tooltip } from '@mui/material';
 
 interface BudgetPreviewProps {
     isOpen: boolean;
@@ -48,14 +49,16 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
         <div className="bg-white rounded-lg shadow-lg max-w-screen-lg w-full p-6 max-h-screen overflow-y-auto"
         onClick={(e) => e.stopPropagation()}>
             {/* Botón Cerrar */}
-            <button
-                onClick={onClose}
-                className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-400 text-gray-800 rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200"
-                aria-label="Cerrar"
-                title="Cerrar"
-            >
-                <span className="text-xl"><IoExitOutline className='flex w-6 h-6'/></span> {/* Icono X */}
-            </button>
+            <Tooltip title='Salir'>
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-100/80 text-gray-800 rounded-full w-10 h-10 flex items-center justify-center transition-colors hover:scale-110 duration-200"
+                    aria-label="Cerrar"
+                    title="Cerrar"
+                >
+                    <span className="text-xl"><IoExitOutline className='flex w-6 h-6'/></span> {/* Icono X */}
+                </button>
+            </Tooltip>
 
             {/* Header */}
             <div className="py-9 bg-center bg-black-nav rounded-xl  flex flex-col sm:flex-row justify-between items-center">

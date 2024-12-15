@@ -1,20 +1,20 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef } from 'react';
 import dayjs from 'dayjs';
 import { NumericFormat } from 'react-number-format';
-import { toast } from 'react-toastify';
+
 
 interface BudgetPDFProps {
     company: Company | undefined;
     customer: Customer | undefined;
     budgetForm: BudgetForm | undefined;
-    selectedServices: Service[];
-    subtotal: number;
-    ivaPercentage: number;
-    igtfPercentage: number;
-    calculatedIva: number;
-    calculatedIgtf: number;
-    total: number;
-    totalWithIgft: number;
+    selectedServices: Service[] | undefined;
+    subtotal: number | undefined;
+    ivaPercentage: number | undefined;
+    igtfPercentage: number | undefined;
+    calculatedIva: number | undefined;
+    calculatedIgtf: number | undefined;
+    total: number | undefined;
+    totalWithIgft: number | undefined;
 }
 
 export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
@@ -99,7 +99,7 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
 
             {/* Filas de Servicios */}
             <div className="space-y-6 px-4 py-2">
-            {selectedServices.map((service) => (
+            {selectedServices?.map((service) => (
                 <div
                 key={service._id}
                 className="rounded-lg"
@@ -323,3 +323,7 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
     </>
   );
 });
+
+
+// Agrega el displayName para evitar el error de ESLint
+BudgetPDF.displayName = 'BudgetPDF';

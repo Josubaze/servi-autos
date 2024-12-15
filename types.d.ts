@@ -174,8 +174,8 @@ interface Product {
     handleView: (budget: Budget) => void;
     handleDelete: (budgetId: string) => void;
     handleUpdate: (budgetId: string) => void;
-    handlePrint: (budget: Budget) => void;
-    handleExport: () => void;
+    handlePrint: (budget: Budget) => Promise<void>
+    handleExportPDF: (budget: Budget) => Promise<void>
   }
   
   interface TableProviderProps extends TableBaseProps {
