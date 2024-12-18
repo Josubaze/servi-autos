@@ -4,10 +4,10 @@ import { jsPDF } from "jspdf";
 import { toast } from "react-toastify";
 
 interface BudgetOptionsProps {
-  extractFormData: () => Promise<{
-    customerData: Customer;
-    budgetForm: BudgetForm;
-  }>;
+  extractFormData: () => {
+    customerData: Customer | null;
+    budgetForm: BudgetForm | null;
+  };
 }
 
 export const useBudgetOptions = ({
@@ -23,14 +23,15 @@ export const useBudgetOptions = ({
 
   // Función que se ejecuta en cada acción de impresión o PDF
   const updateCustomerAndBudget = async () => {
-    try {
-      const { customerData, budgetForm } = await extractFormData();
-      setCustomer(customerData);
-      setBudgetForm(budgetForm);
-    } catch (error) {
-      console.error("Error al extraer los datos del formulario:", error);
-    }
-  };
+        const { customerData, budgetForm } = extractFormData();
+        if (customerData) {
+            setCustomer(customerData);
+        } 
+        if (budgetForm) {
+            setBudgetForm(budgetForm);
+        } 
+};
+
 
   const handlePDFGeneration = async () => {
     setIsLoading(true);

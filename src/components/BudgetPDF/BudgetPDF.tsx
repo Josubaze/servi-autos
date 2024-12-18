@@ -306,14 +306,15 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
                     <div className="flex justify-between w-full max-w-md py-2 mt-2 pr-2 border-t border-gray-300">
                         <span className="font-bold text-lg">Total:</span>
                         <span className="font-bold text-lg">
-                        <NumericFormat 
-                            value={budgetForm?.currency === '$' ? totalWithIgft : total} 
-                            displayType="text" 
-                            thousandSeparator="." 
-                            decimalSeparator="," 
-                            decimalScale={2} 
-                            fixedDecimalScale 
-                        />
+                            <NumericFormat 
+                                value={budgetForm?.currency === '$' ? totalWithIgft : total} 
+                                displayType="text" 
+                                thousandSeparator="." 
+                                decimalSeparator="," 
+                                decimalScale={2} 
+                                fixedDecimalScale 
+                                prefix={budgetForm?.currency === 'Bs' ? 'Bs ' : '$ '}
+                            />
                         </span>
                     </div>
                 </div>

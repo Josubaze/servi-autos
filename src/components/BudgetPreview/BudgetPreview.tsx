@@ -53,8 +53,6 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-100/80 text-gray-800 rounded-full w-10 h-10 flex items-center justify-center transition-colors hover:scale-110 duration-200"
-                    aria-label="Cerrar"
-                    title="Cerrar"
                 >
                     <span className="text-xl"><IoExitOutline className='flex w-6 h-6'/></span> {/* Icono X */}
                 </button>
@@ -325,16 +323,18 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
                     <div className="flex justify-between w-full max-w-md py-2 mt-2 pr-2 border-t border-gray-300">
                         <span className="font-bold text-lg">Total:</span>
                         <span className="font-bold text-lg">
-                        <NumericFormat 
-                            value={budgetForm?.currency === '$' ? totalWithIgft : total} 
-                            displayType="text" 
-                            thousandSeparator="." 
-                            decimalSeparator="," 
-                            decimalScale={2} 
-                            fixedDecimalScale 
-                        />
+                            <NumericFormat 
+                                value={budgetForm?.currency === '$' ? totalWithIgft : total} 
+                                displayType="text" 
+                                thousandSeparator="." 
+                                decimalSeparator="," 
+                                decimalScale={2} 
+                                fixedDecimalScale 
+                                prefix={budgetForm?.currency === 'Bs' ? 'Bs ' : '$ '}
+                            />
                         </span>
                     </div>
+
                 </div>
             </div>
             </div>

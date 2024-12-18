@@ -8,10 +8,13 @@ import {useBudgetSummary} from './useBudgetSummary'
 
 
 interface BudgetFormHandle {
-    submitForm: () => any;
-    resetForm: () => void;
-    setFormDate: ( budgetForm : BudgetForm ) => void;
+    submitFormDateBudget: () => Promise<BudgetForm | null>;
+    submitFormCustomer: () => Promise<Customer | null>;
+    setFormDateBudget: ( budgetForm : BudgetForm ) => void;
     setFormCustomer: ( customer: Customer ) => void;
+    getFormDateBudget: () => BudgetForm | null;
+    getFormCutomer: () => Customer | null;
+    resetFormCustomer: () => void;
 }
 
 interface UseBudgetProps {
@@ -59,27 +62,39 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
         setSelectedServices([]);
         setDescription("");
         if (formCustomerRef.current) {
-            formCustomerRef.current.resetForm();
+            formCustomerRef.current.resetFormCustomer();
         }
         setIvaPercentage(16);
         setIgtfPercentage(3);
     };
 
     const handleSetFormDate = (budgetForm : BudgetForm) => {
-        formDateRef.current?.setFormDate(budgetForm);
+        formDateRef.current?.setFormDateBudget(budgetForm);
     };
 
     const handleSetFormCustomer = (customer : Customer) => {
         formCustomerRef.current?.setFormCustomer(customer);
     };
 
-    const extractFormData = async () => {
+    const extractFormData = () => {
         const customerData = formCustomerRef.current
-            ? await formCustomerRef.current.submitForm()
+            ? formCustomerRef.current.getFormCutomer()
             : null;
     
         const budgetForm = formDateRef.current
-            ? await formDateRef.current.submitForm()
+            ? formDateRef.current.getFormDateBudget()
+            : null;
+    
+        return { customerData, budgetForm }; 
+    };
+
+    const extractFormDataAndValidate = async () => {
+        const customerData = formCustomerRef.current
+            ? await formCustomerRef.current.submitFormCustomer()
+            : null;
+    
+        const budgetForm = formDateRef.current
+            ? await formDateRef.current.submitFormDateBudget()
             : null;
     
         return { customerData, budgetForm }; // Devuelve los datos
@@ -88,7 +103,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
 
     // Función para validar los datos del presupuesto
     const validateBudget = async () => {
-        const { customerData, budgetForm } = await extractFormData();
+        const { customerData, budgetForm } = await extractFormDataAndValidate();
 
         if (!company) {
             toast.error("Faltan datos de la empresa");

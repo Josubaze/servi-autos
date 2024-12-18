@@ -109,17 +109,17 @@ export const BudgetForm = forwardRef(({
     };
 
     // Exponer método para validar el formulario desde el padre
-    const submitForm = async () => {
+    const submitFormDateBudget = async () => {
         const isFormValid = await trigger();
         return isFormValid ? getValues() : null;
     };
 
-    const getForm = () => {
+    const getFormDateBudget = () => {
         return getValues(); // Retorna los valores actuales del formulario
     };
 
     // Función setFormDate para actualizar los datos
-    const setFormDate = ( budgetForm : BudgetForm ) => {
+    const setFormDateBudget = ( budgetForm : BudgetForm ) => {
         setValue("n_budget", budgetForm.n_budget);
         setValue("dateCreation", dayjs(budgetForm.dateCreation));
         setValue("dateExpiration", dayjs(budgetForm.dateExpiration));
@@ -129,9 +129,9 @@ export const BudgetForm = forwardRef(({
     };
     
     useImperativeHandle(ref, () => ({
-        setFormDate, // Este es el nombre que usaremos en el padre
-        submitForm,
-        getForm,
+        setFormDateBudget, // Este es el nombre que usaremos en el padre
+        submitFormDateBudget,
+        getFormDateBudget,
     }));
 
     useEffect(() => {

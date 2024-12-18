@@ -9,10 +9,10 @@ import { Loading } from "src/components/Common/Loading";
 interface BudgetOptionsProps {
     company: Company | undefined;
     selectedServices: Service[];
-    extractFormData: () => Promise<{
-        customerData: Customer;
-        budgetForm: BudgetForm;
-    }>;
+    extractFormData: () => {
+      customerData: Customer | null;
+      budgetForm: BudgetForm | null;
+    };
     subtotal: number;
     ivaPercentage: number;
     igtfPercentage: number;

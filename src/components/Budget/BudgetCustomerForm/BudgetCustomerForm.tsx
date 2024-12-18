@@ -42,11 +42,11 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
         }
     };
 
-    const getForm = () => {
+    const getFormCutomer = () => {
         return getValues(); // Retorna los valores actuales del formulario
     };
 
-    const submitForm = async () => {
+    const submitFormCustomer = async () => {
         const formData = getValues();
         const isFormValid = await trigger();
         if (isFormValid) {
@@ -65,16 +65,16 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
         setValue("address", customer.address);
     };
 
-    const resetForm = () => {
+    const resetFormCustomer = () => {
         // Reinicia los campos del formulario al estado inicial
         reset(CUSTOMERVOID);
     };
 
     useImperativeHandle(ref, () => ({
-        submitForm,
+        submitFormCustomer,
         setFormCustomer,
-        resetForm,
-        getForm,
+        resetFormCustomer,
+        getFormCutomer,
     }));
 
     return (
