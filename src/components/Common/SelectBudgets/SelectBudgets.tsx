@@ -2,14 +2,12 @@ import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { Loading } from 'src/components/Common/Loading';
 import { darkTheme } from "src/styles/themes/themeTable";
-import { useDynamicFilter } from "src/hooks/useProductFilter";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
-import { useDateRangeFilter } from "src/hooks/useDateRangeFilter";
 import { toast } from "react-toastify";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
-export const SelectBudget: React.FC<{
+export const SelectBudgets: React.FC<{
   data: Budget[]; 
   isLoading: boolean; 
   isError: boolean; 

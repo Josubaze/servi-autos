@@ -11,7 +11,7 @@ import { SelectBudgetButton } from "./SelectBudgetButton";
 import { NumericFormat } from "react-number-format";
 import { motion } from "framer-motion"; 
 import { useGetBudgetsQuery } from "src/redux/services/budgets.Api";
-import { SelectBudget } from "src/components/Common/SelectBudgets/SelectBudgets";
+import { SelectBudgets } from "src/components/Common/SelectBudgets/SelectBudgets";
 import { Dispatch, SetStateAction } from 'react';
 import { Loading } from "src/components/Common/Loading";
 
@@ -145,6 +145,7 @@ export const BudgetForm = forwardRef(({
             // Actualizamos el valor de n_budget utilizando setValue 
             setValue('n_budget', maxBudget + 1 );    
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, budgets, isSuccess]);
     
 
@@ -286,7 +287,7 @@ export const BudgetForm = forwardRef(({
         {/* Modal para la tabla de selección de clientes */}
         {isTableVisible && (
             <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-                <SelectBudget
+                <SelectBudgets
                     data={budgets}
                     isLoading={isLoading}
                     isError={isError}
