@@ -3,7 +3,7 @@ import { Input } from "@nextui-org/react";
 
 export const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm }) => {
   return (
-    <div>
+    <div className="w-full sm:max-w-lg">
       <Input
         isClearable
         classNames={{
@@ -25,7 +25,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm 
             "group-data-[focus=true]:bg-default-200/50",
             "dark:group-data-[focus=true]:bg-default/60",
             "!cursor-text",
-            "max-w-xs"
+            "w-full",          
           ],
         }}
         label="Buscar"
@@ -33,6 +33,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm 
         radius="lg"
         value={searchTerm} 
         onChange={(e) => setSearchTerm(e.target.value)} 
+        onClear={() => setSearchTerm("")}
         startContent={
           <BsSearch className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
         }

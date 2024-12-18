@@ -9,10 +9,12 @@ import { SelectProducts } from "src/components/Common/SelectProducts";
 interface BudgetTableProps {
   selectedServices: Service[];
   setSelectedServices: React.Dispatch<React.SetStateAction<Service[]>>;
+  originalServices: Service[];
+  setOriginalServices: React.Dispatch<React.SetStateAction<Service[]>>;
   currency: string;
   exchangeRate: number;
 }
-export const BudgetTable = ({ selectedServices, setSelectedServices, currency, exchangeRate }: BudgetTableProps) => {
+export const BudgetTable = ({ selectedServices, setSelectedServices, originalServices, setOriginalServices, currency, exchangeRate }: BudgetTableProps) => {
   const {
     services,
     products,
@@ -36,7 +38,7 @@ export const BudgetTable = ({ selectedServices, setSelectedServices, currency, e
     setIsServiceTableVisible,
     setIsProductTableVisible,
     setActiveServiceId,
-  } = useBudgetTable({ selectedServices, setSelectedServices, currency, exchangeRate});
+  } = useBudgetTable({ selectedServices, setSelectedServices, originalServices, setOriginalServices, currency, exchangeRate});
 
   return (
     <>

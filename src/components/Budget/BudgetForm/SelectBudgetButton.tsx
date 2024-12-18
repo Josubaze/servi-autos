@@ -5,7 +5,8 @@ interface SelectBudgetButtonProps {
     onClick: () => void;
 }
 
-export const SelectBudgetButton = ({ onClick }: SelectBudgetButtonProps) => (
+export const SelectBudgetButton = ({ onClick }: SelectBudgetButtonProps) =>{ 
+    return (
     <div className="relative">
         <Tooltip title="Cargar Presupuesto" arrow>
         <button
@@ -20,4 +21,4 @@ export const SelectBudgetButton = ({ onClick }: SelectBudgetButtonProps) => (
         </button>
         </Tooltip>
     </div>
-);
+)};

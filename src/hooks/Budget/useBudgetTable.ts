@@ -6,9 +6,11 @@ import { useGetProductsQuery } from "src/redux/services/productsApi";
 import { v4 as uuidv4 } from "uuid";
 import { SERVICEVOID } from "src/utils/constanst";
 
-export const useBudgetTable = ({ selectedServices, setSelectedServices, currency, exchangeRate }: { 
+export const useBudgetTable = ({ selectedServices, setSelectedServices, originalServices, setOriginalServices, currency, exchangeRate }: { 
   selectedServices: Service[]; 
-  setSelectedServices: React.Dispatch<React.SetStateAction<Service[]>>; 
+  setSelectedServices: React.Dispatch<React.SetStateAction<Service[]>>;
+  originalServices: Service[];  
+  setOriginalServices: React.Dispatch<React.SetStateAction<Service[]>>;
   currency: string;
   exchangeRate: number; 
 }) => {
@@ -16,42 +18,43 @@ export const useBudgetTable = ({ selectedServices, setSelectedServices, currency
   const [isServiceTableVisible, setIsServiceTableVisible] = useState<boolean>(false);
   const [isProductTableVisible, setIsProductTableVisible] = useState<boolean>(false);
   const [activeServiceId, setActiveServiceId] = useState<string | null>(null);
-  const [originalServices, setOriginalServices] = useState<Service[]>([]);
   const { data: services = [], isLoading, isError, isSuccess } = useGetServicesQuery();
   const { data: products = [], isError: isErrorProducts } = useGetProductsQuery();
+  const [isInitialized, setIsInitialized] = useState(false); // Bandera de control
 
+  // Actualización inicial de originalServices cuando se cargan los selectedServices
   useEffect(() => {
-    if (selectedServices.length > 0 && originalServices.length === 0) {
-      setOriginalServices([...selectedServices]); // Clonar solo si es necesario
-    } else if (selectedServices.length === 0 && originalServices.length > 0) {
-      setOriginalServices([]); // Reiniciar originalServices si selectedServices está vacío
+    if (!isInitialized && selectedServices.length > 0 && originalServices.length === 0) {
+      setOriginalServices([...selectedServices]); // Clona solo al inicio
+      setIsInitialized(true); // Marcamos como inicializado
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedServices]); // Solo depende de selectedServices
-  
+  }, [selectedServices]);
+
+  // Efecto para recalcular selectedServices cuando cambia la moneda o la tasa de cambio
   useEffect(() => {
-    if (currency === "Bs") {
-      setSelectedServices(
-        originalServices.map((service) => ({
-          ...service,
-          totalPrice: parseFloat((service.totalPrice * exchangeRate).toFixed(2)),
-          servicePrice: parseFloat((service.servicePrice * exchangeRate).toFixed(2)),
-          products: service.products.map((product) => ({
-            ...product,
-            product: {
-              ...product.product,
-              price: parseFloat((product.product.price * exchangeRate).toFixed(2)),
-            },
-          })),
-        }))
-      );
-    } else if (currency === "$") {
-      setSelectedServices([...originalServices]); // Restablece valores originales
-    } else {
-      setSelectedServices(originalServices);
+    if (originalServices.length > 0) {
+      if (currency === "Bs") {
+        setSelectedServices(
+          originalServices.map((service) => ({
+            ...service,
+            totalPrice: parseFloat((service.totalPrice * exchangeRate).toFixed(2)),
+            servicePrice: parseFloat((service.servicePrice * exchangeRate).toFixed(2)),
+            products: service.products.map((product) => ({
+              ...product,
+              product: {
+                ...product.product,
+                price: parseFloat((product.product.price * exchangeRate).toFixed(2)),
+              },
+            })),
+          }))
+        );
+      } else if (currency === "$") {
+        setSelectedServices([...originalServices]); // Restablece valores originales
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currency, exchangeRate, originalServices]);
+  }, [currency, exchangeRate]);
   
   const handleServiceSelect = (service: Service) => {
     let isRepeated = false;
@@ -402,6 +405,8 @@ const removeServiceFromState = (
     services,
     products,
     selectedServices,
+    originalServices,
+    setOriginalServices,
     isServiceTableVisible,
     isProductTableVisible,
     activeServiceId,

@@ -25,6 +25,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     const formCustomerRef = useRef<BudgetFormHandle | null>(null);
     const formDateRef = useRef<BudgetFormHandle | null>(null);
     const [selectedServices, setSelectedServices] = useState<Service[]>([]);
+    const [originalServices, setOriginalServices] = useState<Service[]>([]);
     const [currency, setCurrency] = useState<string>("$");
     const [exchangeRate, setExchangeRate] = useState<number>(1);
     const [description, setDescription] = useState<string>("");
@@ -211,6 +212,8 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
         formDateRef,
         selectedServices,
         setSelectedServices,
+        originalServices,
+        setOriginalServices,
         subtotal,
         currency,
         setCurrency,

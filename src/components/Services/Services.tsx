@@ -42,12 +42,13 @@ export const Services = () => {
         <PageTitle title="Gestión de Servicios" />
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
-        <div className="my-4 flex justify-between items-center gap-2 pb-2">
+        <div className="my-4 flex flex-col sm:flex-row sm:justify-between justify-start sm:items-center gap-2 pb-2">
+          {/* Botón: Oculto en pantallas pequeñas */}
           <button
             className="transition ease-in-out delay-150 bg-emerald-600 text-white px-4 py-2 rounded hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300 max-sm:hidden"
             onClick={() => setShowForm(true)}
           >
-            <span className='flex items-center gap-2 '>
+            <span className="flex items-center gap-2">
               <FaTools />
               Agregar Servicio
             </span>

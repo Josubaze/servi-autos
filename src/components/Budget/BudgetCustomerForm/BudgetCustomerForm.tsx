@@ -42,6 +42,10 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
         }
     };
 
+    const getForm = () => {
+        return getValues(); // Retorna los valores actuales del formulario
+    };
+
     const submitForm = async () => {
         const formData = getValues();
         const isFormValid = await trigger();
@@ -69,7 +73,8 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
         submitForm,
         setFormCustomer,
-        resetForm
+        resetForm,
+        getForm,
     }));
 
     return (

@@ -21,6 +21,8 @@ import { useBudget } from "src/hooks/Budget/useBudget";
         formDateRef,
         selectedServices,
         setSelectedServices,
+        originalServices,
+        setOriginalServices,
         subtotal,
         currency,
         setCurrency,
@@ -42,6 +44,7 @@ import { useBudget } from "src/hooks/Budget/useBudget";
         totalWithIgft,
         setIvaPercentage,
         setIgtfPercentage,
+        handleSetFormCustomer,
     } = useBudget({ mode, budgetData });
     
 
@@ -76,6 +79,12 @@ import { useBudget } from "src/hooks/Budget/useBudget";
                         currency={currency}
                         exchangeRate={exchangeRate}
                         setExchangeRate={setExchangeRate}
+                        setSelectedServices={setSelectedServices}
+                        setOriginalServices={setOriginalServices}
+                        setIvaPercentage={setIvaPercentage}
+                        setIgtfPercentage={setIgtfPercentage}
+                        handleSetFormCustomer={handleSetFormCustomer}
+                        setDescription={setDescription}
                         mode={mode}
                     />
                 </div>
@@ -83,6 +92,8 @@ import { useBudget } from "src/hooks/Budget/useBudget";
             <BudgetTable
                 selectedServices={selectedServices}
                 setSelectedServices={setSelectedServices}
+                originalServices={originalServices}
+                setOriginalServices={setOriginalServices}
                 currency={currency}
                 exchangeRate={exchangeRate}
             />

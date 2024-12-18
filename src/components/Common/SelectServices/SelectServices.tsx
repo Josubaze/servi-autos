@@ -11,12 +11,18 @@ import Paper from '@mui/material/Paper';
 import { darkTheme } from 'src/styles/themes/themeTable';
 import { ServiceRow } from './ServiceRow'; 
 import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
 import { useSortableData } from 'src/hooks/useSortableData';
 import { Loading } from 'src/components/Common/Loading';
 import { useMediaQuery } from '@mui/material';
 import { Tooltip } from '@mui/material';
 import { IoExitOutline } from "react-icons/io5";
+import { toast } from 'react-toastify';
+import { Input } from "@nextui-org/react";
+import { BsSearch } from "react-icons/bs";
+import { useDynamicFilter } from 'src/hooks/useProductFilter';
+import { SearchBar } from '../SearchBar';
+
+
 
 
 export const SelectServices: React.FC<SelectServicesProps> = ({
@@ -29,8 +35,10 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
 }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const { sortedData, order, orderBy, handleRequestSort } = useSortableData(data, 'serviceQuantity');
     const isMobile = useMediaQuery('(max-width:600px)');
+    const [searchTerm, setSearchTerm] = useState('');
+    const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'serviceQuantity', 'servicePrice', 'totalPrice']);
+    const { sortedData, order, orderBy, handleRequestSort } = useSortableData(filteredData, 'serviceQuantity');
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -53,9 +61,7 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
 
     if (isError) {
         return (
-        <Typography variant="h6" color="error" style={{ textAlign: 'center', margin: '20px' }}>
-            Ha ocurrido un error al cargar los servicios.
-        </Typography>
+            toast.error('Ha ocurrido un error')
         );
     }
 
@@ -70,8 +76,6 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
                 <button
                     onClick={onCloseTable}
                     className="absolute top-4 right-4 shadow-xl shadow-gray-600 bg-black-nav hover:bg-black-nav/80 rounded-full w-10 h-10 flex items-center justify-center hover:scale-110 transition-colors duration-200"
-                    aria-label="Cerrar"
-                    title="Cerrar"
                 >
                     <span className="text-xl"><IoExitOutline className='flex w-6 h-6'/></span> {/* Icono X */}
                 </button>
@@ -83,16 +87,40 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
                         <Table aria-label="collapsible table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell  
-                                        colSpan={6} 
+                                {/* Lista de Servicios */}
+                                <TableCell
+                                    colSpan={2} 
+                                    sx={{
+                                    fontSize: "1.25rem",
+                                    textAlign: "left",
+                                    backgroundColor: "#161616",
+                                    }}
+                                >
+                                    <span>Lista de Servicios</span>
+                                </TableCell>
+
+                                {/* Buscador */}
+                                {/* Espaciador (solo escritorio) */}
+                                {!isMobile && (
+                                    <TableCell
+                                        colSpan={1}
                                         sx={{
-                                            fontSize: '1.25rem',
-                                            textAlign: 'left', 
-                                            backgroundColor: '#161616',                            
-                                        }}>
-                                            <span>Lista de Servicios</span>        
-                                    </TableCell>
+                                            backgroundColor: "#161616",
+                                        }}
+                                    />
+                                )}
+                                <TableCell
+                                    colSpan={2} 
+                                    sx={{
+                                    backgroundColor: "#161616",
+                                    }}
+                                >
+                                    
+                                    <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}></SearchBar>
+
+                                </TableCell>
                                 </TableRow>
+
                             </TableHead>
 
                             <TableHead>
@@ -143,7 +171,7 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
                                 {rowsToShow.map((service: Service) => (
                                 <ServiceRow 
                                     key={service._id} 
-                                    service={service} 
+                                    service={service}
                                     onServiceSelect={onServiceSelect}/>
                                 ))}
                             </TableBody>

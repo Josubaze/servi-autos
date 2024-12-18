@@ -11,20 +11,42 @@ import { SelectBudgetButton } from "./SelectBudgetButton";
 import { NumericFormat } from "react-number-format";
 import { motion } from "framer-motion"; 
 import { useGetBudgetsQuery } from "src/redux/services/budgets.Api";
+import { SelectBudget } from "src/components/Common/SelectBudgets/SelectBudgets";
+import { Dispatch, SetStateAction } from 'react';
+import { Loading } from "src/components/Common/Loading";
 
 interface BudgetFormProps {
-    setCurrency: (currency: string) => void; 
-    currency: string;
-    exchangeRate: number;
-    setExchangeRate: (currency: number) => void; 
-    mode: string;
-}
+    setCurrency: (currency: string) => void;
+    currency: string; 
+    exchangeRate: number; 
+    setExchangeRate: Dispatch<SetStateAction<number>>; 
+    setSelectedServices: Dispatch<SetStateAction<Service[]>>; 
+    setOriginalServices: Dispatch<SetStateAction<Service[]>>; 
+    setIvaPercentage: Dispatch<SetStateAction<number>>; 
+    setIgtfPercentage: Dispatch<SetStateAction<number>>;
+    handleSetFormCustomer: (customer: Customer) => void; 
+    setDescription: (description: string) => void; 
+    mode: string; // Modo actual (ejemplo: "edit" o "create")
+  }   
+export const BudgetForm = forwardRef(({ 
+    currency, 
+    setCurrency, 
+    exchangeRate, 
+    setExchangeRate, 
+    setIgtfPercentage,
+    setIvaPercentage,
+    setDescription,
+    setSelectedServices,
+    setOriginalServices,
+    handleSetFormCustomer,
+    mode
 
-export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, setExchangeRate, mode }: BudgetFormProps, ref) => {
+}: BudgetFormProps, ref) => {
     const today = dayjs();
     const expirationDate = today.add(14, 'day');
-    const { data: budgets = [], isSuccess } = useGetBudgetsQuery(); 
-
+    const { data: budgets = [], isSuccess, isLoading, isFetching, isError } = useGetBudgetsQuery(); 
+    const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const { 
         register, 
         formState: { errors }, 
@@ -38,15 +60,62 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
             n_budget: 0, 
             dateCreation: today,
             dateExpiration: expirationDate,
-            currency, // Sincroniza con el estado del padre
-            exchangeRate,
+            currency: currency ?? "$", 
+            exchangeRate: exchangeRate ?? 1
         }
     });
+
+    // Función para cargar el presupuesto y convertir si es necesario
+    const handleBudgetSelect = (budget: Budget) => {
+        if (!budget) return;
+
+        setIsUpdating(true); // Activar el loading al inicio
+
+        setTimeout(() => {
+            // Actualiza todos los valores del formulario
+            handleSetFormCustomer(budget.customer);
+            setCurrency(budget.budgetForm.currency);
+            setValue("currency", budget.budgetForm.currency);
+            setExchangeRate(budget.budgetForm.exchangeRate);
+            setValue("exchangeRate", budget.budgetForm.exchangeRate);
+            setSelectedServices(budget.services);
+
+            if (budget.budgetForm.currency === "Bs" && budget.budgetForm.exchangeRate > 1) {
+                const updatedOriginalServices = budget.services.map((service) => ({
+                    ...service,
+                    totalPrice: parseFloat((service.totalPrice / budget.budgetForm.exchangeRate).toFixed(2)),
+                    servicePrice: parseFloat((service.servicePrice / budget.budgetForm.exchangeRate).toFixed(2)),
+                    products: service.products.map((product) => ({
+                        ...product,
+                        product: {
+                            ...product.product,
+                            price: parseFloat((product.product.price / budget.budgetForm.exchangeRate).toFixed(2)),
+                        },
+                    })),
+                }));
+
+                setOriginalServices(updatedOriginalServices);
+            } else {
+                setOriginalServices(budget.services);
+            }
+
+            setIvaPercentage(budget.ivaPercentage);
+            setIgtfPercentage(budget.igtfPercentage);
+            setDescription(budget.description);
+            setIsTableVisible(false);
+
+            setIsUpdating(false); // Desactivar el loading cuando termina
+        }, 500); // Simulamos un pequeño delay de 500ms
+    };
 
     // Exponer método para validar el formulario desde el padre
     const submitForm = async () => {
         const isFormValid = await trigger();
         return isFormValid ? getValues() : null;
+    };
+
+    const getForm = () => {
+        return getValues(); // Retorna los valores actuales del formulario
     };
 
     // Función setFormDate para actualizar los datos
@@ -62,8 +131,8 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
     useImperativeHandle(ref, () => ({
         setFormDate, // Este es el nombre que usaremos en el padre
         submitForm,
+        getForm,
     }));
-    
 
     useEffect(() => {
         // Si el modo es "update", no ejecutamos este efecto
@@ -76,15 +145,14 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
             // Actualizamos el valor de n_budget utilizando setValue 
             setValue('n_budget', maxBudget + 1 );    
         }
-    }, [mode, budgets, isSuccess, setValue]);
-    
+    }, [mode, budgets, isSuccess]);
     
 
     return (
         <>
         <div className="flex items-center justify-end gap-3">
             <p className="font-title font-bold">Presupuesto Existente</p>
-            <SelectBudgetButton onClick={() => console.log("Presupuesto seleccionado")} />
+            <SelectBudgetButton onClick={() => setIsTableVisible(true)} />
         </div>
 
         <form className="w-full pt-4 sm:pl-6">
@@ -96,7 +164,7 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
                             <TextField
                                 fullWidth
                                 {...register("n_budget")} 
-                                value={watch("n_budget")} 
+                                value={getValues("n_budget")}
                                 error={!!errors.n_budget}
                                 helperText={errors.n_budget?.message}
                                 InputProps={{
@@ -155,7 +223,7 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
                         {/* Select para la moneda */}
                         <motion.div
                             className={`${
-                                watch("currency") === "$" ? "col-span-3" : "col-span-1"
+                                currency === "$" ? "col-span-3" : "col-span-1"
                             }`}
                             layout
                             transition={{
@@ -167,7 +235,7 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
                             <ThemeProvider theme={TextFieldTheme}>
                                 <Select
                                     {...register("currency")}
-                                    value={watch("currency")}
+                                    value={currency}
                                     fullWidth
                                     onChange={(e) => {
                                         setCurrency(e.target.value);
@@ -189,7 +257,7 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
                                 <ThemeProvider theme={TextFieldTheme}>
                                     <NumericFormat
                                         customInput={TextField}
-                                        value={watch("exchangeRate")}
+                                        value={exchangeRate}
                                         onValueChange={({ floatValue }) => {
                                             setExchangeRate(floatValue || 0);
                                             setValue("exchangeRate", floatValue || 0, { shouldValidate: true });
@@ -214,6 +282,26 @@ export const BudgetForm = forwardRef(({ currency, setCurrency, exchangeRate, set
                 </div>
             </div>
         </form>
+
+        {/* Modal para la tabla de selección de clientes */}
+        {isTableVisible && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+                <SelectBudget
+                    data={budgets}
+                    isLoading={isLoading}
+                    isError={isError}
+                    isFetching={isFetching}
+                    isSuccess={isSuccess}
+                    onSelectBudget={handleBudgetSelect}
+                    onCloseTable={() => setIsTableVisible(false)}
+                />
+            </div>
+        )}
+        {isUpdating && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+                  <Loading />
+                </div>
+        )}
         </>
     );
 });

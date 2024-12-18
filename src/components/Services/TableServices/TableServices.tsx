@@ -11,11 +11,11 @@ import Paper from '@mui/material/Paper';
 import { darkTheme } from 'src/styles/themes/themeTable';
 import { ServiceRow } from './ServiceRow'; 
 import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
 import { useSortableData } from 'src/hooks/useSortableData';
 import { Loading } from 'src/components/Common/Loading';
 import { useDynamicFilter } from 'src/hooks/useProductFilter';
 import { useMediaQuery } from '@mui/material';
+import { toast } from 'react-toastify';
 
 export const TableServices: React.FC<TableServicesProps> = ({
   data,
@@ -53,9 +53,7 @@ export const TableServices: React.FC<TableServicesProps> = ({
 
   if (isError) {
     return (
-      <Typography variant="h6" color="error" style={{ textAlign: 'center', margin: '20px' }}>
-        Ha ocurrido un error al cargar los servicios.
-      </Typography>
+      toast.error('Ha ocurrido un error al cargar los servicios')
     );
   }
 
