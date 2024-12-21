@@ -11,7 +11,7 @@ interface BudgetOptionsProps {
     selectedServices: Service[];
     extractFormData: () => {
       customerData: Customer | null;
-      budgetForm: BudgetForm | null;
+      form: Form | null;
     };
     subtotal: number;
     ivaPercentage: number;
@@ -45,7 +45,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
       handlePDFGeneration,
       handlePrint,
       handlePreview,
-      budgetForm,
+      form,
       customer,
   } = useBudgetOptions({
       extractFormData,  // Pasamos el estado actualizado aquí
@@ -99,7 +99,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
           onClose={() => setModalOpen(false)}
           company={company}
           customer={customer}
-          budgetForm={budgetForm}
+          form={form}
           selectedServices={selectedServices}
           subtotal={subtotal}
           ivaPercentage={ivaPercentage}
@@ -118,7 +118,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
             ref={printRef}
             company={company}
             customer={customer}
-            budgetForm={budgetForm}
+            form={form}
             selectedServices={selectedServices}
             subtotal={subtotal}
             ivaPercentage={ivaPercentage}

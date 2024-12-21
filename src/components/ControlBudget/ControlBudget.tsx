@@ -99,7 +99,7 @@ export const ControlBudget = () => {
               ref={printRef}
               company={budgetCopy?.company}
               customer={budgetCopy?.customer}
-              budgetForm={budgetCopy?.budgetForm}
+              form={budgetCopy?.form}
               selectedServices={budgetCopy?.services}
               subtotal={budgetCopy?.subtotal}
               ivaPercentage={budgetCopy?.ivaPercentage}
@@ -119,7 +119,7 @@ export const ControlBudget = () => {
             onClose={() => setIsOpenPreview(false)}
             company={budgetCopy?.company}
             customer={budgetCopy?.customer}
-            budgetForm={budgetCopy?.budgetForm}
+            form={budgetCopy?.form}
             selectedServices={budgetCopy?.services}
             subtotal={budgetCopy?.subtotal}
             ivaPercentage={budgetCopy?.ivaPercentage}

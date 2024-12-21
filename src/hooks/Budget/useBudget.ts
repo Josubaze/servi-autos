@@ -7,12 +7,12 @@ import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './useBudgetSummary'
 
 
-interface BudgetFormHandle {
-    submitFormDateBudget: () => Promise<BudgetForm | null>;
+interface FormHandle {
+    submitForm: () => Promise<Form | null>;
     submitFormCustomer: () => Promise<Customer | null>;
-    setFormDateBudget: ( budgetForm : BudgetForm ) => void;
+    setForm: ( form : Form ) => void;
     setFormCustomer: ( customer: Customer ) => void;
-    getFormDateBudget: () => BudgetForm | null;
+    getForm: () => Form | null;
     getFormCutomer: () => Customer | null;
     resetFormCustomer: () => void;
 }
@@ -25,8 +25,8 @@ interface UseBudgetProps {
 export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps) => {
 
     const { calculateIgft, calculateIva, calculateTotal, calculateSubtotal } = useBudgetSummary();
-    const formCustomerRef = useRef<BudgetFormHandle | null>(null);
-    const formDateRef = useRef<BudgetFormHandle | null>(null);
+    const formCustomerRef = useRef<FormHandle | null>(null);
+    const formRef = useRef<FormHandle | null>(null);
     const [selectedServices, setSelectedServices] = useState<Service[]>([]);
     const [originalServices, setOriginalServices] = useState<Service[]>([]);
     const [currency, setCurrency] = useState<string>("$");
@@ -48,7 +48,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     // Inicializar datos si el modo es "update"
     useEffect(() => {
         if (mode === "update" && budgetData) {
-            handleSetFormDate(budgetData.budgetForm);
+            handleSetForm(budgetData.form);
             handleSetFormCustomer(budgetData.customer);
             setSelectedServices(budgetData.services);
             setDescription(budgetData.description);
@@ -68,8 +68,8 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
         setIgtfPercentage(3);
     };
 
-    const handleSetFormDate = (budgetForm : BudgetForm) => {
-        formDateRef.current?.setFormDateBudget(budgetForm);
+    const handleSetForm = (form : Form) => {
+        formRef.current?.setForm(form);
     };
 
     const handleSetFormCustomer = (customer : Customer) => {
@@ -78,33 +78,32 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
 
     const extractFormData = () => {
         const customerData = formCustomerRef.current
-            ? formCustomerRef.current.getFormCutomer()
+            ? formCustomerRef.current?.getFormCutomer()
             : null;
     
-        const budgetForm = formDateRef.current
-            ? formDateRef.current.getFormDateBudget()
+        const form = formRef.current
+            ? formRef.current?.getForm()
             : null;
     
-        return { customerData, budgetForm }; 
+        return { customerData, form }; 
     };
 
     const extractFormDataAndValidate = async () => {
         const customerData = formCustomerRef.current
-            ? await formCustomerRef.current.submitFormCustomer()
+            ? await formCustomerRef.current?.submitFormCustomer()
             : null;
     
-        const budgetForm = formDateRef.current
-            ? await formDateRef.current.submitFormDateBudget()
+        const form = formRef.current
+            ? await formRef.current?.submitForm()
             : null;
-    
-        return { customerData, budgetForm }; // Devuelve los datos
+            console.log(form);
+        return { customerData, form }; // Devuelve los datos
     };
     
 
     // Función para validar los datos del presupuesto
     const validateBudget = async () => {
-        const { customerData, budgetForm } = await extractFormDataAndValidate();
-
+        const { customerData, form } = await extractFormDataAndValidate();
         if (!company) {
             toast.error("Faltan datos de la empresa");
             throw new Error("Datos de la empresa incompletos");
@@ -115,7 +114,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
             throw new Error("Datos del cliente incompletos");
         }
 
-        if (!budgetForm) {
+        if (!form) {
             toast.error("Faltan datos de las fechas");
             throw new Error("Datos de las fechas incompletos");
         }
@@ -142,7 +141,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
 
         return {
             customerData,
-            budgetForm,
+            form,
             company,
             selectedServices,
             description,
@@ -157,7 +156,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
         try {
             const {
                 customerData,
-                budgetForm,
+                form,
                 company,
                 selectedServices,
                 description,
@@ -167,10 +166,10 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     
             // Construcción del objeto `budget`
             const budget: Omit<Budget, "_id"> = {
-                budgetForm: {
-                    n_budget: budgetForm.n_budget,
-                    dateCreation: dayjs(budgetForm.dateCreation).toDate(),
-                    dateExpiration: dayjs(budgetForm.dateExpiration).toDate(),
+                form: {
+                    num: form.num,
+                    dateCreation: dayjs(form.dateCreation).toDate(),
+                    dateExpiration: dayjs(form.dateExpiration).toDate(),
                     dateUpdate: null,
                     currency,
                     exchangeRate,
@@ -204,7 +203,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
                     ...budget,
                     _id: budget_id,
                     budgetForm: {
-                        ...budget.budgetForm, // Asegúrate de mantener las propiedades existentes de `budgetForm`
+                        ...budget.form, // Asegúrate de mantener las propiedades existentes de `budgetForm`
                         dateUpdate: dayjs().toDate(), // Actualiza la fecha
                     }
                 };
@@ -224,7 +223,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
 
     return {
         formCustomerRef,
-        formDateRef,
+        formRef,
         selectedServices,
         setSelectedServices,
         originalServices,
@@ -250,7 +249,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
         isLoading,
         isError,
         isSaving,
-        handleSetFormDate,
+        handleSetForm,
         handleSetFormCustomer,
         handleSave,
         extractFormData

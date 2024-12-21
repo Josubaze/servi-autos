@@ -13,7 +13,7 @@ export const budgetsApi = createApi({
             query: () => '/budgets',
             providesTags: ['Budgets'],
             transformResponse: (response: Budget[]) => {
-                return response.sort((a, b) => dayjs(b.budgetForm.dateExpiration).isBefore(dayjs(a.budgetForm.dateCreation)) ? 1 : -1);
+                return response.sort((a, b) => dayjs(b.form.dateExpiration).isBefore(dayjs(a.form.dateCreation)) ? 1 : -1);
             },
             keepUnusedDataFor: 600, 
         }),

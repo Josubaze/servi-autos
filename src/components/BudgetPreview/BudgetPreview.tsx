@@ -9,7 +9,7 @@ interface BudgetPreviewProps {
     onClose: () => void;
     company: Company | undefined;
     customer: Customer | undefined;
-    budgetForm: BudgetForm | undefined;
+    form: Form | undefined;
     selectedServices: Service[] | undefined;
     subtotal: number | undefined;
     ivaPercentage: number | undefined;
@@ -25,7 +25,7 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
   onClose,
   company,
   customer,
-  budgetForm,
+  form,
   selectedServices,
   subtotal,
   ivaPercentage,
@@ -93,13 +93,13 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
                 <div className="flex flex-col lg:items-end text-gray-700">
                     <div className="flex-1">
                         <h3 className="text-lg font-semibold mb-2">Detalles del Presupuesto</h3>
-                        <p ><strong>Nº de Presupuesto:</strong> {budgetForm?.n_budget || 'No disponible'}</p>
-                        <p ><strong>Fecha de Creación:</strong> {formatDate(budgetForm?.dateCreation)}</p>
-                        <p><strong>Fecha de Vencimiento:</strong> {formatDate(budgetForm?.dateExpiration)}</p>
-                        <p><strong>Moneda:</strong> {budgetForm?.currency === 'Bs' ? 'Bolívar (Bs)' : 'USD ($)'}</p>
-                        {budgetForm?.currency === 'Bs' && (
+                        <p ><strong>Nº de Presupuesto:</strong> {form?.num || 'No disponible'}</p>
+                        <p ><strong>Fecha de Creación:</strong> {formatDate(form?.dateCreation)}</p>
+                        <p><strong>Fecha de Vencimiento:</strong> {formatDate(form?.dateExpiration)}</p>
+                        <p><strong>Moneda:</strong> {form?.currency === 'Bs' ? 'Bolívar (Bs)' : 'USD ($)'}</p>
+                        {form?.currency === 'Bs' && (
                         <p>
-                            <strong>Tasa de Cambio:</strong> {budgetForm.exchangeRate?.toFixed(2) || 'No disponible'}
+                            <strong>Tasa de Cambio:</strong> {form.exchangeRate?.toFixed(2) || 'No disponible'}
                         </p>
                         )}
                     </div>
@@ -252,9 +252,9 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
                 <div className="w-full md:w-1/2 rounded-lg p-4 bg-gray-50">
                     <h3 className="text-lg font-bold mb-2">Condiciones de la Oferta:</h3>
                     <p className="mb-1">
-                        <span className="font-semibold">Moneda:</span> El monto está establecido en {budgetForm?.currency === '$' ? 'dólares' : 'Bolívares'}.
+                        <span className="font-semibold">Moneda:</span> El monto está establecido en {form?.currency === '$' ? 'dólares' : 'Bolívares'}.
                     </p>
-                    {budgetForm?.currency !== '$' && (
+                    {form?.currency !== '$' && (
                         <p className="mb-1">
                         <span className="font-semibold">Pagadero a tasa de BCV:</span> A la fecha de su cancelación.
                         </p>
@@ -303,7 +303,7 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
                     </div>
 
                     {/* IGTF (si la moneda es USD) */}
-                    {budgetForm?.currency === '$' && (
+                    {form?.currency === '$' && (
                         <div className="flex justify-between w-full max-w-md py-1 pr-3">
                         <span className="font-bold">IGTF ({igtfPercentage}%):</span>
                         <span>
@@ -324,13 +324,13 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
                         <span className="font-bold text-lg">Total:</span>
                         <span className="font-bold text-lg">
                             <NumericFormat 
-                                value={budgetForm?.currency === '$' ? totalWithIgft : total} 
+                                value={form?.currency === '$' ? totalWithIgft : total} 
                                 displayType="text" 
                                 thousandSeparator="." 
                                 decimalSeparator="," 
                                 decimalScale={2} 
                                 fixedDecimalScale 
-                                prefix={budgetForm?.currency === 'Bs' ? 'Bs ' : '$ '}
+                                prefix={form?.currency === 'Bs' ? 'Bs ' : '$ '}
                             />
                         </span>
                     </div>

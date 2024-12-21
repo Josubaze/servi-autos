@@ -100,7 +100,7 @@ export const useControlBudget = () => {
         if (yOffset < fullCanvas.height) pdf.addPage();
       }
 
-      pdf.save(`Budget_${budget.budgetForm.n_budget}.pdf`);
+      pdf.save(`Budget_${budget.form.num}.pdf`);
     } catch (error) {
       toast.error("Error al generar el PDF:");
     } finally {

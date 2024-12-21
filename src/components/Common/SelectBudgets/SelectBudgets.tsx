@@ -27,10 +27,10 @@ export const SelectBudgets: React.FC<{
 
     //const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'budgetForm.n_budget']);
     const rows = data.map(budget => ({
-        n_budget: budget.budgetForm.n_budget,
+        n_budget: budget.form.num,
         description: budget.description,
-        dateCreation: new Date(budget.budgetForm.dateCreation).toLocaleDateString(),
-        dateUpdate: budget.budgetForm.dateUpdate ? new Date(budget.budgetForm.dateUpdate).toLocaleDateString() : "", 
+        dateCreation: new Date(budget.form.dateCreation).toLocaleDateString(),
+        dateUpdate: budget.form.dateUpdate ? new Date(budget.form.dateUpdate).toLocaleDateString() : "", 
         state: budget.state,
         budgetId: budget._id, 
         budget: budget,

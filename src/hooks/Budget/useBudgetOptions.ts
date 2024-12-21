@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 interface BudgetOptionsProps {
   extractFormData: () => {
     customerData: Customer | null;
-    budgetForm: BudgetForm | null;
+    form: Form | null;
   };
 }
 
@@ -18,17 +18,17 @@ export const useBudgetOptions = ({
   const [isLoading, setIsLoading] = useState(false);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [ customer , setCustomer] = useState<Customer>();
-  const [budgetForm, setBudgetForm] = useState<BudgetForm>();
+  const [form, setForm] = useState<Form>();
   const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
   // Función que se ejecuta en cada acción de impresión o PDF
   const updateCustomerAndBudget = async () => {
-        const { customerData, budgetForm } = extractFormData();
+        const { customerData, form } = extractFormData();
         if (customerData) {
             setCustomer(customerData);
         } 
-        if (budgetForm) {
-            setBudgetForm(budgetForm);
+        if (form) {
+            setForm(form);
         } 
 };
 
@@ -87,7 +87,7 @@ export const useBudgetOptions = ({
         if (yOffset < fullCanvas.height) pdf.addPage();
       }
 
-      pdf.save(`Budget_${budgetForm?.n_budget}.pdf`);
+      pdf.save(`Budget_${form?.num}.pdf`);
     } catch (error) {
       toast.error("Error al generar el PDF:");
     } finally {
@@ -228,6 +228,6 @@ export const useBudgetOptions = ({
     handlePrint,
     handlePreview,
     customer,
-    budgetForm,
+    form,
   };
 };

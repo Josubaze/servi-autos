@@ -1,11 +1,11 @@
 import { Schema, model, models } from 'mongoose';
 import dayjs from 'dayjs';
 
-const budgetSchema = new Schema(
+const invoiceSchema = new Schema(
   {
-    form: {
+    Form: {
       type: {
-        num: {
+        nro: {
           type: Number,
           required: true,
           unique: true,
@@ -87,7 +87,6 @@ const budgetSchema = new Schema(
       required: true,
       trim: true,
     },
-    // Nuevas propiedades agregadas
     subtotal: {
       type: Number,
       required: true,
@@ -118,9 +117,9 @@ const budgetSchema = new Schema(
     },
   },
   {
-    collection: 'budgets',
+    collection: 'invoices',
     timestamps: false,
   }
 );
 
-export default models.Budget || model('Budget', budgetSchema);
+export default models.Invoice || model('Invoice', invoiceSchema);

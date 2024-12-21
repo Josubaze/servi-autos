@@ -94,7 +94,7 @@ export const ProviderSchema = z.object({
 });
 
 export const BudgetFormSchema = z.object({
-  n_budget: 
+  num: 
     z.union([
       z.string()
         .refine(quantity => /^[0-9]+$/.test(quantity) && parseInt(quantity, 10) > 0, { message: "La cantidad debe ser un número entero positivo" })

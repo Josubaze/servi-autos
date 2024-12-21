@@ -18,7 +18,7 @@ import { useBudget } from "src/hooks/Budget/useBudget";
     export const Budget: React.FC<BudgetProps> = ({ mode = "create", budgetData= null }) => {
     const {
         formCustomerRef,
-        formDateRef,
+        formRef,
         selectedServices,
         setSelectedServices,
         originalServices,
@@ -74,7 +74,7 @@ import { useBudget } from "src/hooks/Budget/useBudget";
                 </div>
                 <div className="flex-1">
                     <BudgetForm
-                        ref={formDateRef}
+                        ref={formRef}
                         setCurrency={setCurrency}
                         currency={currency}
                         exchangeRate={exchangeRate}

@@ -82,7 +82,7 @@ interface Product {
 
   interface Budget {
     _id: string;
-    budgetForm: BudgetForm;
+    form: Form;
     company: Company;
     customer: Customer;
     services: Service[];
@@ -97,6 +97,22 @@ interface Product {
     totalWithIgft: number;
   }
   
+  interface Invoice {
+    _id: string;
+    budgetForm: BudgetForm;
+    company: Company;
+    customer: Customer;
+    services: Service[];
+    description: string;
+    state: string;
+    subtotal: number;
+    ivaPercentage: number;
+    igtfPercentage: number;
+    calculatedIva: number;
+    calculatedIgtf: number;
+    total: number;
+    totalWithIgft: number;
+  }
 
   interface TableServicesProps {
     data: Service[];
@@ -139,8 +155,8 @@ interface Product {
   }
 
 
-  interface BudgetForm{
-    n_budget: number;
+  interface Form{
+    num: number;
     dateCreation: Dayjs;
     dateExpiration: Dayjs;
     dateUpdate: Dayjs;

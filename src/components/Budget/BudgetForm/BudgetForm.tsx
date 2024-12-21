@@ -40,7 +40,6 @@ export const BudgetForm = forwardRef(({
     setOriginalServices,
     handleSetFormCustomer,
     mode
-
 }: BudgetFormProps, ref) => {
     const today = dayjs();
     const expirationDate = today.add(14, 'day');
@@ -54,10 +53,10 @@ export const BudgetForm = forwardRef(({
         setValue, 
         trigger, 
         watch 
-    } = useForm<BudgetForm>({
+    } = useForm<Form>({
         resolver: zodResolver(BudgetFormSchema), 
         defaultValues: {
-            n_budget: 0, 
+            num: 0, 
             dateCreation: today,
             dateExpiration: expirationDate,
             currency: currency ?? "$", 
@@ -74,22 +73,22 @@ export const BudgetForm = forwardRef(({
         setTimeout(() => {
             // Actualiza todos los valores del formulario
             handleSetFormCustomer(budget.customer);
-            setCurrency(budget.budgetForm.currency);
-            setValue("currency", budget.budgetForm.currency);
-            setExchangeRate(budget.budgetForm.exchangeRate);
-            setValue("exchangeRate", budget.budgetForm.exchangeRate);
+            setCurrency(budget.form.currency);
+            setValue("currency", budget.form.currency);
+            setExchangeRate(budget.form.exchangeRate);
+            setValue("exchangeRate", budget.form.exchangeRate);
             setSelectedServices(budget.services);
 
-            if (budget.budgetForm.currency === "Bs" && budget.budgetForm.exchangeRate > 1) {
+            if (budget.form.currency === "Bs" && budget.form.exchangeRate > 1) {
                 const updatedOriginalServices = budget.services.map((service) => ({
                     ...service,
-                    totalPrice: parseFloat((service.totalPrice / budget.budgetForm.exchangeRate).toFixed(2)),
-                    servicePrice: parseFloat((service.servicePrice / budget.budgetForm.exchangeRate).toFixed(2)),
+                    totalPrice: parseFloat((service.totalPrice / budget.form.exchangeRate).toFixed(2)),
+                    servicePrice: parseFloat((service.servicePrice / budget.form.exchangeRate).toFixed(2)),
                     products: service.products.map((product) => ({
                         ...product,
                         product: {
                             ...product.product,
-                            price: parseFloat((product.product.price / budget.budgetForm.exchangeRate).toFixed(2)),
+                            price: parseFloat((product.product.price / budget.form.exchangeRate).toFixed(2)),
                         },
                     })),
                 }));
@@ -109,29 +108,29 @@ export const BudgetForm = forwardRef(({
     };
 
     // Exponer método para validar el formulario desde el padre
-    const submitFormDateBudget = async () => {
+    const submitForm = async () => {
         const isFormValid = await trigger();
         return isFormValid ? getValues() : null;
     };
 
-    const getFormDateBudget = () => {
+    const getForm = () => {
         return getValues(); // Retorna los valores actuales del formulario
     };
 
     // Función setFormDate para actualizar los datos
-    const setFormDateBudget = ( budgetForm : BudgetForm ) => {
-        setValue("n_budget", budgetForm.n_budget);
-        setValue("dateCreation", dayjs(budgetForm.dateCreation));
-        setValue("dateExpiration", dayjs(budgetForm.dateExpiration));
-        setValue("dateUpdate", dayjs(budgetForm.dateUpdate)); 
-        setValue("currency", budgetForm.currency);
-        setValue("exchangeRate", budgetForm.exchangeRate);
+    const setForm = ( form : Form ) => {
+        setValue("num", form.num);
+        setValue("dateCreation", dayjs(form.dateCreation));
+        setValue("dateExpiration", dayjs(form.dateExpiration));
+        setValue("dateUpdate", dayjs(form.dateUpdate)); 
+        setValue("currency", form.currency);
+        setValue("exchangeRate", form.exchangeRate);
     };
     
     useImperativeHandle(ref, () => ({
-        setFormDateBudget, // Este es el nombre que usaremos en el padre
-        submitFormDateBudget,
-        getFormDateBudget,
+        setForm,
+        submitForm,
+        getForm,
     }));
 
     useEffect(() => {
@@ -140,10 +139,10 @@ export const BudgetForm = forwardRef(({
     
         if (isSuccess) {
             const maxBudget = budgets.length > 0
-            ? Math.max(...budgets.map(budget => budget.budgetForm.n_budget)) // Obtener el mayor valor de n_budget
+            ? Math.max(...budgets.map(budget => budget.form.num)) // Obtener el mayor valor de n_budget
             : 0; 
             // Actualizamos el valor de n_budget utilizando setValue 
-            setValue('n_budget', maxBudget + 1 );    
+            setValue('num', maxBudget + 1 );    
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, budgets, isSuccess]);
@@ -164,10 +163,10 @@ export const BudgetForm = forwardRef(({
                         <ThemeProvider theme={TextFieldTheme}>
                             <TextField
                                 fullWidth
-                                {...register("n_budget")} 
-                                value={getValues("n_budget")}
-                                error={!!errors.n_budget}
-                                helperText={errors.n_budget?.message}
+                                {...register("num")} 
+                                value={getValues("num")}
+                                error={!!errors.num}
+                                helperText={errors.num?.message}
                                 InputProps={{
                                     inputProps: {
                                         style: { textAlign: "right", paddingRight: "20px"},
