@@ -99,7 +99,7 @@ interface Product {
   
   interface Invoice {
     _id: string;
-    budgetForm: BudgetForm;
+    form: Form;
     company: Company;
     customer: Customer;
     services: Service[];

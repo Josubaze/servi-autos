@@ -1,7 +1,9 @@
+import { ControlInvoice } from "src/components/ControlInvoice/ControlInvoice";
+
 export default function createInvoicesPage(){
   return (
     <div>
-        Control Invoices
+      <ControlInvoice/>
     </div>
 );
 }

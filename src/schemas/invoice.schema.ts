@@ -3,9 +3,9 @@ import dayjs from 'dayjs';
 
 const invoiceSchema = new Schema(
   {
-    Form: {
+    form: {
       type: {
-        nro: {
+        num: {
           type: Number,
           required: true,
           unique: true,

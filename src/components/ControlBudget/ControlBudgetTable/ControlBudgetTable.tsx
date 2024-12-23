@@ -26,10 +26,10 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     handleExportPDF,
     }) => {
     
-    const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'budgetForm.n_budget']);
+    const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
     const rows = filteredByDateRange.map(budget => ({
-        n_budget: budget.form.num,
+        num: budget.form.num,
         description: budget.description,
         dateCreation: new Date(budget.form.dateCreation).toLocaleDateString(),
         dateUpdate: budget.form.dateUpdate ? new Date(budget.form.dateUpdate).toLocaleDateString() : "", 
@@ -40,8 +40,8 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
 
     const columns = [
     {
-        name: "n_budget",
-        label: "N° Presupuesto",
+        name: "num",
+        label: "N°",
         options: { filter: false, sort: true },
     },
     {
@@ -131,8 +131,8 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         },
     ];
 
-    const mobileColumnsToShow = ['n_budget', 'dateCreation', 'state', 'options'];
-    const tabletColumnsToShow = ['n_budget', 'dateCreation', 'dateUpdate', 'state', 'options'];
+    const mobileColumnsToShow = ['num', 'dateCreation', 'state', 'options'];
+    const tabletColumnsToShow = ['num', 'dateCreation', 'dateUpdate', 'state', 'options'];
     const responsiveColumns = useResponsiveColumns(
       columns,
       mobileColumnsToShow,
@@ -149,7 +149,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         rowsPerPageOptions: [5, 10, 20, 50],
         textLabels: {
         body: {
-            noMatch: "AGREGA PRESUPUESTOS..",
+            noMatch: "AGREGA NUEVOS..",
         },
         pagination: {
             rowsPerPage: "Filas por página",
@@ -169,12 +169,12 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         {isLoading || isFetching ? (
             <Loading />
         ) : isError ? (
-            <p className="text-red-600">Error al cargar los presupuestos..</p>
+            <p className="text-red-600">Error al cargar..</p>
         ) : isSuccess ? (
             <StyledEngineProvider injectFirst>
             <ThemeProvider theme={darkTheme}>
                 <MUIDataTable
-                title={"Lista de Presupuestos"}
+                title={"Listado de Documentos"}
                 data={rows}
                 columns={responsiveColumns}
                 options={options}

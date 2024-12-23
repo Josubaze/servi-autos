@@ -1,13 +1,19 @@
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { useDeleteBudgetMutation, useGetBudgetsQuery } from 'src/redux/services/budgets.Api';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
-export const useControlBudget = () => {
-  const { data = [], isError, isLoading: isLoadingBudget, isFetching, isSuccess } = useGetBudgetsQuery();
-  const [deleteBudget] = useDeleteBudgetMutation();
+interface UseControlBudgetProps {
+  data: any[];
+  isError: boolean;
+  isLoading: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  deleteMutation: any;
+}
+
+export const useControlBudget = ({ data, isError, isLoading, isFetching, isSuccess, deleteMutation }: UseControlBudgetProps) => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedRange, setSelectedRange] = useState<any>(null);
@@ -16,39 +22,38 @@ export const useControlBudget = () => {
   const [budgetCopy, setBudgetCopy] = useState<any>(null);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
-  
+
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleDateRangeChange = (value: any) => setSelectedRange(value);
 
   const handleUpdate = (budgetId: string) => {
-    if (budgetId){
+    if (budgetId) {
       router.push(`/update/budget/${budgetId}`);
     }
   };
 
   const handleDelete = async (budgetId: string) => {
     try {
-      await deleteBudget(budgetId); 
+      await deleteMutation(budgetId);
+      toast.success('Presupuesto eliminado exitosamente');
     } catch (error) {
       toast.error('Hubo un error al eliminar el presupuesto');
-    } finally {
-      toast.success('Presupuesto eliminado exitosamente');
     }
-  };  
+  };
 
-  const handleView = async (budget: Budget) => {
+  const handleView = async (budget: any) => {
     try {
-      if(budget){
+      if (budget) {
         setBudgetCopy(budget);
       }
       setIsOpenPreview(true);
     } catch (error) {
       toast.error('Hubo un error al imprimir el presupuesto');
     }
-  }
+  };
 
-  const handleExportPDF = async (budget: Budget) => {
+  const handleExportPDF = async (budget: any) => {
     setIsLoadingPDF(true);
     setIsOpenPdf(true);
     setBudgetCopy(budget);
@@ -109,7 +114,7 @@ export const useControlBudget = () => {
     }
   };
 
-  const handlePrint = async (budget: Budget) => {
+  const handlePrint = async (budget: any) => {
     setIsLoadingPDF(true);
     setIsOpenPdf(true);
     setBudgetCopy(budget);
@@ -225,7 +230,7 @@ export const useControlBudget = () => {
   return {
     data,
     isError,
-    isLoadingBudget,
+    isLoading,
     isFetching,
     isSuccess,
     searchTerm,
