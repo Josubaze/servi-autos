@@ -1,1 +1,1 @@
-export { BudgetForm } from './BudgetForm'
+export { InvoiceForm } from './InvoiceForm'
