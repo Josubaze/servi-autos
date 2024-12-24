@@ -12,7 +12,7 @@ import { PrintButton } from "src/components/Common/Buttons/PrintButton";
 import { ViewButton } from "src/components/Common/Buttons/ViewButton/ViewButton";
 import { NumericFormat } from "react-number-format";
 
-export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
+export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
     data,
     searchTerm,
     selectedRange,
@@ -29,15 +29,15 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', 'total']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
-    const rows = filteredByDateRange.map(budget => ({
-        num: budget.form.num,
-        description: budget.description,
-        dateCreation: new Date(budget.form.dateCreation).toLocaleDateString(),
-        dateUpdate: budget.form.dateUpdate ? new Date(budget.form.dateUpdate).toLocaleDateString() : "", 
-        state: budget.state,
-        total: budget.total,
-        budgetId: budget._id, 
-        budget: budget,
+    const rows = filteredByDateRange.map(invoice => ({
+        num: invoice.form.num,
+        description: invoice.description,
+        dateCreation: new Date(invoice.form.dateCreation).toLocaleDateString(),
+        dateUpdate: invoice.form.dateUpdate ? new Date(invoice.form.dateUpdate).toLocaleDateString() : "", 
+        state: invoice.state,
+        total: invoice.total,
+        invoiceId: invoice._id, 
+        invoice: invoice,
     }));
 
     const columns = [
@@ -51,14 +51,14 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         label: "Descripción",
         options: { filter: true, sort: true },
     },
-    {      
+    {
         name: "total",
         label: "Monto Total",
         options: { 
             filter: true, 
             sort: true,
             customBodyRender: (value: number, tableMeta: any) => {
-                const currency = rows[tableMeta.rowIndex].budget.form.currency;
+                const currency = rows[tableMeta.rowIndex].invoice.form.currency;
 
                 return (
                     <NumericFormat
@@ -143,14 +143,14 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
             style: { textAlign: 'center' },
             }),
             customBodyRender: (value: any, tableMeta: any) => { // Accede al objeto completo
-            const budget = rows[tableMeta.rowIndex].budget
+            const invoice = rows[tableMeta.rowIndex].invoice
             return (
                 <div className='flex gap-x-5 justify-center'>
-                    <ViewButton onClick={() => handleView(budget)}/>
-                    <UpdateButton onClick={() => handleUpdate(budget._id)} />
-                    <ExportButton onClick={() => handleExportPDF(budget)} />
-                    <PrintButton onClick={() => handlePrint(budget)} />
-                    <DeleteButton onClick={() => handleDelete(budget._id)} />
+                    <ViewButton onClick={() => handleView(invoice)}/>
+                    <UpdateButton onClick={() => handleUpdate(invoice._id)} />
+                    <ExportButton onClick={() => handleExportPDF(invoice)} />
+                    <PrintButton onClick={() => handlePrint(invoice)} />
+                    <DeleteButton onClick={() => handleDelete(invoice._id)} />
                 </div>
             );
             },
@@ -176,7 +176,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         rowsPerPageOptions: [5, 10, 20, 50],
         textLabels: {
         body: {
-            noMatch: "AGREGA NUEVOS PRESUPUESTOS..",
+            noMatch: "AGREGA NUEVAS FACTURAS..",
         },
         pagination: {
             rowsPerPage: "Filas por página",
@@ -196,12 +196,12 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         {isLoading || isFetching ? (
             <Loading />
         ) : isError ? (
-            <p className="text-red-600">Error al cargar presupuestos..</p>
+            <p className="text-red-600">Error al cargar facturas..</p>
         ) : isSuccess ? (
             <StyledEngineProvider injectFirst>
             <ThemeProvider theme={darkTheme}>
                 <MUIDataTable
-                title={"Lista de Presupuestos"}
+                title={"Lista de Facturas"}
                 data={rows}
                 columns={responsiveColumns}
                 options={options}

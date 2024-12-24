@@ -193,6 +193,16 @@ interface Product {
     handlePrint: (budget: Budget) => Promise<void>
     handleExportPDF: (budget: Budget) => Promise<void>
   }
+
+  interface TableControlInvoiceProps extends TableBaseProps {
+    data: Invoice[]; 
+    selectedRange: RangeValue<DateValue> | null;
+    handleView: (budget: Invoice) => void;
+    handleDelete: (budgetId: string) => void;
+    handleUpdate: (budgetId: string) => void;
+    handlePrint: (budget: Invoice) => Promise<void>
+    handleExportPDF: (budget: Invoice) => Promise<void>
+  }
   
   interface TableProviderProps extends TableBaseProps {
     data: Provider[]; 

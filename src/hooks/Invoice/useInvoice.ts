@@ -50,7 +50,28 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
         if (mode === "update" && invoiceData) {
             handleSetForm(invoiceData.form);
             handleSetFormCustomer(invoiceData.customer);
+            setCurrency(invoiceData.form.currency);
+            setExchangeRate(invoiceData.form.exchangeRate);
             setSelectedServices(invoiceData.services);
+
+            if (invoiceData.form.currency === "Bs" && invoiceData.form.exchangeRate > 1) {
+                const updatedOriginalServices = invoiceData.services.map((service) => ({
+                    ...service,
+                    totalPrice: parseFloat((service.totalPrice / invoiceData.form.exchangeRate).toFixed(2)),
+                    servicePrice: parseFloat((service.servicePrice / invoiceData.form.exchangeRate).toFixed(2)),
+                    products: service.products.map((product) => ({
+                        ...product,
+                        product: {
+                            ...product.product,
+                            price: parseFloat((product.product.price / invoiceData.form.exchangeRate).toFixed(2)),
+                        },
+                    })),
+                }));
+
+                setOriginalServices(updatedOriginalServices);
+            } else {
+                setOriginalServices(invoiceData.services);
+            }
             setDescription(invoiceData.description);
             setIvaPercentage(invoiceData.ivaPercentage || 16);
             setIgtfPercentage(invoiceData.igtfPercentage || 3);

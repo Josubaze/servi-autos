@@ -4,8 +4,8 @@ import { toast } from 'react-toastify';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
-interface UseControlBudgetProps {
-  data: Budget[];
+interface UseControlInvoiceProps {
+  data: Invoice[];
   isError: boolean;
   isLoading: boolean;
   isFetching: boolean;
@@ -13,13 +13,13 @@ interface UseControlBudgetProps {
   deleteMutation: any;
 }
 
-export const useControlBudget = ({ data, isError, isLoading, isFetching, isSuccess, deleteMutation }: UseControlBudgetProps) => {
+export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSuccess, deleteMutation }: UseControlInvoiceProps) => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedRange, setSelectedRange] = useState<any>(null);
   const [isOpenPdf, setIsOpenPdf] = useState<boolean>(false);
   const [isOpenPreview, setIsOpenPreview] = useState<boolean>(false);
-  const [budgetCopy, setBudgetCopy] = useState<any>(null);
+  const [invoiceCopy, setInvoiceCopy] = useState<any>(null);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
 
@@ -27,36 +27,36 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
 
   const handleDateRangeChange = (value: any) => setSelectedRange(value);
 
-  const handleUpdate = (budgetId: string) => {
-    if (budgetId) {
-      router.push(`/update/budget/${budgetId}`);
+  const handleUpdate = (invoiceId: string) => {
+    if (invoiceId) {
+      router.push(`/update/invoice/${invoiceId}`);
     }
   };
 
-  const handleDelete = async (budgetId: string) => {
+  const handleDelete = async (invoiceId: string) => {
     try {
-      await deleteMutation(budgetId);
-      toast.success('Presupuesto eliminado exitosamente');
+      await deleteMutation(invoiceId);
+      toast.success('Factura eliminada exitosamente');
     } catch (error) {
-      toast.error('Hubo un error al tratar de eliminar el presupuesto');
+      toast.error('Hubo un error al tratar de eliminar factura');
     }
   };
 
-  const handleView = async (budget: Budget) => {
+  const handleView = async (invoice: Invoice) => {
     try {
-      if (budget) {
-        setBudgetCopy(budget);
+      if (invoice) {
+        setInvoiceCopy(invoice);
       }
       setIsOpenPreview(true);
     } catch (error) {
-      toast.error('Hubo un error al imprimir el presupuesto');
+      toast.error('Hubo un error al imprimir factura');
     }
   };
 
-  const handleExportPDF = async (budget: Budget) => {
+  const handleExportPDF = async (invoice: Invoice) => {
     setIsLoadingPDF(true);
     setIsOpenPdf(true);
-    setBudgetCopy(budget);
+    setInvoiceCopy(invoice);
     try {
       await sleep(300);
       if (!printRef.current) return;
@@ -105,7 +105,7 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
         if (yOffset < fullCanvas.height) pdf.addPage();
       }
 
-      pdf.save(`Budget_${budget.form.num}.pdf`);
+      pdf.save(`invoice_${invoice.form.num}.pdf`);
     } catch (error) {
       toast.error("Error al generar el PDF:");
     } finally {
@@ -114,10 +114,10 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
     }
   };
 
-  const handlePrint = async (budget: Budget) => {
+  const handlePrint = async (invoice: Invoice) => {
     setIsLoadingPDF(true);
     setIsOpenPdf(true);
-    setBudgetCopy(budget);
+    setInvoiceCopy(invoice);
     try {
       await sleep(300);
       if (!printRef.current) return;
@@ -245,7 +245,7 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
     isOpenPdf,
     isOpenPreview,
     setIsOpenPreview,
-    budgetCopy,
+    invoiceCopy,
     printRef,
     router,
     isLoadingPDF,

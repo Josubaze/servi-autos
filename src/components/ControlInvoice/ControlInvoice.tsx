@@ -5,13 +5,13 @@ import { SearchBar } from 'src/components/Common/SearchBar';
 import { PageTitle } from '../Common/PageTitle';
 import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
 import { HiDocumentPlus } from "react-icons/hi2";
-import { ControlBudgetTable } from './../ControlBudget/ControlBudgetTable';
+import { ControlInvoiceTable } from './../ControlInvoice/ControlInvoiceTable';
 import { DateRangePicker } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { BudgetPreview } from '../BudgetPreview';
 import { BudgetPDF } from '../BudgetPDF';
 import { Loading } from '../Common/Loading';
-import { useControlBudget } from 'src/hooks/ControlBudget/useControlBudget';
+import { useControlInvoice } from 'src/hooks/ControlInvoice/useControlInvoice';
 import { useGetInvoicesQuery, useDeleteInvoiceMutation } from "src/redux/services/invoices.Api";
 
 export const ControlInvoice = () => {
@@ -32,10 +32,10 @@ export const ControlInvoice = () => {
     isOpenPreview,
     setIsOpenPreview,
     router,
-    budgetCopy,
+    invoiceCopy,
     printRef,
     isLoadingPDF,
-  } = useControlBudget({ data, isError, isLoading, isFetching, isSuccess, deleteMutation });
+  } = useControlInvoice({ data, isError, isLoading, isFetching, isSuccess, deleteMutation });
 
   return (
     <>
@@ -68,7 +68,7 @@ export const ControlInvoice = () => {
           </div>
         </div>
 
-        <ControlBudgetTable
+        <ControlInvoiceTable
           data={data}
           searchTerm={searchTerm}
           selectedRange={selectedRange}
@@ -85,7 +85,7 @@ export const ControlInvoice = () => {
 
         <button
           className="bg-emerald-600 hover:bg-emerald-800 text-3xl text-white p-5 rounded-full fixed bottom-0 right-0 mr-8 mb-12 shadow-2xl shadow-emerald-400 sm:hidden z-50"
-          onClick={() => router.push("/create/invoice")}
+          onClick={() => router.push("/create/invoices")}
         >
           <FaPlus />
         </button>
@@ -96,17 +96,17 @@ export const ControlInvoice = () => {
           <div className="absolute top-[-9999px] left-[-9999px]">
             <BudgetPDF
               ref={printRef}
-              company={budgetCopy?.company}
-              customer={budgetCopy?.customer}
-              form={budgetCopy?.form}
-              selectedServices={budgetCopy?.services}
-              subtotal={budgetCopy?.subtotal}
-              ivaPercentage={budgetCopy?.ivaPercentage}
-              igtfPercentage={budgetCopy?.igtfPercentage}
-              calculatedIva={budgetCopy?.calculatedIva}
-              calculatedIgtf={budgetCopy?.calculatedIgtf}
-              total={budgetCopy?.total}
-              totalWithIgft={budgetCopy?.totalWithIgft}
+              company={invoiceCopy?.company}
+              customer={invoiceCopy?.customer}
+              form={invoiceCopy?.form}
+              selectedServices={invoiceCopy?.services}
+              subtotal={invoiceCopy?.subtotal}
+              ivaPercentage={invoiceCopy?.ivaPercentage}
+              igtfPercentage={invoiceCopy?.igtfPercentage}
+              calculatedIva={invoiceCopy?.calculatedIva}
+              calculatedIgtf={invoiceCopy?.calculatedIgtf}
+              total={invoiceCopy?.total}
+              totalWithIgft={invoiceCopy?.totalWithIgft}
             /> 
           </div>
         )}
@@ -116,17 +116,17 @@ export const ControlInvoice = () => {
           <BudgetPreview
             isOpen={isOpenPreview}
             onClose={() => setIsOpenPreview(false)}
-            company={budgetCopy?.company}
-            customer={budgetCopy?.customer}
-            form={budgetCopy?.form}
-            selectedServices={budgetCopy?.services}
-            subtotal={budgetCopy?.subtotal}
-            ivaPercentage={budgetCopy?.ivaPercentage}
-            igtfPercentage={budgetCopy?.igtfPercentage}
-            calculatedIva={budgetCopy?.calculatedIva}
-            calculatedIgtf={budgetCopy?.calculatedIgtf}
-            total={budgetCopy?.total}
-            totalWithIgft={budgetCopy?.totalWithIgft}
+            company={invoiceCopy?.company}
+            customer={invoiceCopy?.customer}
+            form={invoiceCopy?.form}
+            selectedServices={invoiceCopy?.services}
+            subtotal={invoiceCopy?.subtotal}
+            ivaPercentage={invoiceCopy?.ivaPercentage}
+            igtfPercentage={invoiceCopy?.igtfPercentage}
+            calculatedIva={invoiceCopy?.calculatedIva}
+            calculatedIgtf={invoiceCopy?.calculatedIgtf}
+            total={invoiceCopy?.total}
+            totalWithIgft={invoiceCopy?.totalWithIgft}
           />
         )}
 

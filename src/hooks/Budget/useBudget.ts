@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './useBudgetSummary'
+import { set } from "mongoose";
 
 
 interface FormHandle {
@@ -50,10 +51,32 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
         if (mode === "update" && budgetData) {
             handleSetForm(budgetData.form);
             handleSetFormCustomer(budgetData.customer);
+            setCurrency(budgetData.form.currency);
+            setExchangeRate(budgetData.form.exchangeRate);
             setSelectedServices(budgetData.services);
-            setDescription(budgetData.description);
+
+            if (budgetData.form.currency === "Bs" && budgetData.form.exchangeRate > 1) {
+                const updatedOriginalServices = budgetData.services.map((service) => ({
+                    ...service,
+                    totalPrice: parseFloat((service.totalPrice / budgetData.form.exchangeRate).toFixed(2)),
+                    servicePrice: parseFloat((service.servicePrice / budgetData.form.exchangeRate).toFixed(2)),
+                    products: service.products.map((product) => ({
+                        ...product,
+                        product: {
+                            ...product.product,
+                            price: parseFloat((product.product.price / budgetData.form.exchangeRate).toFixed(2)),
+                        },
+                    })),
+                }));
+
+                setOriginalServices(updatedOriginalServices);
+            } else {
+                setOriginalServices(budgetData.services);
+            }
+
             setIvaPercentage(budgetData.ivaPercentage || 16);
             setIgtfPercentage(budgetData.igtfPercentage || 3);
+            setDescription(budgetData.description);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, budgetData]);
