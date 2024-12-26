@@ -42,7 +42,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
         }
     };
 
-    const getFormCutomer = () => {
+    const getFormCustomer = () => {
         return getValues(); // Retorna los valores actuales del formulario
     };
 
@@ -74,7 +74,7 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
         submitFormCustomer,
         setFormCustomer,
         resetFormCustomer,
-        getFormCutomer,
+        getFormCustomer,
     }));
 
     return (

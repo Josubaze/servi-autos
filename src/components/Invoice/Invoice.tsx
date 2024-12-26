@@ -1,6 +1,5 @@
 'use client';
 
-import { BudgetOptions } from "../Budget/BudgetOptions";
 import { InvoiceHeader } from "../Invoice/InvoiceHeader";
 import { BudgetCustomerForm } from "../Budget/BudgetCustomerForm";
 import { BudgetTable } from "../Budget/BudgetTable";
@@ -9,6 +8,7 @@ import { BudgetActions } from "../Budget/BudgetActions";
 import { Loading } from "../Common/Loading";
 import { useInvoice } from "src/hooks/Invoice/useInvoice";
 import { InvoiceForm } from "./InvoiceForm/InvoiceForm";
+import { InvoiceOptions } from "./InvoiceOptions/InvoiceOptions";
 
     interface InvoiceProps {
         mode?: "create" | "update";
@@ -55,7 +55,7 @@ import { InvoiceForm } from "./InvoiceForm/InvoiceForm";
                     <Loading />
                 </div>
             )}
-            <BudgetOptions  
+            <InvoiceOptions  
                 company={company}
                 selectedServices={selectedServices}
                 extractFormData={extractFormData}

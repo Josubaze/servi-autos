@@ -1,12 +1,13 @@
 import { FaRegEye } from "react-icons/fa";
 import { PiFilePdfBold } from "react-icons/pi";
 import { MdPrint } from "react-icons/md";
-import { BudgetPreview } from "src/components/BudgetPreview";
-import { BudgetPDF } from "src/components/BudgetPDF";
 import { useBudgetOptions } from "src/hooks/Budget/useBudgetOptions"; // Importar el hook
 import { Loading } from "src/components/Common/Loading";
+import { InvoicePreview } from "src/components/InvoicePreview";
+import { InvoicePDF } from "src/components/InvoicePDF/InvoicePDF";
+import { set } from "mongoose";
 
-interface BudgetOptionsProps {
+interface InvoiceOptionsProps {
     company: Company | undefined;
     selectedServices: Service[];
     extractFormData: () => {
@@ -22,7 +23,7 @@ interface BudgetOptionsProps {
     totalWithIgft: number;
 }
 
-export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
+export const InvoiceOptions: React.FC<InvoiceOptionsProps> = ({
   company,
   extractFormData,
   subtotal,
@@ -34,6 +35,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
   total,
   totalWithIgft,
 }) => {
+
 
   const {
       showPreview,
@@ -49,7 +51,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
   } = useBudgetOptions({
       extractFormData,  // Pasamos el estado actualizado aquí
   });
-
+  
   return (
     <div className="grid grid-cols-6 rounded-lg w-full h-12 mb-4 gap-x-4 bg-gradient-to-r from-indigo-600 via-black-nav to-indigo-600 animate-gradient bg-[length:200%]">
       {/* Botón de vista previa */}
@@ -82,7 +84,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
       <div className="col-span-2">
         <button
           className="text-base px-6 w-full h-full rounded-xl bg-transparent transition ease-in-out delay-150 hover:bg-indigo-600/80 duration-300"
-          onClick={() => handlePDFGeneration("Budget")}
+          onClick={ () =>  handlePDFGeneration("Invoice") }
         >
           <span className="flex items-center justify-center gap-x-2 h-full">
             Exportar
@@ -93,7 +95,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
 
       {/* Modal para vista previa */}
       {showPreview && (
-        <BudgetPreview
+        <InvoicePreview
           isOpen={showPreview}
           onClose={() => setShowPreview(false)}
           company={company}
@@ -113,7 +115,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
       {/* Componente oculto para PDF */}
       {showHiddenPDF && (
         <div className="absolute top-[-9999px] left-[-9999px]">
-          <BudgetPDF
+          <InvoicePDF
             ref={printRef}
             company={company}
             customer={customer}

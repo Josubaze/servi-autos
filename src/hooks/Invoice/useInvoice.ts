@@ -13,7 +13,7 @@ interface FormHandle {
     setForm: ( form : Form ) => void;
     setFormCustomer: ( customer: Customer ) => void;
     getForm: () => Form | null;
-    getFormCutomer: () => Customer | null;
+    getFormCustomer: () => Customer | null;
     resetFormCustomer: () => void;
 }
 
@@ -98,18 +98,17 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
     };
 
     const extractFormData = () => {
-        const customerData = formCustomerRef.current
-            ? formCustomerRef.current?.getFormCutomer()
-            : null;
-    
-        const form = formRef.current
-            ? formRef.current?.getForm()
-            : null;
+        const customerData = formCustomerRef.current?.getFormCustomer?.() || null;
+        const form = formRef.current?.getForm?.() || null;
     
         return { customerData, form }; 
     };
 
     const extractFormDataAndValidate = async () => {
+
+        while (!formCustomerRef?.current || !formRef?.current) {
+            await new Promise((resolve) => setTimeout(resolve, 50)); // Espera hasta que las referencias estén listas
+        }
         const customerData = formCustomerRef.current
             ? await formCustomerRef.current?.submitFormCustomer()
             : null;
@@ -117,7 +116,6 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
         const form = formRef.current
             ? await formRef.current?.submitForm()
             : null;
-            
         return { customerData, form }; // Devuelve los datos
     };
     

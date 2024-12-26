@@ -4,7 +4,7 @@ import { NumericFormat } from 'react-number-format';
 import { IoExitOutline } from "react-icons/io5";
 import { Tooltip } from '@mui/material';
 
-interface BudgetPreviewProps {
+interface InvoicePreviewProps {
     isOpen: boolean;
     onClose: () => void;
     company: Company | undefined;
@@ -20,7 +20,7 @@ interface BudgetPreviewProps {
     totalWithIgft: number | undefined;
 }
 
-export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
+export const InvoicePreview: React.FC<InvoicePreviewProps> = ({
   isOpen,
   onClose,
   company,
@@ -75,9 +75,9 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
                         )}
                     </div>
                 </div>
-                <div className="font-knewave text-white px-8 font-title text-5xl mt-5 sm:mt-0">Presupuesto</div>
+                <div className="font-knewave text-white px-8 font-title text-5xl mt-5 sm:mt-0">FACTURA</div>
             </div>
-            
+
             {/* Contenido Principal */}
             <div className="flex flex-col sm:flex-row py-4 px-8">
                 {/* Customer Form */}
@@ -93,8 +93,8 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
                 {/* Budget Form */}
                 <div className="flex flex-col lg:items-end text-black">
                     <div className="flex-1">
-                        <h3 className="text-lg font-semibold mb-2">Detalles del Presupuesto</h3>
-                        <p ><strong>Nº de Presupuesto:</strong> {form?.num || 'No disponible'}</p>
+                        <h3 className="text-lg font-semibold mb-2">Detalles de Factura</h3>
+                        <p ><strong>Nº de Factura:</strong> {form?.num || 'No disponible'}</p>
                         <p ><strong>Fecha de Creación:</strong> {formatDate(form?.dateCreation)}</p>
                         <p><strong>Fecha de Vencimiento:</strong> {formatDate(form?.dateExpiration)}</p>
                         <p><strong>Moneda:</strong> {form?.currency === 'Bs' ? 'Bolívar (Bs)' : 'USD ($)'}</p>
@@ -159,83 +159,83 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
                 <div className="bg-gray-100/55 px-6 py-4 rounded-b-lg">
                     <div className="font-bold text-black mb-2">Detalles del Servicio</div>
                     {service.products && service.products.length > 0 ? (
-                    <div className="space-y-2">
-                        {/* Columnas de Productos */}
-                        <div className="grid grid-cols-5 font-semibold text-black border-b pb-2">
-                        <div className="text-start col-span-1">Producto</div>
-                        <div className="text-end col-span-1">Categoría</div>
-                        <div className="text-end col-span-1">Cantidad</div>
-                        <div className="text-end col-span-1">Precio Unitario</div>
-                        <div className="text-end col-span-1">Precio Total</div>
-                        </div>
+                        <div className="space-y-2">
+                            {/* Columnas de Productos */}
+                            <div className="grid grid-cols-5 font-semibold text-black border-b pb-2">
+                                <div className="text-start col-span-1">Producto</div>
+                                <div className="text-end col-span-1">Categoría</div>
+                                <div className="text-end col-span-1">Cantidad</div>
+                                <div className="text-end col-span-1">Precio Unitario</div>
+                                <div className="text-end col-span-1">Precio Total</div>
+                            </div>
 
-                        {/* Filas de Productos */}
-                        {service.products.map((product) => (
-                        <div
-                            key={product.product._id}
-                            className="grid grid-cols-5 items-center text-black py-1"
-                        >
-                            <div className="text-start col-span-1">{product.product.name}</div>
-                            <div className="text-end col-span-1">{product.product.category}</div>
-                            <div className="text-end col-span-1">
-                            <NumericFormat
-                                value={product.quantity}
-                                displayType="text"
-                                thousandSeparator="."
-                                decimalSeparator=","
-                            />
-                            </div>
-                            <div className="text-end col-span-1">
-                            <NumericFormat
-                                value={product.product.price}
-                                displayType="text"
-                                thousandSeparator="."
-                                decimalSeparator=","
-                                decimalScale={2}
-                                fixedDecimalScale
-                            />
-                            </div>
-                            <div className="text-end col-span-1">
-                            <NumericFormat
-                                value={product.product.price * product.quantity}
-                                displayType="text"
-                                thousandSeparator="."
-                                decimalSeparator=","
-                                decimalScale={2}
-                                fixedDecimalScale
-                            />
-                            </div>
-                        </div>
-                        ))}
+                            {/* Filas de Productos */}
+                            {service.products.map((product) => (
+                                <div
+                                    key={product.product._id}
+                                    className="grid grid-cols-5 items-center text-black py-1"
+                                >
+                                    <div className="text-start col-span-1">{product.product.name}</div>
+                                    <div className="text-end col-span-1">{product.product.category}</div>
+                                    <div className="text-end col-span-1">
+                                    <NumericFormat
+                                        value={product.quantity}
+                                        displayType="text"
+                                        thousandSeparator="."
+                                        decimalSeparator=","
+                                    />
+                                    </div>
+                                    <div className="text-end col-span-1">
+                                    <NumericFormat
+                                        value={product.product.price}
+                                        displayType="text"
+                                        thousandSeparator="."
+                                        decimalSeparator=","
+                                        decimalScale={2}
+                                        fixedDecimalScale
+                                    />
+                                    </div>
+                                    <div className="text-end col-span-1">
+                                    <NumericFormat
+                                        value={product.product.price * product.quantity}
+                                        displayType="text"
+                                        thousandSeparator="."
+                                        decimalSeparator=","
+                                        decimalScale={2}
+                                        fixedDecimalScale
+                                    />
+                                    </div>
+                                </div>
+                                ))}
 
-                        {/* Fila de Mano de Obra */}
-                        <div className="grid grid-cols-5 items-center text-black">
-                        <div className="text-start col-span-2">Mano de obra</div>
-                        <div className="text-end col-span-1">1</div>
-                        <div className="text-end col-span-1">
-                            <NumericFormat
-                            value={service.servicePrice}
-                            displayType="text"
-                            thousandSeparator="."
-                            decimalSeparator=","
-                            decimalScale={2}
-                            fixedDecimalScale
-                            />
-                        </div>
-                        <div className="text-end col-span-1">
-                            <NumericFormat
-                            value={service.servicePrice}
-                            displayType="text"
-                            thousandSeparator="."
-                            decimalSeparator=","
-                            decimalScale={2}
-                            fixedDecimalScale
-                            />
-                        </div>
-                        </div>
+                                {/* Fila de Mano de Obra */}
+                                <div className="grid grid-cols-5 items-center text-black">
+                                <div className="text-start col-span-2">Mano de obra</div>
+                                <div className="text-end col-span-1">1</div>
+                                <div className="text-end col-span-1">
+                                    <NumericFormat
+                                    value={service.servicePrice}
+                                    displayType="text"
+                                    thousandSeparator="."
+                                    decimalSeparator=","
+                                    decimalScale={2}
+                                    fixedDecimalScale
+                                    />
+                                </div>
+                                <div className="text-end col-span-1">
+                                    <NumericFormat
+                                    value={service.servicePrice}
+                                    displayType="text"
+                                    thousandSeparator="."
+                                    decimalSeparator=","
+                                    decimalScale={2}
+                                    fixedDecimalScale
+                                    />
+                                </div>
+                            </div>
                     </div>
                     ) : (
-                    <div className="text-center py-2 text-gray-500">
+                    <div className="text-center py-2 text-gray-700">
                         No hay productos para este servicio.
                     </div>
                     )}
@@ -245,13 +245,14 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
             </div>
 
             {/* Contenedor Principal para Resumen y Condiciones */}
-            <div className="flex flex-col md:flex-row w-full pl-4 pr-6 mt-6 gap-8 text-black text-justify">        
+            <div className="flex flex-col md:flex-row w-full pl-4 pr-6 mt-6 gap-8 text-black text-justify">
+            
                 {/* Condiciones de la Oferta (lado izquierdo) */}
                 <div className="w-full md:w-1/2 rounded-lg p-4 bg-gray-100/55">
                     <h3 className="text-lg font-bold mb-2">Condiciones de la Oferta:</h3>
-                    <p className="mb-1">
-                        <span className="font-semibold">Moneda:</span> El monto está establecido en {form?.currency === '$' ? 'dólares. Este pago estará sujeto al cobro adicional del 3% del Impuesto a las Grandes Transacciones Financieras (IGTF), de conformidad con la Providencia Administrativa SNAT/2022/000013 publicada en la G.O. N° 42.339 del 17-03-2022' : 'Bolívares'}.
-                    </p>
+                        <p className="mb-1">
+                            <span className="font-semibold">Moneda:</span> El monto está establecido en {form?.currency === '$' ? 'dólares. Este pago estará sujeto al cobro adicional del 3% del Impuesto a las Grandes Transacciones Financieras (IGTF), de conformidad con la Providencia Administrativa SNAT/2022/000013 publicada en la G.O. N° 42.339 del 17-03-2022' : 'Bolívares'}.
+                        </p>
                     {form?.currency !== '$' && (
                         <p className="mb-1">
                         <span className="font-semibold">Pagadero a tasa de BCV:</span> A la fecha de su cancelación.
@@ -265,74 +266,81 @@ export const BudgetPreview: React.FC<BudgetPreviewProps> = ({
                     </p>
                 </div>
 
-                {/* Resumen de Totales (lado derecho) */}
-                <div className="w-full md:w-1/2">
-                    {/* Summary Section */}
-                    <div className="flex flex-col items-end w-full text-black">
-                        {/* Subtotal */}
+
+            {/* Resumen de Totales (lado derecho) */}
+            <div className="w-full md:w-1/2">
+                {/* Summary Section */}
+                <div className="flex flex-col items-end w-full text-black">
+                    {/* Subtotal */}
+                    <div className="flex justify-between w-full max-w-md py-1 pr-3">
+                        <span className="font-bold">Subtotal:</span>
+                        <span>
+                        <NumericFormat 
+                            value={subtotal} 
+                            displayType="text" 
+                            thousandSeparator="." 
+                            decimalSeparator="," 
+                            decimalScale={2} 
+                            fixedDecimalScale 
+                        />
+                        </span>
+                    </div>
+
+                    {/* IVA */}
+                    <div className="flex justify-between w-full max-w-md py-1 pr-3">
+                        <span className="font-bold">IVA ({ivaPercentage}%):</span>
+                        <span>
+                        <NumericFormat 
+                            value={calculatedIva} 
+                            displayType="text" 
+                            thousandSeparator="." 
+                            decimalSeparator="," 
+                            decimalScale={2} 
+                            fixedDecimalScale 
+                        />
+                        </span>
+                    </div>
+
+                    {/* IGTF (si la moneda es USD) */}
+                    {form?.currency === '$' && (
                         <div className="flex justify-between w-full max-w-md py-1 pr-3">
-                            <span className="font-bold">Subtotal:</span>
-                            <span>
+                        <span className="font-bold">IGTF ({igtfPercentage}%):</span>
+                        <span>
                             <NumericFormat 
-                                value={subtotal} 
-                                displayType="text" 
-                                thousandSeparator="." 
-                                decimalSeparator="," 
-                                decimalScale={2} 
-                                fixedDecimalScale 
+                            value={calculatedIgtf} 
+                            displayType="text" 
+                            thousandSeparator="." 
+                            decimalSeparator="," 
+                            decimalScale={2} 
+                            fixedDecimalScale 
                             />
-                            </span>
+                        </span>
                         </div>
+                    )}
 
-                        {/* IVA */}
-                        <div className="flex justify-between w-full max-w-md py-1 pr-3">
-                            <span className="font-bold">IVA ({ivaPercentage}%):</span>
-                            <span>
+                    {/* Total */}
+                    <div className="flex justify-between w-full max-w-md py-2 mt-2 pr-2 border-t border-gray-300">
+                        <span className="font-bold text-lg">Total:</span>
+                        <span className="font-bold text-lg">
                             <NumericFormat 
-                                value={calculatedIva} 
+                                value={form?.currency === '$' ? totalWithIgft : total} 
                                 displayType="text" 
                                 thousandSeparator="." 
                                 decimalSeparator="," 
                                 decimalScale={2} 
                                 fixedDecimalScale 
+                                prefix={form?.currency === 'Bs' ? 'Bs ' : '$ '}
                             />
-                            </span>
-                        </div>
-
-                        {/* IGTF (si la moneda es USD) */}
-                        {form?.currency === '$' && (
-                            <div className="flex justify-between w-full max-w-md py-1 pr-3">
-                            <span className="font-bold">IGTF ({igtfPercentage}%):</span>
-                            <span>
-                                <NumericFormat 
-                                value={calculatedIgtf} 
-                                displayType="text" 
-                                thousandSeparator="." 
-                                decimalSeparator="," 
-                                decimalScale={2} 
-                                fixedDecimalScale 
-                                />
-                            </span>
-                            </div>
-                        )}
-
-                        {/* Total */}
-                        <div className="flex justify-between w-full max-w-md py-2 mt-2 pr-2 border-t border-gray-300">
-                            <span className="font-bold text-lg">Total:</span>
-                            <span className="font-bold text-lg">
-                                <NumericFormat 
-                                    value={form?.currency === '$' ? totalWithIgft : total} 
-                                    displayType="text" 
-                                    thousandSeparator="." 
-                                    decimalSeparator="," 
-                                    decimalScale={2} 
-                                    fixedDecimalScale 
-                                    prefix={form?.currency === 'Bs' ? 'Bs ' : '$ '}
-                                />
-                            </span>
-                        </div>
+                        </span>
                     </div>
                 </div>
+            </div>
+            </div>
+            {/* Validacion de factura */}    
+            <div className='px-8 py-2 text-justify'>
+                <p className='text-sm text-black/80'>Documento que se emite de acuerdo a lo establecido en la Providencia Administrativa SNAT/2014/0032 de fecha 31/07/2014.
+                Corporación Unidigital 1000, C.A. Rif J-40140000-0 Imprenta Digital, Autorizada según Providencia Administrativa SENIAT/INTI/2000 00000000 de fecha 01-01-2024,
+                Numero de Control desde el Nro 00-00000000 hasta el Nro 00-00000000 generadas el 01-01-2024, estos datos solo son con fines demostrativos no son reales.</p>
             </div>
         </div>
     </div>

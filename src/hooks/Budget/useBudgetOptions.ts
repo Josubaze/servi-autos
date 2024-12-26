@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ interface BudgetOptionsProps {
 export const useBudgetOptions = ({
   extractFormData,
 }: BudgetOptionsProps) => {
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [showHiddenPDF, setShowHiddenPDF] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const printRef = useRef<HTMLDivElement | null>(null);
@@ -22,7 +22,7 @@ export const useBudgetOptions = ({
   const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
   // Función que se ejecuta en cada acción de impresión o PDF
-  const updateCustomerAndBudget = async () => {
+  const updateCustomerAndForm = async () => {
         const { customerData, form } = extractFormData();
         if (customerData) {
             setCustomer(customerData);
@@ -30,69 +30,82 @@ export const useBudgetOptions = ({
         if (form) {
             setForm(form);
         } 
-};
+  };
 
-
-  const handlePDFGeneration = async () => {
-    setIsLoading(true);
-    setShowHiddenPDF(true);
-    // Actualizamos los estados antes de generar el PDF
-    await updateCustomerAndBudget();
-
+  const handlePDFGeneration = async (type: "Budget" | "Invoice") => {
     try {
-      await sleep(300);
-      if (!printRef.current) return;
+        const { form: formExtract } = await extractFormData();
+        setIsLoading(true);
+        setShowHiddenPDF(true);
 
-      const fullCanvas = await html2canvas(printRef.current, {
-        scale: 1.2,
-        backgroundColor: "#ffffff",
-      });
+        await updateCustomerAndForm();
 
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const margin = 10;
-      const imgWidth = pageWidth - margin * 2;
-      const visibleHeight = pageHeight - margin * 2;
+        await sleep(300);
+        if (!printRef.current) {
+            throw new Error("Referencia de impresión no disponible.");
+        }
 
-      let yOffset = 0;
+        // Aumentamos la escala para mejorar la calidad
+        const fullCanvas = await html2canvas(printRef.current, {
+            scale: 3, 
+            backgroundColor: "#ffffff",
+        });
 
-      while (yOffset < fullCanvas.height) {
-        const remainingHeight = Math.min(
-          fullCanvas.height - yOffset,
-          visibleHeight * (fullCanvas.width / imgWidth)
-        );
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const margin = 10;
+        const imgWidth = pageWidth - margin * 2;
+        const visibleHeight = pageHeight - margin * 2;
 
-        const partCanvas = document.createElement("canvas");
-        partCanvas.width = fullCanvas.width;
-        partCanvas.height = remainingHeight;
+        let yOffset = 0;
 
-        const context = partCanvas.getContext("2d");
-        if (!context) return;
+        while (yOffset < fullCanvas.height) {
+            const remainingHeight = Math.min(
+                fullCanvas.height - yOffset,
+                visibleHeight * (fullCanvas.width / imgWidth)
+            );
 
-        context.drawImage(
-          fullCanvas,
-          0, yOffset,
-          fullCanvas.width, remainingHeight,
-          0, 0,
-          partCanvas.width, remainingHeight
-        );
+            const partCanvas = document.createElement("canvas");
+            partCanvas.width = fullCanvas.width;
+            partCanvas.height = remainingHeight;
 
-        const partImgData = partCanvas.toDataURL("image/png");
+            const context = partCanvas.getContext("2d");
+            if (!context) throw new Error("Error al crear el contexto del canvas.");
 
-        pdf.addImage(partImgData, "PNG", margin, margin, imgWidth, (remainingHeight / fullCanvas.width) * imgWidth);
+            context.drawImage(
+                fullCanvas,
+                0,
+                yOffset,
+                fullCanvas.width,
+                remainingHeight,
+                0,
+                0,
+                partCanvas.width,
+                remainingHeight
+            );
 
-        yOffset += remainingHeight;
+            // Comprimir la imagen antes de añadirla al PDF
+            const partImgData = partCanvas.toDataURL("image/jpeg", 0.6);
 
-        if (yOffset < fullCanvas.height) pdf.addPage();
-      }
+            pdf.addImage(partImgData, "JPEG", margin, margin, imgWidth, (remainingHeight / fullCanvas.width) * imgWidth);
 
-      pdf.save(`Budget_${form?.num}.pdf`);
+            yOffset += remainingHeight;
+
+            if (yOffset < fullCanvas.height) pdf.addPage();
+        }
+
+        pdf.save(`${type}_N${formExtract?.num}.pdf`);
     } catch (error) {
-      toast.error("Error al generar el PDF:");
+        if (error instanceof Error) {
+            toast.error(`Error: ${error.message}`);
+        } else {
+            toast.error("Error desconocido al generar el PDF.");
+        }
+        console.error("Error al generar el PDF:", error);
     } finally {
-      setShowHiddenPDF(false);
-      setIsLoading(false);
+        setShowHiddenPDF(false);
+        setIsLoading(false);
     }
   };
 
@@ -100,14 +113,14 @@ export const useBudgetOptions = ({
     setIsLoading(true);
     setShowHiddenPDF(true);
     // Actualizamos los estados antes de generar el PDF
-    await updateCustomerAndBudget();
+    await updateCustomerAndForm();
 
     try {
       await sleep(300);
       if (!printRef.current) return;
 
       const fullCanvas = await html2canvas(printRef.current, {
-        scale: 1.2,
+        scale: 3,
         backgroundColor: "#ffffff",
       });
 
@@ -213,13 +226,13 @@ export const useBudgetOptions = ({
 
   const handlePreview = async () => {
     // Actualizamos los estados antes de generar el PDF
-    await updateCustomerAndBudget();
-    setModalOpen(!isModalOpen);
+    await updateCustomerAndForm();
+    setShowPreview(!showPreview);
   };
 
   return {
-    isModalOpen,
-    setModalOpen,
+    showPreview,
+    setShowPreview,
     showHiddenPDF,
     setShowHiddenPDF,
     isLoading,

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { NumericFormat } from 'react-number-format';
 
 
-interface BudgetPDFProps {
+interface InvoicePDFProps {
     company: Company | undefined;
     customer: Customer | undefined;
     form: Form | undefined;
@@ -17,7 +17,7 @@ interface BudgetPDFProps {
     totalWithIgft: number | undefined;
 }
 
-export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
+export const InvoicePDF = forwardRef<HTMLDivElement, InvoicePDFProps>((
     { 
     company,
     form,
@@ -58,7 +58,7 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
                         )}
                     </div>
                 </div>
-                <div className="font-knewave text-white px-8 font-title text-5xl mt-5 sm:mt-0">Presupuesto</div>
+                <div className="font-knewave text-white px-8 font-title text-5xl mt-5 sm:mt-0">FACTURA</div>
             </div>
             {/* Contenido Principal */}
             <div className="flex flex-col sm:flex-row py-4 px-8">
@@ -75,8 +75,8 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
                 {/* Budget Form */}
                 <div className="flex flex-col lg:items-end text-black">
                     <div className="flex-1">
-                        <h3 className="text-lg font-semibold mb-2">Detalles del Presupuesto</h3>
-                        <p ><strong>Nº de Presupuesto:</strong> {form?.num || 'No disponible'}</p>
+                        <h3 className="text-lg font-semibold mb-2">Detalles de Factura</h3>
+                        <p ><strong>Nº de Factura:</strong> {form?.num || 'No disponible'}</p>
                         <p ><strong>Fecha de Creación:</strong> {formatDate(form?.dateCreation)}</p>
                         <p><strong>Fecha de Vencimiento:</strong> {formatDate(form?.dateExpiration)}</p>
                         <p><strong>Moneda:</strong> {form?.currency === 'Bs' ? 'Bolívar (Bs)' : 'USD ($)'}</p>
@@ -217,7 +217,7 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
                         </div>
                     </div>
                     ) : (
-                    <div className="text-center py-2 text-gray-500">
+                    <div className="text-center py-2 text-gray-700">
                         No hay productos para este servicio.
                     </div>
                     )}
@@ -227,13 +227,14 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
             </div>
 
             {/* Contenedor Principal para Resumen y Condiciones */}
-            <div className="flex flex-col md:flex-row w-full pl-4 pr-6 mt-6 gap-8 text-black text-justify">        
+            <div className="flex flex-col md:flex-row w-full pl-4 pr-6 mt-6 gap-8 text-black text-justify">
+            
                 {/* Condiciones de la Oferta (lado izquierdo) */}
                 <div className="w-full md:w-1/2 rounded-lg p-4 bg-gray-100/55">
                     <h3 className="text-lg font-bold mb-2">Condiciones de la Oferta:</h3>
-                    <p className="mb-1">
-                        <span className="font-semibold">Moneda:</span> El monto está establecido en {form?.currency === '$' ? 'dólares. Este pago estará sujeto al cobro adicional del 3% del Impuesto a las Grandes Transacciones Financieras (IGTF), de conformidad con la Providencia Administrativa SNAT/2022/000013 publicada en la G.O. N° 42.339 del 17-03-2022' : 'Bolívares'}.
-                    </p>
+                        <p className="mb-1">
+                            <span className="font-semibold">Moneda:</span> El monto está establecido en {form?.currency === '$' ? 'dólares. Este pago estará sujeto al cobro adicional del 3% del Impuesto a las Grandes Transacciones Financieras (IGTF), de conformidad con la Providencia Administrativa SNAT/2022/000013 publicada en la G.O. N° 42.339 del 17-03-2022' : 'Bolívares'}.
+                        </p>
                     {form?.currency !== '$' && (
                         <p className="mb-1">
                         <span className="font-semibold">Pagadero a tasa de BCV:</span> A la fecha de su cancelación.
@@ -316,6 +317,12 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
                     </div>
                 </div>
             </div>
+            {/* Validacion de factura */}    
+            <div className='px-8 py-2 text-justify'>
+                <p className='text-sm text-black/80'>Documento que se emite de acuerdo a lo establecido en la Providencia Administrativa SNAT/2014/0032 de fecha 31/07/2014.
+                Corporación Unidigital 1000, C.A. Rif J-40140000-0 Imprenta Digital, Autorizada según Providencia Administrativa SENIAT/INTI/2000 00000000 de fecha 01-01-2024,
+                Numero de Control desde el Nro 00-00000000 hasta el Nro 00-00000000 generadas el 01-01-2024, estos datos solo son con fines demostrativos no son reales.</p>
+            </div>
         </div>
     </>
   );
@@ -323,4 +330,4 @@ export const BudgetPDF = forwardRef<HTMLDivElement, BudgetPDFProps>((
 
 
 // Agrega el displayName para evitar el error de ESLint
-BudgetPDF.displayName = 'BudgetPDF';
+InvoicePDF.displayName = 'InvoicePDF';
