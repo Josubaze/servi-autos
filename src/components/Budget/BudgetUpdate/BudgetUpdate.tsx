@@ -16,16 +16,25 @@ export const BudgetUpdate = ({ id }: { id: string }) => {
     setHasRedirected(true); // Marcar que se ha hecho la redirección
     toast.error('Error al cargar el presupuesto');
     router.push('/control/budgets');
-    return null; 
+    return null;
+  }
+
+  // Validar si el estado es "Aceptado" antes de renderizar el componente
+  if (budget?.state === 'Aceptado' && !hasRedirected) {
+    setHasRedirected(true); // Marcar que se ha hecho la redirección
+    toast.error('No se puede modificar un presupuesto aceptado');
+    router.push('/control/budgets');
+    return null;
   }
 
   return (
     <div>
-      <Budget mode="update" budgetData={budget} />
-      {isLoading && (
-        <div className='h-full'>
-          <Loading/>
+      {isLoading ? (
+        <div className="h-full">
+          <Loading />
         </div>
+      ) : (
+        <Budget mode="update" budgetData={budget} />
       )}
     </div>
   );

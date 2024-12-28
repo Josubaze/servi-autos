@@ -125,7 +125,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 const bgColor = value === "Borrador" ? "bg-gray-600" : value === "Aceptado" ? "bg-green-600" : "bg-red-600";
                 return (
                     <div className="flex justify-center"> 
-                        <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor}`}>
+                        <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24`}>
                             {value}
                         </div>     
                     </div>
@@ -147,7 +147,9 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
             return (
                 <div className='flex gap-x-5 justify-center'>
                     <ViewButton onClick={() => handleView(budget)}/>
-                    <UpdateButton onClick={() => handleUpdate(budget._id)} />
+                    {budget.state !== "Aceptado" && (
+                        <UpdateButton onClick={() => handleUpdate(budget._id)} />
+                    )}
                     <ExportButton onClick={() => handleExportPDF(budget)} />
                     <PrintButton onClick={() => handlePrint(budget)} />
                     <DeleteButton onClick={() => handleDelete(budget._id)} />

@@ -81,6 +81,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
 
     const resetValues = () => {
         setSelectedServices([]);
+        setOriginalServices([]);
         setDescription("");
         if (formCustomerRef.current) {
             formCustomerRef.current.resetFormCustomer();
@@ -170,7 +171,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
     };
 
     // Función principal para guardar el presupuesto
-    const handleSave = async (action: "draft" | "accepted", mode: "create" | "update", invoice_id : string) => {
+    const handleSave = async (action: "draft" | "paid" | "pending", mode: "create" | "update", invoice_id : string) => {
         setIsSaving(true);
         try {
             const {
@@ -203,7 +204,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                     })),
                 })),
                 description,
-                state: action === "draft" ? "Borrador" : action === "accepted" ? "Aceptado" : "",
+                state: action === "draft" ? "Borrador" : action === "paid" ? "Pagada" : action === "pending" ? "Pendiente" : "",
                 subtotal,
                 ivaPercentage,
                 igtfPercentage,

@@ -1,1 +1,1 @@
-export { BudgetOptions } from './BudgetOptions'
+export { InvoiceOptions } from './InvoiceOptions'

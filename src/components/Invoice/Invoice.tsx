@@ -4,11 +4,11 @@ import { InvoiceHeader } from "../Invoice/InvoiceHeader";
 import { BudgetCustomerForm } from "../Budget/BudgetCustomerForm";
 import { BudgetTable } from "../Budget/BudgetTable";
 import { BudgetSummary } from "../Budget/BudgetSummary";
-import { BudgetActions } from "../Budget/BudgetActions";
 import { Loading } from "../Common/Loading";
 import { useInvoice } from "src/hooks/Invoice/useInvoice";
 import { InvoiceForm } from "./InvoiceForm/InvoiceForm";
 import { InvoiceOptions } from "./InvoiceOptions/InvoiceOptions";
+import { InvoiceActions } from "./InvoiceActions";
 
     interface InvoiceProps {
         mode?: "create" | "update";
@@ -111,10 +111,10 @@ import { InvoiceOptions } from "./InvoiceOptions/InvoiceOptions";
                 setIgtfPercentage={setIgtfPercentage}
             />
 
-            <BudgetActions
+            <InvoiceActions
                 description={description}
                 setDescription={setDescription}
-                handleButtonType={(action: "draft" | "accepted") => handleSave(action, mode, invoiceData?._id || '')} 
+                handleButtonType={(action: "draft" | "paid" | "pending") => handleSave(action, mode, invoiceData?._id || '')} 
                 mode={mode}              
             />
         </div>

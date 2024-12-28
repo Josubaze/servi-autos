@@ -1,1 +1,1 @@
-export { BudgetPDF } from './BudgetPDF';
+export { InvoicePDF } from './InvoicePDF';

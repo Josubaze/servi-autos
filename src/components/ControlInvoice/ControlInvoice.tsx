@@ -8,11 +8,11 @@ import { HiDocumentPlus } from "react-icons/hi2";
 import { ControlInvoiceTable } from './../ControlInvoice/ControlInvoiceTable';
 import { DateRangePicker } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
-import { BudgetPreview } from '../BudgetPreview';
-import { BudgetPDF } from '../BudgetPDF';
 import { Loading } from '../Common/Loading';
 import { useControlInvoice } from 'src/hooks/ControlInvoice/useControlInvoice';
 import { useGetInvoicesQuery, useDeleteInvoiceMutation } from "src/redux/services/invoices.Api";
+import { InvoicePDF } from "../InvoicePDF/InvoicePDF";
+import { InvoicePreview } from "../InvoicePreview";
 
 export const ControlInvoice = () => {
   
@@ -94,7 +94,7 @@ export const ControlInvoice = () => {
       {/* Componente oculto para PDF */}
         {isOpenPdf && (
           <div className="absolute top-[-9999px] left-[-9999px]">
-            <BudgetPDF
+            <InvoicePDF
               ref={printRef}
               company={invoiceCopy?.company}
               customer={invoiceCopy?.customer}
@@ -113,7 +113,7 @@ export const ControlInvoice = () => {
 
         {/* Modal para vista previa */}
         {isOpenPreview && (
-          <BudgetPreview
+          <InvoicePreview
             isOpen={isOpenPreview}
             onClose={() => setIsOpenPreview(false)}
             company={invoiceCopy?.company}

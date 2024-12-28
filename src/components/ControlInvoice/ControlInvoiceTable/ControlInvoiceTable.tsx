@@ -122,40 +122,51 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
                 style: { textAlign: 'center' },
             }),
             customBodyRender: (value: string) => {
-                const bgColor = value === "Borrador" ? "bg-gray-600" : value === "Aceptado" ? "bg-green-600" : "bg-red-600";
+                const bgColor = 
+                    value === "Borrador" ? "bg-gray-600" : 
+                    value === "Pagada" ? "bg-green-600" : 
+                    value === "Pendiente" ? "bg-yellow-400/80" : 
+                    "bg-red-600";
+            
                 return (
                     <div className="flex justify-center"> 
-                        <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor}`}>
+                        <div 
+                            className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24`}
+                        >
                             {value}
                         </div>     
                     </div>
                 );
             },
+            
         },
     },
     {
         name: "options",
         label: "Opciones",
         options: {
-            sort: false,
-            filter: false,
-            setCellHeaderProps: () => ({
+        sort: false,
+        filter: false,
+        setCellHeaderProps: () => ({
             style: { textAlign: 'center' },
-            }),
-            customBodyRender: (value: any, tableMeta: any) => { // Accede al objeto completo
-            const invoice = rows[tableMeta.rowIndex].invoice
+        }),
+        customBodyRender: (value: any, tableMeta: any) => {
+            const invoice = rows[tableMeta.rowIndex].invoice;
             return (
-                <div className='flex gap-x-5 justify-center'>
-                    <ViewButton onClick={() => handleView(invoice)}/>
-                    <UpdateButton onClick={() => handleUpdate(invoice._id)} />
-                    <ExportButton onClick={() => handleExportPDF(invoice)} />
-                    <PrintButton onClick={() => handlePrint(invoice)} />
-                    <DeleteButton onClick={() => handleDelete(invoice._id)} />
-                </div>
+            <div className='flex gap-x-5 justify-center'>
+                <ViewButton onClick={() => handleView(invoice)} />
+                {invoice.state !== "Pagada" && (
+                <UpdateButton onClick={() => handleUpdate(invoice._id)} />
+                )}
+                <ExportButton onClick={() => handleExportPDF(invoice)} />
+                <PrintButton onClick={() => handlePrint(invoice)} />
+                <DeleteButton onClick={() => handleDelete(invoice._id)} />
+            </div>
             );
-            },
         },
         },
+    }
+      
     ];
 
     const mobileColumnsToShow = ['num', 'dateCreation', 'state', 'options'];

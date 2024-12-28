@@ -83,6 +83,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
 
     const resetValues = () => {
         setSelectedServices([]);
+        setOriginalServices([]);
         setDescription("");
         if (formCustomerRef.current) {
             formCustomerRef.current.resetFormCustomer();

@@ -16,16 +16,25 @@ export const InvoiceUpdate = ({ id }: { id: string }) => {
     setHasRedirected(true); // Marcar que se ha hecho la redirección
     toast.error('Error al cargar factura');
     router.push('/control/invoices');
-    return null; 
+    return null;
+  }
+
+  // Validar si el estado es "Pagada" antes de renderizar el componente
+  if (invoice?.state === 'Pagada' && !hasRedirected) {
+    setHasRedirected(true); // Marcar que se ha hecho la redirección
+    toast.error('No se puede modificar una factura pagada');
+    router.push('/control/invoices');
+    return null;
   }
 
   return (
     <div>
-      <Invoice mode="update" invoiceData={invoice} />
-      {isLoading && (
-        <div className='h-full'>
-          <Loading/>
+      {isLoading ? (
+        <div className="h-full">
+          <Loading />
         </div>
+      ) : (
+        <Invoice mode="update" invoiceData={invoice} />
       )}
     </div>
   );

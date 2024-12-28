@@ -1,37 +1,38 @@
-import { LuSaveAll } from "react-icons/lu";
 import { motion } from "framer-motion";
 import Tooltip from "@mui/material/Tooltip";
-import { RiDraftLine } from "react-icons/ri";
 import { ThemeProvider, TextField } from "@mui/material";
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
 import { useState } from "react";
 import { TbArrowBadgeRightFilled } from "react-icons/tb";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { IoMdCheckmark } from "react-icons/io";
-import { Loading } from "src/components/Common/Loading";
+import { LuFileClock } from "react-icons/lu";
 import { LuFileText } from "react-icons/lu";
 import { LuFileCheck } from "react-icons/lu";
+import { Loading } from "src/components/Common/Loading";
+import { set } from "mongoose";
 
-interface BudgetActionsProps {
+interface InvoiceActionsProps {
     description: string;
     setDescription: (value: string) => void;
-    handleButtonType: (action: "draft" | "accepted") => Promise<void>; 
+    handleButtonType: (action: "draft" | "paid" | "pending") => Promise<void>;
     mode: string;
 }
 
-export const BudgetActions = ({
+export const InvoiceActions = ({
     description,
     setDescription,
     handleButtonType,
-    mode
-}: BudgetActionsProps) => {
-    const [activeButton, setActiveButton] = useState<"draft" | "accepted" | null>(null);
+    mode,
+}: InvoiceActionsProps) => {
+    const [activeButton, setActiveButton] = useState<"draft" | "paid" | "pending" | null>(null);
 
-    const showTextField = activeButton === "draft" || activeButton === "accepted"; 
+    const showTextField = activeButton === "draft" || activeButton === "paid" || activeButton === "pending";
 
     // Texto de los tooltips basado en el valor de 'mode'
     const draftTooltipText = mode === "update" ? "Actualizar como Borrador" : "Borrador";
-    const acceptedTooltipText = mode === "update" ? "Actualizar como Aceptado" : "Aceptado";
+    const paidTooltipText = mode === "update" ? "Actualizar como Pagada" : "Pagada";
+    const pendingTooltipText = mode === "update" ? "Actualizar como Pendiente" : "Pendiente";
     const [isLoading, setIsLoading] = useState(false);
 
     return (
@@ -43,7 +44,7 @@ export const BudgetActions = ({
                         transition={{ duration: 1, repeat: 5, ease: "easeInOut" }}
                         className="flex gap-x-2 justify-center items-center"
                     >
-                        <span className="font-knewave text-4xl">GUARDAR</span> 
+                        <span className="font-knewave text-4xl">GUARDAR</span>
                         <TbArrowBadgeRightFilled className="text-5xl" />
                     </motion.div>
                 </div>
@@ -62,7 +63,7 @@ export const BudgetActions = ({
                 )}
 
                 {/* Botón de borrador */}
-                {activeButton !== "accepted" && ( 
+                {activeButton !== "paid" && activeButton !== "pending" && (
                     <Tooltip title={activeButton === "draft" ? "Volver" : draftTooltipText} arrow>
                         <button
                             className="w-16 h-16 rounded-full bg-transparent border-2 border-gray-600 flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 hover:bg-gray-600 hover:border-gray-600 duration-300"
@@ -77,14 +78,38 @@ export const BudgetActions = ({
                     </Tooltip>
                 )}
 
-                {/* Botón de aceptado */}
-                {activeButton !== "draft" && ( 
-                    <Tooltip title={activeButton === "accepted" ? "Volver" : acceptedTooltipText} arrow>
+                {/* Botón de pendiente */}
+                {activeButton !== "draft" && activeButton !== "paid" && (
+                    <Tooltip title={activeButton === "pending" ? "Volver" : pendingTooltipText} arrow>
                         <button
-                            className={`w-16 h-16 rounded-full bg-transparent border-2 ${activeButton === "accepted" ? "border-gray-600 hover:bg-gray-600" : "border-green-600 hover:border-green-600 hover:bg-green-600"}  flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 duration-300`}
-                            onClick={() => setActiveButton(activeButton === "accepted" ? null : "accepted")}
+                            className={`w-16 h-16 rounded-full bg-transparent border-2 ${
+                                activeButton === "pending"
+                                    ? "border-gray-600 hover:bg-gray-600"
+                                    : "border-yellow-600 hover:border-yellow-600 hover:bg-yellow-600"
+                            } flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 duration-300`}
+                            onClick={() => setActiveButton(activeButton === "pending" ? null : "pending")}
                         >
-                            {activeButton === "accepted" ? (
+                            {activeButton === "pending" ? (
+                                <RiArrowGoBackFill className="w-16 h-16 p-4" />
+                            ) : (
+                                <LuFileClock  className="w-16 h-16 p-3" />
+                            )}
+                        </button>
+                    </Tooltip>
+                )}
+
+                {/* Botón de aceptado */}
+                {activeButton !== "draft" && activeButton !== "pending" && (
+                    <Tooltip title={activeButton === "paid" ? "Volver" : paidTooltipText} arrow>
+                        <button
+                            className={`w-16 h-16 rounded-full bg-transparent border-2 ${
+                                activeButton === "paid"
+                                    ? "border-gray-600 hover:bg-gray-600"
+                                    : "border-green-600 hover:border-green-600 hover:bg-green-600"
+                            }  flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 duration-300`}
+                            onClick={() => setActiveButton(activeButton === "paid" ? null : "paid")}
+                        >
+                            {activeButton === "paid" ? (
                                 <RiArrowGoBackFill className="w-16 h-16 p-4" />
                             ) : (
                                 <LuFileCheck className="w-16 h-16 p-3" />
