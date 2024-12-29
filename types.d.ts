@@ -238,4 +238,11 @@ interface ProductTableProps {
 }
 
 
+interface ErrorResponse {
+  data: {
+    message: string;
+  };
+  status: number;
+}
+
 declare module 'mui-datatables';

@@ -38,7 +38,16 @@ export const productsApi = createApi({
             }),
             invalidatesTags: ['Products'],
         }),
+        subtractProductQuantity: builder.mutation<void, { _id: string, quantityToSubtract: number }>({
+            query: ({ _id, quantityToSubtract }) => ({
+                url: `/products/${ _id}`,
+                method: 'PATCH',
+                body: { quantityToSubtract },
+            }),
+            invalidatesTags: ['Products'], // Actualiza los datos en la caché
+        }),
     }),
 });
 
-export const { useGetProductsQuery, useDeleteProductMutation , useCreateProductMutation, useUpdateProductMutation } =  productsApi
+export const { useGetProductsQuery, useDeleteProductMutation , useCreateProductMutation, useUpdateProductMutation, useSubtractProductQuantityMutation,
+ } =  productsApi
