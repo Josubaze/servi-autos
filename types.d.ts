@@ -114,6 +114,22 @@ interface Product {
     totalWithIgft: number;
   }
 
+  interface CreditNote {
+    _id: string;
+    formCreditNote: FormCreditNote;
+    company: Company;
+    customer: Customer;
+    services: Service[];
+    description: string;
+    subtotal: number;
+    ivaPercentage: number;
+    igtfPercentage: number;
+    calculatedIva: number;
+    calculatedIgtf: number;
+    total: number;
+    totalWithIgft: number;
+  }
+
   interface TableServicesProps {
     data: Service[];
     searchTerm: string;
@@ -160,6 +176,14 @@ interface Product {
     dateCreation: Dayjs;
     dateExpiration: Dayjs;
     dateUpdate: Dayjs;
+    currency: string;
+    exchangeRate: number;
+  }
+
+  interface FormCreditNote{
+    n_creditNote: number;
+    n_invoice: number;
+    dateCreation: Dayjs;
     currency: string;
     exchangeRate: number;
   }

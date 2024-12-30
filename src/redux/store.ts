@@ -11,6 +11,7 @@ import { companyApi } from './services/company.Api';
 import companySlice  from './features/companySlice';
 import { budgetsApi } from './services/budgets.Api';
 import { invoicesApi } from './services/invoices.Api';
+import { creditNotesApi } from './services/creditNotes.Api';
 
 export const makeStore = () => {
   return configureStore({
@@ -27,6 +28,7 @@ export const makeStore = () => {
       [companyApi.reducerPath]: companyApi.reducer,
       [budgetsApi.reducerPath]: budgetsApi.reducer,
       [invoicesApi.reducerPath]: invoicesApi.reducer,
+      [creditNotesApi.reducerPath]: creditNotesApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
@@ -38,6 +40,7 @@ export const makeStore = () => {
         .concat(companyApi.middleware)
         .concat(budgetsApi.middleware)
         .concat(invoicesApi.middleware)
+        .concat(creditNotesApi.middleware)
   });
 }
 
