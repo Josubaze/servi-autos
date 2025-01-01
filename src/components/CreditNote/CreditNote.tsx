@@ -1,21 +1,23 @@
 'use client';
 
-import { BudgetOptions } from "./BudgetOptions";
-import { BudgetCustomerForm } from "./BudgetCustomerForm";
-import { BudgetForm } from "./BudgetForm";
-import { BudgetTable } from "./BudgetTable";
-import { BudgetSummary } from "./BudgetSummary";
-import { BudgetActions } from "./BudgetActions";
+import { BudgetCustomerForm } from "../Budget/BudgetCustomerForm";
+import { BudgetTable } from "../Budget/BudgetTable";
+import { BudgetSummary } from "../Budget/BudgetSummary";
 import { Loading } from "../Common/Loading";
-import { useBudget } from "src/hooks/Budget/useBudget";
+import { useInvoice } from "src/hooks/Invoice/useInvoice";
+import { CreditNoteForm } from "./CreditNoteForm";
+import { InvoiceOptions } from "./../Invoice/InvoiceOptions";	
+import { InvoiceActions } from "./../Invoice/InvoiceActions";
 import { DocHeader } from "../Common/InvoiceHeader/InvoiceHeader";
+import { CreditNoteActions } from "./CreditNoteActions/CreditNoteActions";
+import { useCreditNote } from "src/hooks/CreditNote/useCreditNote";
 
-    interface BudgetProps {
+    interface CreditNoteProps {
         mode?: "create" | "update";
-        budgetData?: Budget | null;
+        invoiceData?: Invoice | null;
     }
 
-    export const Budget: React.FC<BudgetProps> = ({ mode = "create", budgetData= null }) => {
+    export const CreditNote: React.FC<CreditNoteProps> = ({ mode = "create", invoiceData= null }) => {
     const {
         formCustomerRef,
         formRef,
@@ -45,7 +47,7 @@ import { DocHeader } from "../Common/InvoiceHeader/InvoiceHeader";
         setIvaPercentage,
         setIgtfPercentage,
         handleSetFormCustomer,
-    } = useBudget({ mode, budgetData });
+    } = useCreditNote();
     
 
     return (
@@ -55,10 +57,10 @@ import { DocHeader } from "../Common/InvoiceHeader/InvoiceHeader";
                     <Loading />
                 </div>
             )}
-            <BudgetOptions  
+            {/* <InvoiceOptions  
                 company={company}
                 selectedServices={selectedServices}
-                extractFormData={extractFormData}
+                // extractFormData={extractFormData}
                 subtotal={subtotal}
                 ivaPercentage={ivaPercentage}
                 igtfPercentage={igtfPercentage}
@@ -66,14 +68,14 @@ import { DocHeader } from "../Common/InvoiceHeader/InvoiceHeader";
                 calculatedIgtf={calculatedIgtf}
                 total={total}
                 totalWithIgft={totalWithIgft}
-            />
-            <DocHeader company={company || null} isError={isError} isLoading={isLoading} title="PRESUPUESTO" />
+            /> */}
+            <DocHeader company={company || null} isError={isError} isLoading={isLoading} title="NOTA DE CRÉDITO" />
             <div className="flex flex-col sm:flex-row py-4 px-8">
                 <div className="flex-1">
                     <BudgetCustomerForm ref={formCustomerRef} />
                 </div>
                 <div className="flex-1">
-                    <BudgetForm
+                    <CreditNoteForm
                         ref={formRef}
                         setCurrency={setCurrency}
                         currency={currency}
@@ -111,12 +113,12 @@ import { DocHeader } from "../Common/InvoiceHeader/InvoiceHeader";
                 setIgtfPercentage={setIgtfPercentage}
             />
 
-            <BudgetActions
+            <CreditNoteActions
                 description={description}
                 setDescription={setDescription}
-                handleButtonType={(action: "draft" | "accepted") => handleSave(action, mode, budgetData?._id || '')} 
-                mode={mode}              
+                handleSave={handleSave} 
             />
+
         </div>
     );
 };

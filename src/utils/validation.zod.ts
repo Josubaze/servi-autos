@@ -124,6 +124,40 @@ export const BudgetFormSchema = z.object({
   
 });
 
+export const CreditNoteFormSchema = z.object({
+  n_creditNote: 
+    z.union([
+      z.string()
+        .refine(quantity => /^[0-9]+$/.test(quantity) && parseInt(quantity, 10) > 0, { message: "La cantidad debe ser un número entero positivo" })
+        .transform(quantity => parseInt(quantity, 10)),
+      z.number()
+        .refine(quantity => Number.isInteger(quantity) && quantity > 0, { message: "La cantidad debe ser un número entero positivo" })
+  ]),
+
+  n_invoice: 
+    z.union([
+      z.string()
+        .refine(quantity => /^[0-9]+$/.test(quantity) && parseInt(quantity, 10) > 0, { message: "La cantidad debe ser un número entero positivo" })
+        .transform(quantity => parseInt(quantity, 10)),
+      z.number()
+        .refine(quantity => Number.isInteger(quantity) && quantity > 0, { message: "La cantidad debe ser un número entero positivo" })
+  ]),
+  
+  dateCreation: 
+    z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), { message: 'Fecha de creación inválida' }),
+
+  currency: z.enum(["$", "Bs"], { message: "Moneda inválida" }),
+
+  exchangeRate: z.union([
+    z.string()
+      .refine(price => !isNaN(parseFloat(price)) && parseFloat(price) > 0, { message: "El precio debe ser un número positivo" })
+      .transform(price => parseFloat(price)),
+    z.number()
+      .refine(price => price > 0, { message: "El precio debe ser un número positivo" })
+  ]),
+
+});
+
 
 export const ServiceSchema = z.object({
   name: z.string()

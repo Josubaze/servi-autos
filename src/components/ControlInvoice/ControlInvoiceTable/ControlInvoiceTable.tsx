@@ -125,7 +125,7 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
                 const bgColor = 
                     value === "Borrador" ? "bg-gray-600" : 
                     value === "Pagada" ? "bg-green-600" : 
-                    value === "Pendiente" ? "bg-yellow-400/80" : 
+                    value === "Pendiente" ? "bg-yellow-400/85" : 
                     "bg-red-600";
             
                 return (

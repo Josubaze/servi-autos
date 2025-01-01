@@ -53,6 +53,7 @@ export const MENUPROFILE = [
 export const MENUCREATE= [
     { name: 'Factura', href: '/create/invoice' },
     { name: 'Informe', href: '/create/report' },
+    { name: 'Nota de Credito', href: '/create/credit-note' },
     { name: 'Orden de Compra', href: '/create/purchase-order' },
     { name: 'Presupuesto', href: '/create/budget' },
   ];

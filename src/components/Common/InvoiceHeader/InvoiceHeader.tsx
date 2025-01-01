@@ -1,13 +1,10 @@
-'use client';
-
-import React from 'react';
-
-interface BudgetHeaderProps {
+interface DocHeaderProps {
   company: Company | null; // Puede ser `null` mientras se cargan los datos.
   isLoading: boolean;
   isError: boolean;
+  title: string;
 }
-export const BudgetHeader: React.FC<BudgetHeaderProps> = ({ company, isLoading, isError }) => {
+export const DocHeader: React.FC<DocHeaderProps> = ({ company, isLoading, isError, title }) => {
 
   return (
     <div className="py-9 bg-center bg-black-nav rounded-xl  flex flex-col sm:flex-row justify-between items-center">
@@ -42,7 +39,7 @@ export const BudgetHeader: React.FC<BudgetHeaderProps> = ({ company, isLoading, 
         </div>
       </div>
 
-      <div className="font-knewave px-8 font-title text-5xl mt-5 sm:mt-0">PRESUPUESTO</div>
+      <div className="font-knewave px-8 font-title text-5xl mt-5 sm:mt-0">{title}</div>
     </div>
   );
 };

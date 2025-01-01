@@ -1,6 +1,5 @@
 'use client';
 
-import { InvoiceHeader } from "../Invoice/InvoiceHeader";
 import { BudgetCustomerForm } from "../Budget/BudgetCustomerForm";
 import { BudgetTable } from "../Budget/BudgetTable";
 import { BudgetSummary } from "../Budget/BudgetSummary";
@@ -9,6 +8,7 @@ import { useInvoice } from "src/hooks/Invoice/useInvoice";
 import { InvoiceForm } from "./InvoiceForm/InvoiceForm";
 import { InvoiceOptions } from "./InvoiceOptions/InvoiceOptions";
 import { InvoiceActions } from "./InvoiceActions";
+import { DocHeader } from "../Common/InvoiceHeader/InvoiceHeader";
 
     interface InvoiceProps {
         mode?: "create" | "update";
@@ -67,7 +67,7 @@ import { InvoiceActions } from "./InvoiceActions";
                 total={total}
                 totalWithIgft={totalWithIgft}
             />
-            <InvoiceHeader company={company || null} isError={isError} isLoading={isLoading} />
+            <DocHeader company={company || null} isError={isError} isLoading={isLoading} title="FACTURA" />
             <div className="flex flex-col sm:flex-row py-4 px-8">
                 <div className="flex-1">
                     <BudgetCustomerForm ref={formCustomerRef} />
