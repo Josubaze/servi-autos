@@ -1,0 +1,1 @@
+export { ControlCreditNoteTable } from './ControlCreditNoteTable'

@@ -10,22 +10,24 @@ export const creditNotesApi = createApi({
     endpoints: (builder) => ({
         // Obtener todas las notas de crédito
         getCreditNotes: builder.query<CreditNote[], void>({
-            query: () => '/creditNotes',
+            query: () => '/credit_notes',
             providesTags: ['CreditNotes'],
             transformResponse: (response: CreditNote[]) => {
-                return response.sort((a, b) => dayjs(b.formCreditNote.dateCreation).isBefore(dayjs(a.formCreditNote.dateCreation)) ? 1 : -1);
+                return response.sort((a, b) => 
+                    dayjs(b.form.dateCreation).isAfter(dayjs(a.form.dateCreation)) ? 1 : -1
+                );
             },
             keepUnusedDataFor: 600, 
         }),
         // Obtener una nota de crédito por ID
         getCreditNoteById: builder.query<CreditNote, string>({
-            query: (id) => `/creditNotes/${id}`,
+            query: (id) => `/credit_notes/${id}`,
             providesTags: ['CreditNotes'],
         }),
         // Eliminar una nota de crédito
         deleteCreditNote: builder.mutation<void, string>({
             query: (id) => ({
-                url: `/creditNotes/${id}`,
+                url: `/credit_notes/${id}`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['CreditNotes'],
@@ -33,7 +35,7 @@ export const creditNotesApi = createApi({
         // Crear una nueva nota de crédito
         createCreditNote: builder.mutation<void, Omit<CreditNote, '_id'>>({
             query: (newCreditNote) => ({
-                url: '/creditNotes',
+                url: '/credit_notes',
                 method: 'POST',
                 body: newCreditNote,
             }),
@@ -42,7 +44,7 @@ export const creditNotesApi = createApi({
         // Actualizar una nota de crédito existente
         updateCreditNote: builder.mutation<void, CreditNote>({
             query: (creditNote) => ({
-                url: `/creditNotes/${creditNote._id}`,
+                url: `/credit_notes/${creditNote._id}`,
                 method: 'PUT',
                 body: creditNote,
             }),

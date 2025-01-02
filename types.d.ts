@@ -116,7 +116,7 @@ interface Product {
 
   interface CreditNote {
     _id: string;
-    formCreditNote: FormCreditNote;
+    form: FormCreditNote;
     company: Company;
     customer: Customer;
     services: Service[];
@@ -226,6 +226,15 @@ interface Product {
     handleUpdate: (budgetId: string) => void;
     handlePrint: (budget: Invoice) => Promise<void>
     handleExportPDF: (budget: Invoice) => Promise<void>
+  }
+
+  interface TableControlCreditNoteProps extends TableBaseProps {
+    data: CreditNote[]; 
+    selectedRange: RangeValue<DateValue> | null;
+    handleView: (creditNote: CreditNote) => void;
+    handleDelete: (creditNoteId: string) => void;
+    handlePrint: (creditNote: CreditNote) => Promise<void>
+    handleExportPDF: (creditNote: CreditNote) => Promise<void>
   }
   
   interface TableProviderProps extends TableBaseProps {

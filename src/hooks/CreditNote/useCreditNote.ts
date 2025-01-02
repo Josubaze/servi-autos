@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { toast } from "react-toastify";
 import dayjs, { Dayjs } from "dayjs";
@@ -187,7 +187,7 @@ export const useCreditNote = () => {
     
             // Construcción del objeto `budget`
             const creditNote: Omit<CreditNote, "_id"> = {
-                formCreditNote: {
+                form: {
                     n_creditNote: form.n_creditNote,
                     n_invoice: form.n_invoice,
                     dateCreation: dayjs(form.dateCreation).toDate(),
@@ -239,7 +239,7 @@ export const useCreditNote = () => {
         
             // Si todos los productos son válidos, crear la nota
             await createCreditNote(creditNote).unwrap();
-            toast.success("Factura creada exitosamente!");
+            toast.success("Nota de crédito creada exitosamente!");
             
             resetValues();
         } catch (error) {

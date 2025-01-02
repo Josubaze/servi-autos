@@ -7,6 +7,7 @@ export const LottieInvoice = dynamic(() => import("src/components/LottieIcon/Lot
 export const LottiePersons = dynamic(() => import("src/components/LottieIcon/LottiePersons"), { ssr: false });
 export const LottieProduct = dynamic(() => import("src/components/LottieIcon/LottieProduct"), { ssr: false });
 export const LottieSupplier = dynamic(() => import("src/components/LottieIcon/LottieSupplier"), { ssr: false });
+export const LottieCreditNote = dynamic(() => import("src/components/LottieIcon/LottieCreditNote"), { ssr: false });
 
 export const DashWidgets = () => {
   return (

@@ -140,7 +140,7 @@ export const CreditNoteForm = forwardRef(({
     
         if (isSuccess) {
             const maxCreditNote = creditNotes.length > 0
-            ? Math.max(...creditNotes.map(creditNote => creditNote.formCreditNote.n_creditNote)) // Obtener el mayor valor de n_budget
+            ? Math.max(...creditNotes.map(creditNote => creditNote.form.n_creditNote)) // Obtener el mayor valor de n_budget
             : 0; 
             // Actualizamos el valor de n_budget utilizando setValue 
             setValue('n_creditNote', maxCreditNote + 1 );    

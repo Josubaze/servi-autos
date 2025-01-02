@@ -13,7 +13,9 @@ export const invoicesApi = createApi({
             query: () => '/invoices',
             providesTags: ['Invoices'],
             transformResponse: (response: Invoice[]) => {
-                return response.sort((a, b) => dayjs(b.form.dateExpiration).isBefore(dayjs(a.form.dateCreation)) ? 1 : -1);
+                return response.sort((a, b) => 
+                    dayjs(b.form.dateCreation).isAfter(dayjs(a.form.dateCreation)) ? 1 : -1
+                );
             },
             keepUnusedDataFor: 600, 
         }),

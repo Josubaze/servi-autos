@@ -33,7 +33,7 @@ export const useDateRangeFilter = <T>(
     // Filtra los presupuestos por la fecha de creación
     return data.filter((item: any) => {
       // Si item.budgetForm.dateCreation es un string, debes convertirlo a Date:
-      const creationDate = new Date(item.budgetForm.dateCreation);
+      const creationDate = new Date(item.form.dateCreation);
       creationDate.setHours(0, 0, 0, 0); // Asegura que la hora de la fecha de creación sea 00:00:00
 
       // Verifica si la fecha de creación está dentro del rango

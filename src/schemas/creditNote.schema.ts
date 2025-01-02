@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 const creditNoteSchema = new Schema(
   {
-    formCreditNote: {
+    form: {
       type: {
         n_creditNote: {
           type: Number,
