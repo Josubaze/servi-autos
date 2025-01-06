@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './../Budget/useBudgetSummary'
-import { useSubtractProductQuantityMutation } from "src/redux/services/productsApi";
+import { useUpdateProductQuantityMutation } from "src/redux/services/productsApi";
 import { useCreateCreditNoteMutation, useUpdateCreditNoteMutation } from "src/redux/services/creditNotes.Api";
 
 interface FormHandle {
@@ -45,7 +45,7 @@ export const useCreditNote = () => {
     const calculatedIgtf = calculateIgft((subtotal+calculatedIva), igtfPercentage);
     const total = calculateTotal((subtotal), calculatedIva, 0);
     const totalWithIgft = calculateTotal((subtotal), calculatedIva, calculatedIgtf);
-    const [subtractProductQuantity, { error: errorSubtractProduct } ] = useSubtractProductQuantityMutation();
+    const [updateProductQuantity ] = useUpdateProductQuantityMutation();
     // // Inicializar datos si el modo es "update"
     // useEffect(() => {
     //     if (mode === "update" && creditNoteData) {
@@ -185,7 +185,7 @@ export const useCreditNote = () => {
                 exchangeRate,
             } = await validateBudget();
     
-            // Construcción del objeto `budget`
+            // Construcción del objeto `creditNote`
             const creditNote: Omit<CreditNote, "_id"> = {
                 form: {
                     n_creditNote: form.n_creditNote,
@@ -212,35 +212,34 @@ export const useCreditNote = () => {
                 total,
                 totalWithIgft,
             };
-
-            // Validar disponibilidad de productos antes de crear la factura
+    
+            // Actualizar cantidades de productos en la base de datos
             for (const service of selectedServices) {
                 for (const product of service.products) {
                     try {
-                        // Realizar una solicitud para validar la cantidad disponible (opcional, depende de tu API)
-                        await subtractProductQuantity({
+                        // Realizar una solicitud para sumar productos de nuevo al inventario
+                        await updateProductQuantity({
                             _id: product.product._id,
-                            quantityToSubtract: product.quantity,
+                            quantity: product.quantity,
+                            operation: "add", // Especificar que queremos sumar
                         }).unwrap();
-                        
-                    } catch (error: any) {                      
+                    } catch (error: any) {
                         const typedError = error as ErrorResponse;
                         // Verificar si el error tiene un mensaje
                         if (typedError?.data?.message) {
-                            toast.error(`${typedError.data.message} de : ${product.product.name}.`);
+                            toast.error(`${typedError.data.message} de: ${product.product.name}.`);
                         } else {
-                            toast.error(`Error desconocido al validar el producto: ${product.product.name}`);
+                            toast.error(`Error desconocido al actualizar el producto: ${product.product.name}`);
                         }
                         setIsSaving(false);
-                        return; // Salir de la función sin crear                  
+                        return; // Salir de la función sin crear
                     }
                 }
             }
-        
-            // Si todos los productos son válidos, crear la nota
+    
+            // Si todos los productos se actualizaron correctamente, crear la nota de crédito
             await createCreditNote(creditNote).unwrap();
             toast.success("Nota de crédito creada exitosamente!");
-            
             resetValues();
         } catch (error) {
             toast.error("Ha ocurrido un error");
@@ -248,6 +247,7 @@ export const useCreditNote = () => {
             setIsSaving(false);
         }
     };
+    
 
     return {
         formCustomerRef,

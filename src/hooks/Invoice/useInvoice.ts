@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './../Budget/useBudgetSummary'
-import { useSubtractProductQuantityMutation } from "src/redux/services/productsApi";
+import { useUpdateProductQuantityMutation } from "src/redux/services/productsApi";
 
 
 interface FormHandle {
@@ -46,7 +46,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
     const calculatedIgtf = calculateIgft((subtotal+calculatedIva), igtfPercentage);
     const total = calculateTotal((subtotal), calculatedIva, 0);
     const totalWithIgft = calculateTotal((subtotal), calculatedIva, calculatedIgtf);
-    const [subtractProductQuantity, { error: errorSubtractProduct } ] = useSubtractProductQuantityMutation();
+    const [ updateProductQuantity ] = useUpdateProductQuantityMutation();
     // Inicializar datos si el modo es "update"
     useEffect(() => {
         if (mode === "update" && invoiceData) {
@@ -173,7 +173,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
     };
 
     // Función principal para guardar la factura
-    const handleSave = async (action: "draft" | "paid" | "pending", mode: "create" | "update", invoice_id : string) => {
+    const handleSave = async (action: "draft" | "paid" | "pending", mode: "create" | "update", invoice_id: string) => {
         setIsSaving(true);
         try {
             const {
@@ -186,7 +186,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                 exchangeRate,
             } = await validateBudget();
     
-            // Construcción del objeto `budget`
+            // Construcción del objeto `invoice`
             const invoice: Omit<Invoice, "_id"> = {
                 form: {
                     num: form.num,
@@ -215,34 +215,34 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                 total,
                 totalWithIgft,
             };
-
-            // Crear o Actualizar según `mode`
+    
+            // Crear o actualizar según `mode`
             if (mode === "create") {
-                // Validar disponibilidad de productos antes de crear la factura
+                // Validar disponibilidad y restar cantidades antes de crear la factura
                 for (const service of selectedServices) {
                     for (const product of service.products) {
                         try {
-                            // Realizar una solicitud para validar la cantidad disponible (opcional, depende de tu API)
-                            await subtractProductQuantity({
+                            // Realizar una solicitud para restar productos del inventario
+                            await updateProductQuantity({
                                 _id: product.product._id,
-                                quantityToSubtract: product.quantity,
+                                quantity: product.quantity,
+                                operation: "subtract", // Especificar que queremos restar
                             }).unwrap();
-                            
-                        } catch (error: any) {                      
+                        } catch (error: any) {
                             const typedError = error as ErrorResponse;
                             // Verificar si el error tiene un mensaje
                             if (typedError?.data?.message) {
-                                toast.error(`${typedError.data.message} de : ${product.product.name}.`);
+                                toast.error(`${typedError.data.message} de: ${product.product.name}.`);
                             } else {
-                                toast.error(`Error desconocido al validar el producto: ${product.product.name}`);
+                                toast.error(`Error desconocido al actualizar el producto: ${product.product.name}`);
                             }
                             setIsSaving(false);
-                            return; // Salir de la función sin crear la factura                   
+                            return; // Salir de la función sin crear la factura
                         }
                     }
                 }
-            
-                // Si todos los productos son válidos, crear la factura
+    
+                // Si todos los productos se actualizaron correctamente, crear la factura
                 await createInvoice(invoice).unwrap();
                 toast.success("Factura creada exitosamente!");
             } else if (mode === "update") {
@@ -250,11 +250,11 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                     ...invoice,
                     _id: invoice_id,
                     form: {
-                        ...invoice.form, 
+                        ...invoice.form,
                         dateUpdate: dayjs().toDate(), // Actualiza la fecha
-                    }
+                    },
                 };
-                
+    
                 await updateInvoice(invoiceWithId).unwrap();
                 router.push("/control/budgets");
                 toast.success("Factura actualizada exitosamente!");
@@ -267,6 +267,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
             setIsSaving(false);
         }
     };
+    
 
     return {
         formCustomerRef,
