@@ -44,7 +44,7 @@ export const useControlCreditNote = ({ data, isError, isLoading, isFetching, isS
       }
       setIsOpenPreview(true);
     } catch (error) {
-      toast.error('Hubo un error al imprimir factura');
+      toast.error('Hubo un error al imprimir');
     }
   };
 
@@ -100,7 +100,7 @@ export const useControlCreditNote = ({ data, isError, isLoading, isFetching, isS
         if (yOffset < fullCanvas.height) pdf.addPage();
       }
 
-      pdf.save(`credit_note_${creditNote.form.n_creditNote}.pdf`);
+      pdf.save(`credit_note_${creditNote.form.num}.pdf`);
     } catch (error) {
       toast.error("Error al generar el PDF:");
     } finally {

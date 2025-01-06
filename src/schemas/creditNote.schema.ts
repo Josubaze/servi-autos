@@ -5,12 +5,12 @@ const creditNoteSchema = new Schema(
   {
     form: {
       type: {
-        n_creditNote: {
+        num: {
           type: Number,
           required: true,
           unique: true,
         },
-        n_invoice: {
+        numInvoice: {
             type: Number,
             required: true,
           },

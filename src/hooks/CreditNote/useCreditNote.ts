@@ -188,8 +188,8 @@ export const useCreditNote = () => {
             // Construcción del objeto `creditNote`
             const creditNote: Omit<CreditNote, "_id"> = {
                 form: {
-                    n_creditNote: form.n_creditNote,
-                    n_invoice: form.n_invoice,
+                    num: form.num,
+                    numInvoice: form.numInvoice,
                     dateCreation: dayjs(form.dateCreation).toDate(),
                     currency,
                     exchangeRate,

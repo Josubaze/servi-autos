@@ -181,8 +181,8 @@ interface Product {
   }
 
   interface FormCreditNote{
-    n_creditNote: number;
-    n_invoice: number;
+    num: number;
+    numInvoice: number;
     dateCreation: Dayjs;
     currency: string;
     exchangeRate: number;

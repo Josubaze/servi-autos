@@ -25,11 +25,11 @@ export const ControlCreditNoteTable: React.FC<TableControlCreditNoteProps> = ({
     handleExportPDF,
     }) => {
     
-    const filteredData = useDynamicFilter(data, searchTerm, ['description', 'form.n_creditNote', 'total']);
+    const filteredData = useDynamicFilter(data, searchTerm, ['description', 'form.num', 'total']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
     const rows = filteredByDateRange.map(creditNote => ({
-        n_creditNote: creditNote.form.n_creditNote,
-        n_invoice: creditNote.form.n_invoice,
+        num: creditNote.form.num,
+        numInvoice: creditNote.form.numInvoice,
         description: creditNote.description,
         dateCreation: new Date(creditNote.form.dateCreation).toLocaleDateString(),
         total: creditNote.total,
@@ -39,12 +39,12 @@ export const ControlCreditNoteTable: React.FC<TableControlCreditNoteProps> = ({
 
     const columns = [
     {
-        name: "n_creditNote",
+        name: "num",
         label: "N° Nota de Crédito",
         options: { filter: false, sort: true },
     },
     {
-        name: "n_invoice",
+        name: "numInvoice",
         label: "N° Factura",
         options: { filter: false, sort: true },
     },
@@ -121,8 +121,8 @@ export const ControlCreditNoteTable: React.FC<TableControlCreditNoteProps> = ({
       
     ];
 
-    const mobileColumnsToShow = ['n_creditNote', 'n_invoice', 'dateCreation', 'options'];
-    const tabletColumnsToShow = ['n_creditNote', 'n_invoice', 'description', 'dateCreation', 'options'];
+    const mobileColumnsToShow = ['num', 'numInvoice', 'dateCreation', 'options'];
+    const tabletColumnsToShow = ['num', 'numInvoice', 'description', 'dateCreation', 'options'];
     const responsiveColumns = useResponsiveColumns(
       columns,
       mobileColumnsToShow,

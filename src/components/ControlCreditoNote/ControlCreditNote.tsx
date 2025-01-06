@@ -9,10 +9,12 @@ import { I18nProvider } from '@react-aria/i18n';
 import { Loading } from '../Common/Loading';
 import { useControlCreditNote } from 'src/hooks/ControlCreditNote/useControlInvoice';
 import { useGetCreditNotesQuery, useDeleteCreditNoteMutation } from "src/redux/services/creditNotes.Api";
-import { InvoicePDF } from "../InvoicePDF/InvoicePDF";
 import { InvoicePreview } from "../InvoicePreview";
 import { ControlCreditNoteTable } from "./ControlInvoiceTable";
 import { LottieCreditNote } from "../Dashboard/DashWidgets/DashWidgets";
+import { CreditNotePDF } from "../../components/CreditNotePDF";
+import { CreditNote } from "../CreditNote";
+import { CreditNotePreview } from "../CreditNotePreview";
 
 export const ControlCreditNote = () => {
   
@@ -92,7 +94,7 @@ export const ControlCreditNote = () => {
       {/* Componente oculto para PDF */}
         {isOpenPdf && (
           <div className="absolute top-[-9999px] left-[-9999px]">
-            <InvoicePDF
+            <CreditNotePDF
               ref={printRef}
               company={creditNoteCopy?.company}
               customer={creditNoteCopy?.customer}
@@ -105,13 +107,14 @@ export const ControlCreditNote = () => {
               calculatedIgtf={creditNoteCopy?.calculatedIgtf}
               total={creditNoteCopy?.total}
               totalWithIgft={creditNoteCopy?.totalWithIgft}
+              description={creditNoteCopy?.description}
             /> 
           </div>
         )}
 
         {/* Modal para vista previa */}
         {isOpenPreview && (
-          <InvoicePreview
+          <CreditNotePreview
             isOpen={isOpenPreview}
             onClose={() => setIsOpenPreview(false)}
             company={creditNoteCopy?.company}
@@ -125,6 +128,7 @@ export const ControlCreditNote = () => {
             calculatedIgtf={creditNoteCopy?.calculatedIgtf}
             total={creditNoteCopy?.total}
             totalWithIgft={creditNoteCopy?.totalWithIgft}
+            description={creditNoteCopy?.description}
           />
         )}
 

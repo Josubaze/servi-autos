@@ -125,7 +125,7 @@ export const BudgetFormSchema = z.object({
 });
 
 export const CreditNoteFormSchema = z.object({
-  n_creditNote: 
+  num: 
     z.union([
       z.string()
         .refine(quantity => /^[0-9]+$/.test(quantity) && parseInt(quantity, 10) > 0, { message: "La cantidad debe ser un número entero positivo" })
@@ -134,7 +134,7 @@ export const CreditNoteFormSchema = z.object({
         .refine(quantity => Number.isInteger(quantity) && quantity > 0, { message: "La cantidad debe ser un número entero positivo" })
   ]),
 
-  n_invoice: 
+  numInvoice: 
     z.union([
       z.string()
         .refine(quantity => /^[0-9]+$/.test(quantity) && parseInt(quantity, 10) > 0, { message: "La cantidad debe ser un número entero positivo" })

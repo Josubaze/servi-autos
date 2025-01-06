@@ -4,13 +4,11 @@ import { BudgetCustomerForm } from "../Budget/BudgetCustomerForm";
 import { BudgetTable } from "../Budget/BudgetTable";
 import { BudgetSummary } from "../Budget/BudgetSummary";
 import { Loading } from "../Common/Loading";
-import { useInvoice } from "src/hooks/Invoice/useInvoice";
 import { CreditNoteForm } from "./CreditNoteForm";
-import { InvoiceOptions } from "./../Invoice/InvoiceOptions";	
-import { InvoiceActions } from "./../Invoice/InvoiceActions";
 import { DocHeader } from "../Common/InvoiceHeader/InvoiceHeader";
 import { CreditNoteActions } from "./CreditNoteActions/CreditNoteActions";
 import { useCreditNote } from "src/hooks/CreditNote/useCreditNote";
+import { CreditNoteOptions } from "./CreditNoteOptions/CreditNoteOptions";
 
     interface CreditNoteProps {
         mode?: "create" | "update";
@@ -57,10 +55,10 @@ import { useCreditNote } from "src/hooks/CreditNote/useCreditNote";
                     <Loading />
                 </div>
             )}
-            {/* <InvoiceOptions  
+            <CreditNoteOptions  
                 company={company}
                 selectedServices={selectedServices}
-                // extractFormData={extractFormData}
+                extractFormData={extractFormData}
                 subtotal={subtotal}
                 ivaPercentage={ivaPercentage}
                 igtfPercentage={igtfPercentage}
@@ -68,7 +66,8 @@ import { useCreditNote } from "src/hooks/CreditNote/useCreditNote";
                 calculatedIgtf={calculatedIgtf}
                 total={total}
                 totalWithIgft={totalWithIgft}
-            /> */}
+                description={description}
+            />
             <DocHeader company={company || null} isError={isError} isLoading={isLoading} title="NOTA DE CRÉDITO" />
             <div className="flex flex-col sm:flex-row py-4 px-8">
                 <div className="flex-1">

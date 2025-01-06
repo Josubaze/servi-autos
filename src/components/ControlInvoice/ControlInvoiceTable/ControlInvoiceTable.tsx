@@ -11,6 +11,7 @@ import { ExportButton } from "src/components/Common/Buttons/ExportButton";
 import { PrintButton } from "src/components/Common/Buttons/PrintButton";
 import { ViewButton } from "src/components/Common/Buttons/ViewButton/ViewButton";
 import { NumericFormat } from "react-number-format";
+import { CreditNoteButton } from "src/components/Common/Buttons/CreditNoteButton";
 
 export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
     data,
@@ -155,8 +156,11 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
             return (
             <div className='flex gap-x-5 justify-center'>
                 <ViewButton onClick={() => handleView(invoice)} />
-                {invoice.state !== "Pagada" && (
+                {invoice.state === "Borrador" && (
                 <UpdateButton onClick={() => handleUpdate(invoice._id)} />
+                )}
+                {invoice.state !== "Borrador" && (
+                <CreditNoteButton onClick={() => handleUpdate(invoice._id)} />
                 )}
                 <ExportButton onClick={() => handleExportPDF(invoice)} />
                 <PrintButton onClick={() => handlePrint(invoice)} />

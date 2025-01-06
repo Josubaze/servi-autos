@@ -57,8 +57,8 @@ export const CreditNoteForm = forwardRef(({
     } = useForm<FormCreditNote>({
         resolver: zodResolver(CreditNoteFormSchema), 
         defaultValues: {
-            n_creditNote: 0, 
-            n_invoice: 1, 
+            num: 0, 
+            numInvoice: 1, 
             dateCreation: today,
             currency: currency ?? "$", 
             exchangeRate: exchangeRate ?? 1
@@ -66,14 +66,14 @@ export const CreditNoteForm = forwardRef(({
     });
 
     // Función para cargar el presupuesto y convertir si es necesario
-    const handleBudgetSelect = (invoice: Invoice) => {
+    const handleInvoiceSelect = (invoice: Invoice) => {
         if (!invoice) return;
 
         setIsUpdating(true); // Activar el loading al inicio
 
         setTimeout(() => {
             // Actualiza todos los valores del formulario
-            setValue("n_invoice", invoice.form.num);
+            setValue("numInvoice", invoice.form.num);
             handleSetFormCustomer(invoice.customer);
             setCurrency(invoice.form.currency);
             setValue("currency", invoice.form.currency);
@@ -121,8 +121,8 @@ export const CreditNoteForm = forwardRef(({
 
     // Función setFormDate para actualizar los datos
     const setForm = ( formCreditNote : FormCreditNote ) => {
-        setValue("n_creditNote", formCreditNote.n_creditNote);
-        setValue("n_invoice", formCreditNote.n_invoice);
+        setValue("num", formCreditNote.num);
+        setValue("numInvoice", formCreditNote.numInvoice);
         setValue("dateCreation", dayjs(formCreditNote.dateCreation));
         setValue("currency", formCreditNote.currency);
         setValue("exchangeRate", formCreditNote.exchangeRate);
@@ -140,10 +140,10 @@ export const CreditNoteForm = forwardRef(({
     
         if (isSuccess) {
             const maxCreditNote = creditNotes.length > 0
-            ? Math.max(...creditNotes.map(creditNote => creditNote.form.n_creditNote)) // Obtener el mayor valor de n_budget
+            ? Math.max(...creditNotes.map(creditNote => creditNote.form.num)) // Obtener el mayor valor de n_budget
             : 0; 
             // Actualizamos el valor de n_budget utilizando setValue 
-            setValue('n_creditNote', maxCreditNote + 1 );    
+            setValue('num', maxCreditNote + 1 );    
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, creditNotes, isSuccess]);
@@ -164,10 +164,10 @@ export const CreditNoteForm = forwardRef(({
                         <ThemeProvider theme={TextFieldTheme}>
                             <TextField
                                 fullWidth
-                                {...register("n_creditNote")} 
-                                value={getValues("n_creditNote")}
-                                error={!!errors.n_creditNote}
-                                helperText={errors.n_creditNote?.message}
+                                {...register("num")} 
+                                value={getValues("num")}
+                                error={!!errors.num}
+                                helperText={errors.num?.message}
                                 InputProps={{
                                     inputProps: {
                                         style: { textAlign: "right", paddingRight: "20px"},
@@ -184,10 +184,10 @@ export const CreditNoteForm = forwardRef(({
                         <ThemeProvider theme={TextFieldTheme}>
                             <TextField
                                 fullWidth
-                                {...register("n_invoice")} 
-                                value={getValues("n_invoice")}
-                                error={!!errors.n_invoice}
-                                helperText={errors.n_invoice?.message}
+                                {...register("numInvoice")} 
+                                value={getValues("numInvoice")}
+                                error={!!errors.numInvoice}
+                                helperText={errors.numInvoice?.message}
                                 InputProps={{
                                     inputProps: {
                                         style: { textAlign: "right", paddingRight: "20px"},
@@ -294,7 +294,7 @@ export const CreditNoteForm = forwardRef(({
                     isError={isError}
                     isFetching={isFetching}
                     isSuccess={isSuccess}
-                    onSelectInvoice={handleBudgetSelect}
+                    onSelectInvoice={handleInvoiceSelect}
                     onCloseTable={() => setIsTableVisible(false)}
                 />
             </div>
