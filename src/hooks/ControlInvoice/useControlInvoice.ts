@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { useUpdateStateInvoiceMutation } from 'src/redux/services/invoices.Api';
 
 interface UseControlInvoiceProps {
   data: Invoice[];
@@ -22,14 +23,33 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
   const [invoiceCopy, setInvoiceCopy] = useState<any>(null);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
+  const [updateStateInvoice] = useUpdateStateInvoiceMutation();
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleDateRangeChange = (value: any) => setSelectedRange(value);
 
-  const handleUpdate = (invoiceId: string) => {
+  const handleUpload = (invoiceId: string) => {
     if (invoiceId) {
       router.push(`/update/credit-note/${invoiceId}`);
+    }
+  };
+
+  const handleUpdate = (invoiceId: string) => {
+    if (invoiceId) {
+      router.push(`/update/invoice/${invoiceId}`);
+    }
+  };
+
+  const handleStateUpdate = async (invoiceId: string) => {
+    setIsLoadingPDF(true);
+    try {
+      await updateStateInvoice({ id: invoiceId }).unwrap();
+        toast.success('Estado actualizado con éxito');
+    } catch (error) {
+        toast.error('Error al actualizar el estado:');
+    } finally {
+      setIsLoadingPDF(false);
     }
   };
 
@@ -238,6 +258,8 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
     selectedRange,
     handleDateRangeChange,
     handleUpdate,
+    handleUpload,
+    handleStateUpdate,
     handleDelete,
     handleView,
     handleExportPDF,

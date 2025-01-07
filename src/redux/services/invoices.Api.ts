@@ -50,6 +50,14 @@ export const invoicesApi = createApi({
             }),
             invalidatesTags: ['Invoices'],
         }),
+        // Nueva API: Actualizar solo el estado de una factura
+        updateStateInvoice: builder.mutation<Invoice, { id: string }>({
+            query: ({ id }) => ({
+                url: `/invoices/${id}`,
+                method: 'PATCH',
+            }),
+            invalidatesTags: ['Invoices'],
+        }),
     }),
 });
 
@@ -58,5 +66,6 @@ export const {
     useGetInvoiceByIdQuery,
     useDeleteInvoiceMutation,
     useCreateInvoiceMutation,
-    useUpdateInvoiceMutation
+    useUpdateInvoiceMutation,
+    useUpdateStateInvoiceMutation,
 } = invoicesApi;

@@ -224,6 +224,8 @@ interface Product {
     handleView: (budget: Invoice) => void;
     handleDelete: (budgetId: string) => void;
     handleUpdate: (budgetId: string) => void;
+    handleUpload: (budgetId: string) => void;
+    handleStateUpdate: (budgetId: string) => void;
     handlePrint: (budget: Invoice) => Promise<void>
     handleExportPDF: (budget: Invoice) => Promise<void>
   }

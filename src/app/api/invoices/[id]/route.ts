@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Invoice from 'src/schemas/invoice.schema';
 import { connectDB } from 'src/utils/mongoose'; 
+import dayjs from "dayjs";
 
 interface RouteParams {
     id: string; 
@@ -56,6 +57,57 @@ export async function PUT(request: Request, { params }: { params: RouteParams })
         );
     }
 }
+
+export async function PATCH(request: Request, { params }: { params: RouteParams }) {
+    await connectDB();
+
+    try {
+        const { id } = params; // Obtén el ID del invoice de los parámetros
+
+        // Busca el Invoice para verificar su estado actual
+        const existingInvoice = await Invoice.findById(id);
+
+        if (!existingInvoice) {
+            return NextResponse.json(
+                { message: "Invoice not found" },
+                { status: 404 }
+            );
+        }
+
+        // Verifica que el estado actual sea "Pendiente"
+        if (existingInvoice.state !== "Pendiente") {
+            return NextResponse.json(
+                { message: `Cannot update state. Current state is '${existingInvoice.state}', only 'Pendiente' can be updated.` },
+                { status: 400 }
+            );
+        }
+
+        // Actualiza el estado a "Pagada" y la fecha de actualización
+        const updatedInvoice = await Invoice.findByIdAndUpdate(
+            id,
+            {
+                state: "Pagada",
+                // Actualiza solo la fecha de actualización sin modificar el resto del objeto `form`
+                $set: { "form.dateUpdate": dayjs().toDate() },
+            },
+            { new: true } // Devuelve el documento actualizado
+        );
+
+        return NextResponse.json(updatedInvoice); // Devuelve el invoice actualizado
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return NextResponse.json(
+                { error: error.message },
+                { status: 400 }
+            );
+        }
+        return NextResponse.json(
+            { error: "An unknown error occurred" },
+            { status: 500 }
+        );
+    }
+}
+
 
 export async function DELETE(request: Request, { params }: { params: RouteParams }) {
     await connectDB();

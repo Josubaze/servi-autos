@@ -65,10 +65,10 @@ export const MENUCREATE= [
   ];
   export const MENUCONTROL = [
     { name: 'Facturas', href: '/control/invoices' },
-    { name: 'Informe', href: '/control/reports' },
-    { name: 'Nota de Credito', href: '/control/credit-note' },
-    { name: 'Orden de Ejecución', href: '/control/execution-orders' },
-    { name: 'Orden de Compra', href: '/control/purchase-orders' },
+    { name: 'Informes', href: '/control/reports' },
+    { name: 'Notas de Credito', href: '/control/credit-note' },
+    { name: 'Ordenes de Ejecución', href: '/control/execution-orders' },
+    { name: 'Ordenes de Compra', href: '/control/purchase-orders' },
     { name: 'Presupuestos', href: '/control/budgets' },
   ];
   export const NAVITEMS = [

@@ -256,7 +256,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                 };
     
                 await updateInvoice(invoiceWithId).unwrap();
-                router.push("/control/budgets");
+                router.push("/control/invoices");
                 toast.success("Factura actualizada exitosamente!");
             }
     

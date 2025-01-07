@@ -12,6 +12,7 @@ import { PrintButton } from "src/components/Common/Buttons/PrintButton";
 import { ViewButton } from "src/components/Common/Buttons/ViewButton/ViewButton";
 import { NumericFormat } from "react-number-format";
 import { CreditNoteButton } from "src/components/Common/Buttons/CreditNoteButton";
+import { useState } from "react";
 
 export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
     data,
@@ -24,10 +25,11 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
     handleView,
     handleDelete,
     handleUpdate,
+    handleUpload,
+    handleStateUpdate,
     handlePrint,
     handleExportPDF,
     }) => {
-    
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', 'total']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
     const rows = filteredByDateRange.map(invoice => ({
@@ -122,26 +124,40 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
             setCellHeaderProps: () => ({
                 style: { textAlign: 'center' },
             }),
-            customBodyRender: (value: string) => {
+            customBodyRender: (value: any, tableMeta: any) => {
                 const bgColor = 
                     value === "Borrador" ? "bg-gray-600" : 
                     value === "Pagada" ? "bg-green-600" : 
                     value === "Pendiente" ? "bg-yellow-400/85" : 
                     "bg-red-600";
-            
+                
+                const invoice = rows[tableMeta.rowIndex].invoice;
+    
+                if (value === "Pagada") {
+                    // Si el estado es "Pagada", solo se muestra un div sin acción
+                    return (
+                        <div className="flex justify-center">
+                            <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24`}>
+                                {value}
+                            </div>
+                        </div>
+                    );
+                }
+    
+                // Si el estado es "Borrador" o "Pendiente", el botón tiene acción
                 return (
                     <div className="flex justify-center"> 
-                        <div 
+                        <button 
                             className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24`}
+                            onClick={() => value === "Borrador" ? handleUpdate(invoice._id) : handleStateUpdate(invoice._id)}
                         >
                             {value}
-                        </div>     
+                        </button>     
                     </div>
                 );
             },
-            
         },
-    },
+    },    
     {
         name: "options",
         label: "Opciones",
@@ -156,11 +172,10 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
             return (
             <div className='flex gap-x-5 justify-center'>
                 <ViewButton onClick={() => handleView(invoice)} />
-                {invoice.state === "Borrador" && (
-                <UpdateButton onClick={() => handleUpdate(invoice._id)} />
-                )}
-                {invoice.state !== "Borrador" && (
-                <CreditNoteButton onClick={() => handleUpdate(invoice._id)} />
+                {invoice.state === "Borrador" ? (
+                    <UpdateButton onClick={() => handleUpdate(invoice._id)} />
+                ) : (
+                    <CreditNoteButton onClick={() => handleUpload(invoice._id)} />
                 )}
                 <ExportButton onClick={() => handleExportPDF(invoice)} />
                 <PrintButton onClick={() => handlePrint(invoice)} />

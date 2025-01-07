@@ -24,6 +24,8 @@ export const ControlInvoice = () => {
     selectedRange,
     handleDateRangeChange,
     handleUpdate,
+    handleUpload,
+    handleStateUpdate,
     handleDelete,
     handleView,
     handlePrint,
@@ -79,6 +81,8 @@ export const ControlInvoice = () => {
           handleView={handleView}
           handleDelete={handleDelete}
           handleUpdate={handleUpdate}
+          handleUpload={handleUpload}
+          handleStateUpdate={handleStateUpdate}
           handlePrint={handlePrint}
           handleExportPDF={handleExportPDF}
         />
