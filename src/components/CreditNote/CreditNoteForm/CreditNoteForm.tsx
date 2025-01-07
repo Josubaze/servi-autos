@@ -120,8 +120,7 @@ export const CreditNoteForm = forwardRef(({
     };
 
     // Función setFormDate para actualizar los datos
-    const setForm = ( formCreditNote : FormCreditNote ) => {
-        setValue("num", formCreditNote.num);
+    const setForm = (formCreditNote: Omit<FormCreditNote, 'num'>) => {
         setValue("numInvoice", formCreditNote.numInvoice);
         setValue("dateCreation", dayjs(formCreditNote.dateCreation));
         setValue("currency", formCreditNote.currency);
@@ -135,9 +134,6 @@ export const CreditNoteForm = forwardRef(({
     }));
 
     useEffect(() => {
-        // Si el modo es "update", no ejecutamos este efecto
-        if (mode === "update") return;
-    
         if (isSuccess) {
             const maxCreditNote = creditNotes.length > 0
             ? Math.max(...creditNotes.map(creditNote => creditNote.form.num)) // Obtener el mayor valor de n_budget

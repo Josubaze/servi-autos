@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { toast } from "react-toastify";
 import dayjs, { Dayjs } from "dayjs";
@@ -10,7 +10,7 @@ import { useCreateCreditNoteMutation, useUpdateCreditNoteMutation } from "src/re
 interface FormHandle {
     submitForm: () => Promise<FormCreditNote | null>;
     submitFormCustomer: () => Promise<Customer | null>;
-    setForm: (form: FormCreditNote) => void;
+    setForm: (form: Omit<FormCreditNote, 'num'>) => void;
     setFormCustomer: (customer: Customer) => void;
     getForm: () => FormCreditNote | null;
     getFormCustomer: () => Customer | null;
@@ -18,11 +18,11 @@ interface FormHandle {
 }
 
 interface UseCreditNoteProps {
-    mode?: "create" | "update";
-    creditNoteData?: CreditNote | null;
+    mode?: "create" | "upload";
+    invoiceData?: Invoice | null;
 }
 
-export const useCreditNote = () => {
+export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCreditNoteProps) => {
 
     const { calculateIgft, calculateIva, calculateTotal, calculateSubtotal } = useBudgetSummary();
     const formCustomerRef = useRef<FormHandle | null>(null);
@@ -35,9 +35,7 @@ export const useCreditNote = () => {
     const { data: company, isLoading, isError } = useGetCompanyQuery();
     const [createCreditNote] = useCreateCreditNoteMutation();
     const [isSaving, setIsSaving] = useState<boolean>(false);
-    const [updateCreditNote] = useUpdateCreditNoteMutation();
     const [dateUpdate, setDateUpdate] = useState<Dayjs | null>(null);
-    const router = useRouter();
     const [ivaPercentage, setIvaPercentage] = useState<number>(16); // IVA predeterminado al 16%
     const [igtfPercentage, setIgtfPercentage] = useState<number>(3); // IGTF predeterminado al 3%
     const subtotal = calculateSubtotal(selectedServices);
@@ -46,39 +44,46 @@ export const useCreditNote = () => {
     const total = calculateTotal((subtotal), calculatedIva, 0);
     const totalWithIgft = calculateTotal((subtotal), calculatedIva, calculatedIgtf);
     const [updateProductQuantity ] = useUpdateProductQuantityMutation();
+    const router = useRouter();
+
     // // Inicializar datos si el modo es "update"
-    // useEffect(() => {
-    //     if (mode === "update" && creditNoteData) {
-    //         handleSetForm(creditNoteData.formCreditNote);
-    //         handleSetFormCustomer(creditNoteData.customer);
-    //         setCurrency(creditNoteData.formCreditNote.currency);
-    //         setExchangeRate(creditNoteData.formCreditNote.exchangeRate);
-    //         setSelectedServices(creditNoteData.services);
+    useEffect(() => {
+        if (mode === "upload" && invoiceData) {
+            handleSetForm({
+                numInvoice: invoiceData.form.num,
+                dateCreation: dayjs(),
+                currency: invoiceData.form.currency,
+                exchangeRate: invoiceData.form.exchangeRate,
+            });
+            handleSetFormCustomer(invoiceData.customer);
+            setCurrency(invoiceData.form.currency);
+            setExchangeRate(invoiceData.form.exchangeRate);
+            setSelectedServices(invoiceData.services);
 
-    //         if (creditNoteData.formCreditNote.currency === "Bs" && creditNoteData.formCreditNote.exchangeRate > 1) {
-    //             const updatedOriginalServices = creditNoteData.services.map((service) => ({
-    //                 ...service,
-    //                 totalPrice: parseFloat((service.totalPrice / creditNoteData.formCreditNote.exchangeRate).toFixed(2)),
-    //                 servicePrice: parseFloat((service.servicePrice / creditNoteData.formCreditNote.exchangeRate).toFixed(2)),
-    //                 products: service.products.map((product) => ({
-    //                     ...product,
-    //                     product: {
-    //                         ...product.product,
-    //                         price: parseFloat((product.product.price / creditNoteData.formCreditNote.exchangeRate).toFixed(2)),
-    //                     },
-    //                 })),
-    //             }));
+            if (invoiceData.form.currency === "Bs" && invoiceData.form.exchangeRate > 1) {
+                const updatedOriginalServices = invoiceData.services.map((service) => ({
+                    ...service,
+                    totalPrice: parseFloat((service.totalPrice / invoiceData.form.exchangeRate).toFixed(2)),
+                    servicePrice: parseFloat((service.servicePrice / invoiceData.form.exchangeRate).toFixed(2)),
+                    products: service.products.map((product) => ({
+                        ...product,
+                        product: {
+                            ...product.product,
+                            price: parseFloat((product.product.price / invoiceData.form.exchangeRate).toFixed(2)),
+                        },
+                    })),
+                }));
 
-    //             setOriginalServices(updatedOriginalServices);
-    //         } else {
-    //             setOriginalServices(creditNoteData.services);
-    //         }
-    //         setDescription(creditNoteData.description);
-    //         setIvaPercentage(creditNoteData.ivaPercentage || 16);
-    //         setIgtfPercentage(creditNoteData.igtfPercentage || 3);
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [mode, creditNoteData]);
+                setOriginalServices(updatedOriginalServices);
+            } else {
+                setOriginalServices(invoiceData.services);
+            }
+            setDescription("");
+            setIvaPercentage(invoiceData.ivaPercentage || 16);
+            setIgtfPercentage(invoiceData.igtfPercentage || 3);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mode, invoiceData]);
 
     const resetValues = () => {
         setSelectedServices([]);
@@ -91,7 +96,7 @@ export const useCreditNote = () => {
         setIgtfPercentage(3);
     };
 
-    const handleSetForm = (form : FormCreditNote) => {
+    const handleSetForm = (form : Omit<FormCreditNote, 'num'>) => {
         formRef.current?.setForm(form);
     };
 
@@ -146,7 +151,7 @@ export const useCreditNote = () => {
         }
 
         if (!description || description.trim() === "") {
-            toast.error("Falta agregar una descripción");
+            toast.error("Falta agregar el motivo o descripción");
             throw new Error("Descripción vacía");
         }
 
@@ -239,6 +244,7 @@ export const useCreditNote = () => {
     
             // Si todos los productos se actualizaron correctamente, crear la nota de crédito
             await createCreditNote(creditNote).unwrap();
+            router.push("/control/credit-note");
             toast.success("Nota de crédito creada exitosamente!");
             resetValues();
         } catch (error) {

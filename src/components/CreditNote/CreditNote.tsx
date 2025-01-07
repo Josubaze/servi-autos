@@ -5,13 +5,13 @@ import { BudgetTable } from "../Budget/BudgetTable";
 import { BudgetSummary } from "../Budget/BudgetSummary";
 import { Loading } from "../Common/Loading";
 import { CreditNoteForm } from "./CreditNoteForm";
-import { DocHeader } from "../Common/InvoiceHeader/InvoiceHeader";
+import { DocHeader } from "../Common/DocHeader";
 import { CreditNoteActions } from "./CreditNoteActions/CreditNoteActions";
 import { useCreditNote } from "src/hooks/CreditNote/useCreditNote";
 import { CreditNoteOptions } from "./CreditNoteOptions/CreditNoteOptions";
 
     interface CreditNoteProps {
-        mode?: "create" | "update";
+        mode?: "create" | "upload";
         invoiceData?: Invoice | null;
     }
 
@@ -45,7 +45,7 @@ import { CreditNoteOptions } from "./CreditNoteOptions/CreditNoteOptions";
         setIvaPercentage,
         setIgtfPercentage,
         handleSetFormCustomer,
-    } = useCreditNote();
+    } = useCreditNote({ mode, invoiceData });
     
 
     return (

@@ -1,1 +1,1 @@
-export { InvoiceOptions } from './InvoiceOptions'
+export { CreditNoteOptions } from './CreditNoteOptions'

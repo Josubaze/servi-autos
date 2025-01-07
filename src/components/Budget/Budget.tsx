@@ -8,7 +8,7 @@ import { BudgetSummary } from "./BudgetSummary";
 import { BudgetActions } from "./BudgetActions";
 import { Loading } from "../Common/Loading";
 import { useBudget } from "src/hooks/Budget/useBudget";
-import { DocHeader } from "../Common/InvoiceHeader/InvoiceHeader";
+import { DocHeader } from "../Common/DocHeader";
 
     interface BudgetProps {
         mode?: "create" | "update";

@@ -1,1 +1,1 @@
-export { InvoiceActions } from './InvoiceActions'
+export { CreditNoteActions } from './CreditNoteActions'

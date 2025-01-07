@@ -1,1 +1,0 @@
-export { InvoiceHeader } from './InvoiceHeader'

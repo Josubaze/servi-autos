@@ -8,7 +8,7 @@ import { useInvoice } from "src/hooks/Invoice/useInvoice";
 import { InvoiceForm } from "./InvoiceForm/InvoiceForm";
 import { InvoiceOptions } from "./InvoiceOptions/InvoiceOptions";
 import { InvoiceActions } from "./InvoiceActions";
-import { DocHeader } from "../Common/InvoiceHeader/InvoiceHeader";
+import { DocHeader } from "../Common/DocHeader";
 
     interface InvoiceProps {
         mode?: "create" | "update";

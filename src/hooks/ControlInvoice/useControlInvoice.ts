@@ -29,7 +29,7 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
 
   const handleUpdate = (invoiceId: string) => {
     if (invoiceId) {
-      router.push(`/update/invoice/${invoiceId}`);
+      router.push(`/update/credit-note/${invoiceId}`);
     }
   };
 
