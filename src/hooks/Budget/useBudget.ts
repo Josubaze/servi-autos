@@ -5,8 +5,6 @@ import { toast } from "react-toastify";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './useBudgetSummary'
-import { set } from "mongoose";
-
 
 interface FormHandle {
     submitForm: () => Promise<Form | null>;
@@ -19,7 +17,7 @@ interface FormHandle {
 }
 
 interface UseBudgetProps {
-    mode?: "create" | "update";
+    mode?: "create" | "upload";
     budgetData?: Budget | null;
 }
 
@@ -48,7 +46,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     const totalWithIgft = calculateTotal((subtotal), calculatedIva, calculatedIgtf);
     // Inicializar datos si el modo es "update"
     useEffect(() => {
-        if (mode === "update" && budgetData) {
+        if (mode === "upload" && budgetData) {
             handleSetForm(budgetData.form);
             handleSetFormCustomer(budgetData.customer);
             setCurrency(budgetData.form.currency);
@@ -172,7 +170,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     };
 
     // Función principal para guardar el presupuesto
-    const handleSave = async (action: "draft" | "accepted", mode: "create" | "update", budget_id : string) => {
+    const handleSave = async (action: "draft" | "approved", mode: "create" | "upload", budget_id : string) => {
         setIsSaving(true);
         try {
             const {
@@ -205,7 +203,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
                     })),
                 })),
                 description,
-                state: action === "draft" ? "Borrador" : action === "accepted" ? "Aceptado" : "",
+                state: action === "draft" ? "Borrador" : action === "approved" ? "Aprobado" : "",
                 subtotal,
                 ivaPercentage,
                 igtfPercentage,
@@ -219,7 +217,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
             if (mode === "create") {
                 await createBudget(budget).unwrap();
                 toast.success("Presupuesto creado exitosamente!");
-            } else if (mode === "update") {
+            } else if (mode === "upload") {
                 const budgetWithId = {
                     ...budget,
                     _id: budget_id,

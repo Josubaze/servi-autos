@@ -214,6 +214,7 @@ interface Product {
     handleView: (budget: Budget) => void;
     handleDelete: (budgetId: string) => void;
     handleUpdate: (budgetId: string) => void;
+    handleStateUpdate: (budgetId: string) => void;
     handlePrint: (budget: Budget) => Promise<void>
     handleExportPDF: (budget: Budget) => Promise<void>
   }
@@ -221,13 +222,13 @@ interface Product {
   interface TableControlInvoiceProps extends TableBaseProps {
     data: Invoice[]; 
     selectedRange: RangeValue<DateValue> | null;
-    handleView: (budget: Invoice) => void;
-    handleDelete: (budgetId: string) => void;
-    handleUpdate: (budgetId: string) => void;
-    handleUpload: (budgetId: string) => void;
-    handleStateUpdate: (budgetId: string) => void;
-    handlePrint: (budget: Invoice) => Promise<void>
-    handleExportPDF: (budget: Invoice) => Promise<void>
+    handleView: (invoice: Invoice) => void;
+    handleDelete: (invoiceId: string) => void;
+    handleUpdate: (invoiceId: string) => void;
+    handleUpload: (invoiceId: string) => void;
+    handleStateUpdate: (invoiceId: string) => void;
+    handlePrint: (invoice: Invoice) => Promise<void>
+    handleExportPDF: (invoice: Invoice) => Promise<void>
   }
 
   interface TableControlCreditNoteProps extends TableBaseProps {

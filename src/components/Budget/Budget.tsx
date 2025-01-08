@@ -11,7 +11,7 @@ import { useBudget } from "src/hooks/Budget/useBudget";
 import { DocHeader } from "../Common/DocHeader";
 
     interface BudgetProps {
-        mode?: "create" | "update";
+        mode?: "create" | "upload";
         budgetData?: Budget | null;
     }
 
@@ -114,7 +114,7 @@ import { DocHeader } from "../Common/DocHeader";
             <BudgetActions
                 description={description}
                 setDescription={setDescription}
-                handleButtonType={(action: "draft" | "accepted") => handleSave(action, mode, budgetData?._id || '')} 
+                handleButtonType={(action: "draft" | "approved") => handleSave(action, mode, budgetData?._id || '')} 
                 mode={mode}              
             />
         </div>

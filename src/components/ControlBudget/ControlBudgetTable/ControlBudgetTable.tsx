@@ -11,6 +11,8 @@ import { ExportButton } from "src/components/Common/Buttons/ExportButton";
 import { PrintButton } from "src/components/Common/Buttons/PrintButton";
 import { ViewButton } from "src/components/Common/Buttons/ViewButton/ViewButton";
 import { NumericFormat } from "react-number-format";
+import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
+import { useState } from "react";
 
 export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     data,
@@ -23,10 +25,12 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     handleView,
     handleDelete,
     handleUpdate,
+    handleStateUpdate,
     handlePrint,
     handleExportPDF,
     }) => {
-    
+    const [confirmStateIndex, setConfirmStateIndex] = useState<number | null>(null);
+    const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', 'total']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
     const rows = filteredByDateRange.map(budget => ({
@@ -36,6 +40,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         dateUpdate: budget.form.dateUpdate ? new Date(budget.form.dateUpdate).toLocaleDateString() : "", 
         state: budget.state,
         total: budget.total,
+        totalWithIgft: budget.totalWithIgft,
         budgetId: budget._id, 
         budget: budget,
     }));
@@ -51,7 +56,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         label: "Descripción",
         options: { filter: true, sort: true },
     },
-    {      
+    {
         name: "total",
         label: "Monto Total",
         options: { 
@@ -59,10 +64,13 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
             sort: true,
             customBodyRender: (value: number, tableMeta: any) => {
                 const currency = rows[tableMeta.rowIndex].budget.form.currency;
-
+    
+                // Selecciona el valor correcto según la moneda
+                const total = currency === "$" ? rows[tableMeta.rowIndex].budget.totalWithIgft : rows[tableMeta.rowIndex].budget.total;
+    
                 return (
                     <NumericFormat
-                        value={value}
+                        value={total} // Pasa el valor correcto (total o totalWithIgft)
                         displayType="text"
                         thousandSeparator="."
                         decimalSeparator=","
@@ -119,15 +127,63 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
             filter: true,
             sort: false,
             setCellHeaderProps: () => ({
-                style: { textAlign: 'center' },
+                style: { textAlign: "center" },
             }),
-            customBodyRender: (value: string) => {
-                const bgColor = value === "Borrador" ? "bg-gray-600" : value === "Aceptado" ? "bg-green-600" : "bg-red-600";
+            customBodyRender: (value: any, tableMeta: any) => {
+                const bgColor =
+                    value === "Borrador" ? "bg-gray-600" :
+                    value === "Aprobado" ? "bg-green-600" :
+                    "bg-red-600";
+    
+                const budget = rows[tableMeta.rowIndex].budget;
+                const isConfirmingState = confirmStateIndex === tableMeta.rowIndex; // Verifica si esta fila está en modo confirmación
+    
+                // Botón para estado "Aprobado" (sin acción)
+                if (value === "Aprobado") {
+                    return (
+                        <div className="flex justify-center">
+                            <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24`}>
+                                {value}
+                            </div>
+                        </div>
+                    );
+                }
+    
+                // Modo de confirmación con íconos solo para la fila seleccionada
+                if (isConfirmingState) {
+                    return (
+                        <>  
+                            <p className="text-center mb-1 font-semibold">Confirmar Cambio</p>
+                            <div className="flex justify-center gap-2">
+                                <button
+                                    className="rounded-full bg-red-600 px-2 py-2 text-white text-sm flex items-center hover:bg-red-500"
+                                    onClick={() => setConfirmStateIndex(null)} // Cancelar confirmación
+                                >
+                                    <AiOutlineClose />
+                                </button>
+                                <button
+                                    className="rounded-full bg-green-600 px-2 py-2 text-white text-sm flex items-center hover:bg-green-500"
+                                    onClick={() => {
+                                        setConfirmStateIndex(null); // Cerrar confirmación
+                                        handleStateUpdate(budget._id); // Ejecutar acción
+                                    }}
+                                >
+                                    <AiOutlineCheck />
+                                </button>
+                            </div>
+                        </>
+                    );
+                }
+    
+                // Botón inicial para estado "Borrador"
                 return (
-                    <div className="flex justify-center"> 
-                        <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24`}>
+                    <div className="flex justify-center">
+                        <button
+                            className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24 hover:bg-gray-500 transition-all duration-300 ease-in-out`}
+                            onClick={() => setConfirmStateIndex(tableMeta.rowIndex)} // Activar confirmación para esta fila
+                        >
                             {value}
-                        </div>     
+                        </button>
                     </div>
                 );
             },
@@ -140,24 +196,60 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
             sort: false,
             filter: false,
             setCellHeaderProps: () => ({
-            style: { textAlign: 'center' },
+                style: { textAlign: "center" },
             }),
-            customBodyRender: (value: any, tableMeta: any) => { // Accede al objeto completo
-            const budget = rows[tableMeta.rowIndex].budget
-            return (
-                <div className='flex gap-x-5 justify-center'>
-                    <ViewButton onClick={() => handleView(budget)}/>
-                    {budget.state !== "Aceptado" && (
-                        <UpdateButton onClick={() => handleUpdate(budget._id)} />
-                    )}
-                    <ExportButton onClick={() => handleExportPDF(budget)} />
-                    <PrintButton onClick={() => handlePrint(budget)} />
-                    <DeleteButton onClick={() => handleDelete(budget._id)} />
-                </div>
-            );
+            customBodyRender: (value: any, tableMeta: any) => {
+                const budget = rows[tableMeta.rowIndex].budget;
+                const isConfirmingDelete = confirmDeleteIndex === tableMeta.rowIndex; 
+    
+                return (
+                    <div className="flex gap-x-5 justify-center items-center">
+                        {isConfirmingDelete ? (
+                            <>
+                                <p className="font-semibold">Confirmar Eliminación</p>
+                                <div className="flex gap-2">
+                                    <button
+                                        className="bg-red-600 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
+                                        onClick={() => setConfirmDeleteIndex(null)} // Cancelar confirmación
+                                    >
+                                        <AiOutlineClose />
+                                    </button>
+                                    <button
+                                        className="bg-green-600 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
+                                        onClick={() => {
+                                            setConfirmDeleteIndex(null); // Cerrar confirmación
+                                            handleDelete(budget._id); // Ejecutar eliminación
+                                        }}
+                                    >
+                                        <AiOutlineCheck />
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                {/* Botón de vista */}
+                                <ViewButton onClick={() => handleView(budget)} />
+            
+                                {/* Botón de actualización solo si el estado no es "Aprobado" */}
+                                {budget.state !== "Aprobado" && (
+                                    <UpdateButton onClick={() => handleUpdate(budget._id)} />
+                                )}
+            
+                                {/* Botón de exportar */}
+                                <ExportButton onClick={() => handleExportPDF(budget)} />
+            
+                                {/* Botón de imprimir */}
+                                <PrintButton onClick={() => handlePrint(budget)} />
+            
+                                {/* Botón de eliminar */}
+                                <DeleteButton onClick={() => setConfirmDeleteIndex(tableMeta.rowIndex)} />
+                            </>
+                        )}
+                    </div>
+                );
             },
         },
-        },
+    }  
     ];
 
     const mobileColumnsToShow = ['num', 'dateCreation', 'state', 'options'];

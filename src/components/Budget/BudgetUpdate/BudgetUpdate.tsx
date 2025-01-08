@@ -19,10 +19,10 @@ export const BudgetUpdate = ({ id }: { id: string }) => {
     return null;
   }
 
-  // Validar si el estado es "Aceptado" antes de renderizar el componente
-  if (budget?.state === 'Aceptado' && !hasRedirected) {
+  // Validar si el estado es "Aprobado" antes de renderizar el componente
+  if (budget?.state === 'Aprobado' && !hasRedirected) {
     setHasRedirected(true); // Marcar que se ha hecho la redirección
-    toast.error('No se puede modificar un presupuesto aceptado');
+    toast.error('No se puede modificar un presupuesto Aprobado');
     router.push('/control/budgets');
     return null;
   }
@@ -34,7 +34,7 @@ export const BudgetUpdate = ({ id }: { id: string }) => {
           <Loading />
         </div>
       ) : (
-        <Budget mode="update" budgetData={budget} />
+        <Budget mode="upload" budgetData={budget} />
       )}
     </div>
   );

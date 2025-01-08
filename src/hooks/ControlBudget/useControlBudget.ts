@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { useUpdateStateBudgetMutation } from 'src/redux/services/budgets.Api';
 
 interface UseControlBudgetProps {
   data: Budget[];
@@ -22,6 +23,7 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
   const [budgetCopy, setBudgetCopy] = useState<any>(null);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
+  const [updateStateBudget] = useUpdateStateBudgetMutation();
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -30,6 +32,18 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
   const handleUpdate = (budgetId: string) => {
     if (budgetId) {
       router.push(`/update/budget/${budgetId}`);
+    }
+  };
+
+  const handleStateUpdate = async (budgetId: string) => {
+    setIsLoadingPDF(true);
+    try {
+      await updateStateBudget({ id: budgetId }).unwrap();
+        toast.success('Estado actualizado con éxito');
+    } catch (error) {
+        toast.error('Error al actualizar el estado:');
+    } finally {
+      setIsLoadingPDF(false);
     }
   };
 
@@ -238,6 +252,7 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
     selectedRange,
     handleDateRangeChange,
     handleUpdate,
+    handleStateUpdate,
     handleDelete,
     handleView,
     handleExportPDF,

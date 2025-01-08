@@ -24,6 +24,7 @@ export const ControlBudget = () => {
     selectedRange,
     handleDateRangeChange,
     handleUpdate,
+    handleStateUpdate,
     handleDelete,
     handleView,
     handlePrint,
@@ -79,6 +80,7 @@ export const ControlBudget = () => {
           handleView={handleView}
           handleDelete={handleDelete}
           handleUpdate={handleUpdate}
+          handleStateUpdate={handleStateUpdate}
           handlePrint={handlePrint}
           handleExportPDF={handleExportPDF}
         />

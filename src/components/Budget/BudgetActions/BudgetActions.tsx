@@ -15,8 +15,8 @@ import { LuFileCheck } from "react-icons/lu";
 interface BudgetActionsProps {
     description: string;
     setDescription: (value: string) => void;
-    handleButtonType: (action: "draft" | "accepted") => Promise<void>; 
-    mode: string;
+    handleButtonType: (action: "draft" | "approved") => Promise<void>; 
+    mode?: "create" | "upload";
 }
 
 export const BudgetActions = ({
@@ -25,13 +25,13 @@ export const BudgetActions = ({
     handleButtonType,
     mode
 }: BudgetActionsProps) => {
-    const [activeButton, setActiveButton] = useState<"draft" | "accepted" | null>(null);
+    const [activeButton, setActiveButton] = useState<"draft" | "approved" | null>(null);
 
-    const showTextField = activeButton === "draft" || activeButton === "accepted"; 
+    const showTextField = activeButton === "draft" || activeButton === "approved"; 
 
     // Texto de los tooltips basado en el valor de 'mode'
-    const draftTooltipText = mode === "update" ? "Actualizar como Borrador" : "Borrador";
-    const acceptedTooltipText = mode === "update" ? "Actualizar como Aceptado" : "Aceptado";
+    const draftTooltipText = mode === "upload" ? "Actualizar como Borrador" : "Borrador";
+    const approvedTooltipText = mode === "upload" ? "Actualizar como Aprobado" : "Aprobado";
     const [isLoading, setIsLoading] = useState(false);
 
     return (
@@ -62,7 +62,7 @@ export const BudgetActions = ({
                 )}
 
                 {/* Botón de borrador */}
-                {activeButton !== "accepted" && ( 
+                {activeButton !== "approved" && ( 
                     <Tooltip title={activeButton === "draft" ? "Volver" : draftTooltipText} arrow>
                         <button
                             className="w-16 h-16 rounded-full bg-transparent border-2 border-gray-600 flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 hover:bg-gray-600 hover:border-gray-600 duration-300"
@@ -77,14 +77,14 @@ export const BudgetActions = ({
                     </Tooltip>
                 )}
 
-                {/* Botón de aceptado */}
+                {/* Botón de aprobado */}
                 {activeButton !== "draft" && ( 
-                    <Tooltip title={activeButton === "accepted" ? "Volver" : acceptedTooltipText} arrow>
+                    <Tooltip title={activeButton === "approved" ? "Volver" : approvedTooltipText} arrow>
                         <button
-                            className={`w-16 h-16 rounded-full bg-transparent border-2 ${activeButton === "accepted" ? "border-gray-600 hover:bg-gray-600" : "border-green-600 hover:border-green-600 hover:bg-green-600"}  flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 duration-300`}
-                            onClick={() => setActiveButton(activeButton === "accepted" ? null : "accepted")}
+                            className={`w-16 h-16 rounded-full bg-transparent border-2 ${activeButton === "approved" ? "border-gray-600 hover:bg-gray-600" : "border-green-600 hover:border-green-600 hover:bg-green-600"}  flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 duration-300`}
+                            onClick={() => setActiveButton(activeButton === "approved" ? null : "approved")}
                         >
-                            {activeButton === "accepted" ? (
+                            {activeButton === "approved" ? (
                                 <RiArrowGoBackFill className="w-16 h-16 p-4" />
                             ) : (
                                 <LuFileCheck className="w-16 h-16 p-3" />

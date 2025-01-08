@@ -135,7 +135,7 @@ export const BudgetForm = forwardRef(({
 
     useEffect(() => {
         // Si el modo es "update", no ejecutamos este efecto
-        if (mode === "update") return;
+        if (mode === "upload") return;
     
         if (isSuccess) {
             const maxBudget = budgets.length > 0

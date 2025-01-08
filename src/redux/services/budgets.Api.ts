@@ -50,6 +50,13 @@ export const budgetsApi = createApi({
             }),
             invalidatesTags: ['Budgets'], // Invalidar la caché de Budgets después de actualizar
         }),
+        updateStateBudget: builder.mutation<Budget, { id: string }>({
+            query: ({ id }) => ({
+                url: `/budgets/${id}`,
+                method: 'PATCH',
+            }),
+            invalidatesTags: ['Budgets'],
+        }),
     }),
 });
 
@@ -58,5 +65,6 @@ export const {
     useGetBudgetByIdQuery,
     useDeleteBudgetMutation,
     useCreateBudgetMutation,
-    useUpdateBudgetMutation
+    useUpdateBudgetMutation,
+    useUpdateStateBudgetMutation,
 } = budgetsApi;
