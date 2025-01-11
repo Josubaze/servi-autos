@@ -45,7 +45,7 @@ export async function GET(request: Request) {
         const rating = el.querySelector(".poly-reviews__rating")?.textContent || "Sin calificación";
 
         // Obtener información de envío
-        const shipping = el.querySelector(".poly-component__shipping")?.textContent || "Envío no especificado";
+        const shipping = el.querySelector(".poly-component__shipping")?.textContent || "No especificado";
 
         const currency = "$"; // Cambia según corresponda
         const link = el.querySelector(".poly-component__title-wrapper a")?.getAttribute("href") || "#";
@@ -57,6 +57,11 @@ export async function GET(request: Request) {
     });
 
     await browser.close();
+
+    // Verificar si se obtuvieron productos
+    if (products.length === 0) {
+      return NextResponse.json({ message: "No se encontraron productos para la búsqueda realizada." }, { status: 404 });
+    }
 
     // Responder con los productos obtenidos
     return NextResponse.json({ results: products });

@@ -1,122 +1,149 @@
 'use client'
 
-import { useState, useMemo } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Input, Button } from "@nextui-org/react";
-import { FaEye } from "react-icons/fa";
-import Link from "next/link";
+import { Input, Button, Pagination } from "@nextui-org/react";
+import { motion } from "framer-motion";
+import { BsSearch } from "react-icons/bs";
+import { MdOutlineSearchOff } from "react-icons/md";
+import { Loading } from "../Common/Loading";
+import { useMarket } from "../../hooks/Market/useMarket"; // Importa el hook personalizado
+import { MarketTable } from "./MarketTable"; // Importa el nuevo componente
 
 export const Market = () => {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [page, setPage] = useState(1);
-
-  const rowsPerPage = 15; // Cambié de 10 a 15
-
-  const handleSearch = async () => {
-    setLoading(true);
-    setError("");
-    setResults([]);
-
-    try {
-      const response = await fetch(`/api/market?q=${encodeURIComponent(query)}`);
-      
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      console.log(data);
-      setResults(data.results || []);
-    } catch (err: any) {
-      setError(err.message || "Error inesperado.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const pages = Math.ceil(results.length / rowsPerPage);
-
-  const currentPageData = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    return results.slice(start, end);
-  }, [page, results]);
+  const {
+    product,
+    setProduct,
+    page,
+    setPage,
+    results,
+    isLoading,
+    isError,
+    currentPageData,
+    handleSearchSubmit,
+    isFetching,
+    pages,
+  } = useMarket("");
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl mb-4">Buscar artículos en MercadoLibre</h1>
-      <div className="flex items-center justify-center space-x-2 max-w-full sm:max-w-md mx-auto">
-        <Input
-          aria-label="Buscar productos"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Buscar..."
-          className="flex-1"
-        />
-        <Button
-          onClick={handleSearch}
-          color="primary"
-          disabled={loading}
-        >
-          {loading ? "Buscando..." : "Buscar"}
-        </Button>
-      </div>
-
-      {error && <p className="text-red-500 mt-4">{error}</p>}
-
-      <div className="mt-4">
-        {results.length > 0 ? (
-          <Table
-            aria-label="Artículos encontrados en MercadoLibre"
-            classNames={{
-              wrapper: "min-h-[222px]",
-            }}
-          >
-            <TableHeader>
-              <TableColumn key="title">Título</TableColumn>
-              <TableColumn key="price">Precio</TableColumn>
-              <TableColumn key="rating">Calificación</TableColumn>
-              <TableColumn key="shipping">Envío</TableColumn>
-              <TableColumn key="options">Opciones</TableColumn>
-            </TableHeader>
-            <TableBody items={currentPageData}>
-              {(item) => (
-                <TableRow key={item.permalink}>
-                  <TableCell>{item.title}</TableCell>
-                  <TableCell>{item.currency}{item.price}</TableCell>
-                  <TableCell>{item.rating}</TableCell>
-                  <TableCell>{item.shipping}</TableCell>
-                  <TableCell>
-                    <Link href={item.permalink} target="_blank" rel="noopener noreferrer">
-                      <button className="text-blue-500">
-                        <FaEye size={20} />
-                      </button>
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+    <div className="px-10 py-4">
+      <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        transition={{ duration: 0.5 }}>
+        {!results.length && !isLoading && !isError ? (
+          <div className="flex flex-col items-center justify-center h-[70vh] text-center space-y-4">
+            <div className="flex items-center">
+              <h1 className="text-8xl font-bold">Mercado</h1>
+              <h1 className="text-8xl font-bold text-yellow-500">Libre</h1>
+            </div>
+            <p className="text-lg text-gray-400">
+              Consulte precios de MercadoLibre desde aquí.
+            </p>
+            <div className="flex items-center justify-center space-x-2 max-w-full sm:max-w-md">
+              <form onSubmit={handleSearchSubmit}>
+                <Input
+                  aria-label="Buscar productos"
+                  value={product}
+                  onChange={(e) => setProduct(e.target.value)}
+                  placeholder="Buscar..."
+                  className="flex-1"
+                  classNames={{ inputWrapper: "pr-0 pl-3" }}
+                  endContent={
+                    <Button
+                      isIconOnly
+                      variant="ghost"
+                      className="bg-yellow-500 hover:bg-yellow-600"
+                      type="submit"
+                      isLoading={isLoading || isFetching}
+                      disabled={isLoading || isFetching}
+                    >
+                      <BsSearch />
+                    </Button>
+                  }
+                />
+              </form>
+            </div>
+          </div>
         ) : (
-          !loading && <p>No se encontraron resultados.</p>
-        )}
-      </div>
+          <div>
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              transition={{ duration: 0.5 }}>
+              <div className="flex items-center pt-6 mb-4">
+                <div className="flex items-center">
+                  <h1 className="text-3xl font-bold">Consultar Mercado</h1>
+                  <h1 className="text-3xl font-bold text-yellow-500">Libre</h1>
+                </div>
+              </div>
+              <div className="flex items-center justify-between pt-2 mb-4">
+                <h2 className="font-title text-xl">Publicaciones encontradas:</h2>
+                <div className="flex items-center max-w-full sm:max-w-md">
+                  <form onSubmit={handleSearchSubmit}>
+                    <Input
+                      aria-label="Buscar productos"
+                      value={product}
+                      onChange={(e) => setProduct(e.target.value)}
+                      placeholder="Buscar..."
+                      className="flex-1"
+                      classNames={{ inputWrapper: "pr-0 pl-3" }}
+                      endContent={
+                        <Button
+                          isIconOnly
+                          variant="ghost"
+                          className="bg-yellow-500 hover:bg-yellow-600"
+                          type="submit"
+                          isLoading={isLoading || isFetching}
+                          disabled={isLoading || isFetching}
+                        >
+                          <BsSearch />
+                        </Button>
+                      }
+                    />
+                  </form>
+                </div>
+              </div>
+              <div className="mt-4">
+                {isLoading || isFetching ? (
+                  <div className="flex justify-center items-center h-[500px]">
+                    <Loading />
+                  </div>
+                ) : isError ? (
+                  <div className="flex flex-col items-center justify-center h-[500px] text-center space-y-4">
+                    <MdOutlineSearchOff className="h-24 w-24 text-yellow-400" />
+                    <h1 className="font-bold">No hay publicaciones que coincidan con tu búsqueda.</h1>
+                  </div>
+                ) : results.length > 0 ? (
+                  <motion.div  
+                    initial={{ x: '100%' }} 
+                    animate={{ x: 0 }} 
+                    transition={{ type: 'spring', stiffness: 50 }}>
+                    <MarketTable currentPageData={currentPageData} />
+                  </motion.div>
+                ) : null}
+              </div>
+            </motion.div>
 
-      {results.length > 0 && (
-        <div className="flex justify-center mt-4">
-          <Pagination
-            isCompact
-            showControls
-            showShadow
-            color="secondary"
-            page={page}
-            total={pages}
-            onChange={(page) => setPage(page)}
-          />
-        </div>
-      )}
+            {/* Animación de la paginación */}
+            {results.length > 0 && (
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ duration: 0.5 }} 
+                className="flex justify-center mt-4">
+                <Pagination
+                  isCompact
+                  showControls
+                  showShadow
+                  color="secondary"
+                  page={page}
+                  total={pages}
+                  onChange={(page) => setPage(page)}
+                />
+              </motion.div>
+            )}
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 };
