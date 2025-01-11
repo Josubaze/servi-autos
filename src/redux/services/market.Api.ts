@@ -1,18 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-    interface MarketProduct {
-        title: string;
-        price: string;
-        currency: string;
-        rating: string;
-        shipping: string;
-        permalink: string;
-    }
-    
-    interface MarketResults {
-        results: MarketProduct[];
-    }
-
     export const marketApi = createApi({
         reducerPath: "marketApi",
         baseQuery: fetchBaseQuery({

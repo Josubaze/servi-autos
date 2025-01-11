@@ -5,20 +5,51 @@ export const useMarket = (initialProduct: string) => {
   const [product, setProduct] = useState(initialProduct);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const rowsPerPage = 12;
+  const [sortMode, setSortMode] = useState<"unordered" | "asc" | "desc">("unordered"); // Estado para el ordenamiento
+  const itemsPerPage = 10; // Configuración de elementos por página
 
   const { data, isLoading, isError, refetch, isFetching } = useGetMarketQuery(query, {
     skip: !query,
   });
 
   const results = data?.results || [];
-  const pages = Math.ceil(results.length / rowsPerPage);
 
+  // Lógica de ordenamiento
+  const sortedResults = useMemo(() => {
+    if (sortMode === "asc") {
+      return [...results].sort((a, b) => {
+        const priceA = parseFloat(a.price.replace(/[^\d.-]/g, ""));
+        const priceB = parseFloat(b.price.replace(/[^\d.-]/g, ""));
+        return priceA - priceB;
+      });
+    }
+    if (sortMode === "desc") {
+      return [...results].sort((a, b) => {
+        const priceA = parseFloat(a.price.replace(/[^\d.-]/g, ""));
+        const priceB = parseFloat(b.price.replace(/[^\d.-]/g, ""));
+        return priceB - priceA;
+      });
+    }
+    return results; // Modo "unordered", datos originales
+  }, [results, sortMode]);
+
+  // Datos de la página actual
   const currentPageData = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    return results.slice(start, end);
-  }, [page, results]);
+    const startIndex = (page - 1) * itemsPerPage;
+    return sortedResults.slice(startIndex, startIndex + itemsPerPage);
+  }, [page, sortedResults]);
+
+  // Número total de páginas
+  const totalPages = Math.ceil(sortedResults.length / itemsPerPage);
+
+  // Función para alternar el modo de ordenamiento
+  const handleSortToggle = () => {
+    setSortMode((prevMode) => {
+      if (prevMode === "unordered") return "asc";
+      if (prevMode === "asc") return "desc";
+      return "unordered";
+    });
+  };
 
   const handleSearchSubmit = (e: any) => {
     e.preventDefault();
@@ -39,13 +70,14 @@ export const useMarket = (initialProduct: string) => {
     setQuery,
     page,
     setPage,
-    rowsPerPage,
-    results,
+    itemsPerPage,
+    currentPageData,
+    totalPages,
     isLoading,
     isError,
-    currentPageData,
-    handleSearchSubmit,
     isFetching,
-    pages,
+    handleSearchSubmit,
+    sortMode,
+    handleSortToggle,
   };
 };

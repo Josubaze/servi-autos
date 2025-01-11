@@ -281,4 +281,17 @@ interface ErrorResponse {
   status: number;
 }
 
+interface MarketProduct {
+  title: string;
+  price: string;
+  currency: string;
+  rating: string;
+  shipping: string;
+  permalink: string;
+}
+
+interface MarketResults {
+  results: MarketProduct[];
+}
+
 declare module 'mui-datatables';
