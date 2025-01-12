@@ -4,6 +4,7 @@ import * as cheerio from "cheerio";
 interface Product {
   title: string;
   price: string;
+  currency: string;
   shipping: string;
   permalink: string;
   rating: string;
@@ -55,6 +56,14 @@ export async function GET(request: Request) {
         // Formatear el precio final
         const formattedPrice = fullPrice.toFixed(2);
 
+        // Obtener el tipo de moneda (última aparición)
+        const currency =
+          $(el)
+            .find(".andes-money-amount__currency-symbol")
+            .last()
+            .text()
+            .trim() || "";
+
         // Obtener calificación
         const rating =
           $(el).find(".poly-reviews__rating").text().trim() ||
@@ -69,7 +78,7 @@ export async function GET(request: Request) {
         const permalink =
           $(el).find(".poly-component__title-wrapper a").attr("href") || "#";
 
-        return { title, price: formattedPrice, shipping, permalink, rating };
+        return { title, currency, price: formattedPrice, shipping, permalink, rating };
       })
       .get();
 

@@ -25,7 +25,7 @@ export const MarketTable: React.FC<MarketTableProps> = ({
         aria-label="Artículos encontrados en MercadoLibre"
         color="default"
         selectionMode="single"
-        classNames={{ wrapper: "min-h-[222px]" }}
+        classNames={{ wrapper: "min-h-[222px] max-h-[600px]"}}
       >
         <TableHeader>
           <TableColumn key="title">Título</TableColumn>
@@ -41,8 +41,7 @@ export const MarketTable: React.FC<MarketTableProps> = ({
             <TableRow key={item.permalink}>
               <TableCell>{item.title}</TableCell>
               <TableCell>
-                {item.currency}
-                {item.price}
+                {`${item.currency} ${item.price}`}
               </TableCell>
               <TableCell>{item.rating}</TableCell>
               <TableCell>

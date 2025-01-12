@@ -12,6 +12,11 @@ import { Notification } from '../Common/Notification';
 import { PRODUCTVOID } from 'src/utils/constanst';
 import { PageTitle } from '../Common/PageTitle';
 import { LottieProduct } from '../Dashboard/DashWidgets/DashWidgets';
+import { MarketModal } from '../Common/MarketModal';
+import { Button } from '@nextui-org/react';
+import { MdStore } from "react-icons/md";
+import { Tooltip } from '@mui/material';
+
 
 
 export const StoreHouse = () => {
@@ -19,6 +24,7 @@ export const StoreHouse = () => {
   const [deleteProduct, { isError: isErrorDelete }] = useDeleteProductMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
+  const [showMarket, setShowMarket] = useState(false);
   const [showFormUpdate, setShowFormUpdate] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(PRODUCTVOID);
 
@@ -39,17 +45,32 @@ export const StoreHouse = () => {
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
         <div className="my-4 flex justify-between items-center gap-2 pb-2">
-          <button
-            className="transition ease-in-out delay-150 bg-emerald-600 text-white px-4 py-2 rounded hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300 max-sm:hidden"
-            onClick={() => setShowForm(true)}
-          >
-            <span className='flex items-center gap-2 '>
-              <FaBoxes />
-              Agregar Producto
-            </span>
-          </button>
+        <Button
+              radius="md"
+              className="h-14 text-gray-100 bg-green-600"
+              variant="solid"
+              onClick={() => setShowForm(true)}
+            >
+              <span className='flex items-center justify-center gap-x-2'>
+                <FaBoxes/>
+                Agregar Producto
+              </span>
+        </Button>
+
+          <div className='flex gap-x-2'>
+          <Tooltip title="Consultar Mercado" arrow>
+            <Button
+              radius="md"
+              className="h-14 bg-yellow-500"
+              variant="solid"
+              onClick={() => setShowMarket(true)}
+            >
+              <MdStore className="h-8 w-8 text-gray-100"/>
+            </Button>
+          </Tooltip>    
 
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+          </div>
         </div>
 
         <TableProducts
@@ -75,6 +96,13 @@ export const StoreHouse = () => {
         }
         {showForm && <FormProduct onClose={() => setShowForm(false)} />}
         {showFormUpdate && <UpdateProductForm product={currentProduct} onClose={() => setShowFormUpdate(false)} />}
+
+        {
+          showMarket && (
+            <MarketModal isOpen={showMarket} onClose={() => setShowMarket(false)} />
+          )
+        }
+
       </div>
     </>
   );

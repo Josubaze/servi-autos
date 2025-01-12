@@ -30,10 +30,10 @@ export const Market = () => {
         {!currentPageData.length && !isLoading && !isError ? (
           <div className="flex flex-col items-center justify-center h-[70vh] text-center space-y-4">
             <div className="flex items-center">
-              <h1 className="text-8xl font-bold">Mercado</h1>
-              <h1 className="text-8xl font-bold text-yellow-500">Libre</h1>
+              <h1 className="text-4xl sm:text-8xl font-bold">Mercado</h1>
+              <h1 className="text-4xl sm:text-8xl font-bold text-yellow-500">Libre</h1>
             </div>
-            <p className="text-lg text-gray-400">Consulte precios de MercadoLibre desde aquí.</p>
+            <p className="text-sm sm:text-lg text-gray-400">Consulte precios de MercadoLibre desde aquí.</p>
             <div className="flex items-center justify-center space-x-2 max-w-full sm:max-w-md">
               <form onSubmit={handleSearchSubmit}>
                 <Input
