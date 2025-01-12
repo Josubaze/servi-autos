@@ -27,7 +27,7 @@ export const UpdateServiceForm = ({ onClose, service }: FormServiceProps) => {
     },
   });
 
-  const { data: productsData = [], isError: isErrorProducts  } = useGetProductsQuery();
+  const { data: productsData = [], isError: isErrorProducts , isFetching, isLoading, isSuccess } = useGetProductsQuery();
   const [updateService, { isError }] = useUpdateServiceMutation();
   const [selectedProducts, setSelectedProducts] = useState<Product[]>(
     service.products.map((product) => ({
@@ -70,12 +70,15 @@ export const UpdateServiceForm = ({ onClose, service }: FormServiceProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
         {isProductTableVisible ? (
-            <SelectProducts 
+          <SelectProducts 
             data={productsData}
             isError={isErrorProducts}
+            isFetching={isFetching}
+            isSuccess={isSuccess}
+            isLoading={isLoading}
             onAddProduct={handleProductSelect}
             onCloseTable={() => setIsProductTableVisible(false)}
-        />
+          />
         ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-full  md:max-w-2xl lg:max-w-3xl mx-auto bg-black-nav p-8 rounded-md shadow-md border-2 border-x-gray-600"> 
         <h2 className="text-2xl text-center font-bold mb-6">Modificar Servicio</h2> 

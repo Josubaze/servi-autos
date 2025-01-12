@@ -8,7 +8,7 @@ export const useMarket = (initialProduct: string) => {
   const [sortMode, setSortMode] = useState<"unordered" | "asc" | "desc">("unordered"); // Estado para el ordenamiento
   const itemsPerPage = 10; // Configuración de elementos por página
 
-  const { data, isLoading, isError, refetch, isFetching } = useGetMarketQuery(query, {
+  const { data, isLoading, isError, refetch, isFetching, isSuccess } = useGetMarketQuery(query, {
     skip: !query,
   });
 
@@ -76,6 +76,7 @@ export const useMarket = (initialProduct: string) => {
     isLoading,
     isError,
     isFetching,
+    isSuccess,
     handleSearchSubmit,
     sortMode,
     handleSortToggle,

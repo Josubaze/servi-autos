@@ -19,7 +19,7 @@ export const useBudgetTable = ({ selectedServices, setSelectedServices, original
   const [isProductTableVisible, setIsProductTableVisible] = useState<boolean>(false);
   const [activeServiceId, setActiveServiceId] = useState<string | null>(null);
   const { data: services = [], isLoading, isError, isSuccess } = useGetServicesQuery();
-  const { data: products = [], isError: isErrorProducts } = useGetProductsQuery();
+  const { data: products = [], isError: isErrorProducts, isFetching: isFetchingProducts, isLoading: isLoadingProducts, isSuccess: isSuccessProducts } = useGetProductsQuery();
   const [isInitialized, setIsInitialized] = useState(false); // Bandera de control
 
   // Actualización inicial de originalServices cuando se cargan los selectedServices
@@ -415,6 +415,9 @@ const removeServiceFromState = (
     isError,
     isSuccess,
     isErrorProducts,
+    isSuccessProducts,
+    isFetchingProducts,
+    isLoadingProducts,
     handleServiceSelect,
     handleViewDetails,
     handleAddEmptyService,

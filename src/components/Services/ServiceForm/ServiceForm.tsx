@@ -18,7 +18,7 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<Omit<Service, '_id'>>({
     resolver: zodResolver(ServiceSchema),
   });
-  const { data = [], isError: isErrorProducts } = useGetProductsQuery(); 
+  const { data = [], isError: isErrorProducts, isFetching, isLoading, isSuccess } = useGetProductsQuery(); 
   const [createService, { isError }] = useCreateServiceMutation(); 
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]); 
   const [isProductTableVisible, setIsProductTableVisible] = useState(false); 
@@ -51,8 +51,11 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
       {isProductTableVisible ? ( 
         <SelectProducts 
           data={data} 
-          onAddProduct={handleProductSelect} 
+          isFetching={isFetching}
           isError={isErrorProducts}
+          isSuccess={isSuccess}
+          isLoading={isLoading}
+          onAddProduct={handleProductSelect} 
           onCloseTable={() => setIsProductTableVisible(false)} 
         /> 
       ) : ( 

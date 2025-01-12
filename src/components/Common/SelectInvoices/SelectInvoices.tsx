@@ -162,7 +162,9 @@ export const SelectInvoices: React.FC<{
     return (
         <>
         {isLoading || isFetching ? (
-            <Loading />
+            <div className="flex justify-center items-center h-[500px]">
+                <Loading />
+            </div>
         ) : isError ? (
             toast.error('Error al cargar las Facturas')
         ) : isSuccess ? (

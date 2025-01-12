@@ -4,14 +4,18 @@ import { darkTheme } from "src/styles/themes/themeTable";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
-import { Typography } from "@mui/material";
+import { toast } from "react-toastify";
+import { Loading } from "../Loading";
 
 export const SelectProducts: React.FC<{
   data: Product[],
+  isLoading: boolean,
+  isError: boolean,
+  isFetching: boolean,
+  isSuccess: boolean,
   onAddProduct: (product: Product) => void,
   onCloseTable: () => void,
-  isError: boolean,
-}> = ({ data, onAddProduct, onCloseTable, isError }) => {
+}> = ({ data, onAddProduct, onCloseTable, isError, isFetching, isLoading, isSuccess }) => {
 
   const columns = [
     { 
@@ -100,22 +104,27 @@ export const SelectProducts: React.FC<{
   );
 
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={darkTheme}>
-        <div className="w-full max-h-[750px] overflow-y-auto">
-          <MUIDataTable 
-            title={"Lista de Productos"} 
-            data={data} 
-            columns={responsiveColumns} 
-            options={options} 
-          />
-        </div>
-        {isError && (
-          <Typography variant="h4" color="error">
-            Hubo un error al cargar la lista de productos. Por favor, intente nuevamente.
-          </Typography>
-        )}
-      </ThemeProvider>
-    </StyledEngineProvider>
-  );
+      <>
+        {isLoading || isFetching ? (
+          <div className="flex justify-center items-center h-[500px]">
+            <Loading />
+          </div>
+        ) : isError ? (
+          <p className="text-red-600">Error al cargar los productos.</p>
+        ) : isSuccess ? (
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={darkTheme}>
+            <div className="w-full max-h-[750px] overflow-y-auto">
+              <MUIDataTable
+                title={"Lista de Productos"}
+                data={data}
+                columns={responsiveColumns}
+                options={options}
+              />
+            </div>
+            </ThemeProvider>
+          </StyledEngineProvider>
+        ) : null}
+      </>
+    );
 };

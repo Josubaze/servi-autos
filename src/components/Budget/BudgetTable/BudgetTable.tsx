@@ -25,6 +25,9 @@ export const BudgetTable = ({ selectedServices, setSelectedServices, originalSer
     isError,
     isSuccess,
     isErrorProducts,
+    isFetchingProducts,
+    isLoadingProducts,
+    isSuccessProducts,
     handleServiceSelect,
     handleViewDetails,
     handleDeleteRow,
@@ -83,6 +86,9 @@ export const BudgetTable = ({ selectedServices, setSelectedServices, originalSer
           <SelectProducts 
             data={products} 
             isError={isErrorProducts}
+            isFetching={isFetchingProducts}
+            isLoading={isLoadingProducts}
+            isSuccess={isSuccessProducts}
             onAddProduct={handleAddProduct} 
             onCloseTable={() => setIsProductTableVisible(false)} 
           /> 

@@ -19,6 +19,7 @@ export const Market = () => {
     isLoading,
     isError,
     isFetching,
+    isSuccess,
     handleSearchSubmit,
     sortMode,
     handleSortToggle,
@@ -105,7 +106,7 @@ export const Market = () => {
                     <MdOutlineSearchOff className="h-24 w-24 text-yellow-400" />
                     <h1 className="font-bold">No hay publicaciones que coincidan con tu búsqueda.</h1>
                   </div>
-                ) : currentPageData.length > 0 ? (
+                ) : isSuccess && currentPageData.length > 0 ? (
                   <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} transition={{ type: "spring", stiffness: 50 }}>
                     <MarketTable
                       currentPageData={currentPageData}

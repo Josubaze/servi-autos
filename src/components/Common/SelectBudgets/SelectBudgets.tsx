@@ -160,7 +160,9 @@ export const SelectBudgets: React.FC<{
     return (
         <>
         {isLoading || isFetching ? (
-            <Loading />
+            <div className="flex justify-center items-center h-[500px]">
+                <Loading />
+            </div>
         ) : isError ? (
             toast.error('Error al cargar los Presupuestos')
         ) : isSuccess ? (
