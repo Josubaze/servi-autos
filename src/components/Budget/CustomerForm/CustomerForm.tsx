@@ -4,21 +4,30 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CustomerSchema } from 'src/utils/validation.zod';
 import { CUSTOMERVOID } from "src/utils/constanst";
-import { Notification } from "src/components/Common/Notification";
 import { useImperativeHandle, forwardRef } from 'react';
 import TextField from '@mui/material/TextField';
 import { ThemeProvider } from "@mui/material/styles";
 import { TextFieldTheme } from 'src/styles/themes/themeTextField';
-import { SelectCustomerButton } from "./SelectCustomerButton"; 
-import { CreateCustomerButton } from "./CreateCustomerButton";  
 import { SelectCustomers } from "src/components/Common/SelectCustomers";
+import { OptionsCustomerForm } from "../OptionsCustomerForm";
+import { toast } from "react-toastify";
 
-export const BudgetCustomerForm = forwardRef((props, ref) => {
+// Define la interfaz para el ref
+interface FormHandle {
+    submitFormCustomer: () => void;
+}
+
+// Define la interfaz para los props
+interface CustomerFormProps {
+    title: string;
+}
+
+// Componente con forwardRef
+export const CustomerForm = forwardRef<FormHandle, CustomerFormProps>(({ title }, ref) => {
     const { data: customers = [], isLoading: isLoadingCustomers, isError, isFetching, isSuccess } = useGetCustomersQuery();
     const [selectedCustomer, setSelectedCustomer] = useState<Customer>(CUSTOMERVOID);
     const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
-    const [createCustomer, { isError: isErrorCustomer }] = useCreateCustomerMutation();
-    const [isNotification, setIsNotification] = useState(false);
+    const [createCustomer ] = useCreateCustomerMutation();
     const [isLoading, setIsLoading] = useState(false);
     const { control, handleSubmit, formState: { errors }, reset, getValues, trigger, setValue } = useForm<Omit<Customer, '_id'>>({
         resolver: zodResolver(CustomerSchema),
@@ -35,8 +44,9 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
         setIsLoading(true);
         try {
             await createCustomer(data).unwrap();
-            setIsNotification(true);
-        } catch (error) {            
+            toast.success('Cliente registrado exitosamente')
+        } catch (error) {    
+            toast.error('Ha ocurrido un error al intentar registrar')        
         } finally {
             setIsLoading(false);
         }
@@ -79,17 +89,13 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
 
     return (
         <>
-            {/* Botones para cargar cliente existente o crear nuevo */}
-            <div className="flex items-center gap-4">
-                <p className="font-title font-bold">Presupuestar a</p>
-
-                {/* Botón de Seleccionar Cliente */}
-                <SelectCustomerButton onClick={() => setIsTableVisible(true)} />
-
-                {/* Botón de Crear Cliente */}
-                <CreateCustomerButton isLoading={isLoading} onClick={handleSubmit(onSubmit)} />
-            </div>
-
+            {/* botones para cargar al form o guardar en bdd */}
+            <OptionsCustomerForm
+                setIsTableVisible={setIsTableVisible}
+                isLoading={isLoading}
+                handleFormSubmit={handleSubmit(onSubmit)}
+                title={title}
+            />
             <form className="w-full pt-4 sm:pr-6">
                 <div className="bg-black-nav rounded-lg border-y-2 border-gray-500 p-4">
                     <div className="grid gap-y-4 w-full">
@@ -199,9 +205,6 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
                 </div>
             </form>
 
-            {isNotification && <Notification message="El cliente ha sido registrado exitosamente!" backgroundColor="bg-green-600" />}
-            {isErrorCustomer && <Notification message="Ha fallado el registro del cliente!" backgroundColor="bg-red-600" /> }
-
             {/* Modal para la tabla de selección de clientes */}
             {isTableVisible && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
@@ -220,4 +223,4 @@ export const BudgetCustomerForm = forwardRef((props, ref) => {
     );
 });
 
-BudgetCustomerForm.displayName = 'BudgetCustomerForm';
+CustomerForm.displayName = 'CustomerForm';

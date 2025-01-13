@@ -7,13 +7,14 @@ import { BudgetFormSchema } from 'src/utils/validation.zod';
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
 import dayjs from "dayjs";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { SelectBudgetButton } from "./SelectBudgetButton"; 
 import { NumericFormat } from "react-number-format";
 import { motion } from "framer-motion"; 
 import { useGetBudgetsQuery } from "src/redux/services/budgets.Api";
 import { SelectBudgets } from "src/components/Common/SelectBudgets/SelectBudgets";
 import { Dispatch, SetStateAction } from 'react';
 import { Loading } from "src/components/Common/Loading";
+import { OptionsForm } from "src/components/Invoice/OptionsForm";
+import { MarketModal } from "src/components/Common/MarketModal";
 
 interface BudgetFormProps {
     setCurrency: (currency: string) => void;
@@ -45,6 +46,7 @@ export const BudgetForm = forwardRef(({
     const expirationDate = today.add(14, 'day');
     const { data: budgets = [], isSuccess, isLoading, isFetching, isError } = useGetBudgetsQuery(); 
     const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
+    const [showMarket, setShowMarket] = useState<boolean>(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const { 
         register, 
@@ -150,10 +152,10 @@ export const BudgetForm = forwardRef(({
 
     return (
         <>
-        <div className="flex items-center justify-end gap-3">
-            <p className="font-title font-bold">Presupuesto Existente</p>
-            <SelectBudgetButton onClick={() => setIsTableVisible(true)} />
-        </div>
+        <OptionsForm 
+            setIsTableVisible={setIsTableVisible} 
+            setShowMarket={setShowMarket}>
+        </OptionsForm>
 
         <form className="w-full pt-4 sm:pl-6">
             <div className="bg-black-nav rounded-lg border-y-2 border-gray-500 p-4">
@@ -302,6 +304,11 @@ export const BudgetForm = forwardRef(({
                   <Loading />
                 </div>
         )}
+        {
+            showMarket && (
+                <MarketModal isOpen={showMarket} onClose={() => setShowMarket(false)}></MarketModal>
+            )
+        }
         </>
     );
 });

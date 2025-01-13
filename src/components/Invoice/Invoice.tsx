@@ -1,6 +1,6 @@
 'use client';
 
-import { BudgetCustomerForm } from "../Budget/BudgetCustomerForm";
+import { CustomerForm } from "../Budget/CustomerForm";
 import { BudgetTable } from "../Budget/BudgetTable";
 import { BudgetSummary } from "../Budget/BudgetSummary";
 import { Loading } from "../Common/Loading";
@@ -70,7 +70,7 @@ import { DocHeader } from "../Common/DocHeader";
             <DocHeader company={company || null} isError={isError} isLoading={isLoading} title="FACTURA" />
             <div className="flex flex-col sm:flex-row py-4 px-8">
                 <div className="flex-1">
-                    <BudgetCustomerForm ref={formCustomerRef} />
+                    <CustomerForm title="Facturar a" ref={formCustomerRef} />
                 </div>
                 <div className="flex-1">
                     <InvoiceForm

@@ -7,7 +7,6 @@ import { BudgetFormSchema } from 'src/utils/validation.zod';
 import { TextFieldTheme } from "src/styles/themes/themeTextField";
 import dayjs from "dayjs";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { SelectInvoiceButton } from "./SelectInvoiceButton"; 
 import { NumericFormat } from "react-number-format";
 import { motion } from "framer-motion"; 
 import { useGetInvoicesQuery } from "src/redux/services/invoices.Api";
@@ -15,6 +14,8 @@ import { SelectBudgets } from "src/components/Common/SelectBudgets/SelectBudgets
 import { Dispatch, SetStateAction } from 'react';
 import { Loading } from "src/components/Common/Loading";
 import { useGetBudgetsQuery } from "src/redux/services/budgets.Api";
+import { MarketModal } from "src/components/Common/MarketModal";
+import { OptionsForm } from "../OptionsForm";
 
 interface InvoiceFormProps {
     setCurrency: (currency: string) => void;
@@ -48,6 +49,7 @@ export const InvoiceForm = forwardRef(({
     const { data: budgets = [], isSuccess, isLoading, isFetching, isError } = useGetBudgetsQuery(); 
     const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
     const [isUpdating, setIsUpdating] = useState(false);
+    const [showMarket, setShowMarket] = useState(false);
     const { 
         register, 
         formState: { errors }, 
@@ -152,10 +154,10 @@ export const InvoiceForm = forwardRef(({
 
     return (
         <>
-        <div className="flex items-center justify-end gap-3">
-            <p className="font-title font-bold">Presupuesto Existente</p>
-            <SelectInvoiceButton onClick={() => setIsTableVisible(true)} />
-        </div>
+        <OptionsForm 
+            setIsTableVisible={setIsTableVisible} 
+            setShowMarket={setShowMarket}>
+        </OptionsForm>
 
         <form className="w-full pt-4 sm:pl-6">
             <div className="bg-black-nav rounded-lg border-y-2 border-gray-500 p-4">
@@ -301,9 +303,15 @@ export const InvoiceForm = forwardRef(({
         )}
         {isUpdating && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-                  <Loading />
+                    <Loading />
                 </div>
         )}
+
+        {
+            showMarket && (
+                <MarketModal isOpen={showMarket} onClose={() => setShowMarket(false)}></MarketModal>
+            )
+        }
         </>
     );
 });

@@ -5,8 +5,8 @@ export const useMarket = (initialProduct: string) => {
   const [product, setProduct] = useState(initialProduct);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [sortMode, setSortMode] = useState<"unordered" | "asc" | "desc">("unordered"); // Estado para el ordenamiento
-  const itemsPerPage = 10; // Configuración de elementos por página
+  const [sortMode, setSortMode] = useState<"unordered" | "asc" | "desc">("unordered");
+  const itemsPerPage = 10;
 
   const { data, isLoading, isError, refetch, isFetching, isSuccess } = useGetMarketQuery(query, {
     skip: !query,
@@ -14,8 +14,7 @@ export const useMarket = (initialProduct: string) => {
 
   const results = data?.results || [];
 
-  // Lógica de ordenamiento
-  const sortedResults = useMemo(() => {
+  const sortedResults = (() => {
     if (sortMode === "asc") {
       return [...results].sort((a, b) => {
         const priceA = parseFloat(a.price.replace(/[^\d.-]/g, ""));
@@ -30,19 +29,16 @@ export const useMarket = (initialProduct: string) => {
         return priceB - priceA;
       });
     }
-    return results; // Modo "unordered", datos originales
-  }, [results, sortMode]);
+    return results;
+  })();
 
-  // Datos de la página actual
-  const currentPageData = useMemo(() => {
+  const currentPageData = (() => {
     const startIndex = (page - 1) * itemsPerPage;
     return sortedResults.slice(startIndex, startIndex + itemsPerPage);
-  }, [page, sortedResults]);
+  })();
 
-  // Número total de páginas
   const totalPages = Math.ceil(sortedResults.length / itemsPerPage);
 
-  // Función para alternar el modo de ordenamiento
   const handleSortToggle = () => {
     setSortMode((prevMode) => {
       if (prevMode === "unordered") return "asc";

@@ -1,6 +1,6 @@
 'use client';
 
-import { BudgetCustomerForm } from "../Budget/BudgetCustomerForm";
+import { CustomerForm } from "../Budget/CustomerForm";
 import { BudgetTable } from "../Budget/BudgetTable";
 import { BudgetSummary } from "../Budget/BudgetSummary";
 import { Loading } from "../Common/Loading";
@@ -71,7 +71,7 @@ import { CreditNoteOptions } from "./CreditNoteOptions/CreditNoteOptions";
             <DocHeader company={company || null} isError={isError} isLoading={isLoading} title="NOTA DE CRÉDITO" />
             <div className="flex flex-col sm:flex-row py-4 px-8">
                 <div className="flex-1">
-                    <BudgetCustomerForm ref={formCustomerRef} />
+                    <CustomerForm title="Nota de Crédito para:" ref={formCustomerRef} />
                 </div>
                 <div className="flex-1">
                     <CreditNoteForm

@@ -13,8 +13,10 @@ import { useGetInvoicesQuery } from "src/redux/services/invoices.Api";
 import { Dispatch, SetStateAction } from 'react';
 import { Loading } from "src/components/Common/Loading";
 import { useGetCreditNotesQuery } from "src/redux/services/creditNotes.Api";
-import { SelectInvoiceButton } from "./SelectInvoiceButton";
+import { SelectInvoiceButton } from "../../Common/Buttons/SelectInvoiceButton";
 import { SelectInvoices } from "src/components/Common/SelectInvoices";
+import { MarketButton } from "src/components/Common/Buttons/MarketButton";
+import { MarketModal } from "src/components/Common/MarketModal";
 
 interface CreaditNoteFormProps {
     setCurrency: (currency: string) => void;
@@ -46,7 +48,9 @@ export const CreditNoteForm = forwardRef(({
     const { data: creditNotes = []} = useGetCreditNotesQuery(); 
     const { data: invoices = [], isSuccess, isLoading, isFetching, isError } = useGetInvoicesQuery(); 
     const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
+    const [showMarket, setShowMarket] = useState<boolean>(false);
     const [isUpdating, setIsUpdating] = useState(false);
+
     const { 
         register, 
         formState: { errors }, 
@@ -147,9 +151,16 @@ export const CreditNoteForm = forwardRef(({
 
     return (
         <>
-        <div className="flex items-center justify-end gap-3">
-            <p className="font-title font-bold">Seleccionar Factura: </p>
-            <SelectInvoiceButton onClick={() => setIsTableVisible(true)} />
+        <div className="flex items-center justify-start gap-x-3">
+            {/* Sección de Consultar Mercado */}
+            <div className="flex items-center justify-center pl-6">
+                <MarketButton onClick={() => setShowMarket(true)} />
+            </div>
+
+            {/* Sección de Presupuesto Existente */}
+            <div className="flex items-center justify-center">
+                <SelectInvoiceButton onClick={() => setIsTableVisible(true)} />
+            </div>
         </div>
 
         <form className="w-full pt-4 sm:pl-6">
@@ -300,6 +311,11 @@ export const CreditNoteForm = forwardRef(({
                   <Loading />
                 </div>
         )}
+        {
+            showMarket && (
+                <MarketModal isOpen={showMarket} onClose={() => setShowMarket(false)}></MarketModal>
+            )
+        }
         </>
     );
 });

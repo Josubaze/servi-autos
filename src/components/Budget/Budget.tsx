@@ -1,7 +1,7 @@
 'use client';
 
 import { BudgetOptions } from "./BudgetOptions";
-import { BudgetCustomerForm } from "./BudgetCustomerForm";
+import { CustomerForm } from "./CustomerForm";
 import { BudgetForm } from "./BudgetForm";
 import { BudgetTable } from "./BudgetTable";
 import { BudgetSummary } from "./BudgetSummary";
@@ -70,7 +70,7 @@ import { DocHeader } from "../Common/DocHeader";
             <DocHeader company={company || null} isError={isError} isLoading={isLoading} title="PRESUPUESTO" />
             <div className="flex flex-col sm:flex-row py-4 px-8">
                 <div className="flex-1">
-                    <BudgetCustomerForm ref={formCustomerRef} />
+                    <CustomerForm title="Presupuestar a" ref={formCustomerRef} />
                 </div>
                 <div className="flex-1">
                     <BudgetForm
