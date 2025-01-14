@@ -2,15 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-
 html {
   padding-right: 0 !important;
 }
+
 body {
-  @apply bg-custom-gradient text-gray-200; 
+  @apply bg-custom-gradient text-gray-200;
+
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
-}
+  }
 }

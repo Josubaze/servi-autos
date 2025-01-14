@@ -82,7 +82,7 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
       if (!printRef.current) return;
 
       const fullCanvas = await html2canvas(printRef.current, {
-        scale: 1.5,
+        scale: 3,
         backgroundColor: "#ffffff",
       });
 
@@ -116,7 +116,7 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
           partCanvas.width, remainingHeight
         );
 
-        const partImgData = partCanvas.toDataURL("image/png");
+        const partImgData = partCanvas.toDataURL("image/png", 0.6);
 
         pdf.addImage(partImgData, "PNG", margin, margin, imgWidth, (remainingHeight / fullCanvas.width) * imgWidth);
 
@@ -143,7 +143,7 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
       if (!printRef.current) return;
 
       const fullCanvas = await html2canvas(printRef.current, {
-        scale: 2,
+        scale: 3,
         backgroundColor: "#ffffff",
       });
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { useCreateInvoiceMutation , useUpdateInvoiceMutation } from "src/redux/services/invoices.Api";
+import { useCreateExecutionOrderMutation  } from "src/redux/services/executionOrders.Api";
 import { toast } from "react-toastify";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from 'next/navigation';
@@ -35,6 +36,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
     const [description, setDescription] = useState<string>("");
     const { data: company, isLoading, isError } = useGetCompanyQuery();
     const [createInvoice] = useCreateInvoiceMutation();
+    const [createExecutionOrder] = useCreateExecutionOrderMutation();
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [updateInvoice] = useUpdateInvoiceMutation();
     const [dateUpdate, setDateUpdate] = useState<Dayjs | null>(null);
@@ -245,6 +247,22 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                 // Si todos los productos se actualizaron correctamente, crear la factura
                 await createInvoice(invoice).unwrap();
                 toast.success("Factura creada exitosamente!");
+
+                if(invoice.state === 'Pendiente' || invoice.state === 'Pagada'){
+                    // Construcción del objeto `executionOrder`
+                    const executionOrder: Omit<ExecutionOrder, "_id"> = {
+                        form: invoice.form,  
+                        company: invoice.company,
+                        customer: invoice.customer,
+                        services: invoice.services,  
+                        description: invoice.description,
+                        state:"En proceso"
+                    };
+    
+                    // Crear el executionOrder después de crear la factura
+                    await createExecutionOrder(executionOrder).unwrap();
+                    toast.success("Orden de ejecución creada exitosamente!");
+                }
             } else if (mode === "update") {
                 const invoiceWithId = {
                     ...invoice,

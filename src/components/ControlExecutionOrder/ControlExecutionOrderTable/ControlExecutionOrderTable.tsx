@@ -2,7 +2,6 @@ import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { Loading } from 'src/components/Common/Loading';
 import { darkTheme } from "src/styles/themes/themeTable";
-import { UpdateButton } from "src/components/Common/Buttons/UpdateButton";
 import { DeleteButton } from "src/components/Common/Buttons/DeleteButton";
 import { useDynamicFilter } from "src/hooks/useProductFilter";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
@@ -10,11 +9,11 @@ import { useDateRangeFilter } from "src/hooks/useDateRangeFilter";
 import { ExportButton } from "src/components/Common/Buttons/ExportButton";
 import { PrintButton } from "src/components/Common/Buttons/PrintButton";
 import { ViewButton } from "src/components/Common/Buttons/ViewButton/ViewButton";
-import { NumericFormat } from "react-number-format";
-import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
+import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 
-export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
+
+export const ControlExecutionOrderTable: React.FC<TableControlExecutionOrderProps> = ({
     data,
     searchTerm,
     selectedRange,
@@ -24,7 +23,6 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     isSuccess,
     handleView,
     handleDelete,
-    handleUpdate,
     handleStateUpdate,
     handlePrint,
     handleExportPDF,
@@ -33,16 +31,14 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', 'total']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
-    const rows = filteredByDateRange.map(budget => ({
-        num: budget.form.num,
-        description: budget.description,
-        dateCreation: new Date(budget.form.dateCreation).toLocaleDateString(),
-        dateUpdate: budget.form.dateUpdate ? new Date(budget.form.dateUpdate).toLocaleDateString() : "", 
-        state: budget.state,
-        total: budget.total,
-        totalWithIgft: budget.totalWithIgft,
-        budgetId: budget._id, 
-        budget: budget,
+    const rows = filteredByDateRange.map(executionOrder => ({
+        num: executionOrder.form.num,
+        description: executionOrder.description,
+        dateCreation: new Date(executionOrder.form.dateCreation).toLocaleDateString(),
+        dateUpdate: executionOrder.form.dateUpdate ? new Date(executionOrder.form.dateUpdate).toLocaleDateString() : "", 
+        state: executionOrder.state,
+        executionOrderId: executionOrder._id, 
+        executionOrder: executionOrder,
     }));
 
     const columns = [
@@ -55,34 +51,6 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         name: "description",
         label: "Descripción",
         options: { filter: true, sort: true },
-    },
-    {
-        name: "total",
-        label: "Monto Total",
-        options: { 
-            filter: true, 
-            sort: true,
-            customBodyRender: (value: number, tableMeta: any) => {
-                const currency = rows[tableMeta.rowIndex].budget.form.currency;
-    
-                // Selecciona el valor correcto según la moneda
-                const total = currency === "$" ? rows[tableMeta.rowIndex].budget.totalWithIgft : rows[tableMeta.rowIndex].budget.total;
-    
-                return (
-                    <NumericFormat
-                        value={total} // Pasa el valor correcto (total o totalWithIgft)
-                        displayType="text"
-                        thousandSeparator="."
-                        decimalSeparator=","
-                        fixedDecimalScale={true}
-                        decimalScale={2}
-                        renderText={(formattedValue) => 
-                            (currency === '$' ? <label>{'$ '+formattedValue}</label> : <label>{'Bs '+formattedValue}</label>)
-                        }
-                    />
-                );
-            },
-        },
     },
     {
         name: "dateCreation",
@@ -127,19 +95,19 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
             filter: true,
             sort: false,
             setCellHeaderProps: () => ({
-                style: { textAlign: "center" },
+                style: { textAlign: 'center' },
             }),
             customBodyRender: (value: any, tableMeta: any) => {
-                const bgColor =
-                    value === "Borrador" ? "bg-gray-600" :
-                    value === "Aprobado" ? "bg-green-600" :
+                const bgColor = 
+                    value === "Finalizado" ? "bg-gray-600" : 
+                    value === "En proceso" ? "bg-green-600" : 
                     "bg-red-600";
-    
-                const budget = rows[tableMeta.rowIndex].budget;
+                    
+                const executionOrder = rows[tableMeta.rowIndex].executionOrder;
                 const isConfirmingState = confirmStateIndex === tableMeta.rowIndex; // Verifica si esta fila está en modo confirmación
     
-                // Botón para estado "Aprobado" (sin acción)
-                if (value === "Aprobado") {
+                if (value === "Finalizado") {
+                    // Si el estado es "Pagada", solo se muestra un div sin acción
                     return (
                         <div className="flex justify-center">
                             <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24`}>
@@ -152,7 +120,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 // Modo de confirmación con íconos solo para la fila seleccionada
                 if (isConfirmingState) {
                     return (
-                        <>  
+                        <>
                             <p className="text-center mb-1 font-semibold">Confirmar Cambio</p>
                             <div className="flex justify-center gap-2">
                                 <button
@@ -165,7 +133,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                                     className="rounded-full bg-green-600 px-2 py-2 text-white text-sm flex items-center hover:bg-green-500"
                                     onClick={() => {
                                         setConfirmStateIndex(null); // Cerrar confirmación
-                                        handleStateUpdate(budget._id); // Ejecutar acción
+                                        value === "Pendiente" && handleStateUpdate(executionOrder._id); // Cambiar estado a "Pagada"
                                     }}
                                 >
                                     <AiOutlineCheck />
@@ -175,15 +143,15 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                     );
                 }
     
-                // Botón inicial para estado "Borrador"
+                // Si no está en confirmación, muestra el botón normal
                 return (
-                    <div className="flex justify-center">
-                        <button
-                            className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24 hover:bg-gray-500 transition-all duration-300 ease-in-out`}
-                            onClick={() => setConfirmStateIndex(tableMeta.rowIndex)} // Activar confirmación para esta fila
+                    <div className="flex justify-center"> 
+                        <button 
+                            className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24  hover:bg-green-500 transition-all duration-300 ease-in-out`}
+                            onClick={() => setConfirmStateIndex(tableMeta.rowIndex)}
                         >
                             {value}
-                        </button>
+                        </button>     
                     </div>
                 );
             },
@@ -199,9 +167,8 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 style: { textAlign: "center" },
             }),
             customBodyRender: (value: any, tableMeta: any) => {
-                const budget = rows[tableMeta.rowIndex].budget;
-                const isConfirmingDelete = confirmDeleteIndex === tableMeta.rowIndex; 
-    
+                const executionOrder = rows[tableMeta.rowIndex].executionOrder;
+                const isConfirmingDelete = confirmDeleteIndex === tableMeta.rowIndex;
                 return (
                     <div className="flex gap-x-5 justify-center items-center">
                         {isConfirmingDelete ? (
@@ -217,8 +184,8 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                                     <button
                                         className="bg-green-600 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
                                         onClick={() => {
-                                            setConfirmDeleteIndex(null); // Cerrar confirmación
-                                            handleDelete(budget._id); // Ejecutar eliminación
+                                            setConfirmDeleteIndex(null); 
+                                            handleDelete(executionOrder._id); // Ejecutar eliminación
                                         }}
                                     >
                                         <AiOutlineCheck />
@@ -228,19 +195,14 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                         ) : (
                             <>
                                 {/* Botón de vista */}
-                                <ViewButton onClick={() => handleView(budget)} />
-            
-                                {/* Botón de actualización solo si el estado no es "Aprobado" */}
-                                {budget.state !== "Aprobado" && (
-                                    <UpdateButton onClick={() => handleUpdate(budget._id)} />
-                                )}
-            
+                                <ViewButton onClick={() => handleView(executionOrder)} />
+                
                                 {/* Botón de exportar */}
-                                <ExportButton onClick={() => handleExportPDF(budget)} />
-            
+                                <ExportButton onClick={() => handleExportPDF(executionOrder)} />
+                
                                 {/* Botón de imprimir */}
-                                <PrintButton onClick={() => handlePrint(budget)} />
-            
+                                <PrintButton onClick={() => handlePrint(executionOrder)} />
+                
                                 {/* Botón de eliminar */}
                                 <DeleteButton onClick={() => setConfirmDeleteIndex(tableMeta.rowIndex)} />
                             </>
@@ -249,7 +211,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 );
             },
         },
-    }  
+    }
     ];
 
     const mobileColumnsToShow = ['num', 'dateCreation', 'state', 'options'];
@@ -263,6 +225,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     // Opciones de la tabla
     const options = {
         responsive: "standard",
+        size: "small",
         pagination: true,
         search: false,
         selectableRows: "none",
@@ -270,7 +233,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         rowsPerPageOptions: [5, 10, 20, 50],
         textLabels: {
         body: {
-            noMatch: "AGREGA NUEVOS PRESUPUESTOS..",
+            noMatch: "NO HAY ORDENES DE EJECUCIÓN CREADAS..",
         },
         pagination: {
             rowsPerPage: "Filas por página",
@@ -292,12 +255,12 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 <Loading />
             </div>
         ) : isError ? (
-            <p className="text-red-600">Error al cargar presupuestos..</p>
+            <p className="text-red-600">Error al cargar las ordenes..</p>
         ) : isSuccess ? (
             <StyledEngineProvider injectFirst>
             <ThemeProvider theme={darkTheme}>
                 <MUIDataTable
-                title={"Lista de Presupuestos"}
+                title={"Lista de Ordenes de Ejecución"}
                 data={rows}
                 columns={responsiveColumns}
                 options={options}

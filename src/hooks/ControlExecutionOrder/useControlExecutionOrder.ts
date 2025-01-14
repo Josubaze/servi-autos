@@ -3,10 +3,10 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { useUpdateStateBudgetMutation } from 'src/redux/services/budgets.Api';
+import { useUpdateStateInvoiceMutation } from 'src/redux/services/invoices.Api';
 
-interface UseControlBudgetProps {
-  data: Budget[];
+interface UseControlInvoiceProps {
+  data: ExecutionOrder[];
   isError: boolean;
   isLoading: boolean;
   isFetching: boolean;
@@ -14,31 +14,25 @@ interface UseControlBudgetProps {
   deleteMutation: any;
 }
 
-export const useControlBudget = ({ data, isError, isLoading, isFetching, isSuccess, deleteMutation }: UseControlBudgetProps) => {
+export const useControlExecutionOrder = ({ data, isError, isLoading, isFetching, isSuccess, deleteMutation }: UseControlInvoiceProps) => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedRange, setSelectedRange] = useState<any>(null);
   const [isOpenPdf, setIsOpenPdf] = useState<boolean>(false);
   const [isOpenPreview, setIsOpenPreview] = useState<boolean>(false);
-  const [budgetCopy, setBudgetCopy] = useState<any>(null);
+  const [executionOrderCopy, setExecutionOrderCopy] = useState<any>(null);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
-  const [updateStateBudget] = useUpdateStateBudgetMutation();
+  const [updateStateInvoice] = useUpdateStateInvoiceMutation();
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleDateRangeChange = (value: any) => setSelectedRange(value);
 
-  const handleUpdate = (budgetId: string) => {
-    if (budgetId) {
-      router.push(`/update/budget/${budgetId}`);
-    }
-  };
-
-  const handleStateUpdate = async (budgetId: string) => {
+  const handleStateUpdate = async (executionOrderId: string) => {
     setIsLoadingPDF(true);
     try {
-      await updateStateBudget({ id: budgetId }).unwrap();
+      await updateStateInvoice({ id: executionOrderId }).unwrap();
         toast.success('Estado actualizado con éxito');
     } catch (error) {
         toast.error('Error al actualizar el estado:');
@@ -47,30 +41,30 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
     }
   };
 
-  const handleDelete = async (budgetId: string) => {
+  const handleDelete = async (executionOrderId: string) => {
     try {
-      await deleteMutation(budgetId);
-      toast.success('Presupuesto eliminado exitosamente');
+      await deleteMutation(executionOrderId);
+      toast.success('Orden eliminada exitosamente');
     } catch (error) {
-      toast.error('Hubo un error al tratar de eliminar el presupuesto');
+      toast.error('Hubo un error al tratar de eliminar orden');
     }
   };
 
-  const handleView = async (budget: Budget) => {
+  const handleView = async (executionOrder: ExecutionOrder) => {
     try {
-      if (budget) {
-        setBudgetCopy(budget);
+      if (executionOrder) {
+        setExecutionOrderCopy(executionOrder);
       }
       setIsOpenPreview(true);
     } catch (error) {
-      toast.error('Hubo un error al imprimir el presupuesto');
+      toast.error('Hubo un error al imprimir orden');
     }
   };
 
-  const handleExportPDF = async (budget: Budget) => {
+  const handleExportPDF = async (executionOrder: ExecutionOrder) => {
     setIsLoadingPDF(true);
     setIsOpenPdf(true);
-    setBudgetCopy(budget);
+    setExecutionOrderCopy(executionOrder);
     try {
       await sleep(300);
       if (!printRef.current) return;
@@ -119,7 +113,7 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
         if (yOffset < fullCanvas.height) pdf.addPage();
       }
 
-      pdf.save(`Budget_${budget.form.num}.pdf`);
+      pdf.save(`execution_order_N${executionOrder.form.num}.pdf`);
     } catch (error) {
       toast.error("Error al generar el PDF:");
     } finally {
@@ -128,10 +122,10 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
     }
   };
 
-  const handlePrint = async (budget: Budget) => {
+  const handlePrint = async (executionOrder: ExecutionOrder) => {
     setIsLoadingPDF(true);
     setIsOpenPdf(true);
-    setBudgetCopy(budget);
+    setExecutionOrderCopy(executionOrder);
     try {
       await sleep(300);
       if (!printRef.current) return;
@@ -251,7 +245,6 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
     setSearchTerm,
     selectedRange,
     handleDateRangeChange,
-    handleUpdate,
     handleStateUpdate,
     handleDelete,
     handleView,
@@ -260,7 +253,7 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
     isOpenPdf,
     isOpenPreview,
     setIsOpenPreview,
-    budgetCopy,
+    executionOrderCopy,
     printRef,
     router,
     isLoadingPDF,

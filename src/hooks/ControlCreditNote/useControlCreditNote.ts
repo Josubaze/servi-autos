@@ -57,7 +57,7 @@ export const useControlCreditNote = ({ data, isError, isLoading, isFetching, isS
       if (!printRef.current) return;
 
       const fullCanvas = await html2canvas(printRef.current, {
-        scale: 1.5,
+        scale: 3,
         backgroundColor: "#ffffff",
       });
 
@@ -91,7 +91,7 @@ export const useControlCreditNote = ({ data, isError, isLoading, isFetching, isS
           partCanvas.width, remainingHeight
         );
 
-        const partImgData = partCanvas.toDataURL("image/png");
+        const partImgData = partCanvas.toDataURL("image/png", 0.6);
 
         pdf.addImage(partImgData, "PNG", margin, margin, imgWidth, (remainingHeight / fullCanvas.width) * imgWidth);
 
@@ -118,7 +118,7 @@ export const useControlCreditNote = ({ data, isError, isLoading, isFetching, isS
       if (!printRef.current) return;
 
       const fullCanvas = await html2canvas(printRef.current, {
-        scale: 2,
+        scale: 3,
         backgroundColor: "#ffffff",
       });
 

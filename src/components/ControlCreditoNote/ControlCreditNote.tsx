@@ -7,13 +7,11 @@ import { HiDocumentPlus } from "react-icons/hi2";
 import { DateRangePicker } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { Loading } from '../Common/Loading';
-import { useControlCreditNote } from 'src/hooks/ControlCreditNote/useControlInvoice';
+import { useControlCreditNote } from 'src/hooks/ControlCreditNote/useControlCreditNote';
 import { useGetCreditNotesQuery, useDeleteCreditNoteMutation } from "src/redux/services/creditNotes.Api";
-import { InvoicePreview } from "../InvoicePreview";
-import { ControlCreditNoteTable } from "./ControlInvoiceTable";
+import { ControlCreditNoteTable } from "./ControlCreditNoteTable";
 import { LottieCreditNote } from "../Dashboard/DashWidgets/DashWidgets";
 import { CreditNotePDF } from "../../components/CreditNotePDF";
-import { CreditNote } from "../CreditNote";
 import { CreditNotePreview } from "../CreditNotePreview";
 
 export const ControlCreditNote = () => {

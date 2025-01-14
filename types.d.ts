@@ -130,6 +130,16 @@ interface Product {
     totalWithIgft: number;
   }
 
+  interface ExecutionOrder {
+    _id: string;
+    form: Form;
+    company: Company;
+    customer: Customer;
+    services: Service[];
+    description: string;
+    state: string;
+  }
+
   interface TableServicesProps {
     data: Service[];
     searchTerm: string;
@@ -229,6 +239,16 @@ interface Product {
     handleStateUpdate: (invoiceId: string) => void;
     handlePrint: (invoice: Invoice) => Promise<void>
     handleExportPDF: (invoice: Invoice) => Promise<void>
+  }
+
+  interface TableControlExecutionOrderProps extends TableBaseProps {
+    data: ExecutionOrder[]; 
+    selectedRange: RangeValue<DateValue> | null;
+    handleView: (executionOrder: ExecutionOrder) => void;
+    handleDelete: (executionOrderId: string) => void;
+    handleStateUpdate: (executionOrderId: string) => void;
+    handlePrint: (executionOrder: ExecutionOrder) => Promise<void>
+    handleExportPDF: (executionOrder: ExecutionOrder) => Promise<void>
   }
 
   interface TableControlCreditNoteProps extends TableBaseProps {

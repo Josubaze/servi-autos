@@ -1,8 +1,5 @@
+import { ControlExecutionOrder } from "src/components/ControlExecutionOrder";
 
-export default function createExecutionOrdersPage(){
-  return (
-    <div>
-        Control Execution Orders
-    </div>
-);
+export default function controlExecutionOrderPage(){
+  return <ControlExecutionOrder/>
 }

@@ -11,6 +11,7 @@ export const companyApi = createApi({
         getCompany: builder.query<Company, void>({
             query: () => '/company',
             providesTags: ['Company'],
+            keepUnusedDataFor: 3600, // Mantén la caché durante 1 hora
         }),
         // Actualizar la empresa
         updateCompany: builder.mutation<Company, Company>({

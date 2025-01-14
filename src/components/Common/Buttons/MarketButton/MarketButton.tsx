@@ -14,7 +14,7 @@ export const MarketButton = ({ onClick }: MarketButtonProps) =>{
             onClick={onClick}
         > 
             Consultar Mercado
-            <MdStore className="h-5 w-5" />
+            <MdStore className="h-6 w-6" />
         </Button>
     </div>
 )};
