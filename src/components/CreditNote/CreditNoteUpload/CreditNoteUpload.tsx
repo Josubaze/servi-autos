@@ -30,8 +30,8 @@ export const CreditNoteUpload = ({ id }: { id: string }) => {
   return (
     <div>
       {isLoading ? (
-        <div className="h-full">
-          <Loading />
+        <div className="flex justify-center items-center h-screen">
+          <Loading/>
         </div>
       ) : (
         <CreditNote mode="upload" invoiceData={invoice} />

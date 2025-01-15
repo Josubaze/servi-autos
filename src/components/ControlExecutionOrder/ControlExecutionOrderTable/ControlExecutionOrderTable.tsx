@@ -11,6 +11,7 @@ import { PrintButton } from "src/components/Common/Buttons/PrintButton";
 import { ViewButton } from "src/components/Common/Buttons/ViewButton/ViewButton";
 import { useState } from "react";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
+import { Chip } from "@nextui-org/react";
 
 
 export const ControlExecutionOrderTable: React.FC<TableControlExecutionOrderProps> = ({
@@ -97,22 +98,20 @@ export const ControlExecutionOrderTable: React.FC<TableControlExecutionOrderProp
             setCellHeaderProps: () => ({
                 style: { textAlign: 'center' },
             }),
-            customBodyRender: (value: any, tableMeta: any) => {
-                const bgColor = 
-                    value === "Finalizado" ? "bg-gray-600" : 
-                    value === "En proceso" ? "bg-green-600" : 
-                    "bg-red-600";
-                    
+            customBodyRender: (value: any, tableMeta: any) => {             
                 const executionOrder = rows[tableMeta.rowIndex].executionOrder;
                 const isConfirmingState = confirmStateIndex === tableMeta.rowIndex; // Verifica si esta fila está en modo confirmación
     
                 if (value === "Finalizado") {
-                    // Si el estado es "Pagada", solo se muestra un div sin acción
                     return (
                         <div className="flex justify-center">
-                            <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24`}>
-                                {value}
-                            </div>
+                            <Chip 
+                                color="default"
+                                size="md"
+                                variant="flat"
+                                >
+                                    {value}
+                            </Chip>
                         </div>
                     );
                 }
@@ -124,16 +123,16 @@ export const ControlExecutionOrderTable: React.FC<TableControlExecutionOrderProp
                             <p className="text-center mb-1 font-semibold">Confirmar Cambio</p>
                             <div className="flex justify-center gap-2">
                                 <button
-                                    className="rounded-full bg-red-600 px-2 py-2 text-white text-sm flex items-center hover:bg-red-500"
+                                    className="rounded-full bg-red-600/40 px-2 py-2 text-white text-sm flex items-center hover:bg-red-500"
                                     onClick={() => setConfirmStateIndex(null)} // Cancelar confirmación
                                 >
                                     <AiOutlineClose />
                                 </button>
                                 <button
-                                    className="rounded-full bg-green-600 px-2 py-2 text-white text-sm flex items-center hover:bg-green-500"
+                                    className="rounded-full bg-green-600/40 px-2 py-2 text-white text-sm flex items-center hover:bg-green-500"
                                     onClick={() => {
-                                        setConfirmStateIndex(null); // Cerrar confirmación
-                                        value === "Pendiente" && handleStateUpdate(executionOrder._id); // Cambiar estado a "Pagada"
+                                        setConfirmStateIndex(null);
+                                        value === "En proceso" && handleStateUpdate(executionOrder._id);  
                                     }}
                                 >
                                     <AiOutlineCheck />
@@ -146,12 +145,15 @@ export const ControlExecutionOrderTable: React.FC<TableControlExecutionOrderProp
                 // Si no está en confirmación, muestra el botón normal
                 return (
                     <div className="flex justify-center"> 
-                        <button 
-                            className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24  hover:bg-green-500 transition-all duration-300 ease-in-out`}
+                        <Chip 
+                            color="success"
+                            className="cursor-pointer hover:bg-green-500/50" 
+                            size="md"
+                            variant="flat"
                             onClick={() => setConfirmStateIndex(tableMeta.rowIndex)}
-                        >
-                            {value}
-                        </button>     
+                            >
+                                {value}
+                        </Chip>
                     </div>
                 );
             },
@@ -176,13 +178,13 @@ export const ControlExecutionOrderTable: React.FC<TableControlExecutionOrderProp
                                 <p className="font-semibold">Confirmar Eliminación</p>
                                 <div className="flex gap-2">
                                     <button
-                                        className="bg-red-600 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
+                                         className="bg-red-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
                                         onClick={() => setConfirmDeleteIndex(null)} // Cancelar confirmación
                                     >
                                         <AiOutlineClose />
                                     </button>
                                     <button
-                                        className="bg-green-600 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
+                                        className="bg-green-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
                                         onClick={() => {
                                             setConfirmDeleteIndex(null); 
                                             handleDelete(executionOrder._id); // Ejecutar eliminación
@@ -225,27 +227,26 @@ export const ControlExecutionOrderTable: React.FC<TableControlExecutionOrderProp
     // Opciones de la tabla
     const options = {
         responsive: "standard",
-        size: "small",
         pagination: true,
         search: false,
         selectableRows: "none",
         rowsPerPage: 10,
         rowsPerPageOptions: [5, 10, 20, 50],
         textLabels: {
-        body: {
-            noMatch: "NO HAY ORDENES DE EJECUCIÓN CREADAS..",
-        },
-        pagination: {
-            rowsPerPage: "Filas por página",
-            displayRows: "de",
-        },
-        toolbar: {
-            viewColumns: "Ver Columnas",
-            filterTable: "Filtrar Tabla",
-            downloadCsv: "Descargar CSV",
-            print: "Imprimir",
-        },
-        },
+            body: {
+                noMatch: "NO HAY ORDENES DE EJECUCIÓN CREADAS..",
+            },
+            pagination: {
+                rowsPerPage: "Filas por página",
+                displayRows: "de",
+            },
+            toolbar: {
+                viewColumns: "Ver Columnas",
+                filterTable: "Filtrar Tabla",
+                downloadCsv: "Descargar CSV",
+                print: "Imprimir",
+            },
+        },     
     };
 
     return (

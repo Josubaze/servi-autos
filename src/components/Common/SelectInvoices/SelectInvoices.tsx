@@ -1,11 +1,12 @@
 import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { Loading } from 'src/components/Common/Loading';
-import { darkTheme } from "src/styles/themes/themeTable";
+import { darkThemeSolid } from "src/styles/themes/themeTable";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { toast } from "react-toastify";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { Chip } from "@nextui-org/react";
 
 export const SelectInvoices: React.FC<{
   data: Invoice[]; 
@@ -94,14 +95,16 @@ export const SelectInvoices: React.FC<{
                 style: { textAlign: 'center' },
             }),
             customBodyRender: (value: string) => {
-                const bgColor = value === "Pendiente" ? "bg-yellow-400/85" : value === "Pagada" ? "bg-green-600" : "bg-red-600";
+                const bgColor = value === "Pendiente" ? "success" : value === "Pagada" ? "default": value === "Borrador" ? "warning" : "danger";
                 return (
                     <div className="flex justify-center"> 
-                        <div 
-                            className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24`}
-                        >
-                            {value}
-                        </div>     
+                        <Chip 
+                            color={bgColor}
+                            size="md"
+                            variant="flat"
+                            >
+                                {value}
+                        </Chip>        
                     </div>
                 );
             },
@@ -169,7 +172,7 @@ export const SelectInvoices: React.FC<{
             toast.error('Error al cargar las Facturas')
         ) : isSuccess ? (
             <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={darkTheme}>
+            <ThemeProvider theme={darkThemeSolid}>
                 <div className="w-full max-h-[750px] overflow-y-auto"
                     onClick={(e) => e.stopPropagation()}
                 >

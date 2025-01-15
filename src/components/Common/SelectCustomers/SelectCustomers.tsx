@@ -1,6 +1,6 @@
 import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
-import { darkTheme } from "src/styles/themes/themeTable";
+import { darkThemeSolid } from "src/styles/themes/themeTable";
 import { Loading } from 'src/components/Common/Loading';
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -121,7 +121,6 @@ export const SelectCustomers: React.FC<{
     setRowProps: () => ({
         style: { cursor: 'pointer' }
     }),
-    tableBodyHeight: '600px'
   };
 
   return (
@@ -134,7 +133,7 @@ export const SelectCustomers: React.FC<{
         <p className="text-red-600">Error al cargar los clientes.</p>
       ) : isSuccess ? (
         <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={darkTheme}>
+          <ThemeProvider theme={darkThemeSolid}>
           <div className="w-full max-h-[750px] overflow-y-auto">
             <MUIDataTable
               title={"Lista de Clientes"}

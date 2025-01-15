@@ -14,6 +14,7 @@ import { NumericFormat } from "react-number-format";
 import { CreditNoteButton } from "src/components/Common/Buttons/CreditNoteButton";
 import { useState } from "react";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
+import { Chip } from "@nextui-org/react";
 
 export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
     data,
@@ -31,6 +32,7 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
     handlePrint,
     handleExportPDF,
     }) => {
+    const [isLoadingUp, setIsLoadingUp] = useState(false); 
     const [confirmStateIndex, setConfirmStateIndex] = useState<number | null>(null);
     const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', 'total']);
@@ -46,7 +48,7 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
         invoiceId: invoice._id, 
         invoice: invoice,
     }));
-
+   
     const columns = [
     {
         name: "num",
@@ -131,13 +133,7 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
             setCellHeaderProps: () => ({
                 style: { textAlign: 'center' },
             }),
-            customBodyRender: (value: any, tableMeta: any) => {
-                const bgColor = 
-                    value === "Borrador" ? "bg-gray-600" : 
-                    value === "Pagada" ? "bg-green-600" : 
-                    value === "Pendiente" ? "bg-yellow-400/85" : 
-                    "bg-red-600";
-                    
+            customBodyRender: (value: any, tableMeta: any) => {            
                 const invoice = rows[tableMeta.rowIndex].invoice;
                 const isConfirmingState = confirmStateIndex === tableMeta.rowIndex; // Verifica si esta fila está en modo confirmación
     
@@ -145,9 +141,13 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
                     // Si el estado es "Pagada", solo se muestra un div sin acción
                     return (
                         <div className="flex justify-center">
-                            <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24`}>
+                             <Chip 
+                                color="default" 
+                                size="md" 
+                                variant="flat"
+                            >
                                 {value}
-                            </div>
+                            </Chip>
                         </div>
                     );
                 }
@@ -155,10 +155,22 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
                 if (value === "Borrador") {
                     return (
                         <div className="flex justify-center">
-                            <button className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24  hover:bg-gray-500 transition-all duration-300 ease-in-out`}
-                                onClick={() => handleUpdate(invoice._id)}>
+                            <Chip                       
+                                color="warning" 
+                                className="cursor-pointer hover:bg-orange-400/50" 
+                                size="md"
+                                variant="flat"
+                                isDisabled={isLoadingUp}
+                                onClick={() => {
+                                    setIsLoadingUp(true);
+                                    handleUpdate(invoice._id);
+                                    setTimeout(() => {
+                                        setIsLoadingUp(false); 
+                                    }, 10000);
+                                }}
+                                >
                                 {value}
-                            </button>
+                            </Chip>
                         </div>
                     );
                 }
@@ -170,13 +182,14 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
                             <p className="text-center mb-1 font-semibold">Confirmar Cambio</p>
                             <div className="flex justify-center gap-2">
                                 <button
-                                    className="rounded-full bg-red-600 px-2 py-2 text-white text-sm flex items-center hover:bg-red-500"
+                                    className="rounded-full bg-red-600/40 px-2 py-2 text-white text-sm flex items-center hover:bg-red-500"
                                     onClick={() => setConfirmStateIndex(null)} // Cancelar confirmación
                                 >
                                     <AiOutlineClose />
                                 </button>
+
                                 <button
-                                    className="rounded-full bg-green-600 px-2 py-2 text-white text-sm flex items-center hover:bg-green-500"
+                                    className="rounded-full bg-green-600/40 px-2 py-2 text-white text-sm flex items-center hover:bg-green-500"
                                     onClick={() => {
                                         setConfirmStateIndex(null); // Cerrar confirmación
                                         value === "Pendiente" && handleStateUpdate(invoice._id); // Cambiar estado a "Pagada"
@@ -191,13 +204,16 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
     
                 // Si no está en confirmación, muestra el botón normal
                 return (
-                    <div className="flex justify-center"> 
-                        <button 
-                            className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24  hover:bg-yellow-500 transition-all duration-300 ease-in-out`}
-                            onClick={() => setConfirmStateIndex(tableMeta.rowIndex)} // Activar confirmación para esta fila
-                        >
-                            {value}
-                        </button>     
+                    <div className="flex justify-center">    
+                        <Chip 
+                            color="success"
+                            className="cursor-pointer hover:bg-green-500/50" 
+                            size="md"
+                            variant="flat"
+                            onClick={() => setConfirmStateIndex(tableMeta.rowIndex)}
+                            >
+                                {value}
+                        </Chip>
                     </div>
                 );
             },
@@ -222,13 +238,13 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
                                 <p className="font-semibold">Confirmar Eliminación</p>
                                 <div className="flex gap-2">
                                     <button
-                                        className="bg-red-600 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
+                                        className="bg-red-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
                                         onClick={() => setConfirmDeleteIndex(null)} // Cancelar confirmación
                                     >
                                         <AiOutlineClose />
                                     </button>
                                     <button
-                                        className="bg-green-600 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
+                                        className="bg-green-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
                                         onClick={() => {
                                             setConfirmDeleteIndex(null); 
                                             handleDelete(invoice._id); // Ejecutar eliminación

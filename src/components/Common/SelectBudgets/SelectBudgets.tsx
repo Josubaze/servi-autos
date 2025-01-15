@@ -1,11 +1,12 @@
 import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { Loading } from 'src/components/Common/Loading';
-import { darkTheme } from "src/styles/themes/themeTable";
+import { darkThemeSolid } from "src/styles/themes/themeTable";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { toast } from "react-toastify";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { Chip } from "@nextui-org/react";
 
 export const SelectBudgets: React.FC<{
   data: Budget[]; 
@@ -93,12 +94,16 @@ export const SelectBudgets: React.FC<{
                 style: { textAlign: 'center' },
             }),
             customBodyRender: (value: string) => {
-                const bgColor = value === "Borrador" ? "bg-gray-600" : value === "Aceptado" ? "bg-green-600" : "bg-red-600";
+                const bgColor = value === "Borrador" ? "success" : value === "Aprobado" ? "default" : "warning";
                 return (
                     <div className="flex justify-center"> 
-                        <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor}`}>
-                            {value}
-                        </div>     
+                        <Chip 
+                            color={bgColor}
+                            size="md"
+                            variant="flat"
+                            >
+                                {value}
+                        </Chip>   
                     </div>
                 );
             },
@@ -167,7 +172,7 @@ export const SelectBudgets: React.FC<{
             toast.error('Error al cargar los Presupuestos')
         ) : isSuccess ? (
             <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={darkTheme}>
+            <ThemeProvider theme={darkThemeSolid}>
                 <div className="w-full max-h-[750px] overflow-y-auto">
                   <MUIDataTable
                   title={"Lista de Presupuestos"}

@@ -13,6 +13,7 @@ import { ViewButton } from "src/components/Common/Buttons/ViewButton/ViewButton"
 import { NumericFormat } from "react-number-format";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
+import { Chip } from "@nextui-org/react";
 
 export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     data,
@@ -130,11 +131,6 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 style: { textAlign: "center" },
             }),
             customBodyRender: (value: any, tableMeta: any) => {
-                const bgColor =
-                    value === "Borrador" ? "bg-gray-600" :
-                    value === "Aprobado" ? "bg-green-600" :
-                    "bg-red-600";
-    
                 const budget = rows[tableMeta.rowIndex].budget;
                 const isConfirmingState = confirmStateIndex === tableMeta.rowIndex; // Verifica si esta fila está en modo confirmación
     
@@ -142,9 +138,13 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 if (value === "Aprobado") {
                     return (
                         <div className="flex justify-center">
-                            <div className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24`}>
-                                {value}
-                            </div>
+                            <Chip 
+                                color="default"
+                                size="md"
+                                variant="flat"
+                                >
+                                    {value}
+                            </Chip>
                         </div>
                     );
                 }
@@ -156,13 +156,13 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                             <p className="text-center mb-1 font-semibold">Confirmar Cambio</p>
                             <div className="flex justify-center gap-2">
                                 <button
-                                    className="rounded-full bg-red-600 px-2 py-2 text-white text-sm flex items-center hover:bg-red-500"
+                                    className="rounded-full bg-red-600/40 px-2 py-2 text-white text-sm flex items-center hover:bg-red-500"
                                     onClick={() => setConfirmStateIndex(null)} // Cancelar confirmación
                                 >
                                     <AiOutlineClose />
                                 </button>
                                 <button
-                                    className="rounded-full bg-green-600 px-2 py-2 text-white text-sm flex items-center hover:bg-green-500"
+                                    className="rounded-full bg-green-600/40 px-2 py-2 text-white text-sm flex items-center hover:bg-green-500"
                                     onClick={() => {
                                         setConfirmStateIndex(null); // Cerrar confirmación
                                         handleStateUpdate(budget._id); // Ejecutar acción
@@ -178,12 +178,15 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 // Botón inicial para estado "Borrador"
                 return (
                     <div className="flex justify-center">
-                        <button
-                            className={`rounded-full px-4 py-1 text-center inline-block text-sm ${bgColor} w-24 hover:bg-gray-500 transition-all duration-300 ease-in-out`}
-                            onClick={() => setConfirmStateIndex(tableMeta.rowIndex)} // Activar confirmación para esta fila
-                        >
-                            {value}
-                        </button>
+                        <Chip 
+                            color="success"
+                            className="cursor-pointer hover:bg-green-500/50" 
+                            size="md"
+                            variant="flat"
+                            onClick={() => setConfirmStateIndex(tableMeta.rowIndex)}
+                            >
+                                {value}
+                        </Chip>
                     </div>
                 );
             },
@@ -209,13 +212,13 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                                 <p className="font-semibold">Confirmar Eliminación</p>
                                 <div className="flex gap-2">
                                     <button
-                                        className="bg-red-600 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
+                                        className="bg-red-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
                                         onClick={() => setConfirmDeleteIndex(null)} // Cancelar confirmación
                                     >
                                         <AiOutlineClose />
                                     </button>
                                     <button
-                                        className="bg-green-600 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
+                                        className="bg-green-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
                                         onClick={() => {
                                             setConfirmDeleteIndex(null); // Cerrar confirmación
                                             handleDelete(budget._id); // Ejecutar eliminación

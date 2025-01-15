@@ -30,8 +30,8 @@ export const InvoiceUpdate = ({ id }: { id: string }) => {
   return (
     <div>
       {isLoading ? (
-        <div className="h-full">
-          <Loading />
+        <div className="flex justify-center items-center h-screen">
+          <Loading/>
         </div>
       ) : (
         <Invoice mode="update" invoiceData={invoice} />

@@ -1,10 +1,9 @@
 import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
-import { darkTheme } from "src/styles/themes/themeTable";
+import { darkThemeSolid } from "src/styles/themes/themeTable";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
-import { toast } from "react-toastify";
 import { Loading } from "../Loading";
 
 export const SelectProducts: React.FC<{
@@ -113,7 +112,7 @@ export const SelectProducts: React.FC<{
           <p className="text-red-600">Error al cargar los productos.</p>
         ) : isSuccess ? (
           <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={darkTheme}>
+            <ThemeProvider theme={darkThemeSolid}>
             <div className="w-full max-h-[750px] overflow-y-auto">
               <MUIDataTable
                 title={"Lista de Productos"}

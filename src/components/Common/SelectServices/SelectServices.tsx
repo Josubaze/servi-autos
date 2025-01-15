@@ -8,7 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
-import { darkTheme } from 'src/styles/themes/themeTable';
+import { darkThemeSolid } from 'src/styles/themes/themeTable';
 import { ServiceRow } from './ServiceRow'; 
 import TableCell from '@mui/material/TableCell';
 import { useSortableData } from 'src/hooks/useSortableData';
@@ -17,8 +17,6 @@ import { useMediaQuery } from '@mui/material';
 import { Tooltip } from '@mui/material';
 import { IoExitOutline } from "react-icons/io5";
 import { toast } from 'react-toastify';
-import { Input } from "@nextui-org/react";
-import { BsSearch } from "react-icons/bs";
 import { useDynamicFilter } from 'src/hooks/useProductFilter';
 import { SearchBar } from '../SearchBar';
 
@@ -81,7 +79,7 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
                 </button>
             </Tooltip>
 
-            <ThemeProvider theme={darkTheme}>
+            <ThemeProvider theme={darkThemeSolid}>
                 <div className="relative w-full max-h-[700px] overflow-y-auto">
                     <TableContainer component={Paper}>
                         <Table aria-label="collapsible table">

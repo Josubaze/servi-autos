@@ -1,8 +1,10 @@
+import { Divider } from "@nextui-org/react";
 
 export const Footer = () => {
   return (
-  <footer className="relative bg-black-nav text-center text-white">
-    <div className="flex gap-10 w-full items-center justify-center py-2">
+  <footer className="relative bg-transparent text-center text-white">
+    <Divider orientation="horizontal" />
+    <div className="flex gap-10 w-full items-center justify-center pt-6 pb-2">
             <a className="text-gray-200">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +38,7 @@ export const Footer = () => {
     </div>
     {/* <!--Copyright section--> */}
     <div
-      className="bg-black-nav pb-2 text-center text-gray-200">
+      className="bg-transparent pb-2 text-center text-gray-200">
       © 2024 Copyright: 
       <a
         className="text-gray-400 hover:text-gray-200 cursor-pointer"

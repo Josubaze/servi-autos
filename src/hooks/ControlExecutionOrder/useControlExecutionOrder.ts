@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { useUpdateStateInvoiceMutation } from 'src/redux/services/invoices.Api';
+import { useUpdateStateExecutionOrderMutation } from 'src/redux/services/executionOrders.Api';
 
 interface UseControlInvoiceProps {
   data: ExecutionOrder[];
@@ -23,7 +23,7 @@ export const useControlExecutionOrder = ({ data, isError, isLoading, isFetching,
   const [executionOrderCopy, setExecutionOrderCopy] = useState<any>(null);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
-  const [updateStateInvoice] = useUpdateStateInvoiceMutation();
+  const [updateStateExecutionOrder] = useUpdateStateExecutionOrderMutation();
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -32,7 +32,7 @@ export const useControlExecutionOrder = ({ data, isError, isLoading, isFetching,
   const handleStateUpdate = async (executionOrderId: string) => {
     setIsLoadingPDF(true);
     try {
-      await updateStateInvoice({ id: executionOrderId }).unwrap();
+      await updateStateExecutionOrder({ id: executionOrderId }).unwrap();
         toast.success('Estado actualizado con éxito');
     } catch (error) {
         toast.error('Error al actualizar el estado:');
