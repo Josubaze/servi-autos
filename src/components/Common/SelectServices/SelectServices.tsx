@@ -13,12 +13,12 @@ import { ServiceRow } from './ServiceRow';
 import TableCell from '@mui/material/TableCell';
 import { useSortableData } from 'src/hooks/useSortableData';
 import { Loading } from 'src/components/Common/Loading';
-import { useMediaQuery } from '@mui/material';
-import { Tooltip } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 import { IoExitOutline } from "react-icons/io5";
 import { toast } from 'react-toastify';
 import { useDynamicFilter } from 'src/hooks/useProductFilter';
 import { SearchBar } from '../SearchBar';
+import { Tooltip } from '@nextui-org/react';
 
 
 
@@ -70,7 +70,7 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
             {/* Botón Cerrar */}
-            <Tooltip title='Salir'>
+            <Tooltip content='Salir'>
                 <button
                     onClick={onCloseTable}
                     className="absolute top-4 right-4 shadow-xl shadow-gray-600 bg-black-nav hover:bg-black-nav/80 rounded-full w-10 h-10 flex items-center justify-center hover:scale-110 transition-colors duration-200"
@@ -82,43 +82,33 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
             <ThemeProvider theme={darkThemeSolid}>
                 <div className="relative w-full max-h-[700px] overflow-y-auto">
                     <TableContainer component={Paper}>
-                        <Table aria-label="collapsible table">
+                        <Table aria-label="collapsible table" className='p-4'>
                             <TableHead>
                                 <TableRow>
-                                {/* Lista de Servicios */}
-                                <TableCell
-                                    colSpan={2} 
-                                    sx={{
-                                    fontSize: "1.25rem",
-                                    textAlign: "left",
-                                    backgroundColor: "#161616",
-                                    }}
-                                >
-                                    <span>Lista de Servicios</span>
-                                </TableCell>
-
-                                {/* Buscador */}
-                                {/* Espaciador (solo escritorio) */}
-                                {!isMobile && (
+                                    {/* Lista de Servicios */}
                                     <TableCell
-                                        colSpan={1}
+                                        colSpan={2} 
                                         sx={{
-                                            backgroundColor: "#161616",
+                                        fontSize: "1.25rem",
+                                        textAlign: "left",
                                         }}
-                                    />
-                                )}
-                                <TableCell
-                                    colSpan={2} 
-                                    sx={{
-                                    backgroundColor: "#161616",
-                                    }}
-                                >
-                                    
-                                    <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}></SearchBar>
+                                    >
+                                        <span>Lista de Servicios</span>
+                                    </TableCell>
 
-                                </TableCell>
+                                    {/* Buscador */}
+                                    {/* Espaciador (solo escritorio) */}
+                                    {!isMobile && (
+                                        <TableCell
+                                            colSpan={1}
+                                        />
+                                    )}
+                                    <TableCell
+                                        colSpan={2} 
+                                    >                                       
+                                        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}></SearchBar>
+                                    </TableCell>
                                 </TableRow>
-
                             </TableHead>
 
                             <TableHead>

@@ -14,6 +14,7 @@ import { ProductRow } from './ProductRow';
 import { useMediaQuery } from '@mui/material';
 import { UpdateButton } from 'src/components/Common/Buttons/UpdateButton';
 import { DeleteButton } from 'src/components/Common/Buttons/DeleteButton';
+import { Divider } from '@nextui-org/react';
 
 export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDelete }) => {
   const [open, setOpen] = React.useState(false);
@@ -82,14 +83,19 @@ export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDele
                       );
                     }                  
                   )}
-                  <TableRow className='border-y-4 border-gray-600'>
-                    <TableCell colSpan={4} align="right" sx={{ fontWeight: 'bold' }}>
-                      Total de Productos
-                    </TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                      {totalProductos.toFixed(2)}
-                    </TableCell>
-                  </TableRow>
+                   <TableRow>
+                        <TableCell colSpan={5}>
+                            <Divider orientation="horizontal"></Divider>
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell colSpan={4} align="right" sx={{ fontWeight: 'bold' }}>
+                            Total de Productos
+                        </TableCell>
+                        <TableCell align="right" sx={{ fontWeight: 'bold' }}>
+                            {totalProductos.toFixed(2)}
+                        </TableCell>
+                    </TableRow>
                 </TableBody>
               </Table>
             </Box>

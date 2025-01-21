@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { toast } from "react-toastify";
-import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './../Budget/useBudgetSummary'
 import { useUpdateProductQuantityMutation } from "src/redux/services/productsApi";
-import { useCreateCreditNoteMutation, useUpdateCreditNoteMutation } from "src/redux/services/creditNotes.Api";
+import { useCreateCreditNoteMutation } from "src/redux/services/creditNotes.Api";
+import { getLocalTimeZone, now } from "@internationalized/date";
 
 interface FormHandle {
     submitForm: () => Promise<FormCreditNote | null>;
@@ -35,7 +35,7 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
     const { data: company, isLoading, isError } = useGetCompanyQuery();
     const [createCreditNote] = useCreateCreditNoteMutation();
     const [isSaving, setIsSaving] = useState<boolean>(false);
-    const [dateUpdate, setDateUpdate] = useState<Dayjs | null>(null);
+    const [dateUpdate, setDateUpdate] = useState<Date | null>(null);
     const [ivaPercentage, setIvaPercentage] = useState<number>(16); // IVA predeterminado al 16%
     const [igtfPercentage, setIgtfPercentage] = useState<number>(3); // IGTF predeterminado al 3%
     const subtotal = calculateSubtotal(selectedServices);
@@ -51,7 +51,7 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
         if (mode === "upload" && invoiceData) {
             handleSetForm({
                 numInvoice: invoiceData.form.num,
-                dateCreation: dayjs(),
+                dateCreation: now(getLocalTimeZone()),
                 currency: invoiceData.form.currency,
                 exchangeRate: invoiceData.form.exchangeRate,
             });
@@ -195,7 +195,7 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
                 form: {
                     num: form.num,
                     numInvoice: form.numInvoice,
-                    dateCreation: dayjs(form.dateCreation).toDate(),
+                    dateCreation: form.dateCreation.toDate(),
                     currency,
                     exchangeRate,
                 },

@@ -239,6 +239,7 @@ export const useControlCreditNote = ({ data, isError, isLoading, isFetching, isS
     isOpenPdf,
     isOpenPreview,
     setIsOpenPreview,
+    setIsOpenPdf,
     creditNoteCopy,
     printRef,
     router,

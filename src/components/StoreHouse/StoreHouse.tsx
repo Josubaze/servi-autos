@@ -13,11 +13,8 @@ import { PRODUCTVOID } from 'src/utils/constanst';
 import { PageTitle } from '../Common/PageTitle';
 import { LottieProduct } from '../Dashboard/DashWidgets/DashWidgets';
 import { MarketModal } from '../Common/MarketModal';
-import { Button } from '@nextui-org/react';
+import { Button, Tooltip } from '@nextui-org/react';
 import { MdStore } from "react-icons/md";
-import { Tooltip } from '@mui/material';
-
-
 
 export const StoreHouse = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProductsQuery();
@@ -58,18 +55,18 @@ export const StoreHouse = () => {
         </Button>
 
           <div className='flex gap-x-2'>
-          <Tooltip title="Consultar Mercado" arrow>
-            <Button
-              radius="md"
-              className="h-14 bg-yellow-500"
-              variant="solid"
-              onClick={() => setShowMarket(true)}
-            >
-              <MdStore className="h-8 w-8 text-gray-100"/>
-            </Button>
-          </Tooltip>    
+            <Tooltip content="Consultar Mercado">
+              <Button
+                radius="md"
+                className="h-14 bg-yellow-500"
+                variant="solid"
+                onClick={() => setShowMarket(true)}
+              >
+                <MdStore className="h-8 w-8 text-gray-100"/>
+              </Button>
+            </Tooltip>    
 
-          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
           </div>
         </div>
 

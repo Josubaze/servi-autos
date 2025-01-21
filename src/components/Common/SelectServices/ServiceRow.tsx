@@ -12,6 +12,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { ProductRow } from '../../Services/TableServices/ProductRow'; 
 import { useMediaQuery } from '@mui/material';
 import { useState } from 'react';
+import { Divider } from '@nextui-org/react';
 
 export const ServiceRow: React.FC<SelectRowProps> = ({ service, onServiceSelect }) => {
     const [open, setOpen] = useState(false);
@@ -85,12 +86,17 @@ export const ServiceRow: React.FC<SelectRowProps> = ({ service, onServiceSelect 
                         );
                         }                  
                     )}
-                    <TableRow className='border-y-4 border-gray-600'>
+                    <TableRow>
+                        <TableCell colSpan={5}>
+                            <Divider orientation="horizontal"></Divider>
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
                         <TableCell colSpan={4} align="right" sx={{ fontWeight: 'bold' }}>
-                        Total de Productos
+                            Total de Productos
                         </TableCell>
                         <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                        {totalProductos.toFixed(2)}
+                            {totalProductos.toFixed(2)}
                         </TableCell>
                     </TableRow>
                     </TableBody>

@@ -4,15 +4,14 @@ import { FaPlus } from "react-icons/fa6";
 import { SearchBar } from 'src/components/Common/SearchBar';
 import { PageTitle } from '../Common/PageTitle';
 import { HiDocumentPlus } from "react-icons/hi2";
-import { DateRangePicker } from '@nextui-org/react';
+import { Button, DateRangePicker } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { Loading } from '../Common/Loading';
 import { useControlCreditNote } from 'src/hooks/ControlCreditNote/useControlCreditNote';
 import { useGetCreditNotesQuery, useDeleteCreditNoteMutation } from "src/redux/services/creditNotes.Api";
 import { ControlCreditNoteTable } from "./ControlCreditNoteTable";
 import { LottieCreditNote } from "../Dashboard/DashWidgets/DashWidgets";
-import { CreditNotePDF } from "../../components/CreditNotePDF";
-import { CreditNotePreview } from "../CreditNotePreview";
+import { CreditNoteView } from "../CreditNoteView";
 
 export const ControlCreditNote = () => {
   
@@ -30,6 +29,7 @@ export const ControlCreditNote = () => {
     isOpenPdf,
     isOpenPreview,
     setIsOpenPreview,
+    setIsOpenPdf,
     router,
     creditNoteCopy,
     printRef,
@@ -44,15 +44,17 @@ export const ControlCreditNote = () => {
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
         <div className="my-4 flex justify-between items-center gap-2">
-          <button
-            className="transition ease-in-out delay-150 bg-emerald-600 text-white px-3 py-3 rounded-full hover:-translate-y-1 hover:scale-110 hover:bg-emerald-500 duration-300 max-sm:hidden"
-            onClick={() => window.location.href = '/create/credit-note'} 
+          <Button
+            radius="md"
+            className="h-14 text-gray-100 bg-green-600"
+            variant="solid"
+            onClick={() => router.push("/create/credit-note")}
           >
-            <span className='flex items-center'>
+            <span className="flex items-center gap-2">
               <HiDocumentPlus className='h-6 w-6' />
               Agregar Nota de Crédito
             </span>
-          </button>
+          </Button>
           <div className='flex gap-x-4'>
             {/* Envolvemos el DateRangePicker con I18nProvider para cambiar localizacion*/}
             <I18nProvider locale="es">
@@ -83,7 +85,7 @@ export const ControlCreditNote = () => {
 
         <button
           className="bg-emerald-600 hover:bg-emerald-800 text-3xl text-white p-5 rounded-full fixed bottom-0 right-0 mr-8 mb-12 shadow-2xl shadow-emerald-400 sm:hidden z-50"
-          onClick={() => router.push("/create/invoices")}
+          onClick={() => router.push("/create/credit-note")}
         >
           <FaPlus />
         </button>
@@ -92,7 +94,8 @@ export const ControlCreditNote = () => {
       {/* Componente oculto para PDF */}
         {isOpenPdf && (
           <div className="absolute top-[-9999px] left-[-9999px]">
-            <CreditNotePDF
+            <CreditNoteView
+              onClose={() => setIsOpenPdf(false)}
               ref={printRef}
               company={creditNoteCopy?.company}
               customer={creditNoteCopy?.customer}
@@ -112,8 +115,7 @@ export const ControlCreditNote = () => {
 
         {/* Modal para vista previa */}
         {isOpenPreview && (
-          <CreditNotePreview
-            isOpen={isOpenPreview}
+          <CreditNoteView
             onClose={() => setIsOpenPreview(false)}
             company={creditNoteCopy?.company}
             customer={creditNoteCopy?.customer}

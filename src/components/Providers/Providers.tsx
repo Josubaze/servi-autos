@@ -12,7 +12,7 @@ import { Notification } from '../Common/Notification';
 import { PROVIDERVOID } from 'src/utils/constanst';
 import { PageTitle } from '../Common/PageTitle';
 import { LottieSupplier } from '../Dashboard/DashWidgets/DashWidgets';
-
+import { Button } from '@nextui-org/react';
 
 export const Providers = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProvidersQuery();
@@ -39,17 +39,23 @@ export const Providers = () => {
     </div>
     <div className="relative flex flex-col pb-6 px-0 sm:px-12">
       <div className="my-4 flex justify-between items-center gap-2 pb-2">
-        <button
-          className="transition ease-in-out delay-150 bg-emerald-600 text-white px-4 py-2 rounded hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300 max-sm:hidden"
+        {/* Botón: Oculto en pantallas pequeñas */}
+        <Button
+          radius="md"
+          className="h-14 text-gray-100 bg-green-600"
+          variant="solid"
           onClick={() => setShowForm(true)}
         >
-          <span className='flex items-center gap-2 '>
+          <span className="flex items-center gap-2">
             <FaUsersGear />
             Agregar Proveedor
           </span>
-        </button>
-
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        </Button>
+        
+        {/* Barra de búsqueda */}
+        <div className='w-full sm:w-3/12'>
+          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        </div>
       </div>
 
       <ProvidersTable

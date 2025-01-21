@@ -2,9 +2,8 @@ import { FaRegEye } from "react-icons/fa";
 import { PiFilePdfBold } from "react-icons/pi";
 import { MdPrint } from "react-icons/md";
 import { Loading } from "src/components/Common/Loading";
-import { CreditNotePreview } from "src/components/CreditNotePreview";
+import { CreditNoteView } from "src/components/CreditNoteView";
 import { useCreditNoteOptions } from "src/hooks/CreditNote/useCreditNoteOptions";
-import { CreditNotePDF } from "src/components/CreditNotePDF";
 
 interface CreditNoteOptionsProps {
     company: Company | undefined;
@@ -42,6 +41,7 @@ export const CreditNoteOptions: React.FC<CreditNoteOptionsProps> = ({
       showPreview,
       setShowPreview,
       showHiddenPDF,
+      setShowHiddenPDF,
       isLoading,
       printRef,
       handlePDFGeneration,
@@ -96,8 +96,7 @@ export const CreditNoteOptions: React.FC<CreditNoteOptionsProps> = ({
 
       {/* Modal para vista previa */}
       {showPreview && (
-        <CreditNotePreview
-          isOpen={showPreview}
+        <CreditNoteView
           onClose={() => setShowPreview(false)}
           company={company}
           customer={customer}
@@ -117,7 +116,8 @@ export const CreditNoteOptions: React.FC<CreditNoteOptionsProps> = ({
       {/* Componente oculto para PDF */}
       {showHiddenPDF && (
         <div className="absolute top-[-9999px] left-[-9999px]">
-          <CreditNotePDF
+          <CreditNoteView
+            onClose={() => setShowHiddenPDF(false)}
             ref={printRef}
             company={company}
             customer={customer}

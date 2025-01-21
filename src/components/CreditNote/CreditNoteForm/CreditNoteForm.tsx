@@ -104,7 +104,6 @@ export const CreditNoteForm = forwardRef(({
 
             setIvaPercentage(invoice.ivaPercentage);
             setIgtfPercentage(invoice.igtfPercentage);
-            setDescription(invoice.description);
             setIsTableVisible(false);
 
             setIsUpdating(false); 
@@ -183,7 +182,6 @@ export const CreditNoteForm = forwardRef(({
                             </div>
                         )     
                     }
-                    
                     
                     {/* Fecha de creación */}
                     <div className="flex flex-col w-full  sm:items-center">

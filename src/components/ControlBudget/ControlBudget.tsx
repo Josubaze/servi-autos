@@ -6,7 +6,7 @@ import { PageTitle } from '../Common/PageTitle';
 import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
 import { HiDocumentPlus } from "react-icons/hi2";
 import { ControlBudgetTable } from './ControlBudgetTable';
-import { DateRangePicker } from '@nextui-org/react';
+import { Button, DateRangePicker } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { BudgetView } from '../BudgetView';
 import { Loading } from '../Common/Loading';
@@ -45,15 +45,17 @@ export const ControlBudget = () => {
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
         <div className="my-4 flex justify-between items-center gap-2">
-          <button
-            className="transition ease-in-out delay-150 bg-emerald-600 text-white px-3 py-3 rounded-full hover:-translate-y-1 hover:scale-110 hover:bg-emerald-500 duration-300 max-sm:hidden"
-            onClick={() => window.location.href = '/create/budget'} 
+          <Button
+            radius="md"
+            className="h-14 text-gray-100 bg-green-600"
+            variant="solid"
+            onClick={() => router.push("/create/budget")}
           >
-            <span className='flex items-center'>
+            <span className="flex items-center gap-2">
               <HiDocumentPlus className='h-6 w-6' />
               Agregar Presupuesto
             </span>
-          </button>
+          </Button>
           <div className='flex gap-x-4'>
             {/* Envolvemos el DateRangePicker con I18nProvider para cambiar localizacion*/}
             <I18nProvider locale="es">

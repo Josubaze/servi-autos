@@ -1,8 +1,8 @@
 import React, { forwardRef } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { IoExitOutline } from "react-icons/io5";
-import { Tooltip } from '@mui/material';
 import { useCalendarDate } from 'src/hooks/useCalendarDate';
+import { Tooltip } from '@nextui-org/react';
 
 interface BudgetViewProps {
     onClose: () => void;
@@ -61,7 +61,7 @@ export const BudgetView = forwardRef<HTMLDivElement, BudgetViewProps>((
         <div className="bg-white rounded-lg shadow-lg max-w-screen-lg w-full p-6 max-h-screen overflow-y-auto"
         onClick={(e) => e.stopPropagation()}>
             {/* Botón Cerrar */}
-            <Tooltip title='Salir'>
+            <Tooltip content='Salir'>
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-100/80 text-gray-800 rounded-full w-10 h-10 flex items-center justify-center transition-colors hover:scale-110 duration-200"

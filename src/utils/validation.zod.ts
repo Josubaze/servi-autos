@@ -167,7 +167,12 @@ export const CreditNoteFormSchema = z.object({
   ]),
   
   dateCreation: 
-    z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), { message: 'Fecha de creación inválida' }),
+  z.custom<any>((date) => {
+    if (!isValidDateObject(date)) {
+      throw new Error("La fecha de creación debe ser un objeto de fecha válido.");
+    }
+    return true; // La fecha ya es válida según la validación previa
+  }),
 
   currency: z.enum(["$", "Bs"], { message: "Moneda inválida" }),
 

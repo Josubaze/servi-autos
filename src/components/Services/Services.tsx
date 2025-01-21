@@ -13,6 +13,7 @@ import { SERVICEVOID } from 'src/utils/constanst';
 import dynamic from 'next/dynamic';
 export const LottieTools = dynamic(() => import("src/components/LottieIcon/LottieTools"), { ssr: false });
 import { FaTools } from "react-icons/fa";
+import { Button } from '@nextui-org/react';
 
 export const Services = () => {
   const { data = [], isError, isLoading, isSuccess } = useGetServicesQuery();
@@ -42,19 +43,24 @@ export const Services = () => {
         <PageTitle title="Gestión de Servicios" />
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
-        <div className="my-4 flex flex-col sm:flex-row sm:justify-between justify-start sm:items-center gap-2 pb-2">
+        <div className="my-4 flex justify-between items-center gap-2 pb-2">
           {/* Botón: Oculto en pantallas pequeñas */}
-          <button
-            className="transition ease-in-out delay-150 bg-emerald-600 text-white px-4 py-2 rounded hover:-translate-y-1 hover:scale-110 hover:bg-indigo-600 duration-300 max-sm:hidden"
+          <Button
+            radius="md"
+            className="h-14 text-gray-100 bg-green-600"
+            variant="solid"
             onClick={() => setShowForm(true)}
           >
             <span className="flex items-center gap-2">
               <FaTools />
               Agregar Servicio
             </span>
-          </button>
-
-          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          </Button>
+          
+          {/* Barra de búsqueda */}
+          <div className='w-full sm:w-3/12'>
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          </div>
         </div>
 
         <TableServices

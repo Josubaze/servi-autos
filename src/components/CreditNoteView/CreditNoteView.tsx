@@ -4,11 +4,11 @@ import { IoExitOutline } from "react-icons/io5";
 import { useCalendarDate } from 'src/hooks/useCalendarDate';
 import { Tooltip } from '@nextui-org/react';
 
-interface InvoiceViewProps {
+interface CreditNoteViewProps {
     onClose: () => void;
     company: Company | undefined;
     customer: Customer | undefined;
-    form: Form | undefined;
+    form: FormCreditNote | null | undefined;
     selectedServices: Service[] | undefined;
     subtotal: number | undefined;
     ivaPercentage: number | undefined;
@@ -17,9 +17,10 @@ interface InvoiceViewProps {
     calculatedIgtf: number | undefined;
     total: number   | undefined;
     totalWithIgft: number | undefined;
+    description: string | undefined;
 }
 
-export const InvoiceView = forwardRef<HTMLDivElement, InvoiceViewProps>((
+export const CreditNoteView = forwardRef<HTMLDivElement, CreditNoteViewProps>((
     { 
     onClose,
     company,
@@ -32,7 +33,8 @@ export const InvoiceView = forwardRef<HTMLDivElement, InvoiceViewProps>((
     calculatedIva, 
     calculatedIgtf, 
     total, 
-    totalWithIgft },
+    totalWithIgft,
+    description },
     ref
     ) => {
     const { transformToCalendarDate } = useCalendarDate();  
@@ -69,8 +71,7 @@ export const InvoiceView = forwardRef<HTMLDivElement, InvoiceViewProps>((
                     <span className="text-xl"><IoExitOutline className='flex w-6 h-6'/></span> {/* Icono X */}
                 </button>
             </Tooltip>
-
-            <div ref={ref}>
+            <div ref={ref} >
                 {/* Header */}
                 <div className="py-9 bg-center bg-black/85 rounded-xl  flex flex-col sm:flex-row justify-between items-center">
                     <div className="flex flex-col px-8 sm:flex-row items-center">
@@ -88,7 +89,7 @@ export const InvoiceView = forwardRef<HTMLDivElement, InvoiceViewProps>((
                             )}
                         </div>
                     </div>
-                    <div className="font-knewave text-white px-8 font-title text-5xl mt-5 sm:mt-0">FACTURA</div>
+                    <div className="font-knewave text-white px-8 font-title text-5xl mt-5 sm:mt-0">NOTA DE CRÉDITO</div>
                 </div>
 
                 {/* Contenido Principal */}
@@ -106,10 +107,10 @@ export const InvoiceView = forwardRef<HTMLDivElement, InvoiceViewProps>((
                     {/* Budget Form */}
                     <div className="flex flex-col lg:items-end text-black">
                         <div className="flex-1">
-                            <h3 className="text-lg font-semibold mb-2">Detalles de Factura</h3>
-                            <p ><strong>Nº de Factura:</strong> {form?.num || 'No disponible'}</p>
-                            <p ><strong>Fecha de Creación: </strong>{formatDate(form?.dateCreation)}</p>
-                            <p><strong>Fecha de Vencimiento: </strong>{formatDate(form?.dateExpiration)}</p>
+                            <h3 className="text-lg font-semibold mb-2">Detalles de Nota de Crédito</h3>
+                            <p ><strong>Nº de Nota de Crédito:</strong> {form?.num || 'No disponible'}</p>
+                            <p ><strong>Nº de Factura Ref:</strong> {form?.numInvoice || 'No disponible'}</p>
+                            <p ><strong>Fecha de Creación:</strong> {formatDate(form?.dateCreation)}</p>
                             <p><strong>Moneda:</strong> {form?.currency === 'Bs' ? 'Bolívar (Bs)' : 'USD ($)'}</p>
                             {form?.currency === 'Bs' && (
                             <p>
@@ -257,33 +258,20 @@ export const InvoiceView = forwardRef<HTMLDivElement, InvoiceViewProps>((
                 ))}
                 </div>
 
-                {/* Contenedor Principal para Resumen y Condiciones */}
-                <div className="flex flex-col md:flex-row w-full pl-4 pr-6 mt-6 gap-8 text-black text-justify">
-                
-                    {/* Condiciones de la Oferta (lado izquierdo) */}
+                {/* Contenedor Principal para Descripción y Totales */}
+                <div className="flex flex-col md:flex-row w-full pl-4 pr-6 mt-6 gap-8 text-black text-justify">      
+                    {/* Descripción de la Nota de Crédito (lado izquierdo) */}
                     <div className="w-full md:w-1/2 rounded-lg p-4 bg-gray-100/55">
-                        <h3 className="text-lg font-bold mb-2">Condiciones de la Oferta:</h3>
-                            <p className="mb-1">
-                                <span className="font-semibold">Moneda:</span> El monto está establecido en {form?.currency === '$' ? 'dólares. Este pago estará sujeto al cobro adicional del 3% del Impuesto a las Grandes Transacciones Financieras (IGTF), de conformidad con la Providencia Administrativa SNAT/2022/000013 publicada en la G.O. N° 42.339 del 17-03-2022' : 'Bolívares'}.
-                            </p>
-                        {form?.currency !== '$' && (
-                            <p className="mb-1">
-                            <span className="font-semibold">Pagadero a tasa de BCV:</span> A la fecha de su cancelación.
-                            </p>
-                        )}
-                        <p className="mb-1">
-                            <span className="font-semibold">Tiempo de entrega:</span> Inmediata.
-                        </p>
-                        <p className="mb-0">
-                            <span className="font-semibold">Nota:</span> Precio sujeto a cambio sin previo aviso.
+                        <h3 className="text-lg font-bold mb-2 bg-">Descripción o Motivo:</h3>
+                        <p className="text-black/80 text-justify text-sm">
+                        {description || "No se ha proporcionado una descripción."}
                         </p>
                     </div>
 
-
-                {/* Resumen de Totales (lado derecho) */}
-                <div className="w-full md:w-1/2">
-                    {/* Summary Section */}
-                    <div className="flex flex-col items-end w-full text-black">
+                    {/* Resumen de Totales (lado derecho) */}
+                    <div className="w-full md:w-1/2">
+                        {/* Summary Section */}
+                        <div className="flex flex-col items-end w-full text-black">
                         {/* Subtotal */}
                         <div className="flex justify-between w-full max-w-md py-1 pr-3">
                             <span className="font-bold">Subtotal:</span>
@@ -335,33 +323,25 @@ export const InvoiceView = forwardRef<HTMLDivElement, InvoiceViewProps>((
                         <div className="flex justify-between w-full max-w-md py-2 mt-2 pr-2 border-t border-gray-300">
                             <span className="font-bold text-lg">Total:</span>
                             <span className="font-bold text-lg">
-                                <NumericFormat 
-                                    value={form?.currency === '$' ? totalWithIgft : total} 
-                                    displayType="text" 
-                                    thousandSeparator="." 
-                                    decimalSeparator="," 
-                                    decimalScale={2} 
-                                    fixedDecimalScale 
-                                    prefix={form?.currency === 'Bs' ? 'Bs ' : '$ '}
-                                />
+                            <NumericFormat 
+                                value={form?.currency === '$' ? totalWithIgft : total} 
+                                displayType="text" 
+                                thousandSeparator="." 
+                                decimalSeparator="," 
+                                decimalScale={2} 
+                                fixedDecimalScale 
+                                prefix={form?.currency === 'Bs' ? 'Bs ' : '$ '}
+                            />
                             </span>
                         </div>
                     </div>
                 </div>
                 </div>
-                {/* Validacion de factura */}    
-                <div className='px-8 py-2 text-justify'>
-                    <p className='text-sm text-black/80'>Documento que se emite de acuerdo a lo establecido en la Providencia Administrativa SNAT/2014/0032 de fecha 31/07/2014.
-                    Corporación Unidigital 1000, C.A. Rif J-40140000-0 Imprenta Digital, Autorizada según Providencia Administrativa SENIAT/INTI/2000 00000000 de fecha 01-01-2024,
-                    Numero de Control desde el Nro 00-00000000 hasta el Nro 00-00000000 generadas el 01-01-2024, estos datos solo son con fines demostrativos no son reales.</p>
-                </div>
-
             </div>
-
         </div>
     </div>
   );
 });
 
 // Agrega el displayName para evitar el error de ESLint
-InvoiceView.displayName = 'InvoiceView';
+CreditNoteView.displayName = 'CreditNoteView';

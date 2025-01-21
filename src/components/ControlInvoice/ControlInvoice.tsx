@@ -6,7 +6,7 @@ import { PageTitle } from '../Common/PageTitle';
 import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
 import { HiDocumentPlus } from "react-icons/hi2";
 import { ControlInvoiceTable } from './../ControlInvoice/ControlInvoiceTable';
-import { DateRangePicker } from '@nextui-org/react';
+import { Button, DateRangePicker } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { Loading } from '../Common/Loading';
 import { useControlInvoice } from 'src/hooks/ControlInvoice/useControlInvoice';
@@ -47,15 +47,17 @@ export const ControlInvoice = () => {
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
         <div className="my-4 flex justify-between items-center gap-2">
-          <button
-            className="transition ease-in-out delay-150 bg-emerald-600 text-white px-3 py-3 rounded-full hover:-translate-y-1 hover:scale-110 hover:bg-emerald-500 duration-300 max-sm:hidden"
-            onClick={() => window.location.href = '/create/invoice'} 
+          <Button
+            radius="md"
+            className="h-14 text-gray-100 bg-green-600"
+            variant="solid"
+            onClick={() => router.push("/create/invoice")}
           >
-            <span className='flex items-center'>
+            <span className="flex items-center gap-2">
               <HiDocumentPlus className='h-6 w-6' />
               Agregar Factura
             </span>
-          </button>
+          </Button>
           <div className='flex gap-x-4'>
             {/* Envolvemos el DateRangePicker con I18nProvider para cambiar localizacion*/}
             <I18nProvider locale="es">
@@ -89,7 +91,7 @@ export const ControlInvoice = () => {
 
         <button
           className="bg-emerald-600 hover:bg-emerald-800 text-3xl text-white p-5 rounded-full fixed bottom-0 right-0 mr-8 mb-12 shadow-2xl shadow-emerald-400 sm:hidden z-50"
-          onClick={() => router.push("/create/invoices")}
+          onClick={() => router.push("/create/invoice")}
         >
           <FaPlus />
         </button>

@@ -1,8 +1,7 @@
-import React, { forwardRef } from 'react';
-import dayjs from 'dayjs';
-import { IoExitOutline } from 'react-icons/io5';
 import { Tooltip } from '@nextui-org/react';
-import { NumericFormat } from 'react-number-format';
+import React, { forwardRef } from 'react';
+import { IoExitOutline } from 'react-icons/io5';
+import { useCalendarDate } from 'src/hooks/useCalendarDate';
 
 interface ExecutionOrderViewProps {
     company: Company | undefined;
@@ -23,9 +22,23 @@ export const ExecutionOrderView = forwardRef<HTMLDivElement, ExecutionOrderViewP
     state,
     onClose,
     }, ref) => {
-    const formatDate = (date: any) => {
-        return date ? dayjs(date).format('DD/MM/YYYY') : 'No disponible';
-    };
+    const { transformToCalendarDate } = useCalendarDate();  
+        const formatDate = (date : any) => {
+            if (!date) return 'No disponible';
+            let calendarDate;
+            // Verificar si el objeto tiene las propiedades de CalendarDate
+            if (date && date.day && date.month && date.year) {
+                calendarDate = date; 
+            } else {
+                calendarDate = transformToCalendarDate(date);
+            }
+    
+            const day = calendarDate.day;
+            const month = calendarDate.month; 
+            const year = calendarDate.year;
+    
+            return `${day}/${month}/${year}`;
+        };
 
     return (
         <div
@@ -33,7 +46,7 @@ export const ExecutionOrderView = forwardRef<HTMLDivElement, ExecutionOrderViewP
         onClick={onClose}
         >
         {/* Botón Cerrar */}
-        <Tooltip title="Salir">
+        <Tooltip content="Salir">
             <button
             onClick={onClose}
             className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-100/80 text-gray-800 rounded-full w-10 h-10 flex items-center justify-center transition-transform hover:scale-110 duration-200"

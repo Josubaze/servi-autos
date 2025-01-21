@@ -1,5 +1,5 @@
+import { Tooltip } from '@nextui-org/react';
 import React from 'react';
-import { Tooltip } from '@mui/material';
 import { IoPencil } from 'react-icons/io5';
 
 interface UpdateButtonProps {
@@ -8,7 +8,7 @@ interface UpdateButtonProps {
 
 export const UpdateButton: React.FC<UpdateButtonProps> = ({ onClick }) => {
   return (
-    <Tooltip title="Modificar" arrow>
+    <Tooltip content="Modificar">
       <button
               className="w-9 h-9 rounded-full bg-transparent flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 hover:bg-gray-600/20 hover:text-indigo-500 duration-300"
               onClick={onClick}
