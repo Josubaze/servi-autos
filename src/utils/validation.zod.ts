@@ -1,5 +1,12 @@
 import { z } from "zod"
 import dayjs, { type Dayjs } from 'dayjs';
+import { CalendarDate } from '@internationalized/date';
+
+// Función de validación para las fechas
+const isValidDateObject = (date: any) => {
+  return date && date.year && date.month && date.day;
+};
+
 
 const roles = ["administrador", "lider"] as const;
 export type Roles = (typeof roles)[number];
@@ -102,11 +109,24 @@ export const BudgetFormSchema = z.object({
       z.number()
         .refine(quantity => Number.isInteger(quantity) && quantity > 0, { message: "La cantidad debe ser un número entero positivo" })
     ]),
-  dateCreation: 
-    z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), { message: 'Fecha de creación inválida' }),
-  dateExpiration: 
-    z.custom<Dayjs>((val) => dayjs.isDayjs(val) && val.isValid(), { message: 'Fecha de vencimiento inválida' }),
+
   currency: z.enum(["$", "Bs"], { message: "Moneda inválida" }),
+
+  dateCreation: 
+    z.custom<any>((date) => {
+      if (!isValidDateObject(date)) {
+        throw new Error("La fecha de creación debe ser un objeto de fecha válido.");
+      }
+      return true; // La fecha ya es válida según la validación previa
+  }),
+
+  dateExpiration: 
+    z.custom<any>((date) => {
+      if (!isValidDateObject(date)) {
+        throw new Error("La fecha de vencimiento debe ser un objeto de fecha válido.");
+      }
+      return true; // La fecha ya es válida según la validación previa
+  }),
 
   exchangeRate: z.union([
     z.string()
@@ -116,12 +136,15 @@ export const BudgetFormSchema = z.object({
       .refine(price => price > 0, { message: "El precio debe ser un número positivo" })
   ]),
 
-  }).refine((data) => {
-    return data.dateExpiration.isSame(data.dateCreation) || data.dateExpiration.isAfter(data.dateCreation);
-  }, {
-    message: "La fecha de vencimiento debe ser mayor o igual a la fecha de creación",
-    path: ["dateExpiration"],
-  
+}).refine((data) => {
+  const { dateCreation, dateExpiration } = data;
+  const creationDate = new CalendarDate(dateCreation.year, dateCreation.month, dateCreation.day);
+  const expirationDate = new CalendarDate(dateExpiration.year, dateExpiration.month, dateExpiration.day);
+
+  return expirationDate.compare(creationDate) >= 0;
+}, {
+  message: "La fecha de vencimiento debe ser mayor o igual a la fecha de creación",
+  path: ["dateExpiration"],
 });
 
 export const CreditNoteFormSchema = z.object({
@@ -155,7 +178,6 @@ export const CreditNoteFormSchema = z.object({
     z.number()
       .refine(price => price > 0, { message: "El precio debe ser un número positivo" })
   ]),
-
 });
 
 

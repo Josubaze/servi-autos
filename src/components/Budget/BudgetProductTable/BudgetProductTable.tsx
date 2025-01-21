@@ -7,15 +7,15 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Tooltip,
   ThemeProvider,
   Typography,
 } from "@mui/material";
 import { MdDelete } from "react-icons/md";
 import { motion } from "framer-motion";
-import { darkTheme } from "src/styles/themes/themeTable";
+import { darkThemeSolid } from "src/styles/themes/themeTable";
 import { NumericFormat } from "react-number-format";
 import { FaPlus } from "react-icons/fa6";
+import { Button, Input, Tooltip } from "@nextui-org/react";
 
 export const BudgetProductTable = ({
   productos,
@@ -28,9 +28,9 @@ export const BudgetProductTable = ({
   
   return (
     <div className="">
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={darkThemeSolid}>
         <TableContainer component={Paper} 
-            className=" border-b-2 border-gray-500 rounded-none rounded-bl-lg rounded-br-lg">
+            className="rounded-none rounded-bl-lg rounded-br-lg">
           <motion.div
             initial={{ maxHeight: 0, opacity: 0 }}
             animate={{ maxHeight: "500px", opacity: 1 }}
@@ -38,19 +38,19 @@ export const BudgetProductTable = ({
             transition={{ duration: 0.5 }}
             style={{ overflow: "hidden" }}
           >
-            <Typography className="pl-4" variant="h6" component="div">Detalles del Servicio</Typography>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell>Nombre</TableCell>
-                  <TableCell>Categoría</TableCell>
-                  <TableCell>Cantidad</TableCell>
-                  <TableCell>Precio Unitario</TableCell>
-                  <TableCell>Precio Total</TableCell>
-                  <TableCell>Acciones</TableCell>
-                </TableRow>
-              </TableHead>
+            <Typography variant="h6" component="div">Detalles del Servicio</Typography>
+            <Table className="pt-2" size="small">
+                <TableHead>
+                  <TableRow>
+                  <TableCell style={{ width: "15%" }}>ID</TableCell>
+                  <TableCell style={{ width: "20%" }}>Nombre</TableCell>
+                  <TableCell style={{ width: "15%" }}>Categoría</TableCell>
+                  <TableCell style={{ width: "10%" }} align="right">Cantidad</TableCell>
+                  <TableCell style={{ width: "15%" }} align="right">Precio Unitario</TableCell>
+                  <TableCell style={{ width: "15%" }} align="right">Precio Total</TableCell>
+                  <TableCell style={{ width: "10%" }} align="center">Acciones</TableCell>
+                  </TableRow>
+                </TableHead>
               <TableBody>
                 {productos.map((productInService) => (
                   <motion.tr
@@ -64,20 +64,26 @@ export const BudgetProductTable = ({
                     <TableCell>{productInService.product.name}</TableCell>
                     <TableCell>{productInService.product.category}</TableCell>
                     <TableCell>
-                      <NumericFormat
-                        value={productInService.quantity}
-                        thousandSeparator="."
-                        decimalSeparator=","
-                        allowNegative={false}
-                        decimalScale={0} // No decimales para cantidad
-                        className="bg-transparent w-16"
-                        onValueChange={({ value }) =>
-                          onProductQuantityChange(productInService.product._id, parseInt(value) || 1)
-                        }
+                      <Input
+                        size="sm"
+                        value={Number(productInService.quantity).toLocaleString("de-DE", {
+                          minimumFractionDigits: 0,
+                        })} 
+                        style={{ textAlign: "right" }}
+                        variant="underlined"
+                        fullWidth
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\./g, "").replace(/,/g, "");
+                          if (!isNaN(Number(value)) && Number(value) >= 0) {
+                            onProductQuantityChange(productInService.product._id, Number(value) || 1)
+                          }
+                        }}                
+                        type="text" 
+                        inputMode="numeric"              
                       />
                     </TableCell>
-                    <TableCell>
-                      <NumericFormat
+                    <TableCell className="pr-2" align="right">
+                      <NumericFormat                       
                         value={productInService.product.price}
                         thousandSeparator="."
                         decimalSeparator=","
@@ -88,7 +94,7 @@ export const BudgetProductTable = ({
                         displayType="text"
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="right">
                       <NumericFormat
                         value={productInService.product.price * productInService.quantity}
                         thousandSeparator="."
@@ -96,18 +102,20 @@ export const BudgetProductTable = ({
                         allowNegative={false}
                         decimalScale={2} // Mantener 2 decimales
                         fixedDecimalScale
-                        className="bg-transparent"
                         displayType="text"
                       />
                     </TableCell>
                     <TableCell align="center">
-                      <Tooltip title="Eliminar Producto" arrow>
-                        <button
-                          className="w-6 h-6 rounded-full bg-transparent border border-red-600 flex justify-center items-center text-red-600 transition-all ease-in-out delay-150 hover:bg-red-600 hover:text-white"
-                          onClick={() => onProductDelete(productInService.product._id)}
+                      <Tooltip content="Eliminar Producto">
+                        <Button
+                            color="danger"
+                            variant="flat"
+                            isIconOnly
+                            className="w-6 h-6 min-w-6 rounded-full"
+                            onClick={() => onProductDelete(productInService.product._id)}
                         >
-                          <MdDelete className="w-5 h-5" />
-                        </button>
+                            <MdDelete className="w-5 h-5" />
+                        </Button>
                       </Tooltip>
                     </TableCell>
                   </motion.tr>
@@ -122,22 +130,32 @@ export const BudgetProductTable = ({
                   <TableCell colSpan={1}></TableCell>
                   <TableCell>Mano de Obra</TableCell>
                   <TableCell></TableCell>
-                  <TableCell>1</TableCell>
+                  <TableCell align="right" className="pr-2">1</TableCell>
+
                   <TableCell>
-                  <ThemeProvider theme={darkTheme}>
-                    <NumericFormat
-                      value={servicePrice.toFixed(2)}
-                      thousandSeparator="."
-                      decimalSeparator=","
-                      decimalScale={2}
-                      fixedDecimalScale
-                      allowNegative={false}
-                      className="bg-transparent w-16"
-                      onValueChange={({ value }) => onServicePriceChange(parseFloat(value) || 0)}
+                    <Input
+                      size="sm"
+                      value={Number(servicePrice).toLocaleString("de-DE", {
+                        minimumFractionDigits: 2, 
+                        maximumFractionDigits: 2,
+                      })} 
+                      variant="underlined"
+                      fullWidth
+                      onChange={(e) => {
+                        // Tomamos el valor ingresado como texto
+                        const inputValue = e.target.value.replace(/\./g, "").replace(/,/g, "");
+                        const numericValue = parseInt(inputValue || "0", 10);
+                        // Actualizamos el precio con lógica de centavos, dividimos entre 100
+                        const adjustedValue = numericValue / 100;
+                        onServicePriceChange(adjustedValue);
+                      }}
+                      type="text"
+                      inputMode="numeric" // Forzamos el teclado numérico en móviles
+                      style={{ textAlign: "right" }}
                     />
-                  </ThemeProvider>
                   </TableCell>
-                  <TableCell>
+
+                  <TableCell align="right">
                     <NumericFormat
                       value={servicePrice}
                       thousandSeparator="."
@@ -147,8 +165,9 @@ export const BudgetProductTable = ({
                       fixedDecimalScale
                       className="bg-transparent"
                       displayType="text"
-                    />
+                    />         
                   </TableCell>
+
                   <TableCell></TableCell>
                 </motion.tr>
               </TableBody>
@@ -157,12 +176,16 @@ export const BudgetProductTable = ({
         </TableContainer>
       </ThemeProvider>
       <div className="flex items-center justify-center pt-2">
-        <Tooltip title="Agregar Fila" arrow>
-            <button className="w-8 h-8 rounded-full bg-transparent border-2 border-gray-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:border-green-600 hover:bg-green-600 hover:text-white duration-300">
-              <FaPlus className="w-6 h-6 p-1 text-gray-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" 
+        <Tooltip content="Agregar Producto">
+          <Button
+              color="success"
+              variant="flat"
+              isIconOnly
+              className="w-8 h-8 min-w-8 rounded-full"
               onClick={onProductTableVisible}
-              />
-            </button>
+          >
+              <FaPlus className="w-6 h-6" />
+          </Button>
         </Tooltip>
       </div>
     </div>

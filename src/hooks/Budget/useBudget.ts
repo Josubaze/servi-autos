@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { useCreateBudgetMutation, useUpdateBudgetMutation } from "src/redux/services/budgets.Api";
 import { toast } from "react-toastify";
-import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './useBudgetSummary'
 
@@ -35,7 +34,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     const [createBudget] = useCreateBudgetMutation();
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [updateBudget] = useUpdateBudgetMutation();
-    const [dateUpdate, setDateUpdate] = useState<Dayjs | null>(null);
+    const [dateUpdate, setDateUpdate] = useState<Date | null>(null);
     const router = useRouter();
     const [ivaPercentage, setIvaPercentage] = useState<number>(16); // IVA predeterminado al 16%
     const [igtfPercentage, setIgtfPercentage] = useState<number>(3); // IGTF predeterminado al 3%
@@ -187,8 +186,8 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
             const budget: Omit<Budget, "_id"> = {
                 form: {
                     num: form.num,
-                    dateCreation: dayjs(form.dateCreation).toDate(),
-                    dateExpiration: dayjs(form.dateExpiration).toDate(),
+                    dateCreation: form.dateCreation.toDate(),
+                    dateExpiration: form.dateExpiration.toDate(),
                     dateUpdate: null,
                     currency,
                     exchangeRate,
@@ -223,7 +222,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
                     _id: budget_id,
                     budgetForm: {
                         ...budget.form, // Asegúrate de mantener las propiedades existentes de `budgetForm`
-                        dateUpdate: dayjs().toDate(), // Actualiza la fecha
+                        dateUpdate: Date(), // Actualiza la fecha
                     }
                 };
                 

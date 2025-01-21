@@ -1,8 +1,8 @@
 import React from "react";
 import { FaPlus, FaTools } from "react-icons/fa";
 import { TbArrowBadgeLeftFilled } from "react-icons/tb";
-import Tooltip from "@mui/material/Tooltip";
 import { motion } from "framer-motion";
+import {Tooltip, Button} from "@nextui-org/react";
 
 // Se añade la propiedad setIsTableVisible
 interface BudgetAddLineButtonProps {
@@ -14,20 +14,28 @@ export const BudgetAddLineButton: React.FC<BudgetAddLineButtonProps> = ({onTable
 
   return (
       <div className="gap-x-4 flex justify-start items-center py-4 px-8">
-        <Tooltip title="Agregar Fila" arrow color="bg-green-600">
-          <button className="w-16 h-16 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600  duration-300"
-          onClick={onAddEmptyService}>
-            <FaPlus className="w-16 h-16 p-4" />
-          </button>
+        <Tooltip content="Agregar Servicio Vacio">
+          <Button
+              color="success"
+              variant="flat"
+              isIconOnly
+              className="w-16 h-16 min-w-16 rounded-full"
+              onClick={onAddEmptyService}
+          >
+              <FaPlus className="w-10 h-10" />
+          </Button>
         </Tooltip>
 
-        <Tooltip title="Agregar Servicio" arrow>
-          <button
-            className="w-16 h-16 rounded-full bg-transparent border-2 border-green-600 flex justify-center items-center transition-all ease-in-out delay-150 hover:scale-110 hover:bg-green-600 duration-300"
-            onClick={onTableVisible} 
+        <Tooltip content="Agregar Servicio">
+          <Button
+              color="success"
+              variant="flat"
+              isIconOnly
+              className="w-16 h-16 min-w-16 rounded-full"
+              onClick={onTableVisible} 
           >
-            <FaTools className="w-16 h-16 p-4" />
-          </button>
+              <FaTools className="w-10 h-10 p-1"/>
+          </Button>
         </Tooltip>
 
         <div>

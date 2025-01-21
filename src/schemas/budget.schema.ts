@@ -13,12 +13,12 @@ const budgetSchema = new Schema(
         dateCreation: {
           type: Date,
           required: true,
-          default: () => dayjs().toDate(),
+          default: () => new Date(),
         },
         dateExpiration: {
           type: Date,
           required: true,
-          default: () => dayjs().toDate(),
+          default: () => new Date(),
         },
         dateUpdate: {
           type: Date,

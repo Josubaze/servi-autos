@@ -266,6 +266,7 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
     handlePrint,
     isOpenPdf,
     isOpenPreview,
+    setIsOpenPdf,
     setIsOpenPreview,
     invoiceCopy,
     printRef,

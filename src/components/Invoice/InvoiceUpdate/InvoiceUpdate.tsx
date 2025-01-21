@@ -34,7 +34,7 @@ export const InvoiceUpdate = ({ id }: { id: string }) => {
           <Loading/>
         </div>
       ) : (
-        <Invoice mode="update" invoiceData={invoice} />
+        <Invoice mode="upload" invoiceData={invoice} />
       )}
     </div>
   );

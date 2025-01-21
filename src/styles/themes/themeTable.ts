@@ -92,7 +92,7 @@ export const darkThemeSolid = createTheme({
           paddingLeft: '16px',
           paddingRight: '16px',
           borderRadius: '16px', 
-          backgroundColor: 'rgba(55, 48, 163, 0.8)',
+          backgroundColor: '#16161680',
           boxShadow: 'none',         
           opacity: 1,                
           filter: 'none',              
@@ -104,7 +104,7 @@ export const darkThemeSolid = createTheme({
       styleOverrides: {
         root: {
           '&:hover': {
-            backgroundColor: 'rgba(156, 163, 175, 0.2) !important',
+            backgroundColor: 'rgba(105, 113, 119, 0.3) !important',
           },
         },
       },
@@ -116,7 +116,7 @@ export const darkThemeSolid = createTheme({
           borderBottom: "none", 
         },
         head: {
-          backgroundColor: 'rgba(156, 163, 175, 0.2) !important',
+          backgroundColor: 'rgba(105, 113, 119, 0.3) !important',
         }
       },
     },

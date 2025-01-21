@@ -7,7 +7,7 @@ interface DocHeaderProps {
 export const DocHeader: React.FC<DocHeaderProps> = ({ company, isLoading, isError, title }) => {
 
   return (
-    <div className="py-9 bg-center bg-black-nav rounded-xl  flex flex-col sm:flex-row justify-between items-center">
+    <div className="py-9 bg-center bg-black-nav/50 rounded-xl  flex flex-col sm:flex-row justify-between items-center">
       <div className="flex flex-col px-8 sm:flex-row items-center">
         <div className="text-gray-100 font-title text-center sm:text-left">
 

@@ -1,8 +1,6 @@
-import { ThemeProvider } from "@mui/material/styles";
-import { TextFieldTheme } from "src/styles/themes/themeTextField";
-import { TextField } from "@mui/material";
 import { NumericFormat } from "react-number-format";
 import { AnimatePresence, motion } from 'framer-motion';
+import { Input } from "@nextui-org/react";
 
 interface BudgetSummaryProps {
   subtotal: number;
@@ -33,7 +31,7 @@ export const BudgetSummary = ({
   return (
     <>
       <div className="flex justify-end items-end w-full px-8">
-        <div className="w-full rounded-lg max-w-xl bg-black-nav p-4 border-y-2 border-gray-500">
+        <div className="w-full rounded-lg max-w-xl bg-black-nav/50 p-4">
 
           {/* Subtotal */}
           <div className="grid grid-cols-4 rounded-lg w-full px-8 gap-x-6">
@@ -41,22 +39,19 @@ export const BudgetSummary = ({
               <label htmlFor="subtotal">Subtotal :</label>
             </div>
             <div className="col-span-3">
-              <ThemeProvider theme={TextFieldTheme}>
-                <NumericFormat
-                  customInput={TextField}
-                  value={subtotal} 
-                  variant="outlined"
-                  fullWidth
-                  type="text"
-                  allowNegative={false}
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                  decimalSeparator=","
-                  thousandSeparator="."
-                  sx={{ input: { textAlign: "right" } }}
-                  disabled
-                />
-              </ThemeProvider>
+              <Input
+                size="md"
+                value={Number(subtotal).toLocaleString("de-DE", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+                variant="underlined"
+                fullWidth
+                disabled
+                style={{ textAlign: "right" }}
+                type="text"
+                inputMode="numeric"
+              />
             </div>
           </div>
 
@@ -65,43 +60,39 @@ export const BudgetSummary = ({
             <div className=" font-bold content-center text-right">
               <label htmlFor="tax">IVA % :</label>
             </div>
-            <div className="">
-              <ThemeProvider theme={TextFieldTheme}>
-                <NumericFormat
-                  customInput={TextField}
-                  value={ivaPercentage} 
-                  onValueChange={(values) => setIvaPercentage(values.floatValue || 0)} // Actualiza el IVA cuando cambia
-                  placeholder="IVA %"
-                  variant="outlined"
-                  fullWidth
-                  type="text"
-                  allowNegative={false}
-                  decimalScale={0}
-                  fixedDecimalScale={false}
-                  decimalSeparator=","
-                  thousandSeparator="."
-                  sx={{ input: { textAlign: "right" } }}
-                />
-              </ThemeProvider>
+            <div>           
+              <Input
+                size="md"
+                value={Number(ivaPercentage).toLocaleString("de-DE", {
+                  minimumFractionDigits: 0,
+                })}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\./g, "").replace(/,/g, "");
+                  if (!isNaN(Number(value)) && Number(value) >= 0) {
+                    setIvaPercentage(Number(value));
+                  }
+                }}
+                variant="underlined"
+                fullWidth
+                style={{ textAlign: "right" }}
+                type="text"
+                inputMode="numeric"
+              />
             </div>
-            <div className=" col-span-2">
-              <ThemeProvider theme={TextFieldTheme}>
-                <NumericFormat
-                  customInput={TextField}
-                  value={calculatedIva} 
-                  placeholder="IVA Calculado"
-                  variant="outlined"
-                  fullWidth
-                  type="text"
-                  allowNegative={false}
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                  decimalSeparator=","
-                  thousandSeparator="."
-                  sx={{ input: { textAlign: "right" } }}
-                  disabled 
-                />
-              </ThemeProvider>
+            <div className="col-span-2">
+              <Input
+                size="md"
+                value={Number(calculatedIva).toLocaleString("de-DE", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+                variant="underlined"
+                fullWidth
+                disabled
+                style={{ textAlign: "right" }}
+                type="text"
+                inputMode="numeric"
+              />
             </div>
           </div>
 
@@ -117,43 +108,41 @@ export const BudgetSummary = ({
               >
                 <div className="font-bold content-center text-right">
                   <label htmlFor="tax">IGTF % :</label>
-                </div>            
-                <ThemeProvider theme={TextFieldTheme}>
-                  <NumericFormat
-                    customInput={TextField}
-                    value={igtfPercentage}
-                    onValueChange={(values) => setIgtfPercentage(values.floatValue || 0)} // Actualiza el IVA cuando cambia
-                    placeholder="IGTF %"
-                    variant="outlined"
+                </div>       
+                <div>
+                  <Input
+                    size="md"
+                    value={Number(igtfPercentage).toLocaleString("de-DE", {
+                      minimumFractionDigits: 0,
+                    })}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\./g, "").replace(/,/g, "");
+                      if (!isNaN(Number(value)) && Number(value) >= 0) {
+                        setIgtfPercentage(Number(value));
+                      }
+                    }}
+                    variant="underlined"
                     fullWidth
+                    style={{ textAlign: "right" }}
                     type="text"
-                    allowNegative={false}
-                    decimalScale={0}
-                    fixedDecimalScale={false}
-                    decimalSeparator=","
-                    thousandSeparator="."
-                    sx={{ input: { textAlign: "right" } }}
+                    inputMode="numeric"
                   />
-                </ThemeProvider>
-               
+                </div>     
+          
                 <div className="col-span-2">
-                  <ThemeProvider theme={TextFieldTheme}>
-                    <NumericFormat
-                      customInput={TextField}
-                      value={calculatedIgtf}
-                      placeholder="IGTF Calculado"
-                      variant="outlined"
-                      fullWidth
-                      type="text"
-                      allowNegative={false}
-                      decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator=","
-                      thousandSeparator="."
-                      sx={{ input: { textAlign: "right" } }}
-                      disabled
-                    />
-                  </ThemeProvider>
+                  <Input
+                    size="md"
+                    value={Number(calculatedIgtf).toLocaleString("de-DE", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                    variant="underlined"
+                    fullWidth
+                    disabled
+                    style={{ textAlign: "right" }}
+                    type="text"
+                    inputMode="numeric"
+                  />
                 </div>
               </motion.div>
             )}

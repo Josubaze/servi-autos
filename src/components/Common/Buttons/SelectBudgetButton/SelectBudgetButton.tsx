@@ -12,6 +12,7 @@ export const SelectBudgetButton = ({ onClick }: SelectBudgetButtonProps) =>{
                 color="default"
                 variant="flat"
                 onClick={onClick}
+                className="w-1/2"
             > 
                 Cargar Presupuesto
                 <FaFilePowerpoint className="h-5 w-5" />

@@ -3,8 +3,7 @@ import { PiFilePdfBold } from "react-icons/pi";
 import { MdPrint } from "react-icons/md";
 import { useBudgetOptions } from "src/hooks/Budget/useBudgetOptions"; // Importar el hook
 import { Loading } from "src/components/Common/Loading";
-import { InvoicePreview } from "src/components/InvoicePreview";
-import { InvoicePDF } from "src/components/InvoicePDF/InvoicePDF";
+import { InvoiceView } from "src/components/InvoiceView";
 
 interface InvoiceOptionsProps {
     company: Company | undefined;
@@ -94,8 +93,7 @@ export const InvoiceOptions: React.FC<InvoiceOptionsProps> = ({
 
       {/* Modal para vista previa */}
       {showPreview && (
-        <InvoicePreview
-          isOpen={showPreview}
+        <InvoiceView
           onClose={() => setShowPreview(false)}
           company={company}
           customer={customer}
@@ -114,7 +112,8 @@ export const InvoiceOptions: React.FC<InvoiceOptionsProps> = ({
       {/* Componente oculto para PDF */}
       {showHiddenPDF && (
         <div className="absolute top-[-9999px] left-[-9999px]">
-          <InvoicePDF
+          <InvoiceView
+            onClose={() => setShowPreview(false)}
             ref={printRef}
             company={company}
             customer={customer}

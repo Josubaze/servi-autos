@@ -11,8 +11,7 @@ import { I18nProvider } from '@react-aria/i18n';
 import { Loading } from '../Common/Loading';
 import { useControlInvoice } from 'src/hooks/ControlInvoice/useControlInvoice';
 import { useGetInvoicesQuery, useDeleteInvoiceMutation } from "src/redux/services/invoices.Api";
-import { InvoicePDF } from "../InvoicePDF/InvoicePDF";
-import { InvoicePreview } from "../InvoicePreview";
+import { InvoiceView } from "../InvoiceView";
 
 export const ControlInvoice = () => {
   
@@ -31,6 +30,7 @@ export const ControlInvoice = () => {
     handlePrint,
     handleExportPDF,
     isOpenPdf,
+    setIsOpenPdf,
     isOpenPreview,
     setIsOpenPreview,
     router,
@@ -98,7 +98,8 @@ export const ControlInvoice = () => {
       {/* Componente oculto para PDF */}
         {isOpenPdf && (
           <div className="absolute top-[-9999px] left-[-9999px]">
-            <InvoicePDF
+            <InvoiceView
+              onClose={() => setIsOpenPdf(false)}
               ref={printRef}
               company={invoiceCopy?.company}
               customer={invoiceCopy?.customer}
@@ -117,8 +118,7 @@ export const ControlInvoice = () => {
 
         {/* Modal para vista previa */}
         {isOpenPreview && (
-          <InvoicePreview
-            isOpen={isOpenPreview}
+          <InvoiceView
             onClose={() => setIsOpenPreview(false)}
             company={invoiceCopy?.company}
             customer={invoiceCopy?.customer}

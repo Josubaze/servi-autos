@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { MdDelete, MdVisibility } from "react-icons/md";
-import { ThemeProvider, Tooltip, TextField } from "@mui/material";
-import { TextFieldTheme } from "src/styles/themes/themeTextField";
-import { NumericFormat } from "react-number-format";
+import { Button, Input, Tooltip } from "@nextui-org/react";
+import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { BudgetProductTable } from "../BudgetProductTable";
 
 export const BudgetServiceRow: React.FC<{
@@ -28,104 +27,137 @@ export const BudgetServiceRow: React.FC<{
   onProductDelete,
   onShowProductTable,
 }) => {
+  const [isConfirming, setIsConfirming] = useState<boolean>(false);
+
+  const handleDeleteConfirmation = () => {
+    setIsConfirming(false); // Reset confirmation
+    onDeleteRow(service._id); // Call delete
+  };
+
   return (
     <div className="px-8 pt-4">
-      <div  className=" bg-black-nav rounded-none rounded-tl-lg rounded-tr-lg p-4 border-t-2 border-gray-500  ">
+      <div
+        className={`bg-black-nav/50 p-3 ${
+          serviceDetailsVisible ? "rounded-none rounded-tl-lg rounded-tr-lg" : "rounded-lg"
+        }`}
+      >
+        <div className="grid grid-cols-12 gap-x-4 rounded-lg w-full">
+          <div className="col-span-5">
+            <Input
+              size="md"
+              value={service.name}
+              variant="underlined"
+              fullWidth
+              type="text"
+              onChange={(e) => onNameChange(service._id, e.target.value)}
+            />
+          </div>
 
-        <div className="grid grid-cols-12 rounded-lg w-full gap-x-4">
+          <div className="col-span-2 pl-4">
+            <Input
+              size="md"
+              value={Number(service.serviceQuantity).toLocaleString("de-DE", {
+                minimumFractionDigits: 0,
+              })}
+              variant="underlined"
+              fullWidth
+              onChange={(e) => {
+                const value = e.target.value.replace(/\./g, "").replace(/,/g, "");
+                if (!isNaN(Number(value)) && Number(value) >= 0) {
+                  onQuantityChange(value, service._id);
+                }
+              }}
+              style={{ textAlign: "right" }}
+              type="text"
+              inputMode="numeric"
+            />
+          </div>
 
-            <div className="col-span-5">
-              <ThemeProvider theme={TextFieldTheme}>
-                <TextField
-                  value={service.name}
-                  variant="outlined"
-                  fullWidth
-                  type="text"
-                  className="text-right"
-                  onChange={(e) => onNameChange(service._id, e.target.value)}
-                />
-              </ThemeProvider>
-            </div>
+          <div className="col-span-2 pl-4">
+            <Input
+              size="md"
+              value={Number(service.totalPrice).toLocaleString("de-DE", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+              variant="underlined"
+              fullWidth
+              disabled
+              style={{ textAlign: "right" }}
+              type="text"
+              inputMode="numeric"
+            />
+          </div>
 
-            <div className="col-span-2">
-              <ThemeProvider theme={TextFieldTheme}>
-                <NumericFormat
-                  value={service.serviceQuantity}
-                  customInput={TextField}
-                  variant="outlined"
-                  fullWidth
-                  type="text"
-                  allowNegative={false}
-                  decimalScale={0}
-                  fixedDecimalScale={false}
-                  decimalSeparator=","
-                  thousandSeparator="."
-                  sx={{ input: { textAlign: "right" } }}
-                  onValueChange={({ value }) => onQuantityChange(value, service._id)}
-                  isAllowed={(values) => {
-                    const { floatValue } = values;
-                    return floatValue !== undefined && floatValue > 0;
-                  }}
-                />
-              </ThemeProvider>
-            </div>
+          <div className="col-span-2 pl-4">
+            <Input
+              size="md"
+              value={Number(service.totalPrice * service.serviceQuantity).toLocaleString("de-DE", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+              variant="underlined"
+              fullWidth
+              disabled
+              style={{ textAlign: "right" }}
+              type="text"
+              inputMode="numeric"
+            />
+          </div>
 
-            <div className="col-span-2">
-              <ThemeProvider theme={TextFieldTheme}>
-                <NumericFormat
-                  value={service.totalPrice}
-                  customInput={TextField}
-                  variant="outlined"
-                  fullWidth
-                  type="text"
-                  decimalSeparator=","
-                  thousandSeparator="."
-                  decimalScale={2}
-                  fixedDecimalScale
-                  allowNegative={false}
-                  sx={{ input: { textAlign: "right" } }}
-                  disabled
-                />
-              </ThemeProvider>
-            </div>
+          {isConfirming ? (
+            <>
+              <div className="flex justify-center gap-2">
+                <Button
+                  color="danger"
+                  variant="flat"
+                  isIconOnly
+                  className="w-10 h-10 min-w-10 rounded-full"
+                  onClick={() => setIsConfirming(false)}
+                >
+                  <AiOutlineClose className="w-8 h-8" />
+                </Button>
 
-            <div className="col-span-2">
-              <ThemeProvider theme={TextFieldTheme}>
-                <NumericFormat
-                  value={(service.totalPrice * service.serviceQuantity)}
-                  customInput={TextField}
-                  variant="outlined"
-                  fullWidth
-                  type="text"
-                  decimalSeparator=","
-                  thousandSeparator="."
-                  decimalScale={2}
-                  fixedDecimalScale
-                  allowNegative={false}
-                  sx={{ input: { textAlign: "right" } }}
-                  disabled
-                />
-              </ThemeProvider>
-            </div>
-
-            <div className="flex justify-center items-center gap-x-2 ">
-              <Tooltip title="Ver Detalles" arrow>
-                <button
-                  className="w-10 h-10 xl:w-12 xl:h-12 rounded-full bg-transparent border-2 border-blue-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-blue-600 hover:text-white duration-300"
+                <Button
+                  color="success"
+                  variant="flat"
+                  isIconOnly
+                  className="w-10 h-10 min-w-10 rounded-full"
+                  onClick={handleDeleteConfirmation}
+                >
+                  <AiOutlineCheck className="w-8 h-8" />
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+            <div className="flex justify-center gap-2">
+              <Tooltip content="Ver Detalles">
+                <Button
+                  color="default"
+                  variant="flat"
+                  isIconOnly
+                  className="w-10 h-10 min-w-10 rounded-full"
                   onClick={() => onViewDetails(service)}
                 >
-                  <MdVisibility className="w-10 h-10 xl:w-12 xl:h-12 p-1 xl:p-2 text-blue-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
-                </button>
+                  <MdVisibility className="w-8 h-8" />
+                </Button>
               </Tooltip>
-              <Tooltip title="Eliminar Fila" arrow>
-                <button
-                  className="w-10 h-10 xl:w-12 xl:h-12 rounded-full bg-transparent border-2 border-red-600 flex justify-center items-center text-white transition-all ease-in-out delay-150 hover:scale-110 hover:bg-red-600 hover:text-white duration-300"
-                  onClick={() => onDeleteRow(service._id)}
+
+              <Tooltip content="Eliminar Servicio">
+                <Button
+                  color="default"
+                  variant="flat"
+                  isIconOnly
+                  className="w-10 h-10 min-w-10 rounded-full"
+                  onClick={() => setIsConfirming(true)} // Activar modo de confirmación
                 >
-                  <MdDelete className="w-10 h-10 xl:w-12 xl:h-12 p-1 xl:p-2 text-red-600 hover:text-white transition-all ease-in-out delay-150 hover:scale-110" />
-                </button>
+                  <MdDelete className="w-8 h-8" />
+                </Button>
               </Tooltip>
             </div>
+            </>
+          )}
         </div>
       </div>
 

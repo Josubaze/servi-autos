@@ -20,7 +20,7 @@ interface FormHandle {
 }
 
 interface UseInvoiceProps {
-    mode?: "create" | "update";
+    mode?: "create" | "upload";
     invoiceData?: Invoice | null;
 }
 
@@ -51,7 +51,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
     const [ updateProductQuantity ] = useUpdateProductQuantityMutation();
     // Inicializar datos si el modo es "update"
     useEffect(() => {
-        if (mode === "update" && invoiceData) {
+        if (mode === "upload" && invoiceData) {
             handleSetForm(invoiceData.form);
             handleSetFormCustomer(invoiceData.customer);
             setCurrency(invoiceData.form.currency);
@@ -175,7 +175,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
     };
 
     // Función principal para guardar la factura
-    const handleSave = async (action: "draft" | "paid" | "pending", mode: "create" | "update", invoice_id: string) => {
+    const handleSave = async (action: "draft" | "paid" | "pending", mode: "create" | "upload", invoice_id: string) => {
         setIsSaving(true);
         try {
             const {
@@ -192,8 +192,8 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
             const invoice: Omit<Invoice, "_id"> = {
                 form: {
                     num: form.num,
-                    dateCreation: dayjs(form.dateCreation).toDate(),
-                    dateExpiration: dayjs(form.dateExpiration).toDate(),
+                    dateCreation: form.dateCreation.toDate(),
+                    dateExpiration: form.dateExpiration.toDate(),
                     dateUpdate: null,
                     currency,
                     exchangeRate,
@@ -263,13 +263,13 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                     await createExecutionOrder(executionOrder).unwrap();
                     toast.success("Orden de ejecución creada exitosamente!");
                 }
-            } else if (mode === "update") {
+            } else if (mode === "upload") {
                 const invoiceWithId = {
                     ...invoice,
                     _id: invoice_id,
                     form: {
                         ...invoice.form,
-                        dateUpdate: dayjs().toDate(), // Actualiza la fecha
+                        dateUpdate: Date() // Actualiza la fecha
                     },
                 };
     

@@ -1,6 +1,7 @@
 import React from 'react';
-import { MarketButton } from '../../Common/Buttons/MarketButton';
-import { SelectBudgetButton } from '../../Common/Buttons/SelectBudgetButton';
+import { Button } from '@nextui-org/react';
+import { MdStore } from "react-icons/md";
+import { FaFilePowerpoint } from "react-icons/fa6";
 
 // Interfaz para las props
 interface OptionsFormProps {
@@ -14,16 +15,25 @@ export const OptionsForm: React.FC<OptionsFormProps> = ({
     setIsTableVisible,
 }) => {
     return (
-        <div className="flex items-center justify-start gap-x-3">
-            {/* Sección de Consultar Mercado */}
-            <div className="flex items-center justify-center pl-6">
-                <MarketButton onClick={() => setShowMarket(true)} />
-            </div>
+        <div className="flex w-full items-center gap-x-2 pl-6">
+            <Button
+                color="default"
+                variant="flat"
+                onClick={() => setIsTableVisible(true)}
+                className="w-1/2"
+            > 
+                Cargar Presupuesto
+                <FaFilePowerpoint className="h-5 w-5" />
+            </Button>
 
-            {/* Sección de Presupuesto Existente */}
-            <div className="flex items-center justify-center">
-                <SelectBudgetButton onClick={() => setIsTableVisible(true)} />
-            </div>
+            <Button
+                className="bg-yellow-400/20 text-yellow-400/90 w-1/2"
+                variant="flat"
+                onClick={() => setShowMarket(true)}
+            > 
+                Consultar Mercado
+                <MdStore className="h-6 w-6" />
+            </Button>
         </div>
     );
 };

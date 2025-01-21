@@ -5,12 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CustomerSchema } from 'src/utils/validation.zod';
 import { CUSTOMERVOID } from "src/utils/constanst";
 import { useImperativeHandle, forwardRef } from 'react';
-import TextField from '@mui/material/TextField';
-import { ThemeProvider } from "@mui/material/styles";
-import { TextFieldTheme } from 'src/styles/themes/themeTextField';
 import { SelectCustomers } from "src/components/Common/SelectCustomers";
 import { OptionsCustomerForm } from "../OptionsCustomerForm";
 import { toast } from "react-toastify";
+import { Input } from "@nextui-org/react";
 
 // Define la interfaz para el ref
 interface FormHandle {
@@ -94,112 +92,107 @@ export const CustomerForm = forwardRef<FormHandle, CustomerFormProps>(({ title }
                 setIsTableVisible={setIsTableVisible}
                 isLoading={isLoading}
                 handleFormSubmit={handleSubmit(onSubmit)}
-                title={title}
             />
             <form className="w-full pt-4 sm:pr-6">
-                <div className="bg-black-nav rounded-lg border-y-2 border-gray-500 p-4">
-                    <div className="grid gap-y-4 w-full">
-                        <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 gap-x-6 w-full">
+                <div className="bg-black-nav/50 rounded-lg p-4">
+                    <div className="grid gap-y-2 w-full">
+                        <div className="grid grid-cols-1 gap-y-2 sm:grid-cols-2 gap-x-6 w-full">
                             <div className="w-full">
-                                <ThemeProvider theme={TextFieldTheme}>
-                                    <Controller
-                                        control={control}
-                                        name="id_card"
-                                        render={({ field }) => (
-                                            <TextField
-                                                label="Cédula | RIF"
-                                                variant="outlined"
-                                                fullWidth
-                                                type="text"
-                                                {...field}
-                                                error={!!errors.id_card}
-                                                helperText={errors.id_card?.message}
-                                            />
-                                        )}
+                            <div className="text-sm h-6">{title}</div>
+                            <Controller
+                                control={control}
+                                name="id_card"
+                                render={({ field }) => (
+                                    <Input
+                                        size="md"
+                                        label="Cédula | RIF"
+                                        type="text"
+                                        variant="underlined"
+                                        {...field}
+                                        isInvalid={!!errors.id_card}
+                                        errorMessage={errors.id_card?.message}
+                                        fullWidth
                                     />
-                                </ThemeProvider>
+                                )}
+                            />
                             </div>
 
-                            <div className="w-full">
-                                <ThemeProvider theme={TextFieldTheme}>
-                                    <Controller
-                                        control={control}
-                                        name="phone"
-                                        render={({ field }) => (
-                                            <TextField
-                                                label="Teléfono"
-                                                variant="outlined"
-                                                fullWidth
-                                                type="text"
-                                                {...field}
-                                                error={!!errors.phone}
-                                                helperText={errors.phone?.message}
-                                            />
-                                        )}
-                                    />
-                                </ThemeProvider>
+                            <div className="w-full pt-6">
+                                <Controller
+                                    control={control}
+                                    name="phone"
+                                    render={({ field }) => (
+                                        <Input
+                                            size="md"
+                                            label="Teléfono"
+                                            variant="underlined"
+                                            type="text"
+                                            {...field}
+                                            isInvalid={!!errors.id_card}
+                                            errorMessage={errors.id_card?.message}
+                                            fullWidth
+                                        />
+                                    )}
+                                />
                             </div>
                         </div>
 
                         {/* Campos individuales */}
                         <div className="w-full">
-                            <ThemeProvider theme={TextFieldTheme}>
-                                <Controller
-                                    control={control}
-                                    name="name"
-                                    render={({ field }) => (
-                                        <TextField
-                                            label="Nombre"
-                                            variant="outlined"
-                                            fullWidth
-                                            type="text"
-                                            {...field}
-                                            error={!!errors.name}
-                                            helperText={errors.name?.message}
-                                        />
-                                    )}
-                                />
-                            </ThemeProvider>
+                            <Controller
+                                control={control}
+                                name="name"
+                                render={({ field }) => (
+                                    <Input
+                                        size="md"
+                                        label="Nombre"
+                                        variant="underlined"
+                                        type="text"
+                                        {...field}
+                                        isInvalid={!!errors.id_card}
+                                        errorMessage={errors.id_card?.message}
+                                        fullWidth
+                                    />
+                                )}
+                            />
                         </div>
 
                         <div className="w-full">
-                            <ThemeProvider theme={TextFieldTheme}>
-                                <Controller
-                                    control={control}
-                                    name="email"
-                                    render={({ field }) => (
-                                        <TextField
-                                            label="Correo Electrónico"
-                                            variant="outlined"
-                                            fullWidth
-                                            type="text"
-                                            {...field}
-                                            error={!!errors.email}
-                                            helperText={errors.email?.message}
-                                        />
-                                    )}
-                                />
-                            </ThemeProvider>
+                            <Controller
+                                control={control}
+                                name="email"
+                                render={({ field }) => (
+                                    <Input
+                                        size="md"
+                                        label="Correo Electrónico"
+                                        variant="underlined"
+                                        type="text"
+                                        {...field}
+                                        isInvalid={!!errors.id_card}
+                                        errorMessage={errors.id_card?.message}
+                                        fullWidth
+                                    />
+                                )}
+                            />
                         </div>
 
                         <div className="w-full">
-                            <ThemeProvider theme={TextFieldTheme}>
-                                <Controller
-                                    control={control}
-                                    name="address"
-                                    render={({ field }) => (
-                                        <TextField
-                                            label="Dirección"
-                                            variant="outlined"
-                                            fullWidth
-                                            type="text"
-                                            {...field}
-                                            error={!!errors.address}
-                                            helperText={errors.address?.message}
-                                        />
-                                    )}
-                                />
-                            </ThemeProvider>
+                            <Controller
+                                control={control}
+                                name="address"
+                                render={({ field }) => (
+                                    <Input
+                                        size="md"
+                                        label="Dirección"
+                                        variant="underlined"
+                                        type="text"
+                                        {...field}
+                                        isInvalid={!!errors.id_card}
+                                        errorMessage={errors.id_card?.message}
+                                        fullWidth
+                                    />
+                                )}
+                            />
                         </div>
                     </div>
                 </div>

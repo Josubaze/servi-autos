@@ -183,9 +183,9 @@ interface Product {
 
   interface Form{
     num: number;
-    dateCreation: Dayjs;
-    dateExpiration: Dayjs;
-    dateUpdate: Dayjs;
+    dateCreation: any;
+    dateExpiration: any;
+    dateUpdate: any;
     currency: string;
     exchangeRate: number;
   }

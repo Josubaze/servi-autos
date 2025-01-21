@@ -8,8 +8,7 @@ import { HiDocumentPlus } from "react-icons/hi2";
 import { ControlBudgetTable } from './ControlBudgetTable';
 import { DateRangePicker } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
-import { BudgetPreview } from '../BudgetPreview';
-import { BudgetPDF } from '../BudgetPDF';
+import { BudgetView } from '../BudgetView';
 import { Loading } from '../Common/Loading';
 import { useControlBudget } from 'src/hooks/ControlBudget/useControlBudget';
 import { useDeleteBudgetMutation, useGetBudgetsQuery } from "src/redux/services/budgets.Api";
@@ -96,7 +95,8 @@ export const ControlBudget = () => {
       {/* Componente oculto para PDF */}
         {isOpenPdf && (
           <div className="absolute top-[-9999px] left-[-9999px]">
-            <BudgetPDF
+            <BudgetView
+              onClose={() => setIsOpenPreview(false)}
               ref={printRef}
               company={budgetCopy?.company}
               customer={budgetCopy?.customer}
@@ -115,8 +115,7 @@ export const ControlBudget = () => {
 
         {/* Modal para vista previa */}
         {isOpenPreview && (
-          <BudgetPreview
-            isOpen={isOpenPreview}
+          <BudgetView
             onClose={() => setIsOpenPreview(false)}
             company={budgetCopy?.company}
             customer={budgetCopy?.customer}

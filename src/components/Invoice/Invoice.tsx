@@ -11,7 +11,7 @@ import { InvoiceActions } from "./InvoiceActions";
 import { DocHeader } from "../Common/DocHeader";
 
     interface InvoiceProps {
-        mode?: "create" | "update";
+        mode?: "create" | "upload";
         invoiceData?: Invoice | null;
     }
 

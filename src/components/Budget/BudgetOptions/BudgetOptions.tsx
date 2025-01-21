@@ -1,8 +1,7 @@
 import { FaRegEye } from "react-icons/fa";
 import { PiFilePdfBold } from "react-icons/pi";
 import { MdPrint } from "react-icons/md";
-import { BudgetPreview } from "src/components/BudgetPreview";
-import { BudgetPDF } from "src/components/BudgetPDF";
+import { BudgetView } from "src/components/BudgetView";
 import { useBudgetOptions } from "src/hooks/Budget/useBudgetOptions"; // Importar el hook
 import { Loading } from "src/components/Common/Loading";
 
@@ -51,11 +50,11 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
   });
 
   return (
-    <div className="grid grid-cols-6 rounded-lg w-full h-12 mb-4 gap-x-4 bg-gradient-to-r from-indigo-600 via-black-nav to-indigo-600 animate-gradient bg-[length:200%]">
+    <div className="grid grid-cols-6 rounded-lg w-full h-12 mb-4 bg-gradient-to-r from-indigo-600 via-black-nav to-indigo-600 animate-gradient bg-[length:200%]">
       {/* Botón de vista previa */}
       <div className="col-span-2">
         <button
-          className="text-base px-6 w-full h-full rounded-xl bg-transparent transition ease-in-out delay-150 hover:bg-indigo-600/80 duration-300"
+          className="text-base px-6 w-full h-full rounded-xl bg-transparent transition ease-in-out delay-150 hover:bg-indigo-600 duration-300"
           onClick={handlePreview}
         >
           <span className="flex items-center justify-center gap-x-2 h-full">
@@ -68,7 +67,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
       {/* Botón para imprimir */}
       <div className="col-span-2">
         <button
-          className="text-base px-6 w-full h-full rounded-xl bg-transparent transition ease-in-out delay-150 hover:bg-indigo-600/80 duration-300"
+          className="text-base px-6 w-full h-full rounded-xl bg-transparent transition ease-in-out delay-150 hover:bg-indigo-600 duration-300"
           onClick={handlePrint}
         >
           <span className="flex items-center justify-center gap-x-2 h-full">
@@ -81,7 +80,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
       {/* Botón para generar PDF */}
       <div className="col-span-2">
         <button
-          className="text-base px-6 w-full h-full rounded-xl bg-transparent transition ease-in-out delay-150 hover:bg-indigo-600/80 duration-300"
+          className="text-base px-6 w-full h-full rounded-xl bg-transparent transition ease-in-out delay-150 hover:bg-indigo-600 duration-300"
           onClick={() => handlePDFGeneration("Budget")}
         >
           <span className="flex items-center justify-center gap-x-2 h-full">
@@ -93,8 +92,7 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
 
       {/* Modal para vista previa */}
       {showPreview && (
-        <BudgetPreview
-          isOpen={showPreview}
+        <BudgetView
           onClose={() => setShowPreview(false)}
           company={company}
           customer={customer}
@@ -113,8 +111,9 @@ export const BudgetOptions: React.FC<BudgetOptionsProps> = ({
       {/* Componente oculto para PDF */}
       {showHiddenPDF && (
         <div className="absolute top-[-9999px] left-[-9999px]">
-          <BudgetPDF
+          <BudgetView
             ref={printRef}
+            onClose={() => setShowPreview(false)}
             company={company}
             customer={customer}
             form={form}
