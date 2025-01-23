@@ -186,10 +186,37 @@ export const CreditNoteFormSchema = z.object({
 });
 
 
+export const ReportFormSchema = z.object({
+  num: 
+    z.union([
+      z.string()
+        .refine(quantity => /^[0-9]+$/.test(quantity) && parseInt(quantity, 10) > 0, { message: "La cantidad debe ser un número entero positivo" })
+        .transform(quantity => parseInt(quantity, 10)),
+      z.number()
+        .refine(quantity => Number.isInteger(quantity) && quantity > 0, { message: "La cantidad debe ser un número entero positivo" })
+  ]),
+
+  
+  dateCreation: 
+    z.custom<any>((date) => {
+      if (!isValidDateObject(date)) {
+        throw new Error("La fecha de creación debe ser un objeto de fecha válido.");
+      }
+      return true; // La fecha ya es válida según la validación previa
+    }),
+
+  nameWorker: z.string()
+    .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
+    .max(40, { message: "El nombre no puede exceder los 40 caracteres" })
+    .trim(),
+
+  emailWorker: z.string().email	({ message: "Debe ser un correo electrónico válido" }),
+});
+
 export const ServiceSchema = z.object({
   name: z.string()
-    .min(1, "El nombre es requerido")
-    .max(100, "El nombre no puede exceder los 100 caracteres")
+    .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
+    .max(40, { message: "El nombre no puede exceder los 40 caracteres" })
     .trim(),
   
   servicePrice: z.union([

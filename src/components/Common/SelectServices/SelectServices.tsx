@@ -13,15 +13,12 @@ import { ServiceRow } from './ServiceRow';
 import TableCell from '@mui/material/TableCell';
 import { useSortableData } from 'src/hooks/useSortableData';
 import { Loading } from 'src/components/Common/Loading';
-import { Typography, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import { IoExitOutline } from "react-icons/io5";
 import { toast } from 'react-toastify';
 import { useDynamicFilter } from 'src/hooks/useProductFilter';
 import { SearchBar } from '../SearchBar';
 import { Tooltip } from '@nextui-org/react';
-
-
-
 
 export const SelectServices: React.FC<SelectServicesProps> = ({
     data,
@@ -30,6 +27,7 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
     isSuccess,
     onServiceSelect,
     onCloseTable,
+    showPrices = true, // Nuevo prop con valor por defecto
 }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -51,9 +49,9 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
 
     if (isLoading) {
         return (
-        <div style={{ textAlign: 'center', margin: '20px' }}>
-            <Loading/>
-        </div>
+            <div style={{ textAlign: 'center', margin: '20px' }}>
+                <Loading/>
+            </div>
         );
     }
 
@@ -75,7 +73,7 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
                     onClick={onCloseTable}
                     className="absolute top-4 right-4 shadow-xl shadow-gray-600 bg-black-nav hover:bg-black-nav/80 rounded-full w-10 h-10 flex items-center justify-center hover:scale-110 transition-colors duration-200"
                 >
-                    <span className="text-xl"><IoExitOutline className='flex w-6 h-6'/></span> {/* Icono X */}
+                    <span className="text-xl"><IoExitOutline className='flex w-6 h-6'/></span>
                 </button>
             </Tooltip>
 
@@ -83,29 +81,31 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
                 <div className="relative w-full max-h-[700px] overflow-y-auto">
                     <TableContainer component={Paper}>
                         <Table aria-label="collapsible table" className='p-4'>
-                            <TableHead>
+                        <TableHead>
                                 <TableRow>
                                     {/* Lista de Servicios */}
                                     <TableCell
-                                        colSpan={2} 
+                                        colSpan={isMobile ? 1 : 2}
                                         sx={{
-                                        fontSize: "1.25rem",
-                                        textAlign: "left",
+                                            fontSize: "1.25rem",
+                                            textAlign: "left",
                                         }}
                                     >
                                         <span>Lista de Servicios</span>
                                     </TableCell>
 
-                                    {/* Buscador */}
-                                    {/* Espaciador (solo escritorio) */}
-                                    {!isMobile && (
-                                        <TableCell
-                                            colSpan={1}
-                                        />
+                                    {/* Espaciador dinámico */}
+                                    {!isMobile && showPrices && (
+                                        <TableCell colSpan={1} />
                                     )}
+
+                                    {/* Buscador */}
                                     <TableCell
-                                        colSpan={2} 
-                                    >                                       
+                                        colSpan={showPrices ? (isMobile ? 3 : 2) : (isMobile ? 2 : 1)}
+                                        sx={{
+                                            textAlign: isMobile || !showPrices ? "center" : "left",
+                                        }}
+                                    >
                                         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}></SearchBar>
                                     </TableCell>
                                 </TableRow>
@@ -134,33 +134,39 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
                                             Nombre
                                         </TableSortLabel>
                                     </TableCell>
-                                    <TableCell align="right">
-                                        <TableSortLabel
-                                            active={orderBy === 'servicePrice'}
-                                            direction={orderBy === 'servicePrice' ? order : 'asc'}
-                                            onClick={() => handleRequestSort('servicePrice')}
-                                        >
-                                            Precio por Servicio
-                                        </TableSortLabel>
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        <TableSortLabel
-                                            active={orderBy === 'totalPrice'}
-                                            direction={orderBy === 'totalPrice' ? order : 'asc'}
-                                            onClick={() => handleRequestSort('totalPrice')}
-                                        >
-                                            Precio Total
-                                        </TableSortLabel>
-                                    </TableCell>
+                                    {showPrices && (
+                                        <>
+                                            <TableCell align="right">
+                                                <TableSortLabel
+                                                    active={orderBy === 'servicePrice'}
+                                                    direction={orderBy === 'servicePrice' ? order : 'asc'}
+                                                    onClick={() => handleRequestSort('servicePrice')}
+                                                >
+                                                    Precio por Servicio
+                                                </TableSortLabel>
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                <TableSortLabel
+                                                    active={orderBy === 'totalPrice'}
+                                                    direction={orderBy === 'totalPrice' ? order : 'asc'}
+                                                    onClick={() => handleRequestSort('totalPrice')}
+                                                >
+                                                    Precio Total
+                                                </TableSortLabel>
+                                            </TableCell>
+                                        </>
+                                    )}
                                 </TableRow>
                             </TableHead>
 
                             <TableBody>
                                 {rowsToShow.map((service: Service) => (
-                                <ServiceRow 
-                                    key={service._id} 
-                                    service={service}
-                                    onServiceSelect={onServiceSelect}/>
+                                    <ServiceRow 
+                                        key={service._id} 
+                                        service={service}
+                                        showPrices={showPrices}
+                                        onServiceSelect={onServiceSelect}
+                                    />
                                 ))}
                             </TableBody>
                         </Table>

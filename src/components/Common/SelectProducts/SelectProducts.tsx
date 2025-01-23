@@ -14,7 +14,17 @@ export const SelectProducts: React.FC<{
   isSuccess: boolean,
   onAddProduct: (product: Product) => void,
   onCloseTable: () => void,
-}> = ({ data, onAddProduct, onCloseTable, isError, isFetching, isLoading, isSuccess }) => {
+  showPrice?: boolean, 
+}> = ({
+  data,
+  onAddProduct,
+  onCloseTable,
+  isError,
+  isFetching,
+  isLoading,
+  isSuccess,
+  showPrice = true, // Valor por defecto: true
+}) => {
 
   const columns = [
     { 
@@ -96,10 +106,13 @@ export const SelectProducts: React.FC<{
 
   const mobileColumnsToShow = ['name', 'quantity', 'price'];
   const tabletColumnsToShow = ['name', 'vehicleType', 'quantity', 'price'];
+
   const responsiveColumns = useResponsiveColumns(
     columns,
     mobileColumnsToShow,
-    tabletColumnsToShow
+    tabletColumnsToShow,
+    true, // Mostrar siempre la columna _id
+    showPrice // Mostrar u ocultar la columna "price" basado en el prop
   );
 
   return (

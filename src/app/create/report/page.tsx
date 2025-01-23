@@ -1,8 +1,6 @@
+import { Report } from 'src/components/Report'; 
+
 
 export default function createReportPage(){
-  return (
-    <div>
-        Create Report
-    </div>
-);
+  return <Report/>
 }

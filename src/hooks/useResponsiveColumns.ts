@@ -13,18 +13,29 @@ export const useResponsiveColumns = (
   columns: Column[],
   mobileColumnsToShow: string[] = [],
   tabletColumnsToShow: string[] = [],
-  showIdColumn: boolean = true 
+  showIdColumn: boolean = true, // Valor por defecto: true
+  showPriceColumn: boolean = true // Valor por defecto: true
 ) => {
   const isMobile = useMediaQuery('(max-width:600px)');
   const isTablet = useMediaQuery('(min-width:601px) and (max-width:960px)');
 
-  return columns.map(column => { 
+  return columns.map(column => {
     if (column.name === "_id") {
       return {
         ...column,
         options: {
           ...column.options,
-          display: showIdColumn, // Controlar si la columna _id se muestra o no
+          display: showIdColumn, // Mostrar/ocultar la columna "_id"
+        },
+      };
+    }
+
+    if (column.name === "price") {
+      return {
+        ...column,
+        options: {
+          ...column.options,
+          display: showPriceColumn, // Mostrar/ocultar la columna "price"
         },
       };
     }

@@ -14,15 +14,16 @@ import { useMediaQuery } from '@mui/material';
 import { useState } from 'react';
 import { Divider } from '@nextui-org/react';
 
-export const ServiceRow: React.FC<SelectRowProps> = ({ service, onServiceSelect }) => {
+export const ServiceRow: React.FC<SelectRowProps> = ({ service, onServiceSelect, showPrices }) => {
     const [open, setOpen] = useState(false);
     const isMobile = useMediaQuery('(max-width:600px)');
     const totalProductos = service.products.reduce((total, product) => {
         return total + product.product.price * product.quantity;
     }, 0);
+
     return (
-    <>
-        <TableRow
+        <>
+            <TableRow
                 sx={{
                     '& > *': { borderBottom: 'unset' },
                     cursor: 'pointer',
@@ -31,81 +32,81 @@ export const ServiceRow: React.FC<SelectRowProps> = ({ service, onServiceSelect 
                     }
                 }}
                 onClick={() => onServiceSelect(service)} 
-        >
-            <TableCell>
-                {/* IconButton para expandir la fila */}
-                <IconButton
-                    aria-label="expand row"
-                    size="small"
-                    onClick={(e) => {
-                        e.stopPropagation(); // Evita que el click se propague al TableRow
-                        setOpen(!open); // Cambia el estado de "open"
-                    }}
-                >
-                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                </IconButton>
-            </TableCell>
-            {!isMobile && 
-            <TableCell 
-            sx={{
-                maxWidth: '150px', 
-                overflow: 'hidden', 
-                textOverflow: 'ellipsis', 
-                wordWrap: 'break-word',
-                padding: '4px 8px'
-            }}>
-            {service._id}
-            </TableCell>}
-            <TableCell >{service.name}</TableCell>
-            <TableCell align="right">{service.servicePrice}</TableCell>
-            <TableCell align="right">{service.totalPrice}</TableCell>
-        </TableRow>
-        <TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-                <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">Detalles del Servicio</Typography>
-                <Table size="small" aria-label="productos">
-                    <TableHead>
-                    <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell>Nombre</TableCell>
-                        <TableCell>Categoría</TableCell>
-                        <TableCell align="right">Cantidad</TableCell>
-                        <TableCell align="right">Precio</TableCell>
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {service.products.map((product) => {                  
-                        return (
-                            <ProductRow
-                            key={product.product._id}
-                            product={product.product}
-                            quantity={product.quantity}
-                            />
-                        );
-                        }                  
-                    )}
-                    <TableRow>
-                        <TableCell colSpan={5}>
-                            <Divider orientation="horizontal"></Divider>
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell colSpan={4} align="right" sx={{ fontWeight: 'bold' }}>
-                            Total de Productos
-                        </TableCell>
-                        <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                            {totalProductos.toFixed(2)}
-                        </TableCell>
-                    </TableRow>
-                    </TableBody>
-                </Table>
-                </Box>
-            </Collapse>
-            </TableCell>
-        </TableRow>
+            >
+                <TableCell>
+                    {/* IconButton para expandir la fila */}
+                    <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={(e) => {
+                            e.stopPropagation(); // Evita que el click se propague al TableRow
+                            setOpen(!open); // Cambia el estado de "open"
+                        }}
+                    >
+                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </IconButton>
+                </TableCell>
+                {!isMobile && 
+                <TableCell 
+                    sx={{
+                        maxWidth: '150px', 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis', 
+                        wordWrap: 'break-word',
+                        padding: '4px 8px'
+                    }}>
+                    {service._id}
+                </TableCell>}
+                <TableCell>{service.name}</TableCell>
+                {showPrices && <TableCell align="right">{service.servicePrice}</TableCell>}
+                {showPrices && <TableCell align="right">{service.totalPrice}</TableCell>}
+            </TableRow>
+            <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <Box sx={{ margin: 1 }}>
+                            <Typography variant="h6" gutterBottom component="div">Detalles del Servicio</Typography>
+                            <Table size="small" aria-label="productos">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>ID</TableCell>
+                                        <TableCell>Nombre</TableCell>
+                                        <TableCell>Categoría</TableCell>
+                                        <TableCell align="right">Cantidad</TableCell>
+                                        {showPrices && <TableCell align="right">Precio</TableCell>}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {service.products.map((product) => {                  
+                                        return (
+                                            <ProductRow
+                                                key={product.product._id}
+                                                product={product.product}
+                                                quantity={product.quantity}                                          
+                                            />
+                                        );
+                                    })}
+                                    <TableRow>
+                                        <TableCell colSpan={showPrices ? 5 : 4}>
+                                            <Divider orientation="horizontal"></Divider>
+                                        </TableCell>
+                                    </TableRow>
+                                    {showPrices && (
+                                        <TableRow>
+                                            <TableCell colSpan={4} align="right" sx={{ fontWeight: 'bold' }}>
+                                                Total de Productos
+                                            </TableCell>
+                                            <TableCell align="right" sx={{ fontWeight: 'bold' }}>
+                                                {totalProductos.toFixed(2)}
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </Box>
+                    </Collapse>
+                </TableCell>
+            </TableRow>
         </>
     );
 };
-

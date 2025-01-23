@@ -140,6 +140,16 @@ interface Product {
     state: string;
   }
 
+  interface Report {
+    _id: string;
+    form: FormReport;
+    company: Company;
+    customer: Customer;
+    services: Service[];
+    description: string;
+    state: string;
+  }
+
   interface TableServicesProps {
     data: Service[];
     searchTerm: string;
@@ -171,12 +181,14 @@ interface Product {
     isLoading: boolean;
     isError: boolean;
     isSuccess: boolean;
+    showPrices?: boolean;
     onServiceSelect: (service: Service) => void;
     onCloseTable: () => void,
   }
 
   interface SelectRowProps {
     service: Service;
+    showPrices?: boolean;
     onServiceSelect: (service: Service) => void;
   }
 
@@ -193,9 +205,17 @@ interface Product {
   interface FormCreditNote{
     num: number;
     numInvoice: number;
-    dateCreation: Dayjs;
+    dateCreation: any;
     currency: string;
     exchangeRate: number;
+  }
+
+  interface FormReport{
+    num: number; 
+    dateCreation: any;
+    dateUpdate: any;
+    nameWorker: string;
+    emailWorker: string; 
   }
 
   interface TableBaseProps {
@@ -292,7 +312,6 @@ interface ProductTableProps {
   onProductDelete: (productId: string) => void;
   onProductTableVisible: () => void,
 }
-
 
 interface ErrorResponse {
   data: {

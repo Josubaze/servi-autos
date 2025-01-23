@@ -14,6 +14,7 @@ import { invoicesApi } from './services/invoices.Api';
 import { creditNotesApi } from './services/creditNotes.Api';
 import { marketApi } from './services/market.Api';
 import { executionOrdersApi } from './services/executionOrders.Api';
+import { reportsApi } from './services/reports.Api';
 
 export const makeStore = () => {
   return configureStore({
@@ -33,6 +34,7 @@ export const makeStore = () => {
       [creditNotesApi.reducerPath]: creditNotesApi.reducer,
       [marketApi.reducerPath]: marketApi.reducer,
       [executionOrdersApi.reducerPath]: executionOrdersApi.reducer,
+      [reportsApi.reducerPath]: reportsApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
@@ -47,6 +49,7 @@ export const makeStore = () => {
         .concat(creditNotesApi.middleware)
         .concat(marketApi.middleware)
         .concat(executionOrdersApi.middleware)
+        .concat(reportsApi.middleware)
   });
 }
 
