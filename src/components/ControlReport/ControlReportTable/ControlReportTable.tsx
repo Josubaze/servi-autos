@@ -12,6 +12,7 @@ import { ViewButton } from "src/components/Common/Buttons/ViewButton/ViewButton"
 import { useState } from "react";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { Chip } from "@nextui-org/react";
+import { UpdateButton } from "src/components/Common/Buttons/UpdateButton";
 
 
 export const ControlReportTable: React.FC<ControlReportTableProps> = ({
@@ -22,6 +23,7 @@ export const ControlReportTable: React.FC<ControlReportTableProps> = ({
     isError,
     isFetching,
     isSuccess,
+    handleUpdate,
     handleView,
     handleDelete,
     handleStateUpdate,
@@ -195,7 +197,13 @@ export const ControlReportTable: React.FC<ControlReportTableProps> = ({
                                 </div>
                             </>
                         ) : (
-                            <>
+                            <>  
+                                {/* Botón de actualización solo si el estado es "Sin Presupuestar" */}
+                                {report.state === "Sin Presupuestar" ? (
+                                    <UpdateButton onClick={() => handleUpdate(report._id)} />
+                                ) : (
+                                    null
+                                )}
                                 {/* Botón de vista */}
                                 <ViewButton onClick={() => handleView(report)} />
                 

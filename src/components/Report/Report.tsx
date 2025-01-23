@@ -30,6 +30,7 @@ import { ReportOptions } from "./ReportOptions";
         isSaving,
         handleSave,
         extractFormData,
+        handleSetFormCustomer,
     } = useReport({ mode, reportData });   
 
     return (
@@ -53,6 +54,10 @@ import { ReportOptions } from "./ReportOptions";
                 <div className="flex-1">
                     <ReportForm
                         ref={formRef}
+                        setSelectedServices={setSelectedServices}
+                        setOriginalServices={setOriginalServices}
+                        setDescription={setDescription}
+                        handleSetFormCustomer={handleSetFormCustomer}
                         mode={mode}
                     />
                 </div>

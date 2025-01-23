@@ -21,6 +21,7 @@ export const ControlReport = () => {
     selectedRange,
     handleDateRangeChange,
     handleStateUpdate,
+    handleUpdate,
     handleDelete,
     handleView,
     handlePrint,
@@ -64,6 +65,7 @@ export const ControlReport = () => {
           isError={isError}
           isFetching={isFetching}
           isSuccess={isSuccess}
+          handleUpdate={handleUpdate}
           handleView={handleView}
           handleDelete={handleDelete}
           handleStateUpdate={handleStateUpdate}

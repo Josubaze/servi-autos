@@ -38,6 +38,7 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
     useEffect(() => {
         if (mode === "upload" && reportData) {
             handleSetFormCustomer(reportData.customer);
+            handleSetForm(reportData.form);
             setSelectedServices(reportData.services);
             setOriginalServices(reportData.services);       
             setDescription(reportData.description);
@@ -158,20 +159,20 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
             // Crear o Actualizar según `mode`
             if (mode === "create") {
                 await createReport(report).unwrap();
-                toast.success("Presupuesto creado exitosamente!");
+                toast.success("Informe creado exitosamente!");
             } else if (mode === "upload") {
                 const reportWithId = {
                     ...report,
                     _id: report_id,
-                    budgetForm: {
+                    form: {
                         ...report.form, // Asegúrate de mantener las propiedades existentes de `budgetForm`
                         dateUpdate: Date(), // Actualiza la fecha
                     }
                 };
                 
                 await updateReport(reportWithId).unwrap(); // Aquí usas la mutación de actualización
-                router.push("/control/budgets");
-                toast.success("Presupuesto actualizado exitosamente!");
+                router.push("/control/reports");
+                toast.success("Informe actualizado exitosamente!");
             }
     
             resetValues();

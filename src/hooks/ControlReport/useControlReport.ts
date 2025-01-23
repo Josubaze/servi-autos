@@ -29,6 +29,12 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
 
   const handleDateRangeChange = (value: any) => setSelectedRange(value);
 
+  const handleUpdate = (reportId: string) => {
+    if (reportId) {
+      router.push(`/update/report/${reportId}`);
+    }
+  };
+
   const handleStateUpdate = async (reportId: string) => {
     setIsLoadingPDF(true);
     try {
@@ -245,6 +251,7 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
     setSearchTerm,
     selectedRange,
     handleDateRangeChange,
+    handleUpdate,
     handleStateUpdate,
     handleDelete,
     handleView,

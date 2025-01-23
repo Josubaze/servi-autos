@@ -2,7 +2,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ReportFormSchema } from 'src/utils/validation.zod';
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react"; 
-import { Dispatch, SetStateAction } from 'react';
 import { Loading } from "src/components/Common/Loading";
 import { MarketModal } from "src/components/Common/MarketModal";
 import { useCalendarDate } from 'src/hooks/useCalendarDate';
@@ -12,12 +11,23 @@ import { I18nProvider } from "@react-aria/i18n";
 import { OptionsCreditNoteForm } from '../../CreditNote/OptionsCreditNoteForm';
 import { useGetReportsQuery } from 'src/redux/services/reports.Api';
 import { useSession } from 'next-auth/react';
+import { SelectReports } from 'src/components/Common/SelectReports';
+import { Dispatch, SetStateAction } from 'react';
+import { get } from 'http';
 
 
 interface ReportFormProps {
+    setSelectedServices: Dispatch<SetStateAction<Service[]>>; 
+    setOriginalServices: Dispatch<SetStateAction<Service[]>>; 
+    handleSetFormCustomer: (customer: Customer) => void; 
+    setDescription: (description: string) => void; 
     mode: string;
   }   
 export const ReportForm = forwardRef(({ 
+    handleSetFormCustomer,
+    setDescription,
+    setSelectedServices,
+    setOriginalServices,
     mode
 }: ReportFormProps, ref) => {
     const today = now(getLocalTimeZone());
@@ -45,47 +55,20 @@ export const ReportForm = forwardRef(({
     });
 
     // // Función para cargar el presupuesto y convertir si es necesario
-    // const handleInvoiceSelect = (invoice: Invoice) => {
-    //     if (!invoice) return;
+    const handleReportSelect = (report: ReportWork) => {
+        if (!report) return;
 
-    //     setIsUpdating(true); // Activar el loading al inicio
+        setIsUpdating(true); // Activar el loading al inicio
 
-    //     setTimeout(() => {
-    //         // Actualiza todos los valores del formulario
-    //         setValue("numInvoice", invoice.form.num);
-    //         handleSetFormCustomer(invoice.customer);
-    //         setCurrency(invoice.form.currency);
-    //         setValue("currency", invoice.form.currency);
-    //         setExchangeRate(invoice.form.exchangeRate);
-    //         setValue("exchangeRate", invoice.form.exchangeRate);
-    //         setSelectedServices(invoice.services);
-
-    //         if (invoice.form.currency === "Bs" && invoice.form.exchangeRate > 1) {
-    //             const updatedOriginalServices = invoice.services.map((service) => ({
-    //                 ...service,
-    //                 totalPrice: parseFloat((service.totalPrice / invoice.form.exchangeRate).toFixed(2)),
-    //                 servicePrice: parseFloat((service.servicePrice / invoice.form.exchangeRate).toFixed(2)),
-    //                 products: service.products.map((product) => ({
-    //                     ...product,
-    //                     product: {
-    //                         ...product.product,
-    //                         price: parseFloat((product.product.price / invoice.form.exchangeRate).toFixed(2)),
-    //                     },
-    //                 })),
-    //             }));
-
-    //             setOriginalServices(updatedOriginalServices);
-    //         } else {
-    //             setOriginalServices(invoice.services);
-    //         }
-
-    //         setIvaPercentage(invoice.ivaPercentage);
-    //         setIgtfPercentage(invoice.igtfPercentage);
-    //         setIsTableVisible(false);
-
-    //         setIsUpdating(false); 
-    //     }, 500); // Simulamos un pequeño delay de 500ms
-    // };
+        setTimeout(() => {
+            handleSetFormCustomer(report.customer);
+            setSelectedServices(report.services);
+            setOriginalServices(report.services);
+            setDescription(report.description);
+            setIsTableVisible(false);
+            setIsUpdating(false); 
+        }, 500); // Simulamos un pequeño delay de 500ms
+    };
 
     // Exponer método para validar el formulario desde el padre
     const submitForm = async () => {
@@ -112,6 +95,11 @@ export const ReportForm = forwardRef(({
     }));
 
     useEffect(() => {
+        if (mode === "upload" || !isSuccess){
+            setLocalNum(getValues("num"));
+            return; 
+        } 
+
         if (isSuccess) {
             const maxReport = reports.length > 0
             ? Math.max(...reports.map(report => report.form.num)) // Obtener el mayor valor de n_budget
@@ -178,6 +166,20 @@ export const ReportForm = forwardRef(({
                 </div>
             </div>
         </form>
+        {/* Modal para la tabla de selección de informe */}
+        {isTableVisible && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+                <SelectReports
+                    data={reports}
+                    isLoading={isLoading}
+                    isError={isError}
+                    isFetching={isFetching}
+                    isSuccess={isSuccess}
+                    onSelectReport={handleReportSelect}
+                    onCloseTable={() => setIsTableVisible(false)}
+                />
+            </div>
+        )}
 
         {isUpdating && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">

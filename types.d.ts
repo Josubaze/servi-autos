@@ -275,6 +275,7 @@ interface Product {
   interface ControlReportTableProps extends TableBaseProps {
     data: ReportWork[]; 
     selectedRange: RangeValue<DateValue> | null;
+    handleUpdate: (reportId: string) => void;
     handleView: (report: ReportWork) => void;
     handleDelete: (reportId: string) => void;
     handleStateUpdate: (reportId: string) => void;
