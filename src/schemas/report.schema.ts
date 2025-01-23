@@ -83,7 +83,7 @@ const reportSchema = new Schema(
     },
     },
     {
-    collection: 'Reports',
+    collection: 'reports',
     timestamps: false,
     }
 );

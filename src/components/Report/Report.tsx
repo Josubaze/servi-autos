@@ -1,21 +1,20 @@
 'use client';
 
 import { CustomerForm } from "../Budget/CustomerForm";
-import { BudgetSummary } from "../Budget/BudgetSummary";
 import { Loading } from "../Common/Loading";
 import { ReportForm } from "./ReportForm";
 import { DocHeader } from "../Common/DocHeader";
-import { CreditNoteActions } from "../CreditNote/CreditNoteActions";
-import { useCreditNote } from "src/hooks/CreditNote/useCreditNote";
-import { CreditNoteOptions } from "../CreditNote/CreditNoteOptions";
 import { ReportTable } from "./ReportTable";
+import { ReportActions } from "./ReportActions";
+import { useReport } from "src/hooks/Report/useReport";
+import { ReportOptions } from "./ReportOptions";
 
     interface ReportProps {
         mode?: "create" | "upload";
-        invoiceData?: Invoice | null;
+        reportData?: ReportWork | null;
     }
 
-    export const Report: React.FC<ReportProps> = ({ mode = "create", invoiceData= null }) => {
+    export const Report: React.FC<ReportProps> = ({ mode = "create", reportData= null }) => {
     const {
         formCustomerRef,
         formRef,
@@ -23,11 +22,6 @@ import { ReportTable } from "./ReportTable";
         setSelectedServices,
         originalServices,
         setOriginalServices,
-        subtotal,
-        currency,
-        setCurrency,
-        exchangeRate,
-        setExchangeRate,
         description,
         setDescription,
         company,
@@ -36,17 +30,7 @@ import { ReportTable } from "./ReportTable";
         isSaving,
         handleSave,
         extractFormData,
-        ivaPercentage,
-        igtfPercentage,
-        calculatedIva,
-        calculatedIgtf,
-        total,
-        totalWithIgft,
-        setIvaPercentage,
-        setIgtfPercentage,
-        handleSetFormCustomer,
-    } = useCreditNote({ mode, invoiceData });
-    
+    } = useReport({ mode, reportData });   
 
     return (
         <div className="relative flex flex-col py-6 px-0 sm:px-12">
@@ -55,17 +39,10 @@ import { ReportTable } from "./ReportTable";
                     <Loading />
                 </div>
             )}
-            <CreditNoteOptions  
+            <ReportOptions  
                 company={company}
                 selectedServices={selectedServices}
                 extractFormData={extractFormData}
-                subtotal={subtotal}
-                ivaPercentage={ivaPercentage}
-                igtfPercentage={igtfPercentage}
-                calculatedIva={calculatedIva}
-                calculatedIgtf={calculatedIgtf}
-                total={total}
-                totalWithIgft={totalWithIgft}
                 description={description}
             />
             <DocHeader company={company || null} isError={isError} isLoading={isLoading} title="INFORME" />
@@ -76,16 +53,6 @@ import { ReportTable } from "./ReportTable";
                 <div className="flex-1">
                     <ReportForm
                         ref={formRef}
-                        setCurrency={setCurrency}
-                        currency={currency}
-                        exchangeRate={exchangeRate}
-                        setExchangeRate={setExchangeRate}
-                        setSelectedServices={setSelectedServices}
-                        setOriginalServices={setOriginalServices}
-                        setIvaPercentage={setIvaPercentage}
-                        setIgtfPercentage={setIgtfPercentage}
-                        handleSetFormCustomer={handleSetFormCustomer}
-                        setDescription={setDescription}
                         mode={mode}
                     />
                 </div>
@@ -95,16 +62,13 @@ import { ReportTable } from "./ReportTable";
                 setSelectedServices={setSelectedServices}
                 originalServices={originalServices}
                 setOriginalServices={setOriginalServices}
-                currency={currency}
-                exchangeRate={exchangeRate}
             />
 
-            <CreditNoteActions
+            <ReportActions
                 description={description}
                 setDescription={setDescription}
-                handleSave={handleSave} 
+                handleSave={() => handleSave(mode, reportData?._id || '')} 
             />
-
         </div>
     );
 };

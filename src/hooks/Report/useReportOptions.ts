@@ -3,22 +3,22 @@ import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { toast } from "react-toastify";
 
-interface BudgetOptionsProps {
+interface ReportOptionsProps {
   extractFormData: () => {
     customerData: Customer | null;
-    form: Form | null;
+    form: FormReport | null;
   };
 }
 
-export const useBudgetOptions = ({
+export const useReportOptions = ({
   extractFormData,
-}: BudgetOptionsProps) => {
+}: ReportOptionsProps) => {
   const [showPreview, setShowPreview] = useState(false);
   const [showHiddenPDF, setShowHiddenPDF] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [ customer , setCustomer] = useState<Customer>();
-  const [form, setForm] = useState<Form>();
+  const [form, setForm] = useState<FormReport>();
   const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
   // Función que se ejecuta en cada acción de impresión o PDF
@@ -32,7 +32,7 @@ export const useBudgetOptions = ({
         } 
   };
 
-  const handlePDFGeneration = async (type: "Budget" | "Invoice" | "Report") => {
+  const handlePDFGeneration = async () => {
     try {
         const { form: formExtract } = extractFormData();
         setIsLoading(true);
@@ -95,7 +95,7 @@ export const useBudgetOptions = ({
             if (yOffset < fullCanvas.height) pdf.addPage();
         }
 
-        pdf.save(`${type}_N${formExtract?.num}.pdf`);
+        pdf.save(`Report_N${formExtract?.num}.pdf`);
     } catch (error) {
         if (error instanceof Error) {
             toast.error(`Error: ${error.message}`);

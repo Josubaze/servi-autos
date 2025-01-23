@@ -1,5 +1,5 @@
 import React from "react";
-import { useBudgetTable } from "src/hooks/Budget/useBudgetTable";
+import { useReportTable } from "src/hooks/Report/useReportTable";
 import { ReportTableHeader } from "./ReportTableHeader";
 import { ReportServiceRow } from "./ReportServiceRow";
 import { SelectServices } from "src/components/Common/SelectServices";
@@ -11,10 +11,8 @@ interface ReportTableProps {
   setSelectedServices: React.Dispatch<React.SetStateAction<Service[]>>;
   originalServices: Service[];
   setOriginalServices: React.Dispatch<React.SetStateAction<Service[]>>;
-  currency: string;
-  exchangeRate: number;
 }
-export const ReportTable = ({ selectedServices, setSelectedServices, originalServices, setOriginalServices, currency, exchangeRate }: ReportTableProps) => {
+export const ReportTable = ({ selectedServices, setSelectedServices, originalServices, setOriginalServices }: ReportTableProps) => {
   const {
     services,
     products,
@@ -41,7 +39,7 @@ export const ReportTable = ({ selectedServices, setSelectedServices, originalSer
     setIsServiceTableVisible,
     setIsProductTableVisible,
     setActiveServiceId,
-  } = useBudgetTable({ selectedServices, setSelectedServices, originalServices, setOriginalServices, currency, exchangeRate});
+  } = useReportTable({ selectedServices, setSelectedServices, originalServices, setOriginalServices});
 
   return (
     <>

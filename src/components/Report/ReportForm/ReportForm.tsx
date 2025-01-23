@@ -15,29 +15,9 @@ import { useSession } from 'next-auth/react';
 
 
 interface ReportFormProps {
-    setCurrency: (currency: string) => void;
-    currency: string; 
-    exchangeRate: number; 
-    setExchangeRate: Dispatch<SetStateAction<number>>; 
-    setSelectedServices: Dispatch<SetStateAction<Service[]>>; 
-    setOriginalServices: Dispatch<SetStateAction<Service[]>>; 
-    setIvaPercentage: Dispatch<SetStateAction<number>>; 
-    setIgtfPercentage: Dispatch<SetStateAction<number>>;
-    handleSetFormCustomer: (customer: Customer) => void; 
-    setDescription: (description: string) => void; 
     mode: string;
   }   
 export const ReportForm = forwardRef(({ 
-    currency, 
-    setCurrency, 
-    exchangeRate, 
-    setExchangeRate, 
-    setIgtfPercentage,
-    setIvaPercentage,
-    setDescription,
-    setSelectedServices,
-    setOriginalServices,
-    handleSetFormCustomer,
     mode
 }: ReportFormProps, ref) => {
     const today = now(getLocalTimeZone());
@@ -168,6 +148,7 @@ export const ReportForm = forwardRef(({
                         )}
                     </div>
 
+                    {/* datos del trabajador */}
                     <Divider orientation='horizontal'></Divider>
                     <div className='grid gap-y-2 w-full'>
                         <p className='text-xl font-bold pb-0.5'>Realizado por:</p>

@@ -82,7 +82,8 @@ export const ServiceRow: React.FC<SelectRowProps> = ({ service, onServiceSelect,
                                             <ProductRow
                                                 key={product.product._id}
                                                 product={product.product}
-                                                quantity={product.quantity}                                          
+                                                quantity={product.quantity}
+                                                showPrices={showPrices}                                          
                                             />
                                         );
                                     })}

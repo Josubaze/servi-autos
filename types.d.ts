@@ -55,6 +55,7 @@ interface Product {
       price: number;
     };
     quantity: number;
+    showPrices?: boolean;
   }
 
   interface Service {
@@ -140,7 +141,7 @@ interface Product {
     state: string;
   }
 
-  interface Report {
+  interface ReportWork {
     _id: string;
     form: FormReport;
     company: Company;

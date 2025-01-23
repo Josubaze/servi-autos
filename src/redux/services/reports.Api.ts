@@ -8,10 +8,10 @@ export const reportsApi = createApi({
     tagTypes: ['Reports'], // Etiqueta personalizada para invalidar los datos de reports
     endpoints: (builder) => ({
         // Obtener todos los reportes
-        getReports: builder.query<Report[], void>({
+        getReports: builder.query<ReportWork[], void>({
             query: () => '/reports',
             providesTags: ['Reports'],
-            transformResponse: (response: Report[]) => {
+            transformResponse: (response: ReportWork[]) => {
                 return response.sort((a, b) => 
                     new Date(b.form.dateCreation).getTime() - new Date(a.form.dateCreation).getTime()
                 );
@@ -19,7 +19,7 @@ export const reportsApi = createApi({
             keepUnusedDataFor: 600, 
         }),
         // Obtener un reporte por ID
-        getReportById: builder.query<Report, string>({
+        getReportById: builder.query<ReportWork, string>({
             query: (id) => `/reports/${id}`,
             providesTags: ['Reports'],
         }),
@@ -32,7 +32,7 @@ export const reportsApi = createApi({
             invalidatesTags: ['Reports'],
         }),
         // Crear un nuevo reporte
-        createReport: builder.mutation<void, Omit<Report, '_id'>>({
+        createReport: builder.mutation<void, Omit<ReportWork, '_id'>>({
             query: (newReport) => ({
                 url: '/reports',
                 method: 'POST',
@@ -41,7 +41,7 @@ export const reportsApi = createApi({
             invalidatesTags: ['Reports'],
         }),
         // Actualizar un reporte existente
-        updateReport: builder.mutation<void, Report>({
+        updateReport: builder.mutation<void, ReportWork>({
             query: (report) => ({
                 url: `/reports/${report._id}`,
                 method: 'PUT',
@@ -50,7 +50,7 @@ export const reportsApi = createApi({
             invalidatesTags: ['Reports'],
         }),
         // Nueva API: Actualizar solo el estado de un reporte
-        updateStateReport: builder.mutation<Report, { id: string }>({
+        updateStateReport: builder.mutation<ReportWork, { id: string }>({
             query: ({ id }) => ({
                 url: `/reports/${id}`,
                 method: 'PATCH',

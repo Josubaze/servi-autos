@@ -26,7 +26,7 @@ export async function GET() {
 export async function POST(request: Request) {
     await connectDB(); 
     try {
-        const data: Report = await request.json(); 
+        const data: ReportWork = await request.json(); 
 
         const lastReport = await Report.findOne().sort({ n_report: -1 }); 
         const newReportNumber = lastReport ? lastReport.n_report + 1 : 1; // Si no hay reportes, inicia en 1
