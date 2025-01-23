@@ -272,6 +272,16 @@ interface Product {
     handleExportPDF: (executionOrder: ExecutionOrder) => Promise<void>
   }
 
+  interface ControlReportTableProps extends TableBaseProps {
+    data: ReportWork[]; 
+    selectedRange: RangeValue<DateValue> | null;
+    handleView: (report: ReportWork) => void;
+    handleDelete: (reportId: string) => void;
+    handleStateUpdate: (reportId: string) => void;
+    handlePrint: (report: ReportWork) => Promise<void>
+    handleExportPDF: (report: ReportWork) => Promise<void>
+  }
+
   interface TableControlCreditNoteProps extends TableBaseProps {
     data: CreditNote[]; 
     selectedRange: RangeValue<DateValue> | null;

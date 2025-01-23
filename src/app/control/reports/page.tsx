@@ -1,8 +1,5 @@
+import { ControlReport } from "src/components/ControlReport";
 
-export default function createReportsPage(){
-  return (
-    <div>
-        Control Reports
-    </div>
-);
+export default function controlReportsPage(){
+  return <ControlReport />
 }

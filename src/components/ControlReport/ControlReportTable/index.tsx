@@ -1,0 +1,1 @@
+export { ControlReportTable } from './ControlReportTable'
