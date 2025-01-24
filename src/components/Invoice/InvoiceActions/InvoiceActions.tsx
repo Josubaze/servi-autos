@@ -3,7 +3,7 @@ import { useState } from "react";
 import { TbArrowBadgeRightFilled } from "react-icons/tb";
 import { IoMdCheckmark } from "react-icons/io";
 import { LuFileText, LuFileCheck, LuFileClock } from "react-icons/lu";
-import { Button, Input, Tooltip } from "@nextui-org/react";
+import { Button, Divider, Input, Tooltip } from "@nextui-org/react";
 import { IoMdArrowBack } from "react-icons/io";
 import { Loading } from "src/components/Common/Loading";
 
@@ -69,7 +69,7 @@ interface InvoiceActionsProps {
                     </Button>
                 </Tooltip>
                 )}
-
+                <Divider orientation="vertical"></Divider>
                 {/* Botón de pendiente */}
                 {activeButton !== "draft" && activeButton !== "paid" && (
                 <Tooltip content={activeButton === "pending" ? "Volver" : pendingTooltipText}>

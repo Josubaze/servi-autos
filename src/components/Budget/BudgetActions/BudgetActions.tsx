@@ -6,7 +6,7 @@ import { IoMdCheckmark } from "react-icons/io";
 import { Loading } from "src/components/Common/Loading";
 import { LuFileText } from "react-icons/lu";
 import { LuFileCheck } from "react-icons/lu";
-import { Button, Input, Tooltip } from "@nextui-org/react";
+import { Button, Divider, Input, Tooltip } from "@nextui-org/react";
 import { IoMdArrowBack } from "react-icons/io";
 
 
@@ -74,7 +74,7 @@ export const BudgetActions = ({
                         </Button>
                     </Tooltip>
                 )}
-
+                <Divider orientation="vertical"></Divider>
                 {/* Botón de aprobado */}
                 {activeButton !== "draft" && (
                     <Tooltip content={activeButton === "approved" ? "Volver" : approvedTooltipText}>

@@ -25,8 +25,7 @@ export const SelectBudgets: React.FC<{
   onSelectBudget,
   onCloseTable
   }) => {
-
-    //const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'budgetForm.n_budget']);
+    // Transformar los datos
     const rows = data.map(budget => ({
         n_budget: budget.form.num,
         description: budget.description,
@@ -123,7 +122,6 @@ export const SelectBudgets: React.FC<{
     const options = {
         responsive: "standard",
         pagination: true,
-        search: false,
         selectableRows: "none",
         download: false, 
         print: false, 

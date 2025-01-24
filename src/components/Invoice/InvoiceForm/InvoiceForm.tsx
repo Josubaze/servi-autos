@@ -10,11 +10,13 @@ import { Dispatch, SetStateAction } from 'react';
 import { Loading } from "src/components/Common/Loading";
 import { useGetBudgetsQuery } from "src/redux/services/budgets.Api";
 import { MarketModal } from "src/components/Common/MarketModal";
-import { OptionsForm } from "../OptionsForm";
 import { useCalendarDate } from "src/hooks/useCalendarDate";
 import { Autocomplete, AutocompleteItem, DatePicker, Input, Spinner } from "@nextui-org/react";
 import { I18nProvider } from "@react-aria/i18n";
 import { getLocalTimeZone, now } from '@internationalized/date';
+import { OptionsInvoiceForm } from '../OptionsInvoiceForm/OptionsInvoiceForm';
+import { SelectInvoices } from 'src/components/Common/SelectInvoices';
+import { set } from 'mongoose';
 
 interface InvoiceFormProps {
     setCurrency: (currency: string) => void;
@@ -49,6 +51,7 @@ export const InvoiceForm = forwardRef(({
     const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [showMarket, setShowMarket] = useState(false)
+    const [showInvoices, setShowInvoices] = useState(false)
     const [localNum, setLocalNum] = useState<number | undefined>(undefined);
     const { transformToCalendarDate } = useCalendarDate();
     const { 
@@ -68,8 +71,8 @@ export const InvoiceForm = forwardRef(({
         }
     });
 
-    // Función para cargar el presupuesto y convertir si es necesario
-    const handleBudgetSelect = (budget: Budget) => {
+    // Función para cargar el presupuesto o factura y convertir si es necesario
+    const handleBudgetSelect = (budget: Budget | Invoice) => {
         if (!budget) return;
 
         setIsUpdating(true); // Activar el loading al inicio
@@ -106,6 +109,7 @@ export const InvoiceForm = forwardRef(({
             setIgtfPercentage(budget.igtfPercentage);
             setDescription(budget.description);
             setIsTableVisible(false);
+            setShowInvoices(false);
 
             setIsUpdating(false); // Desactivar el loading cuando termina
         }, 500); // Simulamos un pequeño delay de 500ms
@@ -157,10 +161,11 @@ export const InvoiceForm = forwardRef(({
 
     return (
         <>
-        <OptionsForm 
+        <OptionsInvoiceForm 
             setIsTableVisible={setIsTableVisible} 
+            setShowInvoices={setShowInvoices}
             setShowMarket={setShowMarket}>
-        </OptionsForm>
+        </OptionsInvoiceForm>
 
         <form className="w-full pt-4 sm:pl-6">
             <div className="bg-black-nav/50 rounded-lg p-4">
@@ -283,9 +288,10 @@ export const InvoiceForm = forwardRef(({
             </div>
         </form>
 
-        {/* Modal para la tabla de selección de clientes */}
         {isTableVisible && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
+                onClick={() => setIsTableVisible(false)}
+            >       
                 <SelectBudgets
                     data={budgets}
                     isLoading={isLoading}
@@ -297,6 +303,23 @@ export const InvoiceForm = forwardRef(({
                 />
             </div>
         )}
+
+        {showInvoices && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
+                onClick={() => setShowInvoices(false)}
+            >
+                <SelectInvoices
+                    data={invoices}
+                    isLoading={isLoading}
+                    isError={isError}
+                    isFetching={isFetching}
+                    isSuccess={isSuccess}
+                    onSelectInvoice={handleBudgetSelect}
+                    onCloseTable={() => setShowInvoices(false)}
+                />
+            </div>
+        )}
+
         {isUpdating && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
                     <Loading />

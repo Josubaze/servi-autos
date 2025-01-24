@@ -128,11 +128,11 @@ export const SelectInvoices: React.FC<{
         download: false, 
         print: false, 
         customToolbar: () => {
-          return (
-              <IconButton onClick={onCloseTable}>
-                  <CloseIcon />
-              </IconButton>
-          )
+            return (
+                <IconButton onClick={onCloseTable}>
+                    <CloseIcon />
+                </IconButton>
+            )
         },
         rowsPerPage: 10,
         rowsPerPageOptions: [5, 10, 20, 50],

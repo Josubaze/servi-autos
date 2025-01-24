@@ -8,12 +8,11 @@ import { useCalendarDate } from 'src/hooks/useCalendarDate';
 import { getLocalTimeZone, now } from "@internationalized/date";
 import { DatePicker, Divider,  Spinner } from "@nextui-org/react";
 import { I18nProvider } from "@react-aria/i18n";
-import { OptionsCreditNoteForm } from '../../CreditNote/OptionsCreditNoteForm';
 import { useGetReportsQuery } from 'src/redux/services/reports.Api';
 import { useSession } from 'next-auth/react';
 import { SelectReports } from 'src/components/Common/SelectReports';
 import { Dispatch, SetStateAction } from 'react';
-import { get } from 'http';
+import { OptionsReportForm } from '../OptionsReportForm';
 
 
 interface ReportFormProps {
@@ -115,10 +114,10 @@ export const ReportForm = forwardRef(({
 
     return (
         <>
-        <OptionsCreditNoteForm 
+        <OptionsReportForm 
             setIsTableVisible={setIsTableVisible} 
             setShowMarket={setShowMarket}>
-        </OptionsCreditNoteForm>
+        </OptionsReportForm>
 
         <form className="w-full pt-4 sm:pl-6">
             <div className="bg-black-nav/50 rounded-lg p-4">

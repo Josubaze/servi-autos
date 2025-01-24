@@ -7,12 +7,14 @@ import { useGetBudgetsQuery } from "src/redux/services/budgets.Api";
 import { SelectBudgets } from "src/components/Common/SelectBudgets/SelectBudgets";
 import { Dispatch, SetStateAction } from 'react';
 import { Loading } from "src/components/Common/Loading";
-import { OptionsForm } from "src/components/Invoice/OptionsForm";
 import { MarketModal } from "src/components/Common/MarketModal";
 import { Autocomplete, AutocompleteItem, DatePicker, Input, Spinner } from "@nextui-org/react";
 import { getLocalTimeZone, now} from "@internationalized/date";
 import { I18nProvider } from '@react-aria/i18n';
 import { useCalendarDate } from 'src/hooks/useCalendarDate';
+import { SelectReports } from 'src/components/Common/SelectReports';
+import { useGetReportsQuery } from 'src/redux/services/reports.Api';
+import { OptionsBudgetForm } from '../OptionsBudgetForm/OptionsBudgetForm';
 
 interface BudgetFormProps {
     setCurrency: (currency: string) => void;
@@ -43,8 +45,10 @@ export const BudgetForm = forwardRef(({
     const today = now(getLocalTimeZone());
     const expirationDate = today.add({ days: 15 });
     const { data: budgets = [], isSuccess, isLoading, isFetching, isError } = useGetBudgetsQuery(); 
+    const { data: reports = [], isSuccess: isSuccessRe, isLoading: isLoadingRe, isFetching: isFetchingRe, isError: isErrorRe } = useGetReportsQuery();
     const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
     const [showMarket, setShowMarket] = useState<boolean>(false);
+    const [showReport, setShowReport] = useState<boolean>(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [localNum, setLocalNum] = useState<number | undefined>(undefined);
     const { transformToCalendarDate } = useCalendarDate();
@@ -68,7 +72,6 @@ export const BudgetForm = forwardRef(({
     // Función para cargar el presupuesto y convertir si es necesario
     const handleBudgetSelect = (budget: Budget) => {
         if (!budget) return;
-
         setIsUpdating(true); // Activar el loading al inicio
 
         setTimeout(() => {
@@ -107,6 +110,22 @@ export const BudgetForm = forwardRef(({
             setIsUpdating(false); // Desactivar el loading cuando termina
         }, 500); // Simulamos un pequeño delay de 500ms
     };
+
+    // Función para cargar el informe y convertir si es necesario
+    const handleReportSelect = (report: ReportWork) => {
+        if (!report) return;
+
+        setIsUpdating(true); // Activar el loading al inicio
+
+        setTimeout(() => {
+            handleSetFormCustomer(report.customer);
+            setSelectedServices(report.services);
+            setOriginalServices(report.services);
+            setDescription(report.description);
+            setShowReport(false);
+            setIsUpdating(false); 
+        }, 500); 
+    };	   
 
     // Exponer método para validar el formulario desde el padre
     const submitForm = async () => {
@@ -151,10 +170,11 @@ export const BudgetForm = forwardRef(({
 
     return (
         <>
-        <OptionsForm 
+        <OptionsBudgetForm 
+            setShowReport={setShowReport}
             setIsTableVisible={setIsTableVisible} 
             setShowMarket={setShowMarket}>
-        </OptionsForm>
+        </OptionsBudgetForm>
 
         <form className="w-full pt-4 sm:pl-6">
             <div className="bg-black-nav/50 rounded-lg p-4">
@@ -276,10 +296,26 @@ export const BudgetForm = forwardRef(({
                 </div>
             </div>
         </form>
-
-        {/* Modal para la tabla de selección de clientes */}
+        {showReport && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
+                onClick={() => setShowReport(false)}
+            >
+                <SelectReports
+                    data={reports}
+                    isLoading={isLoadingRe}
+                    isError={isErrorRe}
+                    isFetching={isFetchingRe}
+                    isSuccess={isSuccessRe}
+                    onSelectReport={handleReportSelect}
+                    onCloseTable={() => setShowReport(false)}
+                />
+            </div>
+        )}                
+        
         {isTableVisible && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
+                onClick={() => setIsTableVisible(false)}
+            >
                 <SelectBudgets
                     data={budgets}
                     isLoading={isLoading}
@@ -291,6 +327,7 @@ export const BudgetForm = forwardRef(({
                 />
             </div>
         )}
+
         {isUpdating && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
                   <Loading />

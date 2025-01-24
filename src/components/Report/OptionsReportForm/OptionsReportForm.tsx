@@ -1,15 +1,16 @@
 import React from 'react';
 import { Button } from '@nextui-org/react';
 import { MdStore } from "react-icons/md";
-import { FaFileInvoice } from "react-icons/fa";
+import { IoDocumentText } from "react-icons/io5";
+
 // Interfaz para las props
-interface OptionsCreditNoteFormProps {
+interface OptionsReportFormProps {
     setShowMarket: (isVisible: boolean) => void;
     setIsTableVisible: (isVisible: boolean) => void;
 }
 
 // Componente
-export const OptionsCreditNoteForm: React.FC<OptionsCreditNoteFormProps> = ({
+export const OptionsReportForm: React.FC<OptionsReportFormProps> = ({
     setShowMarket,
     setIsTableVisible,
 }) => {
@@ -30,8 +31,8 @@ export const OptionsCreditNoteForm: React.FC<OptionsCreditNoteFormProps> = ({
                 onClick={() => setIsTableVisible(true)}
                 className='w-1/2'
             > 
-                Cargar Factura
-                <FaFileInvoice className="h-5 w-5" />
+                Cargar Informe
+                <IoDocumentText className="h-5 w-5" />
             </Button>
         </div>
     );
