@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import ExecutionOrder from "src/schemas/executionOrder.schema";
+import PurchaseOrder from "src/schemas/purchaseOrder.schema";
 import { connectDB } from "src/utils/mongoose";
 
 interface RouteParams {
@@ -9,14 +9,14 @@ interface RouteParams {
 export async function GET(request: Request, { params }: { params: RouteParams }) {
     await connectDB();
     try {
-        const executionOrderFound = await ExecutionOrder.findById(params.id);
-        if (!executionOrderFound) {
+        const purchaseOrderFound = await PurchaseOrder.findById(params.id);
+        if (!purchaseOrderFound) {
             return NextResponse.json(
-                { message: "ExecutionOrder not found" },
+                { message: "PurchaseOrder not found" },
                 { status: 404 }
             );
         }
-        return NextResponse.json(executionOrderFound);
+        return NextResponse.json(purchaseOrderFound);
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json(
@@ -35,14 +35,14 @@ export async function PUT(request: Request, { params }: { params: RouteParams })
     await connectDB();
     try {
         const data = await request.json();
-        const updatedExecutionOrder = await ExecutionOrder.findByIdAndUpdate(params.id, data, { new: true });
-        if (!updatedExecutionOrder) {
+        const updatedPurchaseOrder = await PurchaseOrder.findByIdAndUpdate(params.id, data, { new: true });
+        if (!updatedPurchaseOrder) {
             return NextResponse.json(
-                { message: "ExecutionOrder not found" },
+                { message: "PurchaseOrder not found" },
                 { status: 404 }
             );
         }
-        return NextResponse.json(updatedExecutionOrder);
+        return NextResponse.json(updatedPurchaseOrder);
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json(
@@ -62,32 +62,32 @@ export async function PATCH(request: Request, { params }: { params: RouteParams 
 
     try {
         const { id } = params;
-        const existingExecutionOrder = await ExecutionOrder.findById(id);
+        const existingPurchaseOrder = await PurchaseOrder.findById(id);
 
-        if (!existingExecutionOrder) {
+        if (!existingPurchaseOrder) {
             return NextResponse.json(
-                { message: "ExecutionOrder not found" },
+                { message: "PurchaseOrder not found" },
                 { status: 404 }
             );
         }
 
-        if (existingExecutionOrder.state !== "En proceso") {
+        if (existingPurchaseOrder.state !== "En Proceso") {
             return NextResponse.json(
-                { message: `Cannot update state. Current state is '${existingExecutionOrder.state}', only 'En proceso' can be updated.` },
+                { message: `Cannot update state. Current state is '${existingPurchaseOrder.state}', only 'En proceso' can be updated.` },
                 { status: 400 }
             );
         }
 
-        const updatedExecutionOrder = await ExecutionOrder.findByIdAndUpdate(
+        const updatedPurchaseOrder = await PurchaseOrder.findByIdAndUpdate(
             id,
             {
-                state: "Finalizado",
+                state: "Recibido",
                 $set: { "form.dateUpdate": Date() },
             },
             { new: true }
         );
 
-        return NextResponse.json(updatedExecutionOrder);
+        return NextResponse.json(updatedPurchaseOrder);
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json(
@@ -105,15 +105,15 @@ export async function PATCH(request: Request, { params }: { params: RouteParams 
 export async function DELETE(request: Request, { params }: { params: RouteParams }) {
     await connectDB();
     try {
-        const executionOrderDeleted = await ExecutionOrder.findByIdAndDelete(params.id);
-        if (!executionOrderDeleted) {
+        const purchaseOrderDeleted = await PurchaseOrder.findByIdAndDelete(params.id);
+        if (!purchaseOrderDeleted) {
             return NextResponse.json(
-                { message: "ExecutionOrder not found" },
+                { message: "PurchaseOrder not found" },
                 { status: 404 }
             );
         }
-        const allExecutionOrders = await ExecutionOrder.find();
-        return NextResponse.json(allExecutionOrders);
+        const allPurchaseOrders = await PurchaseOrder.find();
+        return NextResponse.json(allPurchaseOrders);
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json(

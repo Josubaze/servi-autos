@@ -25,7 +25,7 @@ export async function GET() {
 export async function POST(request: Request) {
     await connectDB();
     try {
-        const data: CreditNote = await request.json();
+        const data = await request.json();
         const lastCreditNote = await CreditNote.findOne().sort({ n_creditNote: -1 });
         const newCreditNoteNumber = lastCreditNote ? lastCreditNote.n_creditNote + 1 : 1;
 

@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from 'src/utils/mongoose';
-import ExecutionOrder from 'src/schemas/executionOrder.schema';
+import PurchaseOrder from 'src/schemas/purchaseOrder.schema';
 
-// GET: Obtener todas las órdenes de ejecución
+// GET: Obtener todas las órdenes de compra
 export async function GET() {
     await connectDB(); 
     try {
-        const executionOrders = await ExecutionOrder.find(); 
-        return NextResponse.json(executionOrders);
+        const purchaseOrders = await PurchaseOrder.find(); 
+        return NextResponse.json(purchaseOrders);
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json(
@@ -22,21 +22,21 @@ export async function GET() {
     }
 }
 
-// POST: Crear una nueva orden de ejecución
+// POST: Crear una nueva orden de compra
 export async function POST(request: Request) {
     await connectDB(); 
     try {
         const data = await request.json(); 
-        const lastExecutionOrder = await ExecutionOrder.findOne().sort({ n_order: -1 }); 
-        const newOrderNumber = lastExecutionOrder ? lastExecutionOrder.n_order + 1 : 1; // Si no hay órdenes, inicia en 1
+        const lastPurchaseOrder = await PurchaseOrder.findOne().sort({ n_order: -1 }); 
+        const newOrderNumber = lastPurchaseOrder ? lastPurchaseOrder.n_order + 1 : 1; // Si no hay órdenes, inicia en 1
 
-        const newExecutionOrder = new ExecutionOrder({
+        const newPurchaseOrder = new PurchaseOrder({
             ...data,
             n_order: newOrderNumber,
         });
 
-        const savedExecutionOrder = await newExecutionOrder.save();
-        return NextResponse.json(savedExecutionOrder);
+        const savedPurchaseOrder = await newPurchaseOrder.save();
+        return NextResponse.json(savedPurchaseOrder);
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json(

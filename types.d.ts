@@ -151,6 +151,56 @@ interface Product {
     state: string;
   }
 
+  interface PurchaseOrder {
+    _id: string;
+    form: FormPurchaseOrder;
+    company: Company;
+    provider: Provider;
+    products: Product[];
+    description: string;
+    state: string;
+    subtotal: number;
+    ivaPercentage: number;
+    igtfPercentage: number;
+    calculatedIva: number;
+    calculatedIgtf: number;
+    total: number;
+    totalWithIgft: number;
+  }
+
+  interface Form{
+    num: number;
+    dateCreation: any;
+    dateExpiration: any;
+    dateUpdate: any;
+    currency: string;
+    exchangeRate: number;
+  }
+
+  interface FormCreditNote{
+    num: number;
+    numInvoice: number;
+    dateCreation: any;
+    currency: string;
+    exchangeRate: number;
+  }
+
+  interface FormReport{
+    num: number; 
+    dateCreation: any;
+    dateUpdate: any;
+    nameWorker: string;
+    emailWorker: string; 
+  }
+
+  interface FormPurchaseOrder{
+    num: number;
+    dateCreation: Date;
+    dateUpdate?: Date | null;
+    currency: string;
+    exchangeRate: number;
+  }
+
   interface TableServicesProps {
     data: Service[];
     searchTerm: string;
@@ -191,32 +241,6 @@ interface Product {
     service: Service;
     showPrices?: boolean;
     onServiceSelect: (service: Service) => void;
-  }
-
-
-  interface Form{
-    num: number;
-    dateCreation: any;
-    dateExpiration: any;
-    dateUpdate: any;
-    currency: string;
-    exchangeRate: number;
-  }
-
-  interface FormCreditNote{
-    num: number;
-    numInvoice: number;
-    dateCreation: any;
-    currency: string;
-    exchangeRate: number;
-  }
-
-  interface FormReport{
-    num: number; 
-    dateCreation: any;
-    dateUpdate: any;
-    nameWorker: string;
-    emailWorker: string; 
   }
 
   interface TableBaseProps {
