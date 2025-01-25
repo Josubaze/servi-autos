@@ -195,8 +195,8 @@ interface Product {
 
   interface FormPurchaseOrder{
     num: number;
-    dateCreation: Date;
-    dateUpdate?: Date | null;
+    dateCreation: any;
+    dateUpdate?: any;
     currency: string;
     exchangeRate: number;
   }

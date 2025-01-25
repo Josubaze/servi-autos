@@ -229,6 +229,36 @@ export const ServiceSchema = z.object({
 
 });
 
+export const PurchaseOrderFormSchema = z.object({
+  num: 
+    z.union([
+      z.string()
+        .refine(quantity => /^[0-9]+$/.test(quantity) && parseInt(quantity, 10) > 0, { message: "La cantidad debe ser un número entero positivo" })
+        .transform(quantity => parseInt(quantity, 10)),
+      z.number()
+        .refine(quantity => Number.isInteger(quantity) && quantity > 0, { message: "La cantidad debe ser un número entero positivo" })
+    ]),
+
+  currency: z.enum(["$", "Bs"], { message: "Moneda inválida" }),
+
+  dateCreation: 
+    z.custom<any>((date) => {
+      if (!isValidDateObject(date)) {
+        throw new Error("La fecha de creación debe ser un objeto de fecha válido.");
+      }
+      return true; // La fecha ya es válida según la validación previa
+  }),
+
+  exchangeRate: z.union([
+    z.string()
+      .refine(price => !isNaN(parseFloat(price)) && parseFloat(price) > 0, { message: "El precio debe ser un número positivo" })
+      .transform(price => parseFloat(price)),
+    z.number()
+      .refine(price => price > 0, { message: "El precio debe ser un número positivo" })
+  ]),
+
+});
+
 export const CompanySchema = z.object({
   name: z.string()
     .min(3, { message: "El nombre debe tener al menos 3 caracteres" })

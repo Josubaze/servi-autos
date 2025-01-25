@@ -9,7 +9,7 @@ export const purchaseOrdersApi = createApi({
     endpoints: (builder) => ({
         // Obtener todas las órdenes de compra
         getPurchaseOrders: builder.query<PurchaseOrder[], void>({
-            query: () => '/purchaseOrders',
+            query: () => '/purchase_orders',
             providesTags: ['PurchaseOrders'],
             transformResponse: (response: PurchaseOrder[]) => {
                 return response.sort((a, b) => 
@@ -20,13 +20,13 @@ export const purchaseOrdersApi = createApi({
         }),
         // Obtener una orden de compra por ID
         getPurchaseOrderById: builder.query<PurchaseOrder, string>({
-            query: (id) => `/purchaseOrders/${id}`,
+            query: (id) => `/purchase_orders/${id}`,
             providesTags: ['PurchaseOrders'],
         }),
         // Eliminar una orden de compra
         deletePurchaseOrder: builder.mutation<void, string>({
             query: (id) => ({
-                url: `/purchaseOrders/${id}`,
+                url: `/purchase_orders/${id}`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['PurchaseOrders'],
@@ -34,7 +34,7 @@ export const purchaseOrdersApi = createApi({
         // Crear una nueva orden de compra
         createPurchaseOrder: builder.mutation<void, Omit<PurchaseOrder, '_id'>>({
             query: (newPurchaseOrder) => ({
-                url: '/purchaseOrders',
+                url: '/purchase_orders',
                 method: 'POST',
                 body: newPurchaseOrder,
             }),
@@ -43,7 +43,7 @@ export const purchaseOrdersApi = createApi({
         // Actualizar una orden de compra existente
         updatePurchaseOrder: builder.mutation<void, PurchaseOrder>({
             query: (purchaseOrder) => ({
-                url: `/purchaseOrders/${purchaseOrder._id}`,
+                url: `/purchase_orders/${purchaseOrder._id}`,
                 method: 'PUT',
                 body: purchaseOrder,
             }),
@@ -52,7 +52,7 @@ export const purchaseOrdersApi = createApi({
         // Nueva API: Actualizar solo el estado de una orden de compra
         updateStatePurchaseOrder: builder.mutation<PurchaseOrder, { id: string }>({
             query: ({ id }) => ({
-                url: `/purchaseOrders/${id}`,
+                url: `/purchase_orders/${id}`,
                 method: 'PATCH',
             }),
             invalidatesTags: ['PurchaseOrders'],
