@@ -1,15 +1,15 @@
 'use client';
 
-import { BudgetOptions } from "../Budget/BudgetOptions";
-import { CustomerForm } from "../Budget/CustomerForm";
+
 import { PurchaseOrderForm } from "./PurchaseOrderForm";
-import { BudgetTable } from "../Budget/BudgetTable";
 import { BudgetSummary } from "../Budget/BudgetSummary";
 import { BudgetActions } from "../Budget/BudgetActions";
 import { Loading } from "../Common/Loading";
 import { usePurchaseOrder } from "src/hooks/PurchaseOrder/usePurchaseOrder";
 import { DocHeader } from "../Common/DocHeader";
 import { ProviderForm } from "./ProviderForm";
+import { PurchaseOrderTable } from "./PurchaseOrderTable/PurchaseOrderTable";
+import { PurchaseOrdertActions } from "./PurchaseOrderActions/PurchaseOrderActions";
 
     interface PurchaseOrderProps {
         mode?: "create" | "upload";
@@ -20,10 +20,10 @@ import { ProviderForm } from "./ProviderForm";
     const {
         formProviderRef,
         formRef,
-        // selectedServices,
-        // setSelectedServices,
-        // originalServices,
-        // setOriginalServices,
+        selectedProducts,
+        setSelectedProducts,
+        originalProducts,
+        setOriginalProducts,
         subtotal,
         currency,
         setCurrency,
@@ -80,24 +80,24 @@ import { ProviderForm } from "./ProviderForm";
                         currency={currency}
                         exchangeRate={exchangeRate}
                         setExchangeRate={setExchangeRate}
-                        // setSelectedServices={setSelectedServices}
-                        // setOriginalServices={setOriginalServices}
-                        // setIvaPercentage={setIvaPercentage}
-                        // setIgtfPercentage={setIgtfPercentage}
                         handleSetFormProvider={handleSetFormProvider}
-                        // setDescription={setDescription}
+                        setIgtfPercentage={setIgtfPercentage}
+                        setIvaPercentage={setIvaPercentage}
+                        setOriginalProducts={setOriginalProducts}
+                        setSelectedProducts={setSelectedProducts}
+                        setDescription={setDescription}
                         mode={mode}
                     />
                 </div>
             </div>
-            {/* <BudgetTable
-                selectedServices={selectedServices}
-                setSelectedServices={setSelectedServices}
-                originalServices={originalServices}
-                setOriginalServices={setOriginalServices}
+            <PurchaseOrderTable
+                selectedProducts={selectedProducts}
+                setSelectedProducts={setSelectedProducts}
+                originalProducts={originalProducts}
+                setOriginalProducts={setOriginalProducts}
                 currency={currency}
                 exchangeRate={exchangeRate}
-            /> */}
+            />
 
             <BudgetSummary
                 subtotal={subtotal}
@@ -112,10 +112,10 @@ import { ProviderForm } from "./ProviderForm";
                 setIgtfPercentage={setIgtfPercentage}
             />
 
-            <BudgetActions
+            <PurchaseOrdertActions
                 description={description}
                 setDescription={setDescription}
-                handleButtonType={() => handleSave( mode, purchaseOrderData?._id || '')} 
+                handleButtonType={(action: "draft" | "inProgress") => handleSave( action, mode, purchaseOrderData?._id || '')} 
                 mode={mode}              
             />
         </div>

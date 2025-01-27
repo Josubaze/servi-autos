@@ -22,7 +22,7 @@ interface UsePurchaseOrderProps {
 
 export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: UsePurchaseOrderProps) => {
 
-    const { calculateIgft, calculateIva, calculateTotal, calculateSubtotal } = useBudgetSummary();
+    const { calculateIgft, calculateIva, calculateTotal, calculateSubtotalPurchaseOrder } = useBudgetSummary();
     const formProviderRef = useRef<FormHandle | null>(null);
     const formRef = useRef<FormHandle | null>(null);
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
@@ -38,11 +38,12 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
     const router = useRouter();
     const [ivaPercentage, setIvaPercentage] = useState<number>(16); // IVA predeterminado al 16%
     const [igtfPercentage, setIgtfPercentage] = useState<number>(3); // IGTF predeterminado al 3%
-    const subtotal = 1000;//calculateSubtotal(selectedServices);
+    const subtotal = calculateSubtotalPurchaseOrder(selectedProducts);
     const calculatedIva = calculateIva(subtotal, ivaPercentage);
     const calculatedIgtf = calculateIgft((subtotal+calculatedIva), igtfPercentage);
     const total = calculateTotal((subtotal), calculatedIva, 0);
     const totalWithIgft = calculateTotal((subtotal), calculatedIva, calculatedIgtf);
+
     // Inicializar datos si el modo es "update"
     useEffect(() => {
         if (mode === "upload" && purchaseOrderData) {
@@ -50,26 +51,17 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
             handleSetFormProvider(purchaseOrderData.provider);
             setCurrency(purchaseOrderData.form.currency);
             setExchangeRate(purchaseOrderData.form.exchangeRate);
-            // selectedProducts(purchaseOrderData.products);
+            setSelectedProducts(purchaseOrderData.products);
 
-            // if (budgetData.form.currency === "Bs" && budgetData.form.exchangeRate > 1) {
-            //     const updatedOriginalServices = budgetData.services.map((service) => ({
-            //         ...service,
-            //         totalPrice: parseFloat((service.totalPrice / budgetData.form.exchangeRate).toFixed(2)),
-            //         servicePrice: parseFloat((service.servicePrice / budgetData.form.exchangeRate).toFixed(2)),
-            //         products: service.products.map((product) => ({
-            //             ...product,
-            //             product: {
-            //                 ...product.product,
-            //                 price: parseFloat((product.product.price / budgetData.form.exchangeRate).toFixed(2)),
-            //             },
-            //         })),
-            //     }));
-
-            //     setOriginalServices(updatedOriginalServices);
-            // } else {
-            //     setOriginalServices(budgetData.services);
-            // }
+            if (purchaseOrderData.form.currency === "Bs" && purchaseOrderData.form.exchangeRate > 1) {
+                const updatedOriginalProducts =  purchaseOrderData.products.map((product) => ({
+                        ...product,
+                        price: parseFloat((product.price / purchaseOrderData.form.exchangeRate).toFixed(2)),
+                    }));
+                setOriginalProducts(updatedOriginalProducts);
+            } else {
+                setOriginalProducts(purchaseOrderData.products);
+            }
 
             setIvaPercentage(purchaseOrderData.ivaPercentage || 16);
             setIgtfPercentage(purchaseOrderData.igtfPercentage || 3);
@@ -78,16 +70,16 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, purchaseOrderData]);
 
-    // const resetValues = () => {
-    //     setSelectedServices([]);
-    //     setOriginalServices([]);
-    //     setDescription("");
-    //     if (formCustomerRef.current) {
-    //         formCustomerRef.current.resetFormCustomer();
-    //     }
-    //     setIvaPercentage(16);
-    //     setIgtfPercentage(3);
-    // };
+    const resetValues = () => {
+        setSelectedProducts([]);
+        setOriginalProducts([]);
+        setDescription("");
+        if (formProviderRef.current) {
+            formProviderRef.current.resetFormProvider();
+        }
+        setIvaPercentage(16);
+        setIgtfPercentage(3);
+    };
 
     const handleSetForm = (form : FormPurchaseOrder) => {
         formRef.current?.setForm(form);
@@ -137,10 +129,10 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
             throw new Error("Datos de las fechas incompletos");
         }
 
-        // if (selectedServices.length === 0) {
-        //     toast.error("Agrega un servicio");
-        //     throw new Error("No hay servicios seleccionados");
-        // }
+        if(selectedProducts.length === 0) {
+            toast.error("Agrega un servicio");
+            throw new Error("No hay servicios seleccionados");
+        }
 
         if (!description || description.trim() === "") {
             toast.error("Falta agregar una descripción");
@@ -161,7 +153,7 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
             providerData,
             form,
             company,
-            //selectedServices,
+            selectedProducts,
             description,
             currency,
             exchangeRate,
@@ -169,7 +161,7 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
     };
 
     // Función principal para guardar el presupuesto
-    const handleSave = async ( mode: "create" | "upload", purchaseOrder_id : string) => {
+    const handleSave = async (action: "draft" | "inProgress", mode: "create" | "upload", purchaseOrder_id : string) => {
         setIsSaving(true);
         try {
             const {
@@ -193,16 +185,9 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
                 },
                 company: { ...company },
                 provider: { ...providerData },
-                products: [],
-                // products: selectedServices.map(service => ({
-                //     ...service,
-                //     products: service.products.map(product => ({
-                //         product: { ...product.product },
-                //         quantity: product.quantity,
-                //     })),
-                // })),
+                products: selectedProducts,
                 description,
-                state: "En Proceso",
+                state: action === "draft" ? "Borrador" : action === "inProgress" ? "En Proceso" : "",
                 subtotal,
                 ivaPercentage,
                 igtfPercentage,
@@ -215,7 +200,7 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
             // Crear o Actualizar según `mode`
             if (mode === "create") {
                 await createPurchaseOrder(purchaseOrder).unwrap();
-                toast.success("Presupuesto creado exitosamente!");
+                toast.success("Orden de Compra creada exitosamente!");
             } else if (mode === "upload") {
                 const purchaseOrderWithId = {
                     ...purchaseOrder,
@@ -227,11 +212,11 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
                 };
                 
                 await updatePurchaseOrder(purchaseOrderWithId).unwrap(); // Aquí usas la mutación de actualización
-                router.push("/control/budgets");
-                toast.success("Presupuesto actualizado exitosamente!");
+                router.push("/control/purchase_orders");
+                toast.success("Orden de Compra actualizada exitosamente!");
             }
     
-            //resetValues();
+            resetValues();
         } catch (error) {
             toast.error("Ha ocurrido un error");
         } finally {
@@ -242,10 +227,10 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
     return {
         formProviderRef,
         formRef,
-        // selectedServices,
-        // setSelectedServices,
-        // originalServices,
-        // setOriginalServices,
+        selectedProducts,
+        setSelectedProducts,
+        originalProducts,
+        setOriginalProducts,
         subtotal,
         currency,
         setCurrency,

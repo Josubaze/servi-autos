@@ -1,8 +1,5 @@
+import { ControlPurchaseOrder } from "src/components/ControlPurchaseOrder/ControlBudget";
 
 export default function createPurchaseOrdersPage(){
-  return (
-    <div>
-        Control Purchase Orders
-    </div>
-);
+  return <ControlPurchaseOrder/>
 }

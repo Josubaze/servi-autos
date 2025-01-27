@@ -13,18 +13,19 @@ import { useCalendarDate } from 'src/hooks/useCalendarDate';
 import { OptionsBudgetForm } from '../../Budget/OptionsBudgetForm';
 import { useGetPurchaseOrdersQuery } from 'src/redux/services/purchaseOrders.Api';
 import { OptionsPurchaseOrderForm } from '../OptionsPurchaseOrderForm/OptionPurchaseOrderForm';
+import { SelectPurchaseOrder } from 'src/components/Common/SelectPurchaseOrders';
 
 interface PurchaseOrderFormProps {
     setCurrency: (currency: string) => void;
     currency: string; 
     exchangeRate: number; 
     setExchangeRate: Dispatch<SetStateAction<number>>; 
-    // setSelectedServices: Dispatch<SetStateAction<Service[]>>; 
-    // setOriginalServices: Dispatch<SetStateAction<Service[]>>; 
-    // setIvaPercentage: Dispatch<SetStateAction<number>>; 
-    // setIgtfPercentage: Dispatch<SetStateAction<number>>;
+    setSelectedProducts: Dispatch<SetStateAction<Product[]>>; 
+    setOriginalProducts: Dispatch<SetStateAction<Product[]>>; 
+    setIvaPercentage: Dispatch<SetStateAction<number>>; 
+    setIgtfPercentage: Dispatch<SetStateAction<number>>;
     handleSetFormProvider: (provider: Provider) => void; 
-    // setDescription: (description: string) => void; 
+    setDescription: (description: string) => void; 
     mode: string; 
   }   
 export const PurchaseOrderForm = forwardRef(({ 
@@ -32,16 +33,15 @@ export const PurchaseOrderForm = forwardRef(({
     setCurrency, 
     exchangeRate, 
     setExchangeRate, 
-    // setIgtfPercentage,
-    // setIvaPercentage,
-    // setDescription,
-    // setSelectedServices,
-    // setOriginalServices,
+    setSelectedProducts,
+    setOriginalProducts,
+    setIvaPercentage,
+    setIgtfPercentage,
+    setDescription,
     handleSetFormProvider,
     mode
 }: PurchaseOrderFormProps, ref) => {
     const today = now(getLocalTimeZone());
-    const expirationDate = today.add({ days: 15 });
     const { data: purchaseOrder = [], isSuccess, isLoading, isFetching, isError } = useGetPurchaseOrdersQuery(); 
     const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
     const [showMarket, setShowMarket] = useState<boolean>(false);
@@ -64,47 +64,38 @@ export const PurchaseOrderForm = forwardRef(({
         }
     });
 
-    // // Función para cargar el presupuesto y convertir si es necesario
-    // const handleBudgetSelect = (budget: Budget) => {
-    //     if (!budget) return;
-    //     setIsUpdating(true); // Activar el loading al inicio
+    // Función para cargar el presupuesto y convertir si es necesario
+    const handlePurchaseOrderSelect = (purchaseOrder: PurchaseOrder) => {
+        if (!purchaseOrder) return;
+        setIsUpdating(true); // Activar el loading al inicio
 
-    //     setTimeout(() => {
-    //         // Actualiza todos los valores del formulario
-    //         handleSetFormCustomer(budget.customer);
-    //         setCurrency(budget.form.currency);
-    //         setValue("currency", budget.form.currency);
-    //         setExchangeRate(budget.form.exchangeRate);
-    //         setValue("exchangeRate", budget.form.exchangeRate);
-    //         setSelectedServices(budget.services);
+        setTimeout(() => {
+            // Actualiza todos los valores del formulario
+            handleSetFormProvider(purchaseOrder.provider);
+            setCurrency(purchaseOrder.form.currency);
+            setValue("currency", purchaseOrder.form.currency);
+            setExchangeRate(purchaseOrder.form.exchangeRate);
+            setValue("exchangeRate", purchaseOrder.form.exchangeRate);
+            setSelectedProducts(purchaseOrder.products);
 
-    //         if (budget.form.currency === "Bs" && budget.form.exchangeRate > 1) {
-    //             const updatedOriginalServices = budget.services.map((service) => ({
-    //                 ...service,
-    //                 totalPrice: parseFloat((service.totalPrice / budget.form.exchangeRate).toFixed(2)),
-    //                 servicePrice: parseFloat((service.servicePrice / budget.form.exchangeRate).toFixed(2)),
-    //                 products: service.products.map((product) => ({
-    //                     ...product,
-    //                     product: {
-    //                         ...product.product,
-    //                         price: parseFloat((product.product.price / budget.form.exchangeRate).toFixed(2)),
-    //                     },
-    //                 })),
-    //             }));
+            if (purchaseOrder.form.currency === "Bs" && purchaseOrder.form.exchangeRate > 1) {
+                const updatedOriginalProducts =  purchaseOrder.products.map((product) => ({
+                        ...product,
+                        price: parseFloat((product.price / purchaseOrder.form.exchangeRate).toFixed(2)),
+                    }));
+                setOriginalProducts(updatedOriginalProducts);
+            } else {
+                setOriginalProducts(purchaseOrder.products);
+            }
 
-    //             setOriginalServices(updatedOriginalServices);
-    //         } else {
-    //             setOriginalServices(budget.services);
-    //         }
+            setIvaPercentage(purchaseOrder.ivaPercentage);
+            setIgtfPercentage(purchaseOrder.igtfPercentage);
+            setDescription(purchaseOrder.description);
+            setIsTableVisible(false);
 
-    //         setIvaPercentage(budget.ivaPercentage);
-    //         setIgtfPercentage(budget.igtfPercentage);
-    //         setDescription(budget.description);
-    //         setIsTableVisible(false);
-
-    //         setIsUpdating(false); // Desactivar el loading cuando termina
-    //     }, 500); // Simulamos un pequeño delay de 500ms
-    // };
+            setIsUpdating(false); // Desactivar el loading cuando termina
+        }, 500); // Simulamos un pequeño delay de 500ms
+    };
 
     // Exponer método para validar el formulario desde el padre
     const submitForm = async () => {
@@ -257,41 +248,26 @@ export const PurchaseOrderForm = forwardRef(({
                 </div>
             </div>
         </form>
-        {/* {showReport && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
-                onClick={() => setShowReport(false)}
-            >
-                <SelectReports
-                    data={reports}
-                    isLoading={isLoadingRe}
-                    isError={isErrorRe}
-                    isFetching={isFetchingRe}
-                    isSuccess={isSuccessRe}
-                    onSelectReport={handleReportSelect}
-                    onCloseTable={() => setShowReport(false)}
-                />
-            </div>
-        )}                 */}
         
-        {/* {isTableVisible && (
+        {isTableVisible && (
             <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
                 onClick={() => setIsTableVisible(false)}
             >
-                <SelectBudgets
-                    data={budgets}
+                <SelectPurchaseOrder
+                    data={purchaseOrder}
                     isLoading={isLoading}
                     isError={isError}
                     isFetching={isFetching}
                     isSuccess={isSuccess}
-                    onSelectBudget={handleBudgetSelect}
+                    onSelectPurchaseOrder={handlePurchaseOrderSelect}
                     onCloseTable={() => setIsTableVisible(false)}
                 />
             </div>
-        )} */}
+        )}
 
         {isUpdating && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-                  <Loading />
+                    <Loading />
                 </div>
         )}
         {

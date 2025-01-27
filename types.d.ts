@@ -274,6 +274,17 @@ interface Product {
     handleExportPDF: (budget: Budget) => Promise<void>
   }
 
+  interface TableControlPurchaseOrderProps extends TableBaseProps {
+    data: PurchaseOrder[]; 
+    selectedRange: RangeValue<DateValue> | null;
+    handleView: (purchaseOrder: PurchaseOrder) => void;
+    handleDelete: (purchaseOrderId: string) => void;
+    handleUpdate: (purchaseOrderId: string) => void;
+    handleStateUpdate: (purchaseOrderId: string) => void;
+    handlePrint: (purchaseOrder: PurchaseOrder) => Promise<void>
+    handleExportPDF: (purchaseOrder: PurchaseOrder) => Promise<void>
+  }
+
   interface TableControlInvoiceProps extends TableBaseProps {
     data: Invoice[]; 
     selectedRange: RangeValue<DateValue> | null;

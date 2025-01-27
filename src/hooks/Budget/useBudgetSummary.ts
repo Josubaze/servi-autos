@@ -7,6 +7,13 @@ export const useBudgetSummary = () => {
     }, 0);
   };
 
+  const calculateSubtotalPurchaseOrder = (selectedProducts: Product[]) => {
+    return selectedProducts.reduce((acc, product) => {
+      const productTotal = (product.quantity || 1) * (product.price || 0);
+      return acc + productTotal;
+    }, 0);
+  };
+
   // Función para calcular el IVA
   const calculateIva = (subtotal: number, ivaPercentage: number) => {
     return Math.round((subtotal * ivaPercentage) / 100 * 100) / 100;
@@ -27,5 +34,6 @@ export const useBudgetSummary = () => {
     calculateIva,
     calculateIgft,
     calculateTotal,
+    calculateSubtotalPurchaseOrder,
   };
 };

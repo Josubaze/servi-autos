@@ -1,1 +1,1 @@
-export {DashWidgets}  from './DashWidgets'
+export { DashWidgets }  from './DashWidgets'
