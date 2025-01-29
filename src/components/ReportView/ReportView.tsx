@@ -78,7 +78,7 @@ export const ReportView = forwardRef<HTMLDivElement, ReportViewProps>((
                     <h2 className="text-lg font-semibold mb-2">Detalles del Reporte</h2>
                     <p className='text-sm'><strong>Nº de Reporte:</strong> {form?.num || 'No disponible'}</p>
                     <p className='text-sm'><strong>Fecha de Creación:</strong> {formatDate(form?.dateCreation)}</p>
-                    <p className='text-sm'><strong>Estado: </strong> { state || 'Sin Presupuestar'}</p>
+                    <p className='text-sm'><strong>Estado: </strong> { state || 'No Procesado'}</p>
                 </div>
                 <div>
                     <h2 className="text-lg font-semibold mb-2">Información del Cliente</h2>

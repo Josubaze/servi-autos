@@ -22,7 +22,8 @@ export const productsApi = createApi({
             }),
             invalidatesTags: ['Products'],
         }),
-        createProduct: builder.mutation<void, Omit<Product, '_id'>>({
+        // ✅ acepta tanto un solo producto como varios productos en un array
+        createProduct: builder.mutation<void, Omit<Product, '_id'> | Omit<Product, '_id'>[]>({
             query: (newProduct) => ({
                 url: '/products',
                 method: 'POST',

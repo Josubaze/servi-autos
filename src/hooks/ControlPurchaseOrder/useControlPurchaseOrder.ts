@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { useUpdateStatePurchaseOrderMutation } from 'src/redux/services/purchaseOrders.Api';
+import { useCreateProductMutation } from 'src/redux/services/productsApi';
 
 interface UseControlPurchaseOrderProps {
   data: PurchaseOrder[];
@@ -20,10 +21,11 @@ export const useControlPurchaseOrder = ({ data, isError, isLoading, isFetching, 
   const [selectedRange, setSelectedRange] = useState<any>(null);
   const [isOpenPdf, setIsOpenPdf] = useState<boolean>(false);
   const [isOpenPreview, setIsOpenPreview] = useState<boolean>(false);
-  const [purchaseOrderCopy, setPurchaseOrderCopy] = useState<any>(null);
+  const [purchaseOrderCopy, setPurchaseOrderCopy] = useState<PurchaseOrder>();
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
   const [updateStatePurchaseOrder] = useUpdateStatePurchaseOrderMutation();
+  const [createProduct] = useCreateProductMutation();
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -35,11 +37,14 @@ export const useControlPurchaseOrder = ({ data, isError, isLoading, isFetching, 
     }
   };
 
-  const handleStateUpdate = async (purchaseOrderId: string) => {
+  const handleStateUpdate = async (purchaseOrderId: string, products: Product[]) => {
     setIsLoadingPDF(true);
     try {
+      await createProduct( products ).unwrap();
+      toast.success('Productos agregados al almacén');
+
       await updateStatePurchaseOrder({ id: purchaseOrderId }).unwrap();
-        toast.success('Estado actualizado con éxito');
+      toast.success('Estado actualizado con éxito');
     } catch (error) {
         toast.error('Error al actualizar el estado:');
     } finally {

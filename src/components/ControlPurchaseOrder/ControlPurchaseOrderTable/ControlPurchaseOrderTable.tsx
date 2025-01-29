@@ -136,7 +136,7 @@ export const ControlPurchaseOrderTable: React.FC<TableControlPurchaseOrderProps>
                 const isConfirmingState = confirmStateIndex === tableMeta.rowIndex; // Verifica si esta fila está en modo confirmación
     
                 // Botón para estado "Aprobado" (sin acción)
-                if (value === "Recibida") {
+                if (value === "Recibido") {
                     return (
                         <div className="flex justify-center">
                             <Chip 
@@ -189,7 +189,7 @@ export const ControlPurchaseOrderTable: React.FC<TableControlPurchaseOrderProps>
                                     className="rounded-full bg-green-600/40 px-2 py-2 text-white text-sm flex items-center hover:bg-green-500"
                                     onClick={() => {
                                         setConfirmStateIndex(null); // Cerrar confirmación
-                                        handleStateUpdate(purchaseOrder._id); // Ejecutar acción
+                                        handleStateUpdate(purchaseOrder._id, purchaseOrder.products ); // Ejecutar acción
                                     }}
                                 >
                                     <AiOutlineCheck />
@@ -257,8 +257,8 @@ export const ControlPurchaseOrderTable: React.FC<TableControlPurchaseOrderProps>
                                 {/* Botón de vista */}
                                 <ViewButton onClick={() => handleView(purchaseOrder)} />
             
-                                {/* Botón de actualización solo si el estado no es "Aprobado" */}
-                                {purchaseOrder.state !== "Recibida" && (
+                                {/* Botón de actualización solo si el estado no esta "Recibido" */}
+                                {purchaseOrder.state !== "Recibido" && (
                                     <UpdateButton onClick={() => handleUpdate(purchaseOrder._id)} />
                                 )}
             

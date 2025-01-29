@@ -2,17 +2,18 @@
 
 import { FaPlus } from "react-icons/fa6";
 import { SearchBar } from 'src/components/Common/SearchBar';
-import { PageTitle } from '../../Common/PageTitle';
-import { LottieBudget } from '../../Dashboard/DashWidgets/DashWidgets';
+import { PageTitle } from '../Common/PageTitle';
+import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
 import { HiDocumentPlus } from "react-icons/hi2";
 import { ControlPurchaseOrderTable } from './ControlPurchaseOrderTable';
 import { Button, DateRangePicker } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
-import { BudgetView } from '../../BudgetView';
-import { Loading } from '../../Common/Loading';
+import { BudgetView } from '../BudgetView';
+import { Loading } from '../Common/Loading';
 import {  } from "src/redux/services/budgets.Api";
 import { useControlPurchaseOrder } from "src/hooks/ControlPurchaseOrder/useControlPurchaseOrder";
 import { useDeletePurchaseOrderMutation, useGetPurchaseOrdersQuery } from "src/redux/services/purchaseOrders.Api";
+import { PurchaseOrderView } from "../PurchaseOrderView";
 
 export const ControlPurchaseOrder = () => {
 
@@ -98,13 +99,13 @@ export const ControlPurchaseOrder = () => {
       {/* Componente oculto para PDF */}
         {isOpenPdf && (
           <div className="absolute top-[-9999px] left-[-9999px]">
-            <BudgetView
+            <PurchaseOrderView
               onClose={() => setIsOpenPreview(false)}
               ref={printRef}
               company={purchaseOrderCopy?.company}
-              customer={purchaseOrderCopy?.customer}
+              provider={purchaseOrderCopy?.provider}
               form={purchaseOrderCopy?.form}
-              selectedServices={purchaseOrderCopy?.services}
+              selectedProducts={purchaseOrderCopy?.products}
               subtotal={purchaseOrderCopy?.subtotal}
               ivaPercentage={purchaseOrderCopy?.ivaPercentage}
               igtfPercentage={purchaseOrderCopy?.igtfPercentage}
@@ -112,18 +113,19 @@ export const ControlPurchaseOrder = () => {
               calculatedIgtf={purchaseOrderCopy?.calculatedIgtf}
               total={purchaseOrderCopy?.total}
               totalWithIgft={purchaseOrderCopy?.totalWithIgft}
+              state={purchaseOrderCopy?.state}
             /> 
           </div>
         )}
 
         {/* Modal para vista previa */}
         {isOpenPreview && (
-          <BudgetView
+          <PurchaseOrderView
             onClose={() => setIsOpenPreview(false)}
             company={purchaseOrderCopy?.company}
-            customer={purchaseOrderCopy?.customer}
+            provider={purchaseOrderCopy?.provider}
             form={purchaseOrderCopy?.form}
-            selectedServices={purchaseOrderCopy?.services}
+            selectedProducts={purchaseOrderCopy?.products}
             subtotal={purchaseOrderCopy?.subtotal}
             ivaPercentage={purchaseOrderCopy?.ivaPercentage}
             igtfPercentage={purchaseOrderCopy?.igtfPercentage}
@@ -131,6 +133,7 @@ export const ControlPurchaseOrder = () => {
             calculatedIgtf={purchaseOrderCopy?.calculatedIgtf}
             total={purchaseOrderCopy?.total}
             totalWithIgft={purchaseOrderCopy?.totalWithIgft}
+            state={purchaseOrderCopy?.state}
           />
         )}
 

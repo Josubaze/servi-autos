@@ -280,7 +280,7 @@ interface Product {
     handleView: (purchaseOrder: PurchaseOrder) => void;
     handleDelete: (purchaseOrderId: string) => void;
     handleUpdate: (purchaseOrderId: string) => void;
-    handleStateUpdate: (purchaseOrderId: string) => void;
+    handleStateUpdate: (purchaseOrderId: string, products: Product[]) => void;
     handlePrint: (purchaseOrder: PurchaseOrder) => Promise<void>
     handleExportPDF: (purchaseOrder: PurchaseOrder) => Promise<void>
   }

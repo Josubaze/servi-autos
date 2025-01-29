@@ -3,13 +3,13 @@
 
 import { PurchaseOrderForm } from "./PurchaseOrderForm";
 import { BudgetSummary } from "../Budget/BudgetSummary";
-import { BudgetActions } from "../Budget/BudgetActions";
 import { Loading } from "../Common/Loading";
 import { usePurchaseOrder } from "src/hooks/PurchaseOrder/usePurchaseOrder";
 import { DocHeader } from "../Common/DocHeader";
 import { ProviderForm } from "./ProviderForm";
 import { PurchaseOrderTable } from "./PurchaseOrderTable/PurchaseOrderTable";
 import { PurchaseOrdertActions } from "./PurchaseOrderActions/PurchaseOrderActions";
+import { PurchaseOrderOptions } from "./PurchaseOrderOptions";
 
     interface PurchaseOrderProps {
         mode?: "create" | "upload";
@@ -56,9 +56,9 @@ import { PurchaseOrdertActions } from "./PurchaseOrderActions/PurchaseOrderActio
                     <Loading />
                 </div>
             )}
-            {/* <BudgetOptions  
+            <PurchaseOrderOptions  
                 company={company}
-                selectedServices={selectedServices}
+                selectedProducts={selectedProducts}
                 extractFormData={extractFormData}
                 subtotal={subtotal}
                 ivaPercentage={ivaPercentage}
@@ -67,7 +67,7 @@ import { PurchaseOrdertActions } from "./PurchaseOrderActions/PurchaseOrderActio
                 calculatedIgtf={calculatedIgtf}
                 total={total}
                 totalWithIgft={totalWithIgft}
-            /> */}
+            />
             <DocHeader company={company || null} isError={isError} isLoading={isLoading} title="ORDEN DE COMPRA" />
             <div className="flex flex-col sm:flex-row py-4 px-8">
                 <div className="flex-1">

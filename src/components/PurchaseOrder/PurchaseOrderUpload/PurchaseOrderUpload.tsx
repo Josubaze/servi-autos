@@ -20,7 +20,7 @@ export const PurchaseOrderUpload = ({ id }: { id: string }) => {
   }
 
   // Validar si el estado es "Recibida" antes de renderizar el componente
-  if (purchaseOrder?.state === 'Recibida' && !hasRedirected) {
+  if (purchaseOrder?.state === 'Recibido' && !hasRedirected) {
     setHasRedirected(true); // Marcar que se ha hecho la redirección
     toast.error('No se puede actualizar una orden de compra ya recibida');
     router.push('/control/purchase-orders');
