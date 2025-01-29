@@ -1,4 +1,6 @@
+import { Input } from '@nextui-org/react';
 import React from 'react';
+import { NumericFormat } from 'react-number-format';
 import { DeleteButton } from 'src/components/Common/Buttons/DeleteButton';
 
 interface SelectedTableProductsProps {
@@ -22,34 +24,64 @@ export const SelectedTableProducts: React.FC<SelectedTableProductsProps> = ({
     <div className="mt-4">
       <h3 className="font-bold text-xl mb-2">Productos Seleccionados:</h3>
       {selectedProducts.length > 0 ? (
-        <div className="overflow-x-auto max-h-[400px] bg-gray-800 rounded-lg shadow-md">
+        <div className="overflow-x-auto max-h-[400px] bg-[#303030] rounded-lg shadow-md">
           <table className="min-w-full table-auto text-gray-200">
             <thead>
-              <tr className="border-b border-gray-600">
-                <th className="px-4 py-2 text-left">Nombre</th>
-                <th className="px-4 py-2 text-left">Cantidad</th>
-                <th className="px-4 py-2 text-left">Precio</th>
-                <th className="px-4 py-2 text-left">Total</th>
-                <th className="px-4 py-2 text-left">Acción</th>
+              <tr>
+                <th className="px-4 py-2 text-left w-4/12">Nombre</th>
+                <th className="px-4 py-2 text-left w-2/12">Cantidad</th>
+                <th className="px-4 py-2 text-left w-2/12">Precio</th>
+                <th className="px-4 py-2 text-left w-2/12">Total</th>
+                <th className="px-4 py-2 text-left w-2/12">Acción</th>
               </tr>
             </thead>
             <tbody>
               {selectedProducts.map((product, index) => (
-                <tr key={index} className="border-b border-gray-600">
+                <tr key={index}>
                   <td className="px-4 py-2">{product.name}</td>
                   <td className="px-4 py-2">
-                    <input
-                      type="number"
-                      min="1"
-                      value={product.quantity}
-                      onChange={(e) =>
-                        handleQuantityChange(index, Number(e.target.value))
-                      }
-                      className="bg-gray-700 text-white p-2 rounded-md w-20"
+                    <Input
+                      size="sm"
+                      value={Number(product.quantity).toLocaleString("de-DE", {
+                        minimumFractionDigits: 0,
+                      })} 
+                      style={{ textAlign: "right" }}
+                      variant="underlined"
+                      fullWidth
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\./g, "").replace(/,/g, "");
+                        if (!isNaN(Number(value)) && Number(value) >= 0) {
+                          handleQuantityChange(index, Number(value) || 1)
+                        }
+                      }}                
+                      type="text" 
+                      inputMode="numeric"              
                     />
                   </td>
-                  <td className="px-4 py-2">{product.price.toFixed(2)}</td>
-                  <td className="px-4 py-2">{(product.quantity * product.price).toFixed(2)}</td>
+                  <td className="px-4 py-2">
+                    <NumericFormat
+                      value={product.price}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      allowNegative={false}
+                      decimalScale={2}
+                      fixedDecimalScale
+                      prefix="$"
+                      displayType="text"
+                    />
+                  </td>
+                  <td className="px-4 py-2">
+                    <NumericFormat
+                      value={product.price * product.quantity}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      allowNegative={false}
+                      decimalScale={2}
+                      fixedDecimalScale
+                      prefix="$"
+                      displayType="text"
+                    />
+                  </td>
                   <td className="px-4 py-2 text-center">
                     <DeleteButton 
                       onClick={() =>
@@ -61,14 +93,36 @@ export const SelectedTableProducts: React.FC<SelectedTableProductsProps> = ({
                   </td>
                 </tr>
               ))}
-              <tr className="border-t-4 border-gray-600">
-                <td colSpan={3} className="px-4 py-2 text-right">Total de Productos:</td>
-                <td className="px-4 py-2 ">{totalProductos.toFixed(2)}</td>
+              <tr>
+                <td colSpan={3} className="px-4 py-2 font-bold text-right">Productos:</td>
+                <td className="px-4 py-2 ">
+                  <NumericFormat
+                    value={totalProductos}
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    allowNegative={false}
+                    decimalScale={2}
+                    fixedDecimalScale
+                    prefix="$"
+                    displayType="text"
+                  />
+                </td>
                 <td></td>
               </tr>
-              <tr className="border-t-0 border-gray-600">
-                <td colSpan={3} className="px-4 py-2 font-bold text-right">Total del Servicio:</td>
-                <td className="px-4 py-2 font-bold text-green-600">{totalService}</td>
+              <tr>
+                <td colSpan={3} className="px-4 py-2 font-bold text-right">Servicio:</td>
+                <td className="px-4 py-2 font-bold text-green-600">
+                  <NumericFormat
+                    value={totalService}
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    allowNegative={false}
+                    decimalScale={2} // Mantener 2 decimales
+                    fixedDecimalScale
+                    prefix="$"
+                    displayType="text"
+                  />
+                </td>
                 <td></td>
               </tr>
             </tbody>

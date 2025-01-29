@@ -102,6 +102,9 @@ export const SelectProducts: React.FC<{
         <CloseIcon />
       </IconButton>
     ),
+    setRowProps: () => ({
+      style: { cursor: 'pointer' }
+    }),
   };
 
   const mobileColumnsToShow = ['name', 'quantity', 'price'];

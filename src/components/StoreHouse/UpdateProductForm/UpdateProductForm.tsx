@@ -2,10 +2,9 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProductSchema } from 'src/utils/validation.zod';
 import { useUpdateProductMutation } from 'src/redux/services/productsApi';
-import TextField from '@mui/material/TextField';
-import {  ThemeProvider } from "@mui/material/styles";
-import { TextFieldTheme } from 'src/styles/themes/themeTextField';
 import { CloseButton } from 'src/components/Common/Buttons/CloseButton';
+import { Button, Input } from '@nextui-org/react';
+import { toast } from 'react-toastify';
 
 type FormProductProps = {
   onClose: () => void;
@@ -16,7 +15,7 @@ export const UpdateProductForm = ({
   onClose,
   product,
 }: FormProductProps) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<Product>({
+  const { register, handleSubmit, formState: { errors }, watch, setValue, clearErrors} = useForm<Product>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
       _id: product._id,
@@ -29,125 +28,124 @@ export const UpdateProductForm = ({
     }
   });
 
-  const [updateProduct, { isError }] = useUpdateProductMutation();
+  const [updateProduct, { isError, isLoading}] = useUpdateProductMutation();
 
   const onSubmit: SubmitHandler<Product> = async (data) => {
     await updateProduct( { ...data, _id: product._id } ).unwrap();
     onClose();
+    toast.success('Producto Modificado exitosamente!')
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg mx-auto bg-black-nav p-8 rounded-md shadow-md border-2 border-x-gray-600 ">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg mx-auto bg-[#101010] p-8 rounded-xl shadow-md">
         <h2 className="text-2xl text-center font-bold mb-6">Modificar Producto</h2>
         <div className="mb-4">
-          <ThemeProvider theme={TextFieldTheme}>
-            <TextField 
-              label="ID" 
-              variant="outlined"
+          <Input 
+              label="Nombre" 
+              {...register('name')} 
+              variant="underlined"
               fullWidth
               type="text" 
-              {...register('_id')} 
-              error={!!errors._id}
-              helperText={errors._id?.message}
-              InputProps={{
-                readOnly: true,
-              }}
+              errorMessage={errors.name?.message}
+              isInvalid={!!errors.name} 
             />
-          </ThemeProvider>
         </div>
 
         <div className="mb-4">
-          <ThemeProvider theme={TextFieldTheme}>
-            <TextField 
-                label="Nombre" 
-                variant="outlined"
-                fullWidth
-                type="text" 
-                {...register('name')} 
-                error={!!errors.name}
-                helperText={errors.name?.message}  
-              />
-          </ThemeProvider>
+          <Input 
+              label="Modelo de Vehículo" 
+              {...register('vehicleType')} 
+              variant="underlined"
+              fullWidth
+              type="text" 
+              errorMessage={errors.vehicleType?.message} 
+              isInvalid={!!errors.vehicleType} 
+            />
         </div>
 
         <div className="mb-4">
-          <ThemeProvider theme={TextFieldTheme}>
-            <TextField 
-                label="Modelo de Vehículo" 
-                variant="outlined"
-                fullWidth
-                type="text" 
-                {...register('vehicleType')} 
-                error={!!errors.vehicleType}
-                helperText={errors.vehicleType?.message}  
-              />
-          </ThemeProvider>
-        </div>
-
-        <div className="mb-4">
-          <ThemeProvider theme={TextFieldTheme}>
-            <TextField 
+            <Input 
                 label="Descripción" 
-                variant="outlined"
-                fullWidth
-                type="text" 
                 {...register('description')} 
-                error={!!errors.description}
-                helperText={errors.description?.message}  
-              />
-          </ThemeProvider>
-        </div>
-        
-        <div className="mb-4">
-          <ThemeProvider theme={TextFieldTheme}>
-            <TextField 
-                label="Categoría" 
-                variant="outlined"
+                variant="underlined"
                 fullWidth
                 type="text" 
-                {...register('category')} 
-                error={!!errors.category}
-                helperText={errors.category?.message}  
+                errorMessage={errors.description?.message} 
+                isInvalid={!!errors.description}  
               />
-          </ThemeProvider>
         </div>
         
         <div className="mb-4">
-          <ThemeProvider theme={TextFieldTheme}>
-            <TextField 
-                label="Cantidad" 
-                variant="outlined"
+            <Input 
+                label="Categoría" 
+                {...register('category')} 
+                variant="underlined"
                 fullWidth
-                type="number" 
-                {...register('quantity')} 
-                error={!!errors.quantity}
-                helperText={errors.quantity?.message}  
+                type="text" 
+                errorMessage={errors.category?.message}
+                isInvalid={!!errors.category} 
               />
-          </ThemeProvider>
+        </div>
+        
+        <div className="mb-4">
+        <Input
+          label="Cantidad" 
+          value={watch("quantity") !== undefined ? Number(watch("quantity")).toLocaleString("de-DE", { minimumFractionDigits: 0 }) : ""}
+          variant="underlined"
+          fullWidth
+          onChange={(e) => {
+            const value = e.target.value.replace(/\./g, "").replace(/,/g, "");
+            const numericValue = parseInt(value, 10);
+          
+            if (!isNaN(numericValue) && numericValue >= 1) {
+              setValue("quantity", numericValue); // Se actualiza el valor solo si es válido
+              clearErrors("quantity"); // Se limpia el error solo si es válido
+            }
+          }}
+          style={{ textAlign: "right" }}
+          type="text"
+          inputMode="numeric"
+          errorMessage={errors.quantity?.message}
+          isInvalid={!!errors.quantity} 
+        />
         </div>
 
         <div className="mb-4">
-          <ThemeProvider theme={TextFieldTheme}>
-            <TextField 
+          <Input 
                 label="Precio" 
-                variant="outlined"
+                variant="underlined"
                 fullWidth
-                type="number" 
-                {...register('price')} 
-                error={!!errors.price}
-                helperText={errors.price?.message}  
-              />
-          </ThemeProvider>
+                value={watch("price") !== undefined ? Number(watch("price")).toLocaleString("de-DE", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) : ""}
+                onChange={(e) => {
+                  const inputValue = e.target.value.replace(/\./g, "").replace(/,/g, "");
+                  const numericValue = parseInt(inputValue || "0", 10);
+                  const adjustedValue = numericValue / 100;
+                  setValue("price", adjustedValue); 
+                  if (!isNaN(adjustedValue) && adjustedValue > 0) {
+                    clearErrors("price"); // Limpia el error si el valor es válido
+                  }
+                }}
+                style={{ textAlign: "right" }}
+                type="text"
+                inputMode="numeric"
+                errorMessage={errors.price?.message}
+                isInvalid={!!errors.price} 
+            />
         </div>
 
         <div className="flex items-center justify-between">
-          <button
+          <Button
             type="submit"
-            className="bg-orange-600 text-white px-4 py-2 rounded transition ease-in-out delay-150 hover:scale-90 hover:bg-orange-700 duration-300"
+            variant='solid'
+            color='warning'
+            isLoading={isLoading}
           >
             Modificar Producto
-          </button>
+          </Button>
 
           <CloseButton onClose={() => onClose()}></CloseButton>
         </div>

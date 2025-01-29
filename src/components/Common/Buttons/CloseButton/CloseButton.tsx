@@ -1,3 +1,4 @@
+import { Button } from '@nextui-org/react';
 import React from 'react';
 
 interface CloseButtonProps {
@@ -6,13 +7,14 @@ interface CloseButtonProps {
 
 export const CloseButton: React.FC<CloseButtonProps> = ({ onClose }) => {
   return (
-    <button
+    <Button
       type="button"
       onClick={onClose}
-      className="bg-gray-600 text-white px-4 py-2 rounded transition ease-in-out delay-150 hover:scale-90 hover:bg-red-700 duration-300"
+      variant='light'
+      color='danger'
     >
       Cancelar
-    </button>
+    </Button>
   );
 };
 

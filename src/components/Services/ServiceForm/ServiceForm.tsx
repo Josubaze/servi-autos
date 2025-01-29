@@ -11,15 +11,17 @@ import { TextFieldTheme } from 'src/styles/themes/themeTextField';
 import { CloseButton } from 'src/components/Common/Buttons/CloseButton';
 import { SelectedTableProducts } from '../SelectedTableProducts';
 import { SelectProducts } from 'src/components/Common/SelectProducts';
+import { Button, Input } from '@nextui-org/react';
+import { toast } from 'react-toastify';
 
 type FormServiceProps = { onClose: () => void; };
 
 export const ServiceForm = ({ onClose }: FormServiceProps) => { 
-  const { register, handleSubmit, formState: { errors }, watch } = useForm<Omit<Service, '_id'>>({
+  const { register, handleSubmit, formState: { errors }, watch, setValue, clearErrors } = useForm<Omit<Service, '_id'>>({
     resolver: zodResolver(ServiceSchema),
   });
   const { data = [], isError: isErrorProducts, isFetching, isLoading, isSuccess } = useGetProductsQuery(); 
-  const [createService, { isError }] = useCreateServiceMutation(); 
+  const [createService, { isError, isSuccess: isSuccessCreate, isLoading: isLoadingCreate }] = useCreateServiceMutation(); 
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]); 
   const [isProductTableVisible, setIsProductTableVisible] = useState(false); 
 
@@ -44,6 +46,7 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
     };
     await createService(formData).unwrap();
     onClose();
+    toast.success('Servicio Creado Exitosamente!')
   };
 
   return ( 
@@ -59,43 +62,58 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
           onCloseTable={() => setIsProductTableVisible(false)} 
         /> 
       ) : ( 
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-full  md:max-w-2xl lg:max-w-3xl mx-auto bg-black-nav p-8 rounded-md shadow-md border-2 border-x-gray-600"> 
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-full  md:max-w-2xl lg:max-w-3xl mx-auto bg-[#101010] p-8 rounded-xl shadow-md"> 
           <h2 className="text-2xl text-center font-bold mb-6">Nuevo Servicio</h2> 
 
           <div className="mb-4"> 
-            <ThemeProvider theme={TextFieldTheme}>
-              <TextField 
-                label="Nombre del Servicio" 
-                variant="outlined"
-                fullWidth
-                {...register('name')} 
-                error={!!errors.name}
-                helperText={errors.name?.message}
-              />
-            </ThemeProvider>
+            <Input 
+              label="Nombre del Servicio" 
+              {...register('name')} 
+              variant="underlined"
+              fullWidth
+              type="text" 
+              errorMessage={errors.name?.message}
+              isInvalid={!!errors.name}
+            />
           </div>
+
 
           <div className="mb-4"> 
-          <ThemeProvider theme={TextFieldTheme}>
-            <TextField 
-                label="Precio del Servicio" 
-                variant="outlined"
-                fullWidth
-                type="number" 
-                {...register('servicePrice')} 
-                error={!!errors.servicePrice}
-                helperText={errors.servicePrice?.message}  
-              />
-          </ThemeProvider>
+            <Input 
+              label="Precio del Servicio"  
+              variant="underlined"
+              fullWidth
+              value={watch("servicePrice") !== undefined ? Number(watch("servicePrice")).toLocaleString("de-DE", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }) : "0,00"}
+              onChange={(e) => {
+                const inputValue = e.target.value.replace(/\./g, "").replace(/,/g, "");
+                const numericValue = parseInt(inputValue || "0", 10);
+                const adjustedValue = numericValue / 100;
+                setValue("servicePrice", adjustedValue); 
+                if (!isNaN(adjustedValue) && adjustedValue > 0) {
+                  clearErrors("servicePrice"); // Limpia el error si el valor es válido
+                }
+              }}             
+              style={{ textAlign: "right" }}
+              type="text"
+              inputMode="numeric"
+              errorMessage={errors.servicePrice?.message}
+              isInvalid={!!errors.servicePrice}
+            />
           </div>
+          
+          <Button
+              type="button"
+              variant="solid"
+              color='default'
+              isLoading={isLoading}
+              onClick={() => setIsProductTableVisible(true)} 
+            >
+              Cargar Producto
+          </Button>
 
-          <button 
-            type="button" 
-            onClick={() => setIsProductTableVisible(true)} 
-            className="bg-gray-600 text-white px-4 py-2 rounded transition ease-in-out delay-150 hover:scale-90 hover:bg-blue-700 duration-300" 
-          > 
-            Seleccionar Productos 
-          </button>
 
           {/* Lista de productos seleccionados */}
           <SelectedTableProducts
@@ -104,16 +122,18 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
               setSelectedProducts={setSelectedProducts}
               servicePrice={servicePrice}
           />
-
-          {isErrorProducts && <Notification message='Error al cargar productos!' /> }
-          {isError && <Notification message='Error al cargar el Servicio!' /> }
+          
+          {isErrorProducts && toast.error('Error al cargar productos!')}
+          {isError && toast.error('Error al cargar el Servicio!')}
           <div className="flex justify-between mt-6"> 
-            <button 
-              type="submit" 
-              className="bg-green-600 text-white px-11 py-2 rounded transition ease-in-out delay-150 hover:scale-90 hover:bg-green-700 duration-300" 
-            > 
-              Crear Servicio 
-            </button> 
+            <Button
+                type="submit"
+                variant="solid"
+                color='success'
+                isLoading={isLoadingCreate} 
+              >
+                Crear Servicio 
+            </Button>
             <CloseButton onClose={() => onClose()}></CloseButton>
           </div>
         </form> 
