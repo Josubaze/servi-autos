@@ -50,6 +50,7 @@ export const authOptions = {
     async jwt({ token, user, trigger, session }) { //JWT (JSON Web Token) te permite agregar propiedades adicionales al objeto de sesión
       if (trigger === "update") {
         token.image = session.user.image;
+        token.id = session.user.id
       }
       
       if (user) {

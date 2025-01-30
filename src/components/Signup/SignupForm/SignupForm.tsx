@@ -32,7 +32,7 @@ export const SignupForm = () => {
                 id="username"
                 placeholder="Ej. Fernan"
                 {...register('username')}
-                className="block w-full rounded-md px-3 py-1.5 pl-1.5 text-gray-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
+                className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
               />
               {errors.username?.message && <p className="text-red-500 pt-2 text-sm">{errors.username.message}</p>}
             </div>
@@ -48,7 +48,7 @@ export const SignupForm = () => {
                 id="email"
                 placeholder="Anafer@example.com"
                 {...register('email')}
-                className="block w-full rounded-md px-3 py-1.5 pl-1.5 text-gray-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
+                className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
               />
               {errors.email?.message && <p className="text-red-500 pt-2 text-sm">{errors.email.message}</p>}
             </div>
@@ -65,7 +65,7 @@ export const SignupForm = () => {
                 type="password"
                 placeholder="adakk125#1"
                 {...register('password')}
-                className="block w-full rounded-md px-3 py-1.5 pl-1.5 text-gray-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
+                className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
               />
               {errors.password?.message && <p className="text-red-500 pt-2 text-sm">{errors.password.message}</p>}
             </div>
@@ -80,7 +80,7 @@ export const SignupForm = () => {
               <select
                 id="role"
                 {...register('role')}
-                className="block w-full rounded-md px-3 py-1.5 pl-1.5 text-gray-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
+                className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
               >
                 <option value="administrador">Administrador</option>
                 <option value="lider">Líder de equipo</option>
@@ -100,7 +100,7 @@ export const SignupForm = () => {
                   id="secret-question"
                   placeholder="¿Nombre de tu mascota?"
                   {...register('secret_question')}
-                  className="block w-full rounded-md px-3 py-1.5 pl-1.5 text-gray-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl placeholder:text-sm"
+                  className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl placeholder:text-sm"
                 />
                 {errors.secret_question?.message && <p className="text-red-500 pt-2 text-sm">{errors.secret_question.message}</p>}
               </div>
@@ -115,7 +115,7 @@ export const SignupForm = () => {
                   id="secret-answer"
                   placeholder="Neron"
                   {...register('secret_answer')}
-                  className="block w-full rounded-md px-3 py-1.5 pl-1.5 text-gray-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
+                  className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
                 />
                 {errors.secret_answer?.message && <p className="text-red-500 pt-2 text-sm">{errors.secret_answer.message}</p>}
               </div>

@@ -1,6 +1,6 @@
-import { UploadImage } from "src/components/Profile/Upload/UploadImage"
+import { Profile } from "src/components/Profile/Profile"
 
 
 export default function profilePage(){
-  return <UploadImage />
+  return <Profile />
 }

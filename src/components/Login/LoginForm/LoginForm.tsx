@@ -40,7 +40,7 @@ export const LoginForm = () => {
             id="email"
             type="email"
             {...register('email')}
-            className="block w-full rounded-md px-3 py-1.5 pl-1.5 text-gray-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
+            className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
           />
           {errors.email?.message && <p className="text-red-500 pt-2 text-sm lg:text-lg">{errors.email.message}</p>}
         </div>
@@ -55,7 +55,7 @@ export const LoginForm = () => {
             id="password"
             type="password"
             {...register('password')}
-            className="block w-full rounded-md px-3 py-1.5 pl-1.5 text-gray-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
+            className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
           />
           {errors.password?.message && <p className="text-red-500 pt-2 text-sm lg:text-lg">{errors.password.message}</p>}
         </div>
