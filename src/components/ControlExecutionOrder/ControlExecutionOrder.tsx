@@ -38,7 +38,7 @@ export const ControlExecutionOrder = () => {
     <>
       <div className="flex justify-center items-center">  
           <LottieBudget loop className="h-24 pt-2" />
-          <PageTitle title="Control de Ordenes de Ejecución"/>
+          <PageTitle title="CONTROL DE ORDEN DE EJECUCIÓN"/>
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
         <div className="my-4 flex justify-end items-center gap-2">

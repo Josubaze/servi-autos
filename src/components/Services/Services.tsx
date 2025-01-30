@@ -11,9 +11,10 @@ import { ServiceForm } from './ServiceForm';
 import { UpdateServiceForm } from './UpdateServiceForm';
 import { SERVICEVOID } from 'src/utils/constanst';
 import dynamic from 'next/dynamic';
-export const LottieTools = dynamic(() => import("src/components/LottieIcon/LottieTools"), { ssr: false });
+
 import { FaTools } from "react-icons/fa";
 import { Button } from '@nextui-org/react';
+import { LottieTools } from '../Dashboard/DashWidgets/DashWidgets';
 
 export const Services = () => {
   const { data = [], isError, isLoading, isSuccess } = useGetServicesQuery();
@@ -40,7 +41,7 @@ export const Services = () => {
     <>
       <div className="flex justify-center items-center ">
         <LottieTools loop className="h-24 pt-3" />
-        <PageTitle title="Gestión de Servicios" />
+        <PageTitle title="GESTIÓN DE SERVICIOS" />
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
         <div className="my-4 flex justify-between items-center gap-2 pb-2">

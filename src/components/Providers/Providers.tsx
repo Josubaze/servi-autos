@@ -35,7 +35,7 @@ export const Providers = () => {
     <>
     <div className="flex justify-center items-center">  
         <LottieSupplier loop className="h-20 pt-2" />
-        <PageTitle title="Gestión de Proveedores"/>
+        <PageTitle title="GESTIÓN DE PROVEEDORES"/>
     </div>
     <div className="relative flex flex-col pb-6 px-0 sm:px-12">
       <div className="my-4 flex justify-between items-center gap-2 pb-2">

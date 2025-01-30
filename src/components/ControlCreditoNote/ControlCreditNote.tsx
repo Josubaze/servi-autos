@@ -40,7 +40,7 @@ export const ControlCreditNote = () => {
     <>
       <div className="flex justify-center items-center">  
           <LottieCreditNote loop className="h-32 pt-2" />
-          <PageTitle title="Control de Notas de Crédito"/>
+          <PageTitle title="CONTROL DE NOTAS DE CRÉDITO"/>
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
         <div className="my-4 flex justify-between items-center gap-2">

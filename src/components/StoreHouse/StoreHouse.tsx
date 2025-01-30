@@ -38,7 +38,7 @@ export const StoreHouse = () => {
     <>
       <div className="flex justify-center items-center">  
         <LottieProduct loop className="h-20 pt-2" />
-        <PageTitle title="Gestión de Almacén"/>
+        <PageTitle title="GESTIÓN DE ALMACÉN"/>
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
         <div className="my-4 flex justify-between items-center gap-2 pb-2">

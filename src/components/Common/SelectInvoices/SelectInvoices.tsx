@@ -1,7 +1,7 @@
 import MUIDataTable from "mui-datatables";
-import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
+import { StyledEngineProvider, Theme, ThemeProvider } from "@mui/material/styles";
 import { Loading } from 'src/components/Common/Loading';
-import { darkThemeSolid } from "src/styles/themes/themeTable";
+import { darkThemeSolid, darkThemeSolid2 } from "src/styles/themes/themeTable";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { toast } from "react-toastify";
 import IconButton from "@mui/material/IconButton";
@@ -14,8 +14,10 @@ export const SelectInvoices: React.FC<{
   isError: boolean; 
   isSuccess: boolean;
   isFetching: boolean;
-  onSelectInvoice: (invoice: Invoice) => void,
-  onCloseTable: () => void,
+  theme?: Theme,
+  rowsPerPage?: number,
+  onSelectInvoice?: (invoice: Invoice) => void,
+  onCloseTable?: () => void,
 }> = ({
   data,
   isLoading,
@@ -23,7 +25,9 @@ export const SelectInvoices: React.FC<{
   isSuccess,
   isFetching,
   onSelectInvoice,
-  onCloseTable
+  onCloseTable,
+  theme,
+  rowsPerPage
   }) => {
 
     const rows = data
@@ -134,7 +138,7 @@ export const SelectInvoices: React.FC<{
                 </IconButton>
             )
         },
-        rowsPerPage: 10,
+        rowsPerPage: rowsPerPage || 10,
         rowsPerPageOptions: [5, 10, 20, 50],
         textLabels: {
         body: {
@@ -152,10 +156,11 @@ export const SelectInvoices: React.FC<{
         },
         },
         onRowClick: (rowData: any, rowMeta: any) => {
-          const selectedRowIndex = rowMeta.dataIndex;
-          const selectedInvoice = rows[selectedRowIndex].invoice; 
-        
-          onSelectInvoice(selectedInvoice);
+            const selectedRowIndex = rowMeta.dataIndex;
+            const selectedInvoice = rows[selectedRowIndex].invoice; 
+            if(onSelectInvoice){
+                onSelectInvoice(selectedInvoice);
+            }
         },
         setRowProps: () => ({
           style: { cursor: 'pointer' }
@@ -172,7 +177,7 @@ export const SelectInvoices: React.FC<{
             toast.error('Error al cargar las Facturas')
         ) : isSuccess ? (
             <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={darkThemeSolid}>
+            <ThemeProvider theme={theme || darkThemeSolid}>
                 <div className="w-full max-h-[750px] overflow-y-auto"
                     onClick={(e) => e.stopPropagation()}
                 >

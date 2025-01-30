@@ -1,5 +1,5 @@
 import MUIDataTable from "mui-datatables";
-import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
+import { StyledEngineProvider, Theme, ThemeProvider } from "@mui/material/styles";
 import { darkThemeSolid } from "src/styles/themes/themeTable";
 import { Loading } from 'src/components/Common/Loading';
 import IconButton from "@mui/material/IconButton";
@@ -12,14 +12,18 @@ export const SelectCustomers: React.FC<{
   isError: boolean,
   isFetching: boolean,
   isSuccess: boolean,
-  onSelectCustomer: (customer: Customer) => void
-  onCloseTable: () => void,
+  theme?: Theme,
+  rowsPerPage?: number,
+  onSelectCustomer?: (customer: Customer) => void
+  onCloseTable?: () => void,
 }> = ({
   data,
   isLoading,
   isError,
   isFetching,
   isSuccess,
+  theme,
+  rowsPerPage,
   onSelectCustomer,
   onCloseTable
 }) => {
@@ -65,7 +69,8 @@ export const SelectCustomers: React.FC<{
   const responsiveColumns = useResponsiveColumns(
   columns,
   mobileColumnsToShow,
-  tabletColumnsToShow
+  tabletColumnsToShow,
+  false
   );
 
   const rows = data.map(customer => ({
@@ -90,7 +95,7 @@ export const SelectCustomers: React.FC<{
             </IconButton>
         )
     },
-    rowsPerPage: 10,
+    rowsPerPage: rowsPerPage || 10,
     rowsPerPageOptions: [5, 10, 20,30, 50],
     textLabels: {
       body: {
@@ -115,8 +120,9 @@ export const SelectCustomers: React.FC<{
         phone: rowData[4],
         address: rowData[5],
       };
-      // Guardar el cliente seleccionado en el estado local
-      onSelectCustomer(selectedCustomer);
+      if(onSelectCustomer){
+        onSelectCustomer(selectedCustomer);
+      }
     },
     setRowProps: () => ({
         style: { cursor: 'pointer' }
@@ -133,7 +139,7 @@ export const SelectCustomers: React.FC<{
         <p className="text-red-600">Error al cargar los clientes.</p>
       ) : isSuccess ? (
         <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={darkThemeSolid}>
+          <ThemeProvider theme={theme || darkThemeSolid}>
           <div className="w-full max-h-[750px] overflow-y-auto">
             <MUIDataTable
               title={"Lista de Clientes"}

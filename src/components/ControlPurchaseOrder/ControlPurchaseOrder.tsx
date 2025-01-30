@@ -43,7 +43,7 @@ export const ControlPurchaseOrder = () => {
     <>
       <div className="flex justify-center items-center">  
           <LottieBudget loop className="h-24 pt-2" />
-          <PageTitle title="Control de Órdenes de Compra"/>
+          <PageTitle title="CONTROL DE ÓRDENES DE COMPRA"/>
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
         <div className="my-4 flex justify-between items-center gap-2">

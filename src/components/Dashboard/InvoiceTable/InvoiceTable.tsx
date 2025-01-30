@@ -1,32 +1,22 @@
 
-import { InvoiceTwoIcon } from "src/components/Icons/InvoiceTwoIcon";
+import { SelectInvoices } from "src/components/Common/SelectInvoices";
+import { useGetInvoicesQuery } from "src/redux/services/invoices.Api";
+import { darkThemeSolid2 } from "src/styles/themes/themeTable";
+
 
 export const InvoiceTable = () => {
+    const { data: invoices = [], isLoading, isError, isFetching, isSuccess} = useGetInvoicesQuery();
   return (
     <>
-      <div className="sm:bg-black-nav rounded-xl sm:px-3 sm:py-3">
-        <div className="hidden sm:flex invisible sm:visible w-full flex-col sm:flex-row">
-          <div className="sm:text-left font-title flex-1">
-            Nº factura
-          </div>
-          <div className="sm:text-left font-title flex-1">
-            Nombre de cliente
-          </div>
-          <div className="sm:text-left font-title flex-1">
-            Estado
-          </div>
-          <div className="sm:text-left font-title flex-1">
-            Importe
-          </div>
-          <div className="sm:text-left font-title flex-1">
-            Acción
-          </div>
-        </div>
-        <div className="font-title flex flex-col justify-center items-center rounded-md py-5 text-gray-700 bg-gray-100">
-            <InvoiceTwoIcon />
-            Vacio Factura
-        </div>
-      </div>
+        <SelectInvoices
+            data={invoices}
+            isLoading={isLoading}
+            isError={isError}
+            isFetching={isFetching}
+            isSuccess={isSuccess}
+            rowsPerPage={5}
+            theme={darkThemeSolid2}
+        />
     </>
   );
 }

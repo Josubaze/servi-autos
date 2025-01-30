@@ -1,8 +1,7 @@
 import React from 'react';
 import { Button } from '@nextui-org/react';
 import { MdStore } from "react-icons/md";
-import { FaFilePowerpoint } from "react-icons/fa6";
-import { IoDocumentText } from "react-icons/io5";
+import { BiSolidPurchaseTag } from "react-icons/bi";
 
 // Interfaz para las props
 interface OptionsPurchaseOrderFormProps {
@@ -25,7 +24,7 @@ export const OptionsPurchaseOrderForm: React.FC<OptionsPurchaseOrderFormProps> =
                 className="w-1/2"
             > 
                 Cargar Orden de Compra
-                <FaFilePowerpoint className="h-5 w-5" />
+                <BiSolidPurchaseTag className="h-5 w-5" />
             </Button>
 
             <Button
