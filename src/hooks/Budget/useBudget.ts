@@ -220,7 +220,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
                 const budgetWithId = {
                     ...budget,
                     _id: budget_id,
-                    budgetForm: {
+                    form: {
                         ...budget.form, // Asegúrate de mantener las propiedades existentes de `budgetForm`
                         dateUpdate: Date(), // Actualiza la fecha
                     }

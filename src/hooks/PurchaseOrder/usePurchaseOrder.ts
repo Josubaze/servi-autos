@@ -212,7 +212,7 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
                 };
                 
                 await updatePurchaseOrder(purchaseOrderWithId).unwrap(); // Aquí usas la mutación de actualización
-                router.push("/control/purchase_orders");
+                router.push("/control/purchase-orders");
                 toast.success("Orden de Compra actualizada exitosamente!");
             }
     

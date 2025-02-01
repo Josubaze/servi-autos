@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './../Budget/useBudgetSummary'
 import { useUpdateProductQuantityMutation } from "src/redux/services/productsApi";
 import { useCreateCreditNoteMutation } from "src/redux/services/creditNotes.Api";
-import { getLocalTimeZone, now } from "@internationalized/date";
 
 interface FormHandle {
     submitForm: () => Promise<FormCreditNote | null>;
@@ -51,12 +50,12 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
         if (mode === "upload" && invoiceData) {
             handleSetForm({
                 numInvoice: invoiceData.form.num,
-                dateCreation: now(getLocalTimeZone()),
-                currency: invoiceData.form.currency,
+                dateCreation: Date(),
+                currency: invoiceData.form.currency,  // act estado del form
                 exchangeRate: invoiceData.form.exchangeRate,
             });
             handleSetFormCustomer(invoiceData.customer);
-            setCurrency(invoiceData.form.currency);
+            setCurrency(invoiceData.form.currency); // act estado del padre para sincro.
             setExchangeRate(invoiceData.form.exchangeRate);
             setSelectedServices(invoiceData.services);
 
