@@ -7,6 +7,7 @@ import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { darkTheme } from "src/styles/themes/themeTable";
 import { UpdateButton } from "src/components/Common/Buttons/UpdateButton";
 import { DeleteButton } from "src/components/Common/Buttons/DeleteButton";
+import { useSession } from "next-auth/react";
 
 export const TableProducts: React.FC<TableProductProps> = ({
   data,
@@ -18,7 +19,8 @@ export const TableProducts: React.FC<TableProductProps> = ({
   handleDelete,
   handleEdit,
 }) => {
-  
+  const { data: session } = useSession(); 
+  const isLider = session?.user.role === 'lider';
   const columns = [
     { 
       name: "id", 
@@ -96,6 +98,7 @@ export const TableProducts: React.FC<TableProductProps> = ({
     columns,
     mobileColumnsToShow,
     tabletColumnsToShow,
+    ...(isLider ? [true, false, false] : [])
   );
 
   const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'category', 'vehicleType']);

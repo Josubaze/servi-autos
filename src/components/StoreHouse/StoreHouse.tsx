@@ -15,6 +15,8 @@ import { LottieProduct } from '../Dashboard/DashWidgets/DashWidgets';
 import { MarketModal } from '../Common/MarketModal';
 import { Button, Tooltip } from '@nextui-org/react';
 import { MdStore } from "react-icons/md";
+import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 export const StoreHouse = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProductsQuery();
@@ -24,14 +26,19 @@ export const StoreHouse = () => {
   const [showMarket, setShowMarket] = useState(false);
   const [showFormUpdate, setShowFormUpdate] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(PRODUCTVOID);
+  const { data: session } = useSession(); 
+  const isLider = session?.user.role === 'lider';
 
   const handleEdit = (product: Product) => {
+    if(isLider) return;
     setCurrentProduct(product);
     setShowFormUpdate(true);
   };
 
   const handleDelete = async (productId: string) => {
+    if(isLider) return;
     await deleteProduct(productId);
+    toast.success('Producto Borrado Exitosamente!')
   };
 
   return (

@@ -1,4 +1,5 @@
 
+import { useSession } from "next-auth/react";
 import { SelectInvoices } from "src/components/Common/SelectInvoices";
 import { useGetInvoicesQuery } from "src/redux/services/invoices.Api";
 import { darkThemeSolid2 } from "src/styles/themes/themeTable";
@@ -6,6 +7,9 @@ import { darkThemeSolid2 } from "src/styles/themes/themeTable";
 
 export const InvoiceTable = () => {
     const { data: invoices = [], isLoading, isError, isFetching, isSuccess} = useGetInvoicesQuery();
+    const { data: session } = useSession(); 
+    const isLider = session?.user.role === 'lider'
+    console.log(isLider);
   return (
     <>
         <SelectInvoices
@@ -14,7 +18,7 @@ export const InvoiceTable = () => {
             isError={isError}
             isFetching={isFetching}
             isSuccess={isSuccess}
-            rowsPerPage={5}
+            rowsPerPage={isLider ? 10 : 5}
             theme={darkThemeSolid2}
         />
     </>

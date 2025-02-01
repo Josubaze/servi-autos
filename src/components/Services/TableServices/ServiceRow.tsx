@@ -16,7 +16,7 @@ import { UpdateButton } from 'src/components/Common/Buttons/UpdateButton';
 import { DeleteButton } from 'src/components/Common/Buttons/DeleteButton';
 import { Divider } from '@nextui-org/react';
 
-export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDelete }) => {
+export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDelete, isLider }) => {
   const [open, setOpen] = React.useState(false);
   const isMobile = useMediaQuery('(max-width:600px)');
   const totalProductos = service.products.reduce((total, product) => {
@@ -48,14 +48,20 @@ export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDele
           {service._id}
         </TableCell>}
         <TableCell >{service.name}</TableCell>
-        <TableCell align="right">{service.servicePrice}</TableCell>
-        <TableCell align="right">{service.totalPrice}</TableCell>
-        <TableCell>
-          <div className='flex gap-x-5 justify-center'>
-            <UpdateButton onClick={() => handleEdit(service)}></UpdateButton>
-            <DeleteButton onClick={() => handleDelete(service._id)}></DeleteButton>
-          </div>
-        </TableCell>
+        {
+          !isLider && (
+            <>
+              <TableCell align="right">{service.servicePrice}</TableCell>
+              <TableCell align="right">{service.totalPrice}</TableCell>
+              <TableCell>
+                <div className='flex gap-x-5 justify-center'>
+                  <UpdateButton onClick={() => handleEdit(service)}></UpdateButton>
+                  <DeleteButton onClick={() => handleDelete(service._id)}></DeleteButton>
+                </div>
+              </TableCell>
+            </>
+          )
+        }
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -68,8 +74,8 @@ export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDele
                     <TableCell>ID</TableCell>
                     <TableCell>Nombre</TableCell>
                     <TableCell>Categoría</TableCell>
-                    <TableCell align="right">Cantidad</TableCell>
-                    <TableCell align="right">Precio</TableCell>
+                    <TableCell align="right">Cantidad</TableCell>                    
+                    {!isLider && <TableCell align="right">Precio</TableCell> }
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -79,23 +85,26 @@ export const ServiceRow: React.FC<RowProps> = ({ service, handleEdit, handleDele
                           key={product.product._id}
                           product={product.product}
                           quantity={product.quantity}
+                          showPrices={isLider ? false : true}
                         />
                       );
                     }                  
                   )}
-                   <TableRow>
+                  <TableRow>
                         <TableCell colSpan={5}>
                             <Divider orientation="horizontal"></Divider>
                         </TableCell>
                     </TableRow>
-                    <TableRow>
-                        <TableCell colSpan={4} align="right" sx={{ fontWeight: 'bold' }}>
-                            Total de Productos
-                        </TableCell>
-                        <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                            {totalProductos.toFixed(2)}
-                        </TableCell>
-                    </TableRow>
+                    {!isLider && (                      
+                      <TableRow>
+                          <TableCell colSpan={4} align="right" sx={{ fontWeight: 'bold' }}>
+                              Total de Productos
+                          </TableCell>
+                          <TableCell align="right" sx={{ fontWeight: 'bold' }}>
+                              {totalProductos.toFixed(2)}
+                          </TableCell>
+                      </TableRow>
+                    )}
                 </TableBody>
               </Table>
             </Box>

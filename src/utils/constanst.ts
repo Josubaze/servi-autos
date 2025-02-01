@@ -57,12 +57,23 @@ export const MENUCREATE= [
     { name: 'Orden de Compra', href: '/create/purchase-order' },
     { name: 'Presupuesto', href: '/create/budget' },
   ];
+
+  export const MENUCREATELIDER= [
+    { name: 'Informe', href: '/create/report' },
+  ];
+
   export const MENUMANAGE = [
     { name: 'Almacén', href: '/manage/storehouse' },
     { name: 'Clientes', href: '/manage/clients', },
     { name: 'Proveedores', href: '/manage/providers', },
     { name: 'Servicios', href: '/manage/services', },
   ];
+
+  export const MENUMANAGELIDER = [
+    { name: 'Almacén', href: '/manage/storehouse' },
+    { name: 'Servicios', href: '/manage/services', },
+  ];
+
   export const MENUCONTROL = [
     { name: 'Facturas', href: '/control/invoices' },
     { name: 'Informes', href: '/control/reports' },
@@ -71,6 +82,12 @@ export const MENUCREATE= [
     { name: 'Ordenes de Compra', href: '/control/purchase-orders' },
     { name: 'Presupuestos', href: '/control/budgets' },
   ];
+
+  export const MENUCONTROLLIDER = [
+    { name: 'Informes', href: '/control/reports' },
+    { name: 'Ordenes de Ejecución', href: '/control/execution-orders' },
+  ];
+  
   export const NAVITEMS = [
     { name: 'Inicio', href: '/' },
     { name: 'Iniciar Sesión', href: '/login' },

@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import Skeleton from "@mui/material/Skeleton"; // Import Skeleton for loading state
 import { useUpdateCompanyMutation } from "src/redux/services/company.Api";
 import { Button, Input } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 
 type QuickUpdateCompanyProps = {
   company: Company;
@@ -29,8 +30,11 @@ export const QuickUpdateCompany = ({
     resolver: zodResolver(CompanySchema),
     defaultValues: company,
   });
+  const { data: session } = useSession(); 
+  const isLider = session?.user.role === 'lider';
 
   const onSubmit: SubmitHandler<Company> = async (data) => {
+    if (isLider) return;
     try {
       await updateCompany(data).unwrap();
       toast.success("Actualizado Exitosamente!");
@@ -39,7 +43,6 @@ export const QuickUpdateCompany = ({
     }
   };
 
-  // Actualizar los valores del formulario cuando cambie `company`
   useEffect(() => {
     if (company) {
       reset(company);
@@ -48,15 +51,13 @@ export const QuickUpdateCompany = ({
 
   return (
     <div className="bg-black-nav/50 rounded-xl p-4 mt-4">
-      <SectionTitle>ACTUALIZAR EMPRESA</SectionTitle>
+      <SectionTitle>{isLider ? "DATOS DE EMPRESA" : "ACTUALIZAR EMPRESA"}</SectionTitle>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-lg pt-2 mx-auto rounded-xl"
       >
-        {/* Estado de Carga */}
         {isLoadingCompany ? (
           <div>
-            {/* Skeletons for each TextField */}
             <Skeleton variant="text" width="100%" height={80} sx={{ bgcolor: 'grey.900' }} />
             <Skeleton variant="text" width="100%" height={80} sx={{ bgcolor: 'grey.900' }} />
             <Skeleton variant="text" width="100%" height={80} sx={{ bgcolor: 'grey.900' }} />
@@ -65,7 +66,6 @@ export const QuickUpdateCompany = ({
           </div>  
         ) : (
           <>
-            {/* Campo RIF */}
             <div className="mb-4">
                 <Controller
                   name="id_card"
@@ -78,13 +78,12 @@ export const QuickUpdateCompany = ({
                       {...field}
                       isInvalid={!!errors.id_card}
                       errorMessage={errors.id_card?.message}
-                      disabled={isLoadingCompany}
+                      disabled={isLider || isLoadingCompany}
                     />
                   )}
                 />
             </div>
 
-            {/* Campo Nombre */}
             <div className="mb-4">
               <Controller
                 name="name"
@@ -97,13 +96,12 @@ export const QuickUpdateCompany = ({
                     {...field}
                     isInvalid={!!errors.name}
                     errorMessage={errors.name?.message}
-                    disabled={isLoadingCompany}
+                    disabled={isLider || isLoadingCompany}
                   />
                 )}
               />
             </div>
 
-            {/* Campo Correo Electrónico */}
             <div className="mb-4">
               <Controller
                 name="email"
@@ -116,13 +114,12 @@ export const QuickUpdateCompany = ({
                     {...field}
                     isInvalid={!!errors.email}
                     errorMessage={errors.email?.message}
-                    disabled={isLoadingCompany}
+                    disabled={isLider || isLoadingCompany}
                   />
                 )}
               />
             </div>
 
-            {/* Campo Teléfono */}
             <div className="mb-4">
               <Controller
                 name="phone"
@@ -135,13 +132,12 @@ export const QuickUpdateCompany = ({
                     {...field}
                     isInvalid={!!errors.phone}
                     errorMessage={errors.phone?.message}
-                    disabled={isLoadingCompany} 
+                    disabled={isLider || isLoadingCompany} 
                   />
                 )}
               />
             </div>
 
-            {/* Campo Dirección */}
             <div className="mb-4">
               <Controller
                 name="address"
@@ -154,31 +150,29 @@ export const QuickUpdateCompany = ({
                     {...field}
                     isInvalid={!!errors.address}
                     errorMessage={errors.address?.message}
-                    disabled={isLoadingCompany} 
+                    disabled={isLider || isLoadingCompany} 
                   />
                 )}
               />
             </div>
 
-            {/* Botón de Enviar */}
-            <div className="flex items-center justify-between mt-4">
-              <Button
-                  color="warning"
-                  variant="solid"
-                  fullWidth
-                  isLoading={isLoadingCompany}
-                  type="submit"
-              >
-                  Actualizar
-              </Button>
-            </div>
+            {!isLider && (
+              <div className="flex items-center justify-between mt-4">
+                <Button
+                    color="warning"
+                    variant="solid"
+                    fullWidth
+                    isLoading={isLoadingCompany}
+                    type="submit"
+                >
+                    Actualizar
+                </Button>
+              </div>
+            )}
           </>
         )}
 
-        {/* Mensajes de error */}      
-        {isErrorCompany && (
-          toast.error('Hubo un error al cargar la Empresa')
-        )}
+        {isErrorCompany && toast.error('Hubo un error al cargar la Empresa')}
       </form>
     </div>
   );

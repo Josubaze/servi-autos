@@ -14,7 +14,8 @@ export const useResponsiveColumns = (
   mobileColumnsToShow: string[] = [],
   tabletColumnsToShow: string[] = [],
   showIdColumn: boolean = true, // Valor por defecto: true
-  showPriceColumn: boolean = true // Valor por defecto: true
+  showPriceColumn: boolean = true,// Valor por defecto: true
+  showOptionsColum: boolean = true 
 ) => {
   const isMobile = useMediaQuery('(max-width:600px)');
   const isTablet = useMediaQuery('(min-width:601px) and (max-width:960px)');
@@ -36,6 +37,16 @@ export const useResponsiveColumns = (
         options: {
           ...column.options,
           display: showPriceColumn, // Mostrar/ocultar la columna "price"
+        },
+      };
+    }
+
+    if (column.name === "options") {
+      return {
+        ...column,
+        options: {
+          ...column.options,
+          display: showOptionsColum,
         },
       };
     }

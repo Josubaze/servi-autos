@@ -88,13 +88,13 @@ export const SelectCustomers: React.FC<{
     selectableRows: "none",
     download: false, 
     print: false, 
-    customToolbar: () => {
-        return (
+    customToolbar: onSelectCustomer
+        ? () => (
             <IconButton onClick={onCloseTable}>
-                <CloseIcon />
+              <CloseIcon />
             </IconButton>
-        )
-    },
+          )
+        : undefined,
     rowsPerPage: rowsPerPage || 10,
     rowsPerPageOptions: [5, 10, 20,30, 50],
     textLabels: {

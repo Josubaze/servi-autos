@@ -213,6 +213,7 @@ interface Product {
 
   interface RowProps {
     service: Service;
+    isLider: boolean; 
     handleEdit: (service: Service) => void;
     handleDelete: (id: string) => void;
   }

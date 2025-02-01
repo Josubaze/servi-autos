@@ -16,6 +16,7 @@ import { Loading } from 'src/components/Common/Loading';
 import { useDynamicFilter } from 'src/hooks/useProductFilter';
 import { useMediaQuery } from '@mui/material';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 export const TableServices: React.FC<TableServicesProps> = ({
   data,
@@ -31,6 +32,8 @@ export const TableServices: React.FC<TableServicesProps> = ({
   const filteredData = useDynamicFilter(data, searchTerm, ['_id', 'name', 'serviceQuantity', 'servicePrice', 'totalPrice']);
   const { sortedData, order, orderBy, handleRequestSort } = useSortableData(filteredData, 'serviceQuantity');
   const isMobile = useMediaQuery('(max-width:600px)');
+  const { data: session } = useSession(); 
+  const isLider = session?.user.role === 'lider'
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -99,30 +102,37 @@ export const TableServices: React.FC<TableServicesProps> = ({
                   Nombre
                 </TableSortLabel>
               </TableCell>
-              <TableCell align="right">
-                <TableSortLabel
-                  active={orderBy === 'servicePrice'}
-                  direction={orderBy === 'servicePrice' ? order : 'asc'}
-                  onClick={() => handleRequestSort('servicePrice')}
-                >
-                  Precio por Servicio
-                </TableSortLabel>
-              </TableCell>
-              <TableCell align="right">
-                <TableSortLabel
-                  active={orderBy === 'totalPrice'}
-                  direction={orderBy === 'totalPrice' ? order : 'asc'}
-                  onClick={() => handleRequestSort('totalPrice')}
-                >
-                  Precio Total
-                </TableSortLabel>
-              </TableCell>
-              <TableCell align="center">Acciones</TableCell>
+
+              {!isLider && (
+                <>
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={orderBy === 'servicePrice'}
+                      direction={orderBy === 'servicePrice' ? order : 'asc'}
+                      onClick={() => handleRequestSort('servicePrice')}
+                    >
+                      Precio por Servicio
+                    </TableSortLabel>
+                  </TableCell>
+  
+                  <TableCell align="right">
+                    <TableSortLabel
+                      active={orderBy === 'totalPrice'}
+                      direction={orderBy === 'totalPrice' ? order : 'asc'}
+                      onClick={() => handleRequestSort('totalPrice')}
+                    >
+                      Precio Total
+                    </TableSortLabel>
+                  </TableCell>
+  
+                  <TableCell align="center">Acciones</TableCell>
+                </>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
             {rowsToShow.map((service: Service) => (
-              <ServiceRow key={service._id} service={service} handleEdit={handleEdit} handleDelete={handleDelete} />
+              <ServiceRow key={service._id} service={service} handleEdit={handleEdit} handleDelete={handleDelete} isLider={isLider} />
             ))}
           </TableBody>
         </Table>

@@ -131,13 +131,13 @@ export const SelectInvoices: React.FC<{
         selectableRows: "none",
         download: false, 
         print: false, 
-        customToolbar: () => {
-            return (
-                <IconButton onClick={onCloseTable}>
-                    <CloseIcon />
-                </IconButton>
-            )
-        },
+        customToolbar: onSelectInvoice
+        ? () => (
+            <IconButton onClick={onCloseTable}>
+              <CloseIcon />
+            </IconButton>
+          )
+        : undefined,
         rowsPerPage: rowsPerPage || 10,
         rowsPerPageOptions: [5, 10, 20, 50],
         textLabels: {
@@ -181,12 +181,12 @@ export const SelectInvoices: React.FC<{
                 <div className="w-full max-h-[750px] overflow-y-auto"
                     onClick={(e) => e.stopPropagation()}
                 >
-                  <MUIDataTable
-                  title={"Lista de Facturas"}
-                  data={rows}
-                  columns={responsiveColumns}
-                  options={options}
-                  />
+                    <MUIDataTable
+                    title={"Lista de Facturas"}
+                    data={rows}
+                    columns={responsiveColumns}
+                    options={options}
+                />
                 </div>
             </ThemeProvider>
             </StyledEngineProvider>

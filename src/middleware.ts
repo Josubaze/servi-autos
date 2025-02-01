@@ -7,17 +7,41 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret });
   const { pathname } = req.nextUrl;
 
-  // Rutas públicas accesibles para todos
+  // Rutas públicas accesibles para todos (incluso sin sesión)
   const publicRoutes = ['/', '/signup', '/login'];
 
-  if (token) {
-    if (publicRoutes.includes(pathname)) {
-      return NextResponse.redirect(new URL('/dashboard', req.url));
-    }
-  } else {
-    const protectedRoutes = ['/dashboard', '/create', '/control', '/manage', '/market', '/profile'];
+  // Rutas protegidas que requieren autenticación
+  const protectedRoutes = ['/dashboard', '/create', '/control', '/manage', '/market', '/profile'];
+
+  if (!token) {
     if (protectedRoutes.some(route => pathname.startsWith(route))) {
       return NextResponse.redirect(new URL('/login', req.url));
+    }
+    return NextResponse.next();
+  }
+
+  if (publicRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL('/dashboard', req.url));
+  }
+
+ 
+  if (token.role === 'lider') {
+    // Rutas permitidas generales para "lider"
+    const allowedRoutesForLider = [
+      '/dashboard',
+      '/market',
+      '/profile',
+      '/create/report',
+      '/control/reports',
+      '/control/execution-orders',
+      '/manage/storehouse',
+      '/manage/services'
+    ];
+
+    const isAllowedGeneral = allowedRoutesForLider.some(route => pathname.startsWith(route));
+    
+    if (!isAllowedGeneral) {
+      return NextResponse.redirect(new URL('/dashboard', req.url));
     }
   }
 
@@ -25,5 +49,9 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/signup', '/login', '/dashboard/:path*', '/create/:path*', '/control/:path*', '/manage/:path*', '/market/:path*', '/profile/:path*'],
+  matcher: [
+    '/', '/signup', '/login',
+    '/dashboard/:path*', '/create/:path*', '/control/:path*',
+    '/manage/:path*', '/market/:path*', '/profile/:path*'
+  ],
 };

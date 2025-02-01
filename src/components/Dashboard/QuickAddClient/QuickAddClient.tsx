@@ -9,7 +9,7 @@ import { useCreateCustomerMutation } from "src/redux/services/customersApi";
 
 
 export const QuickAddClient = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<Company>({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<Company>({
     resolver: zodResolver(CustomerSchema),
   });
   const [createCustomer, { isError, isLoading }] = useCreateCustomerMutation();
@@ -17,6 +17,7 @@ export const QuickAddClient = () => {
   const onSubmit: SubmitHandler<Omit<Customer, '_id'>> = async (data) => {
     await createCustomer(data).unwrap();
     toast.success('Cliente Creado exitosamente!')
+    reset();
   };
   return (
     <div className="bg-black-nav/50 rounded-xl p-4 mt-4">

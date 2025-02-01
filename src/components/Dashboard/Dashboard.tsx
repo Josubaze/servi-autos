@@ -9,8 +9,12 @@ import { ClientTable } from "src/components/Dashboard/ClientTable";
 import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { COMPANYVOID } from "src/utils/constanst";
 import { ShortcutButtons } from "./ShortcutButtons";
+import { useSession } from "next-auth/react";
+import { ShortcutButtonsLider } from "./ShortcutButtonsLider";
 export const Dashboard = () => {
   const { data: company, isError: isErrorCompany, isLoading: isLoadingCompany} = useGetCompanyQuery();
+  const { data: session } = useSession(); 
+  const isLider = session?.user.role === 'lider'
 
   return (
     <div>
@@ -28,9 +32,14 @@ export const Dashboard = () => {
           </div>
         </div>
         <div className="w-full lg:w-2/6 pl-4 pr-4 sm:pl-4 sm:pr-2 mt-6 lg:mt-0">
-
-          <ShortcutButtons/>
-
+          {
+            !isLider ? (
+              <ShortcutButtons/>
+            ) : (
+              <ShortcutButtonsLider/>
+            )
+          }
+          
           <div className="mt-4">
             <QuickUpdateCompany company={ company || COMPANYVOID } isLoadingCompany={isLoadingCompany} isErrorCompany={isErrorCompany} /> 
           </div>
@@ -38,8 +47,13 @@ export const Dashboard = () => {
             <QuickAddClient /> 
           </div>
 
-          <ShortcutButtons/>
-
+          {
+            !isLider ? (
+              <ShortcutButtons/>
+            ) : (
+              <ShortcutButtonsLider/>
+            )
+          }
         </div>
       </div>
     </div>
