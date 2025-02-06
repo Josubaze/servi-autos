@@ -1,7 +1,7 @@
 import MUIDataTable from "mui-datatables";
 import { StyledEngineProvider, Theme, ThemeProvider } from "@mui/material/styles";
 import { Loading } from 'src/components/Common/Loading';
-import { darkThemeSolid, darkThemeSolid2 } from "src/styles/themes/themeTable";
+import { darkThemeSolid } from "src/styles/themes/themeTable";
 import { useResponsiveColumns } from "src/hooks/useResponsiveColumns";
 import { toast } from "react-toastify";
 import IconButton from "@mui/material/IconButton";

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { connectDB } from 'src/utils/mongoose';
+import { connectDB } from 'src/server/dataBase/connectDB'; 
 import Budget from 'src/schemas/budget.schema';
 
 // GET: Obtener todos los presupuestos

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectDB } from 'src/utils/mongoose';
+import { connectDB } from 'src/server/dataBase/connectDB'; 
 import Provider from '/src/schemas/provider.schema';
 
 export async function GET(request, { params }) {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Invoice from 'src/schemas/invoice.schema';
-import { connectDB } from 'src/utils/mongoose'; 
+import { connectDB } from 'src/server/dataBase/connectDB'; 
 import dayjs from "dayjs";
 
 interface RouteParams {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import ExecutionOrder from "src/schemas/executionOrder.schema";
-import { connectDB } from "src/utils/mongoose";
+import { connectDB } from 'src/server/dataBase/connectDB'; 
 
 interface RouteParams {
     id: string;

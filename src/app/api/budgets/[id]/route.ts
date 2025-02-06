@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 import Budget from 'src/schemas/budget.schema';
-import { connectDB } from 'src/utils/mongoose'; 
+import { connectDB } from 'src/server/dataBase/connectDB'; 
 
 interface RouteParams {
     id: string; 

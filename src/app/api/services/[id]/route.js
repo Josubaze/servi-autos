@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectDB } from 'src/utils/mongoose';
+import { connectDB } from 'src/server/dataBase/connectDB'; 
 import Service from '/src/schemas/service.schema'; // Importa el esquema de servicio
 import Product from 'src/schemas/product.schema';
 

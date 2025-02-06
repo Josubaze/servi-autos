@@ -1,3 +1,4 @@
+
 interface Product {
     _id: string;
     name: string;
@@ -5,6 +6,7 @@ interface Product {
     vehicleType: string;
     category: string;
     quantity: number;
+    minStock?: number;
     price: number;
   }
 
@@ -166,6 +168,12 @@ interface Product {
     calculatedIgtf: number;
     total: number;
     totalWithIgft: number;
+  }
+
+  interface INotification {
+    productId: Types.ObjectId; 
+    message: string; 
+    createdAt: Date; 
   }
 
   interface Form{

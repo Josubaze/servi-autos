@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import User from 'src/schemas/user.schema';
-import { connectDB } from 'src/utils/mongoose';
+import { connectDB } from 'src/server/dataBase/connectDB'; 
 import bcrypt from 'bcrypt';
 
 interface RouteParams {

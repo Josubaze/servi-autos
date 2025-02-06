@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 
 type FormProductProps = {
   onClose: () => void;
-  product: Product; // El producto seleccionado para editar
+  product: Product; 
 };
 
 export const UpdateProductForm = ({
@@ -24,6 +24,7 @@ export const UpdateProductForm = ({
       description: product.description,
       category: product.category,
       quantity: product.quantity,
+      minStock: product.minStock,
       price: product.price,
     }
   });
@@ -109,6 +110,29 @@ export const UpdateProductForm = ({
           errorMessage={errors.quantity?.message}
           isInvalid={!!errors.quantity} 
         />
+        </div>
+
+        <div className="mb-4">
+          <Input
+            label="Mínimo de Existencia o Stock" 
+            value={watch("minStock") !== undefined ? Number(watch("minStock")).toLocaleString("de-DE", { minimumFractionDigits: 0 }) : ""}
+            variant="underlined"
+            fullWidth
+            onChange={(e) => {
+              const value = e.target.value.replace(/\./g, "").replace(/,/g, "");
+              const numericValue = parseInt(value, 10);
+            
+              if (!isNaN(numericValue) && numericValue >= 1) {
+                setValue("minStock", numericValue); 
+                clearErrors("minStock"); 
+              }
+            }}
+            style={{ textAlign: "right" }}
+            type="text"
+            inputMode="numeric"
+            errorMessage={errors.minStock?.message}
+            isInvalid={!!errors.minStock} 
+          />
         </div>
 
         <div className="mb-4">

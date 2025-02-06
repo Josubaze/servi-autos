@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectDB } from 'src/utils/mongoose';
+import { connectDB } from 'src/server/dataBase/connectDB'; 
 import Company from 'src/schemas/company.schema';
 
 // Obtener la información de la empresa

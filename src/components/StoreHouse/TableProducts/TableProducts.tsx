@@ -53,6 +53,11 @@ export const TableProducts: React.FC<TableProductProps> = ({
       options: { filter: true, sort: true } 
     },
     { 
+      name: "minStock", 
+      label: "Stock Mínimo", 
+      options: { filter: true, sort: true } 
+    },
+    { 
       name: "price", 
       label: "Precio", 
       options: { filter: true, sort: true } 
@@ -78,8 +83,8 @@ export const TableProducts: React.FC<TableProductProps> = ({
             description: rowData[3],
             category: rowData[4],
             quantity: rowData[5],
-            price: rowData[6],
-            
+            minStock:rowData[6],
+            price: rowData[7],         
           };      
           return (
             <div className='flex gap-x-5 justify-center'>
@@ -109,6 +114,7 @@ export const TableProducts: React.FC<TableProductProps> = ({
     description: product.description,
     category: product.category,
     quantity: product.quantity,
+    minStock: product.minStock,
     price: product.price,
   }));
 

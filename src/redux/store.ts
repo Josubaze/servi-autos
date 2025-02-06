@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterSlice from './features/couterSlice';
-import loadingSlice  from './features/loadingSlice';
 import { productsApi } from './services/productsApi';
 import { usersApi } from './services/usersApi';
 import { customersApi } from './services/customersApi';
@@ -21,7 +20,6 @@ export const makeStore = () => {
   return configureStore({
     reducer: {
       counter: counterSlice,
-      loading: loadingSlice,
       customerForm: customerFormSlice,
       company: companySlice,
       [productsApi.reducerPath]: productsApi.reducer,

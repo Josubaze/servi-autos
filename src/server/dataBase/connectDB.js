@@ -13,9 +13,11 @@ export async function connectDB(){
 }
 
 connection.on('connected', () => {
-    console.log('Mongoose is connected');
+    console.log('✅ Mongoose connected to database');
 })
 
 connection.on('error', (err) => {
-    console.log('Mongoose conection error', err);
+    console.log('⚠️ Mongoose conection error', err);
 })
+
+

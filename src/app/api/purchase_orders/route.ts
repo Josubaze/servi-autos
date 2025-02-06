@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { connectDB } from 'src/utils/mongoose';
+import { connectDB } from 'src/server/dataBase/connectDB'; 
 import PurchaseOrder from 'src/schemas/purchaseOrder.schema';
 
 // GET: Obtener todas las órdenes de compra

@@ -42,7 +42,13 @@ export const ProductSchema = z.object({
         z.number()
           .refine(price => price > 0, { message: "El precio debe ser un número positivo" })
       ]),
-    
+      minStock: z.union([
+        z.string()
+          .refine(quantity => /^[0-9]+$/.test(quantity) && parseInt(quantity, 10) > 0, { message: "La cantidad debe ser un número entero positivo" })
+          .transform(quantity => parseInt(quantity, 10)),
+        z.number()
+          .refine(quantity => Number.isInteger(quantity) && quantity > 0, { message: "La cantidad debe ser un número entero positivo" })
+      ]),
       quantity: z.union([
         z.string()
           .refine(quantity => /^[0-9]+$/.test(quantity) && parseInt(quantity, 10) > 0, { message: "La cantidad debe ser un número entero positivo" })
