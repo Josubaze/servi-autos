@@ -9,7 +9,6 @@ export const InvoiceTable = () => {
     const { data: invoices = [], isLoading, isError, isFetching, isSuccess} = useGetInvoicesQuery();
     const { data: session } = useSession(); 
     const isLider = session?.user.role === 'lider'
-    console.log(isLider);
   return (
     <>
         <SelectInvoices

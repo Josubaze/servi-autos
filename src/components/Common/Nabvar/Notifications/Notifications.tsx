@@ -1,5 +1,6 @@
 // Notifications.tsx
 import React from 'react';
+import { useSocket } from 'src/hooks/useSocket';
 
 interface Notification {
   id: number;
@@ -12,11 +13,13 @@ interface NotificationsProps {
 }
 
 export const Notifications = ({ notifications, setNotifications }: NotificationsProps) => {
+  const { products } = useSocket("https://app-notifications-yzwl.onrender.com/");
   const removeNotification = (id: number) => {
     setNotifications((prevNotifications) =>
       prevNotifications.filter((notification) => notification.id !== id)
     );
   };
+  console.log(products);
 
   return (
     <div className="w-96 p-6 bg-indigo-950 text-white rounded-md shadow-2xl z-50 relative">
