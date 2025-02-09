@@ -1,24 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { BellIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MENUPROFILE } from 'src/utils/constanst';
 import { Notifications } from '../Notifications'; // Ajusta la ruta según tu estructura
-import { Avatar, Badge, Button } from '@nextui-org/react';
+import { Badge, Button } from '@nextui-org/react';
 import { IoNotificationsCircleOutline } from 'react-icons/io5';
 
 interface ProfileDropdownProps {
   image: string | null | undefined;
+  notifications: Notification[];
+  setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>
 }
 
-export const ProfileDropdown = ({ image }: ProfileDropdownProps) => {
-  // Estado de notificaciones (levantado al componente padre)
-  const [notifications, setNotifications] = useState([
-    { id: 1, message: "Notificación 1: Stock bajo en producto A." },
-    { id: 2, message: "Notificación 2: Stock bajo en producto B." },
-    { id: 3, message: "Notificación 3: Stock bajo en producto C." },
-  ]);
+export const ProfileDropdown = ({ image, notifications, setNotifications }: ProfileDropdownProps) => {
+
 
   const [showNotifications, setShowNotifications] = useState(false);
   // Ref para envolver el botón de notificaciones y el panel
@@ -45,7 +41,7 @@ export const ProfileDropdown = ({ image }: ProfileDropdownProps) => {
     <div className="relative flex items-center">
       {/* Contenedor para el botón de notificaciones y su panel */}
       <div className="relative flex items-center justify-center" ref={notificationsContainerRef} >
-        <Badge color="primary" content={notifications.length} shape="circle">
+        <Badge color="primary" content={notifications.filter(n => !n.seen).length} shape="circle">
           <Button  
             isIconOnly 
             radius="full"
@@ -59,7 +55,7 @@ export const ProfileDropdown = ({ image }: ProfileDropdownProps) => {
         {/* Panel de notificaciones */}
         {showNotifications && (
           <div className="absolute right-0 top-full mt-2">
-            <Notifications notifications={notifications} setNotifications={setNotifications} />
+            <Notifications notifications={notifications} setNotifications={setNotifications}/>
           </div>
         )}
       </div>

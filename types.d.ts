@@ -176,6 +176,15 @@ interface Product {
     createdAt: Date; 
   }
 
+  interface Notification {
+    _id: string;
+    product: string;
+    user: string;
+    message: string;
+    seen: boolean;
+    seenAt?: Date;
+  }
+
   interface Form{
     num: number;
     dateCreation: any;

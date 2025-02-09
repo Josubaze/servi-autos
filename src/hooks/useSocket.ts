@@ -1,22 +1,66 @@
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
-export const useSocket = (serverUrl : any) => {
-    const [socket, setSocket] = useState<any>(null);
-    const [products, setProducts] = useState([]);
+interface UseSocketReturn {
+  socket: Socket | null;
+  products: Product[];
+  notifications: Notification[];
+  setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>
+  getUserNotifications: (userId: string) => void;
+  markNotificationAsSeen: (notificationId: string) => void;
+}
 
-    useEffect(() => {
-        const socketIo = io(serverUrl); // Conectar con el WebSocket del servidor
-        setSocket(socketIo);
+export const useSocket = (): UseSocketReturn => {
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
-        socketIo.on("loadProducts", (data) => {
-            setProducts(data); // Actualizar los productos cuando lleguen del server
-        });
+  useEffect(() => {
+    // URL fija para la conexión con el servidor de WebSocket
+    const socketIo = io("https://app-notifications-yzwl.onrender.com/");
+    setSocket(socketIo);
 
-        return () => {
-            socketIo.disconnect(); // Limpiar conexión cuando el componente se desmonte
-        };
-    }, [serverUrl]);
+    // Escucha para actualizar los productos
+    socketIo.on("loadProducts", (data: Product[]) => {
+      setProducts(data);
+    });
 
-    return { socket, products };
+    // Escucha para recibir las notificaciones del usuario
+    socketIo.on("userNotifications", (data: Notification[]) => {
+      setNotifications(data);
+      console.log(data);
+    });
+
+    // Escucha para recibir la notificación actualizada (al marcarla como vista)
+    socketIo.on("notificationUpdated", (updatedNotification: Notification) => {
+      console.log("Notificación actualizada:", updatedNotification);
+      // Aquí podrías actualizar el estado `notifications` si lo consideras necesario.
+    });
+
+    // Escucha para manejar errores
+    socketIo.on("error", (error: any) => {
+      console.error("Socket error:", error);
+    });
+
+    // Cleanup: desconectar el socket cuando el componente se desmonte
+    return () => {
+      socketIo.disconnect();
+    };
+  }, []); 
+
+  // Función para solicitar las notificaciones de un usuario.
+  const getUserNotifications = (userId: string): void => {
+    if (socket) {
+      socket.emit("getUserNotifications", userId);
+    }
+  };
+
+  // Función para marcar una notificación como vista.
+  const markNotificationAsSeen = (notificationId: string): void => {
+    if (socket) {
+      socket.emit("markNotificationAsSeen", notificationId);
+    }
+  };
+
+  return { socket, products, notifications, setNotifications, getUserNotifications, markNotificationAsSeen };
 };
