@@ -17,7 +17,7 @@ export const useSocket = (): UseSocketReturn => {
 
   useEffect(() => {
     // URL fija para la conexión con el servidor de WebSocket
-    const socketIo = io(process.env.NEXT_PUBLIC_WEBSOCKETS_URL);
+    const socketIo = io("https://app-notifications-yzwl.onrender.com/");
     setSocket(socketIo);
 
     // Escucha para actualizar los productos
