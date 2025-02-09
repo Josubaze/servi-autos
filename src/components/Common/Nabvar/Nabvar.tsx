@@ -8,19 +8,10 @@ import Image from 'next/image'
 import { ProfileDropdown } from './ProfileDropdown'
 import { OptionsMobile } from './NavbarMobile/OptionsMobile';
 import { OptionsDesktop } from './OptionsDesktop';
-import { useSocket } from 'src/hooks/useSocket';
-import { useEffect } from 'react';
 
 export const Navbar = () => {
   const { data: session } = useSession();
-  const { getUserNotifications, notifications, setNotifications } = useSocket();  
 
-  useEffect(() => {
-    if (session?.user?.id) {
-      getUserNotifications(session.user.id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]); 
   return (
     <Disclosure as="nav" className="bg-indigo-950">
       <div className="mx-auto px-2 sm:px-6 lg:px-8">
@@ -39,7 +30,7 @@ export const Navbar = () => {
               <OptionsDesktop session={session}/>
             </div>
           </div>
-          {session?.user && <ProfileDropdown notifications={notifications} setNotifications={setNotifications} image={session.user.image} />}
+          {session?.user && <ProfileDropdown image={session.user.image} />}
         </div>
       </div>
       <OptionsMobile session={session} />

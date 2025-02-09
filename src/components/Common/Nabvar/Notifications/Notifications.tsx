@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { Checkbox, Tooltip } from "@nextui-org/react";
-import { useSocket } from 'src/hooks/useSocket';
 import { motion } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import { useSocketContext } from 'src/context/SocketContext';
 
-interface NotificationsProps {
-  notifications: Notification[];
-  setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
-}
 
-export const Notifications = ({ notifications, setNotifications }: NotificationsProps) => {
-  const { markNotificationAsSeen } = useSocket();
+export const Notifications = () => {
+  const { notifications, markNotificationAsSeen, getUserNotifications } = useSocketContext();
   const [markedNotifications, setMarkedNotifications] = useState<string[]>([]);
+  const { data: session } = useSession();
 
   const sortedNotifications = [...notifications].sort((a, b) => {
     if (a.seen === b.seen) return 0;
@@ -18,18 +16,11 @@ export const Notifications = ({ notifications, setNotifications }: Notifications
   });
 
   const handleMarkAsSeen = (id: string) => {
+    if(!session?.user) return;
     // Marcar localmente para aplicar el efecto visual
     setMarkedNotifications((prev) => [...prev, id]);
-
-    // Actualizamos el estado global para que la notificación quede marcada como vista
-    setNotifications((prevNotifications) =>
-      prevNotifications.map((notif) =>
-        notif._id === id ? { ...notif, seen: true } : notif
-      )
-    );
-
     // Llamamos a la función del socket para marcarla como leída en el servidor
-    markNotificationAsSeen(id);
+    markNotificationAsSeen(id, session?.user.id );
   };
 
   return (

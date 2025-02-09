@@ -3,22 +3,21 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MENUPROFILE } from 'src/utils/constanst';
-import { Notifications } from '../Notifications'; // Ajusta la ruta según tu estructura
+import { Notifications } from '../Notifications'; 
 import { Badge, Button } from '@nextui-org/react';
 import { IoNotificationsCircleOutline } from 'react-icons/io5';
+import { useSocketContext } from 'src/context/SocketContext';
 
 interface ProfileDropdownProps {
   image: string | null | undefined;
-  notifications: Notification[];
-  setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>
 }
 
-export const ProfileDropdown = ({ image, notifications, setNotifications }: ProfileDropdownProps) => {
-
-
+export const ProfileDropdown = ({ image }: ProfileDropdownProps) => {
+  const { notifications } = useSocketContext();
   const [showNotifications, setShowNotifications] = useState(false);
   // Ref para envolver el botón de notificaciones y el panel
   const notificationsContainerRef = useRef<HTMLDivElement>(null);
+
 
   // Listener para detectar clics fuera del contenedor de notificaciones
   useEffect(() => {
@@ -40,8 +39,23 @@ export const ProfileDropdown = ({ image, notifications, setNotifications }: Prof
   return (
     <div className="relative flex items-center">
       {/* Contenedor para el botón de notificaciones y su panel */}
-      <div className="relative flex items-center justify-center" ref={notificationsContainerRef} >
-        <Badge color="primary" content={notifications.filter(n => !n.seen).length} shape="circle">
+      <div className="relative flex items-center justify-center" ref={notificationsContainerRef}>
+        {notifications.length > 0 ? (
+          <Badge 
+            content={notifications.filter(n => !n.seen).length} 
+            className='border-none text-gray-100 bg-indigo-700' 
+            shape="circle"
+          >
+            <Button  
+              isIconOnly 
+              radius="full"
+              variant="light"
+              onClick={() => setShowNotifications((prev) => !prev)}
+            >
+              <IoNotificationsCircleOutline size={36} />
+            </Button>
+          </Badge>
+        ) : (
           <Button  
             isIconOnly 
             radius="full"
@@ -50,15 +64,16 @@ export const ProfileDropdown = ({ image, notifications, setNotifications }: Prof
           >
             <IoNotificationsCircleOutline size={36} />
           </Button>
-        </Badge>
+        )}
 
         {/* Panel de notificaciones */}
         {showNotifications && (
           <div className="absolute right-0 top-full mt-2">
-            <Notifications notifications={notifications} setNotifications={setNotifications}/>
+            <Notifications/>
           </div>
         )}
       </div>
+
 
       {/* Menú de perfil */}
       <div className="ml-3">
