@@ -11,7 +11,9 @@ export const Notifications = () => {
   const { data: session } = useSession();
 
   const sortedNotifications = [...notifications].sort((a, b) => {
-    if (a.seen === b.seen) return 0;
+    if (a.seen === b.seen) {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
     return a.seen ? 1 : -1;
   });
 
