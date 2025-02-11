@@ -178,10 +178,11 @@ interface Product {
 
   interface Notification {
     _id: string;
-    product: string;
+    identifier: string;
     user: string;
     message: string;
     seen: boolean;
+    createdAt: Date;
     seenAt?: Date;
   }
 

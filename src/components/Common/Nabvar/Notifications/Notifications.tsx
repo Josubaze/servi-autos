@@ -6,7 +6,7 @@ import { useSocketContext } from 'src/context/SocketContext';
 
 
 export const Notifications = () => {
-  const { notifications, markNotificationAsSeen, getUserNotifications } = useSocketContext();
+  const { notifications, markNotificationAsSeen } = useSocketContext();
   const [markedNotifications, setMarkedNotifications] = useState<string[]>([]);
   const { data: session } = useSession();
 
@@ -48,7 +48,14 @@ export const Notifications = () => {
                   <div>
                     <span className="text-base font-medium">📩 {notification.message}</span>
                     <span className="block text-sm text-gray-300 mt-1">
-                      🆔 ID Producto: <span className="font-mono text-white">{notification._id}</span>
+                      🕓 Hora: <span className="font-mono text-white">
+                        {`${new Date(notification.createdAt).toLocaleTimeString('es-ES', { hour: '2-digit', minute:     '2-digit', hour12: true })}  - 
+                          ${new Date(notification.createdAt).toLocaleDateString('es-ES')}`}
+                    </span>
+                    
+                    </span>
+                    <span className="block text-sm text-gray-300 mt-1">
+                      🆔 ID: <span className="font-mono text-white">{notification.identifier}</span>
                     </span>
                   </div>
     
