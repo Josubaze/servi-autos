@@ -4,6 +4,7 @@ import { useCreateBudgetMutation, useUpdateBudgetMutation } from "src/redux/serv
 import { toast } from "react-toastify";
 import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './useBudgetSummary'
+import { useUpdateStateReportMutation } from "src/redux/services/reports.Api";
 
 interface FormHandle {
     submitForm: () => Promise<Form | null>;
@@ -42,6 +43,8 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     const calculatedIgtf = calculateIgft((subtotal+calculatedIva), igtfPercentage);
     const total = calculateTotal((subtotal), calculatedIva, 0);
     const totalWithIgft = calculateTotal((subtotal), calculatedIva, calculatedIgtf);
+    const [refReport, setRefReport] = useState<string | null>(null);
+    const [ updateStateReport ]  = useUpdateStateReportMutation();
     // Inicializar datos si el modo es "update"
     useEffect(() => {
         if (mode === "upload" && budgetData) {
@@ -212,15 +215,26 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     
             // Crear o Actualizar según `mode`
             if (mode === "create") {
+
                 await createBudget(budget).unwrap();
+
+                if (refReport !== null) {
+                try {
+                    await updateStateReport({ id: refReport }).unwrap();
+                    toast.info("Se ha actualizado el estado del Informe");
+                } catch (updateError) {
+                        console.error("Error al actualizar el estado del informe:", updateError);
+                        toast.error("Presupuesto creado, pero ocurrió un error al actualizar el estado del informe");
+                    }   
+                }
                 toast.success("Presupuesto creado exitosamente!");
             } else if (mode === "upload") {
                 const budgetWithId = {
                     ...budget,
                     _id: budget_id,
                     form: {
-                        ...budget.form, // Asegúrate de mantener las propiedades existentes de `budgetForm`
-                        dateUpdate: Date(), // Actualiza la fecha
+                        ...budget.form, 
+                        dateUpdate: Date(), 
                     }
                 };
                 
@@ -265,6 +279,8 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
         handleSetForm,
         handleSetFormCustomer,
         handleSave,
-        extractFormData
+        extractFormData,
+        refReport,
+        setRefReport,
     };
 };

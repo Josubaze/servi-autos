@@ -145,7 +145,7 @@ export const ReportView = forwardRef<HTMLDivElement, ReportViewProps>((
 
                 {/* Footer */}
                 <div className="mt-6 text-xs text-center text-gray-500 border-t pt-4">
-                    Este documento es una representación de la orden de ejecución generada el {formatDate(new Date())}.
+                    Este documento es una representación del reporte, generado el {formatDate(new Date())}.
                 </div>
             </div>
         </div>

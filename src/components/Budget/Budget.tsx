@@ -6,7 +6,6 @@ import { BudgetForm } from "./BudgetForm";
 import { BudgetTable } from "./BudgetTable";
 import { BudgetSummary } from "./BudgetSummary";
 import { BudgetActions } from "./BudgetActions";
-import { Loading } from "../Common/Loading";
 import { useBudget } from "src/hooks/Budget/useBudget";
 import { DocHeader } from "../Common/DocHeader";
 
@@ -44,6 +43,7 @@ import { DocHeader } from "../Common/DocHeader";
         setIvaPercentage,
         setIgtfPercentage,
         handleSetFormCustomer,
+        setRefReport
     } = useBudget({ mode, budgetData });
     
 
@@ -80,6 +80,7 @@ import { DocHeader } from "../Common/DocHeader";
                         handleSetFormCustomer={handleSetFormCustomer}
                         setDescription={setDescription}
                         mode={mode}
+                        setRefReport= {setRefReport}
                     />
                 </div>
             </div>

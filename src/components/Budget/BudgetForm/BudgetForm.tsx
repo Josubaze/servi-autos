@@ -28,6 +28,7 @@ interface BudgetFormProps {
     handleSetFormCustomer: (customer: Customer) => void; 
     setDescription: (description: string) => void; 
     mode: string; 
+    setRefReport: Dispatch<SetStateAction<string | null>>;
   }   
 export const BudgetForm = forwardRef(({ 
     currency, 
@@ -40,7 +41,8 @@ export const BudgetForm = forwardRef(({
     setSelectedServices,
     setOriginalServices,
     handleSetFormCustomer,
-    mode
+    mode,
+    setRefReport
 }: BudgetFormProps, ref) => {
     const today = now(getLocalTimeZone());
     const expirationDate = today.add({ days: 15 });
@@ -114,10 +116,10 @@ export const BudgetForm = forwardRef(({
     // Función para cargar el informe y convertir si es necesario
     const handleReportSelect = (report: ReportWork) => {
         if (!report) return;
-
         setIsUpdating(true); // Activar el loading al inicio
 
         setTimeout(() => {
+            setRefReport(report._id);
             handleSetFormCustomer(report.customer);
             setSelectedServices(report.services);
             setOriginalServices(report.services);
