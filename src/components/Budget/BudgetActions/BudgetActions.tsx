@@ -99,7 +99,7 @@ export const BudgetActions = ({
             {(onClose) => (
               <>
                 <ModalHeader>
-                  {activeAction === "draft" ? "Guardar como Borrador" : "Guardar como Aprobado"}
+                  {activeAction === "draft" ? "GUARDAR COMO: BORRADOR" : "GUARDAR COMO: APROBADO"}
                 </ModalHeader>
                 <ModalBody>
                   <Textarea

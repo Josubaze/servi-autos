@@ -63,7 +63,7 @@ export const ReportActions = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Descripción del informe</ModalHeader>
+              <ModalHeader>GUARDAR INFORME</ModalHeader>
               <ModalBody>
                 <Textarea
                   className="p-2 rounded-md bg-black-nav/50"

@@ -69,7 +69,7 @@ export const CreditNoteActions = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Motivo de la Nota de Crédito</ModalHeader>
+              <ModalHeader>GUARDAR NOTA DE CRÉDITO</ModalHeader>
               <ModalBody>
                 <Textarea
                     className="p-2 rounded-md bg-black-nav/50"
