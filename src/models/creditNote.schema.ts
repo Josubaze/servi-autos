@@ -1,7 +1,6 @@
 import { Schema, model, models } from 'mongoose';
-import dayjs from 'dayjs';
 
-const invoiceSchema = new Schema(
+const creditNoteSchema = new Schema(
   {
     form: {
       type: {
@@ -10,19 +9,14 @@ const invoiceSchema = new Schema(
           required: true,
           unique: true,
         },
+        numInvoice: {
+            type: Number,
+            required: true,
+          },
         dateCreation: {
           type: Date,
           required: true,
-          default: () => dayjs().toDate(),
-        },
-        dateExpiration: {
-          type: Date,
-          required: true,
-          default: () => dayjs().toDate(),
-        },
-        dateUpdate: {
-          type: Date,
-          default: null,
+          default: () => new Date(),
         },
         currency: {
           type: String,
@@ -82,11 +76,6 @@ const invoiceSchema = new Schema(
       required: true,
       trim: true,
     },
-    state: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     subtotal: {
       type: Number,
       required: true,
@@ -117,9 +106,9 @@ const invoiceSchema = new Schema(
     },
   },
   {
-    collection: 'invoices',
+    collection: 'creditNotes',
     timestamps: false,
   }
 );
 
-export default models.Invoice || model('Invoice', invoiceSchema);
+export default models.CreditNote || model('CreditNote', creditNoteSchema);

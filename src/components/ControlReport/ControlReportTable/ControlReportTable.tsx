@@ -32,7 +32,7 @@ export const ControlReportTable: React.FC<ControlReportTableProps> = ({
     }) => {
     const [confirmStateIndex, setConfirmStateIndex] = useState<number | null>(null);
     const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
-    const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num']);
+    const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', '_id']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
     const rows = filteredByDateRange.map(report => ({
         num: report.form.num,

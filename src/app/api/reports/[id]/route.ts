@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import Report from "src/schemas/report.schema";
+import Report from "src/models/report.schema";
 import { connectDB } from 'src/server/dataBase/connectDB'; 
 
 interface RouteParams {

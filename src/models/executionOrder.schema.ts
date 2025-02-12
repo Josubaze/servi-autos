@@ -1,7 +1,6 @@
 import { Schema, model, models } from 'mongoose';
-import dayjs from 'dayjs';
 
-const creditNoteSchema = new Schema(
+const executionOrderSchema = new Schema(
   {
     form: {
       type: {
@@ -10,14 +9,19 @@ const creditNoteSchema = new Schema(
           required: true,
           unique: true,
         },
-        numInvoice: {
-            type: Number,
-            required: true,
-          },
         dateCreation: {
           type: Date,
           required: true,
-          default: () => dayjs().toDate(),
+          default: () => new Date(),
+        },
+        dateExpiration: {
+          type: Date,
+          required: true,
+          default: () => new Date(),
+        },
+        dateUpdate: {
+          type: Date,
+          default: null,
         },
         currency: {
           type: String,
@@ -77,39 +81,16 @@ const creditNoteSchema = new Schema(
       required: true,
       trim: true,
     },
-    subtotal: {
-      type: Number,
+    state: {
+      type: String,
       required: true,
-    },
-    ivaPercentage: {
-      type: Number,
-      required: true,
-    },
-    igtfPercentage: {
-      type: Number,
-      required: true,
-    },
-    calculatedIva: {
-      type: Number,
-      required: true,
-    },
-    calculatedIgtf: {
-      type: Number,
-      required: true,
-    },
-    total: {
-      type: Number,
-      required: true,
-    },
-    totalWithIgft: {
-      type: Number,
-      required: true,
+      trim: true,
     },
   },
   {
-    collection: 'creditNotes',
+    collection: 'executionOrders',
     timestamps: false,
   }
 );
 
-export default models.CreditNote || model('CreditNote', creditNoteSchema);
+export default models.ExecutionOrder || model('ExecutionOrder', executionOrderSchema);

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDB } from 'src/server/dataBase/connectDB'; 
-import Product from "src/schemas/product.schema";
+import Product from "src/models/product.schema";
 import { NextRequest } from "next/server";
 
 interface Params {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import PurchaseOrder from "src/schemas/purchaseOrder.schema";
+import PurchaseOrder from "src/models/purchaseOrder.schema";
 import { connectDB } from 'src/server/dataBase/connectDB'; 
 
 interface RouteParams {

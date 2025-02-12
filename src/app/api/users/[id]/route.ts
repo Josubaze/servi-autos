@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import User from 'src/schemas/user.schema';
+import User from 'src/models/user.schema';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
 import bcrypt from 'bcrypt';
 

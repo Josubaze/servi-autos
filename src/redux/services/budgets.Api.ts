@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import dayjs from 'dayjs';
 
 export const budgetsApi = createApi({
     reducerPath: 'budgetApi',
@@ -13,9 +12,7 @@ export const budgetsApi = createApi({
             query: () => '/budgets',
             providesTags: ['Budgets'],
             transformResponse: (response: Budget[]) => {
-                return response.sort((a, b) => 
-                    dayjs(b.form.dateCreation).isAfter(dayjs(a.form.dateCreation)) ? 1 : -1
-                );
+                return response.sort((a, b) => b.form.num - a.form.num);
             },
             keepUnusedDataFor: 600, 
         }),

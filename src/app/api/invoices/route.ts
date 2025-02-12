@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
-import Invoice from 'src/schemas/invoice.schema';
+import Invoice from 'src/models/invoice.schema';
 
 // GET: Obtener todas las facturas
 export async function GET() {

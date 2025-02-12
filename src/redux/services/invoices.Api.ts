@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import dayjs from 'dayjs';
 
 export const invoicesApi = createApi({
     reducerPath: 'invoiceApi',
@@ -13,9 +12,7 @@ export const invoicesApi = createApi({
             query: () => '/invoices',
             providesTags: ['Invoices'],
             transformResponse: (response: Invoice[]) => {
-                return response.sort((a, b) => 
-                    dayjs(b.form.dateCreation).isAfter(dayjs(a.form.dateCreation)) ? 1 : -1
-                );
+                return response.sort((a, b) => b.form.num - a.form.num);
             },
             keepUnusedDataFor: 600, 
         }),

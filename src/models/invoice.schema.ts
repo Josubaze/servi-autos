@@ -1,7 +1,6 @@
 import { Schema, model, models } from 'mongoose';
-import dayjs from 'dayjs';
 
-const executionOrderSchema = new Schema(
+const invoiceSchema = new Schema(
   {
     form: {
       type: {
@@ -13,12 +12,12 @@ const executionOrderSchema = new Schema(
         dateCreation: {
           type: Date,
           required: true,
-          default: () => dayjs().toDate(),
+          default: () => new Date(),
         },
         dateExpiration: {
           type: Date,
           required: true,
-          default: () => dayjs().toDate(),
+          default: () => new Date(),
         },
         dateUpdate: {
           type: Date,
@@ -87,11 +86,39 @@ const executionOrderSchema = new Schema(
       required: true,
       trim: true,
     },
+    subtotal: {
+      type: Number,
+      required: true,
+    },
+    ivaPercentage: {
+      type: Number,
+      required: true,
+    },
+    igtfPercentage: {
+      type: Number,
+      required: true,
+    },
+    calculatedIva: {
+      type: Number,
+      required: true,
+    },
+    calculatedIgtf: {
+      type: Number,
+      required: true,
+    },
+    total: {
+      type: Number,
+      required: true,
+    },
+    totalWithIgft: {
+      type: Number,
+      required: true,
+    },
   },
   {
-    collection: 'executionOrders',
+    collection: 'invoices',
     timestamps: false,
   }
 );
 
-export default models.ExecutionOrder || model('ExecutionOrder', executionOrderSchema);
+export default models.Invoice || model('Invoice', invoiceSchema);

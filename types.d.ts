@@ -170,12 +170,6 @@ interface Product {
     totalWithIgft: number;
   }
 
-  interface INotification {
-    productId: Types.ObjectId; 
-    message: string; 
-    createdAt: Date; 
-  }
-
   interface Notification {
     _id: string;
     identifier: string;

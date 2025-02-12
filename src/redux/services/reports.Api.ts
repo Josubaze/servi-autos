@@ -12,9 +12,7 @@ export const reportsApi = createApi({
             query: () => '/reports',
             providesTags: ['Reports'],
             transformResponse: (response: ReportWork[]) => {
-                return response.sort((a, b) => 
-                    new Date(b.form.dateCreation).getTime() - new Date(a.form.dateCreation).getTime()
-                );
+                return response.sort((a, b) => b.form.num - a.form.num);
             },
             keepUnusedDataFor: 600, 
         }),

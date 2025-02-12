@@ -3,7 +3,6 @@ import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { useCreateInvoiceMutation , useUpdateInvoiceMutation } from "src/redux/services/invoices.Api";
 import { useCreateExecutionOrderMutation  } from "src/redux/services/executionOrders.Api";
 import { toast } from "react-toastify";
-import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './../Budget/useBudgetSummary'
 import { useUpdateProductQuantityMutation } from "src/redux/services/productsApi";
@@ -39,7 +38,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
     const [createExecutionOrder] = useCreateExecutionOrderMutation();
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [updateInvoice] = useUpdateInvoiceMutation();
-    const [dateUpdate, setDateUpdate] = useState<Dayjs | null>(null);
+    const [dateUpdate, setDateUpdate] = useState<Date | null>(null);
     const router = useRouter();
     const [ivaPercentage, setIvaPercentage] = useState<number>(16); // IVA predeterminado al 16%
     const [igtfPercentage, setIgtfPercentage] = useState<number>(3); // IGTF predeterminado al 3%
@@ -269,7 +268,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                     _id: invoice_id,
                     form: {
                         ...invoice.form,
-                        dateUpdate: Date() // Actualiza la fecha
+                        dateUpdate: Date.now // Actualiza la fecha
                     },
                 };
     
@@ -302,8 +301,6 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
         description,
         setDescription,
         company,
-        dateUpdate,
-        setDateUpdate,
         ivaPercentage, 
         setIvaPercentage,
         igtfPercentage, 

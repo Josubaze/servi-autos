@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
-import Budget from 'src/schemas/budget.schema';
+import Budget from 'src/models/budget.schema';
 
 // GET: Obtener todos los presupuestos
 export async function GET() {

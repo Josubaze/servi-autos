@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
-import ExecutionOrder from 'src/schemas/executionOrder.schema';
+import ExecutionOrder from 'src/models/executionOrder.schema';
 
 // GET: Obtener todas las órdenes de ejecución
 export async function GET() {

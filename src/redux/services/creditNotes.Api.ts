@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import dayjs from 'dayjs';
 
 export const creditNotesApi = createApi({
     reducerPath: 'creditNoteApi',
@@ -11,11 +10,9 @@ export const creditNotesApi = createApi({
         // Obtener todas las notas de crédito
         getCreditNotes: builder.query<CreditNote[], void>({
             query: () => '/credit_notes',
-            providesTags: ['CreditNotes'],
+            providesTags: ['CreditNotes'],          
             transformResponse: (response: CreditNote[]) => {
-                return response.sort((a, b) => 
-                    dayjs(b.form.dateCreation).isAfter(dayjs(a.form.dateCreation)) ? 1 : -1
-                );
+                return response.sort((a, b) => b.form.num - a.form.num);
             },
             keepUnusedDataFor: 600, 
         }),

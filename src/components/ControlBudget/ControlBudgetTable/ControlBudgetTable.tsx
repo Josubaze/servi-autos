@@ -32,7 +32,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     }) => {
     const [confirmStateIndex, setConfirmStateIndex] = useState<number | null>(null);
     const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
-    const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', 'total']);
+    const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', 'total', '_id']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
     const rows = filteredByDateRange.map(budget => ({
         num: budget.form.num,

@@ -12,9 +12,7 @@ export const purchaseOrdersApi = createApi({
             query: () => '/purchase_orders',
             providesTags: ['PurchaseOrders'],
             transformResponse: (response: PurchaseOrder[]) => {
-                return response.sort((a, b) => 
-                    new Date(b.form.dateCreation).getTime() - new Date(a.form.dateCreation).getTime()
-                );
+                return response.sort((a, b) => b.form.num - a.form.num);
             },
             keepUnusedDataFor: 600,
         }),

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
-import PurchaseOrder from 'src/schemas/purchaseOrder.schema';
+import PurchaseOrder from 'src/models/purchaseOrder.schema';
 
 // GET: Obtener todas las órdenes de compra
 export async function GET() {

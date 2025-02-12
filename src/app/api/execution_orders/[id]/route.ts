@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import ExecutionOrder from "src/schemas/executionOrder.schema";
+import ExecutionOrder from "src/models/executionOrder.schema";
 import { connectDB } from 'src/server/dataBase/connectDB'; 
 
 interface RouteParams {

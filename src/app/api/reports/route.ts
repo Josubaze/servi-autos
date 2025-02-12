@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
-import Report from 'src/schemas/report.schema';
+import Report from 'src/models/report.schema';
 
 // GET: Obtener todos los reportes
 export async function GET() {

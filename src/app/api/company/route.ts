@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDB } from 'src/server/dataBase/connectDB'; 
-import Company from 'src/schemas/company.schema';
+import Company from 'src/models/company.schema';
 
 // Obtener la información de la empresa
 export async function GET() {

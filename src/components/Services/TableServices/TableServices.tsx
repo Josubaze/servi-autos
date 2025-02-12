@@ -131,9 +131,18 @@ export const TableServices: React.FC<TableServicesProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {rowsToShow.map((service: Service) => (
-              <ServiceRow key={service._id} service={service} handleEdit={handleEdit} handleDelete={handleDelete} isLider={isLider} />
-            ))}
+          {rowsToShow.map((service: Service) => {
+            console.log(service); // Verifica que el objeto service tenga la forma correcta
+            return (
+              <ServiceRow
+                key={service._id}
+                service={service}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+                isLider={isLider}
+              />
+            );
+          })}
           </TableBody>
         </Table>
         <TablePagination

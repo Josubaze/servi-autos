@@ -1,15 +1,21 @@
 import { NextResponse } from "next/server";
 import { connectDB } from 'src/server/dataBase/connectDB'; 
-import Service from '/src/schemas/service.schema'; // Importa el esquema de servicio
-import Product from 'src/schemas/product.schema';
+import Service from 'src/models/service.schema'; // Importa el esquema de servicio
+import Product from 'src/models/product.schema';
+import { NextRequest } from "next/server";
 
-export async function GET(request, { params }) {
+interface Params {
+  params: { id: string };
+}
+
+export async function GET(request: NextRequest, { params }: Params) {
     await connectDB();
     try {
         const serviceFound = await Service.findById(params.id).populate({
             path: 'products.product',
             select: 'name category price' 
         });
+
         if (!serviceFound) {
             return NextResponse.json(
                 { message: "Service not found" },
@@ -19,27 +25,24 @@ export async function GET(request, { params }) {
         return NextResponse.json(serviceFound);
     } catch (error) {
         return NextResponse.json(
-            error.message,
+            { error: (error as Error).message },
             { status: 400 }
         );
     }
 }
 
-export async function PUT(request, { params }) {
+export async function PUT(request: NextRequest, { params }: Params) {
     await connectDB();
     try {
-        const data = await request.json();
+        const data: Service = await request.json();
         const productsInService = data.products;
-        
-        const productIds = productsInService.map(item => item.product);
+
+        const productIds = productsInService.map(item => (item.product));
         const products = await Product.find({ '_id': { $in: productIds } });
 
         const productsPrice = productsInService.reduce((total, productInService) => {
             const product = products.find(p => p._id.toString() === productInService.product);
-            if (product) {
-                return total + (product.price * productInService.quantity);
-            }
-            return total;
+            return product ? total + (product.price * productInService.quantity) : total;
         }, 0);
 
         const serviceQuantity = data.serviceQuantity || 1;
@@ -50,8 +53,8 @@ export async function PUT(request, { params }) {
             params.id,
             {
                 ...data,
-                productsPrice: productsPrice,
-                totalPrice: totalPrice
+                productsPrice,
+                totalPrice
             },
             { new: true }
         ).populate({
@@ -69,14 +72,13 @@ export async function PUT(request, { params }) {
         return NextResponse.json(serviceUpdated);
     } catch (error) {
         return NextResponse.json(
-            error.message,
+            { error: (error as Error).message },
             { status: 400 }
         );
     }
 }
 
-
-export async function DELETE(request, { params }) {
+export async function DELETE(request: NextRequest, { params }: Params) {
     await connectDB();
     try {
         const serviceDeleted = await Service.findByIdAndDelete(params.id);
@@ -90,7 +92,7 @@ export async function DELETE(request, { params }) {
         return NextResponse.json(services);
     } catch (error) {
         return NextResponse.json(
-            error.message,
+            { error: (error as Error).message },
             { status: 400 }
         );
     }

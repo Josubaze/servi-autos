@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
-import User from 'src/schemas/user.schema';
+import User from 'src/models/user.schema';
 import bcrypt from "bcrypt";
 
 // GET: Obtener todos los usuarios

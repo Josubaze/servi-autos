@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import CreditNote from 'src/schemas/creditNote.schema';
+import CreditNote from 'src/models/creditNote.schema';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
 
 interface RouteParams {

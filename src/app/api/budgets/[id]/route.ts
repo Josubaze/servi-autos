@@ -1,6 +1,5 @@
-import dayjs from "dayjs";
 import { NextResponse } from "next/server";
-import Budget from 'src/schemas/budget.schema';
+import Budget from 'src/models/budget.schema';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
 
 interface RouteParams {
@@ -88,7 +87,7 @@ export async function PATCH(request: Request, { params }: { params: RouteParams 
             {
                 state: "Aprobado",
                 // Actualiza solo la fecha de actualización sin modificar el resto del objeto `form`
-                $set: { "form.dateUpdate": dayjs().toDate() },
+                $set: { "form.dateUpdate": Date() },
             },
             { new: true } // Devuelve el documento actualizado
         );

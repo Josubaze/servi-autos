@@ -27,7 +27,7 @@ export const ControlCreditNoteTable: React.FC<TableControlCreditNoteProps> = ({
     handleExportPDF,
     }) => {
     
-    const filteredData = useDynamicFilter(data, searchTerm, ['description', 'form.num', 'total']);
+    const filteredData = useDynamicFilter(data, searchTerm, ['description', 'form.num', 'total', '_id']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
     const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
     const rows = filteredByDateRange.map(creditNote => ({
@@ -43,7 +43,7 @@ export const ControlCreditNoteTable: React.FC<TableControlCreditNoteProps> = ({
     const columns = [
     {
         name: "num",
-        label: "N° Nota de Crédito",
+        label: "N°",
         options: { filter: false, sort: true },
     },
     {

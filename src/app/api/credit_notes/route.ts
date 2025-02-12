@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
-import CreditNote from 'src/schemas/creditNote.schema';
+import CreditNote from 'src/models/creditNote.schema';
 
 // GET: Obtener todas las notas de crédito
 export async function GET() {

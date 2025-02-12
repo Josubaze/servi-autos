@@ -222,7 +222,7 @@ export const ReportFormSchema = z.object({
 export const ServiceSchema = z.object({
   name: z.string()
     .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
-    .max(40, { message: "El nombre no puede exceder los 40 caracteres" })
+    .max(80, { message: "El nombre no puede exceder los 80 caracteres" })
     .trim(),
   
   servicePrice: z.union([

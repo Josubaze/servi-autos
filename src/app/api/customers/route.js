@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDB } from 'src/server/dataBase/connectDB'; 
-import Customer from '/src/schemas/customer.schema';
+import Customer from '/src/models/customer.schema';
 
 export async function GET(request, { params }) {
     await connectDB();
