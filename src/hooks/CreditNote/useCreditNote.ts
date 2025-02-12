@@ -33,7 +33,6 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
     const [description, setDescription] = useState<string>("");
     const { data: company, isLoading, isError } = useGetCompanyQuery();
     const [createCreditNote] = useCreateCreditNoteMutation();
-    const [isSaving, setIsSaving] = useState<boolean>(false);
     const [dateUpdate, setDateUpdate] = useState<Date | null>(null);
     const [ivaPercentage, setIvaPercentage] = useState<number>(16); // IVA predeterminado al 16%
     const [igtfPercentage, setIgtfPercentage] = useState<number>(3); // IGTF predeterminado al 3%
@@ -177,7 +176,6 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
 
     // Función principal para guardar la factura
     const handleSave = async () => {
-        setIsSaving(true);
         try {
             const {
                 customerData,
@@ -235,8 +233,7 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
                         } else {
                             toast.error(`Error desconocido al actualizar el producto: ${product.product.name}`);
                         }
-                        setIsSaving(false);
-                        return; // Salir de la función sin crear
+                        return; 
                     }
                 }
             }
@@ -248,8 +245,6 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
             resetValues();
         } catch (error) {
             toast.error("Ha ocurrido un error");
-        } finally {
-            setIsSaving(false);
         }
     };
     
@@ -281,7 +276,6 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
         totalWithIgft,
         isLoading,
         isError,
-        isSaving,
         handleSetForm,
         handleSetFormCustomer,
         handleSave,

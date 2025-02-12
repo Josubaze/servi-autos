@@ -28,7 +28,6 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
     const [description, setDescription] = useState<string>("");
     const { data: company, isLoading, isError } = useGetCompanyQuery();
     const [createReport] = useCreateReportMutation();
-    const [isSaving, setIsSaving] = useState<boolean>(false);
     const [updateReport] = useUpdateReportMutation();
     const [dateUpdate, setDateUpdate] = useState<Date | null>(null);
     const router = useRouter();
@@ -124,7 +123,6 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
 
     // Función principal para guardar el presupuesto
     const handleSave = async ( mode: "create" | "upload", report_id : string) => {
-        setIsSaving(true);
         try {
             const {
                 customerData,
@@ -178,9 +176,7 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
             resetValues();
         } catch (error) {
             toast.error("Ha ocurrido un error");
-        } finally {
-            setIsSaving(false);
-        }
+        } 
     };
 
     return {
@@ -197,7 +193,6 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
         setDateUpdate,
         isLoading,
         isError,
-        isSaving,
         handleSetForm,
         handleSetFormCustomer,
         handleSave,

@@ -36,7 +36,6 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
     const { data: company, isLoading, isError } = useGetCompanyQuery();
     const [createInvoice] = useCreateInvoiceMutation();
     const [createExecutionOrder] = useCreateExecutionOrderMutation();
-    const [isSaving, setIsSaving] = useState<boolean>(false);
     const [updateInvoice] = useUpdateInvoiceMutation();
     const [dateUpdate, setDateUpdate] = useState<Date | null>(null);
     const router = useRouter();
@@ -175,7 +174,6 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
 
     // Función principal para guardar la factura
     const handleSave = async (action: "draft" | "paid" | "pending", mode: "create" | "upload", invoice_id: string) => {
-        setIsSaving(true);
         try {
             const {
                 customerData,
@@ -237,7 +235,6 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                             } else {
                                 toast.error(`Error desconocido al actualizar el producto: ${product.product.name}`);
                             }
-                            setIsSaving(false);
                             return; // Salir de la función sin crear la factura
                         }
                     }
@@ -280,8 +277,6 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
             resetValues();
         } catch (error) {
             toast.error("Ha ocurrido un error");
-        } finally {
-            setIsSaving(false);
         }
     };
     
@@ -311,7 +306,6 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
         totalWithIgft,
         isLoading,
         isError,
-        isSaving,
         handleSetForm,
         handleSetFormCustomer,
         handleSave,

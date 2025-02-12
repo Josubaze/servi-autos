@@ -1,145 +1,177 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TbArrowBadgeRightFilled } from "react-icons/tb";
-import { IoMdCheckmark } from "react-icons/io";
+import { IoMdCheckmark, IoMdArrowBack } from "react-icons/io";
 import { LuFileText, LuFileCheck, LuFileClock } from "react-icons/lu";
-import { Button, Divider, Input, Tooltip } from "@nextui-org/react";
-import { IoMdArrowBack } from "react-icons/io";
+import {
+  Button,
+  Divider,
+  Tooltip,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Textarea,
+  useDisclosure,
+} from "@nextui-org/react";
 import { Loading } from "src/components/Common/Loading";
 
 interface InvoiceActionsProps {
-    description: string;
-    setDescription: (value: string) => void;
-    handleButtonType: (action: "draft" | "paid" | "pending") => Promise<void>;
-    mode?: "create" | "upload";
+  description: string;
+  setDescription: (value: string) => void;
+  handleButtonType: (action: "draft" | "paid" | "pending") => Promise<void>;
+  mode?: "create" | "upload";
+}
+
+export const InvoiceActions = ({
+  description,
+  setDescription,
+  handleButtonType,
+  mode,
+}: InvoiceActionsProps) => {
+  // Usamos activeAction para saber qué acción se disparó
+  const [activeAction, setActiveAction] = useState<"draft" | "paid" | "pending" | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  // Textos de tooltip según el modo
+  const draftTooltipText = mode === "upload" ? "Actualizar como Borrador" : "Borrador";
+  const paidTooltipText = mode === "upload" ? "Actualizar como Pagada" : "Pagada";
+  const pendingTooltipText = mode === "upload" ? "Actualizar como Pendiente" : "Pendiente";
+
+  // Función para abrir el modal y fijar la acción activa
+  const handleOpenModal = (action: "draft" | "paid" | "pending") => {
+    setActiveAction(action);
+    onOpen();
+  };
+
+  // Reiniciar activeAction cuando el modal se cierra
+  useEffect(() => {
+    if (!isOpen) {
+      setActiveAction(null);
     }
+  }, [isOpen]);
 
-    export const InvoiceActions = ({
-    description,
-    setDescription,
-    handleButtonType,
-    mode,
-    }: InvoiceActionsProps) => {
-    const [activeButton, setActiveButton] = useState<"draft" | "paid" | "pending" | null>(null);
-    const showTextField = activeButton === "draft" || activeButton === "paid" || activeButton === "pending";
-    const draftTooltipText = mode === "upload" ? "Actualizar como Borrador" : "Borrador";
-    const paidTooltipText = mode === "upload" ? "Actualizar como Pagada" : "Pagada";
-    const pendingTooltipText = mode === "upload" ? "Actualizar como Pendiente" : "Pendiente";
-    const [isLoading, setIsLoading] = useState(false);
-
-    return (
+  return (
+    <>
         <div className="grid grid-cols-2 rounded-lg w-full py-3 mt-6 pr-4">
             <div className="col-start-2 flex items-center justify-end gap-x-4">
-                <div>
+            <div>
                 <motion.div
-                    animate={{ x: ["0px", "20px", "0px"] }}
-                    transition={{ duration: 1, repeat: 5, ease: "easeInOut" }}
-                    className="flex gap-x-2 justify-center items-center"
+                animate={{ x: ["0px", "20px", "0px"] }}
+                transition={{ duration: 1, repeat: 5, ease: "easeInOut" }}
+                className="flex gap-x-2 justify-center items-center"
                 >
-                    <span className="font-knewave text-4xl">GUARDAR</span>
-                    <TbArrowBadgeRightFilled className="text-5xl" />
+                <span className="font-knewave text-4xl">GUARDAR</span>
+                <TbArrowBadgeRightFilled className="text-5xl" />
                 </motion.div>
-                </div>
+            </div>
 
-                {showTextField && (
-                    <Input
-                    label="Descripción"
-                    variant="underlined"
-                    fullWidth
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+            {/* Botón para acción "Borrador" */}
+            <Tooltip content={draftTooltipText}>
+                <Button
+                color="default"
+                variant="flat"
+                isIconOnly
+                className="w-16 h-16 min-w-16 rounded-full"
+                onClick={() => handleOpenModal("draft")}
+                >
+                <LuFileText className="w-10 h-10" />
+                </Button>
+            </Tooltip>
+
+            <Divider orientation="vertical" />
+
+            {/* Botón para acción "Pendiente" */}
+            <Tooltip content={pendingTooltipText}>
+                <Button
+                color="warning"
+                variant="flat"
+                isIconOnly
+                className="w-16 h-16 min-w-16 rounded-full"
+                onClick={() => handleOpenModal("pending")}
+                >
+                <LuFileClock className="w-10 h-10" />
+                </Button>
+            </Tooltip>
+
+            {/* Botón para acción "Pagada" */}
+            <Tooltip content={paidTooltipText}>
+                <Button
+                color="success"
+                variant="flat"
+                isIconOnly
+                className="w-16 h-16 min-w-16 rounded-full"
+                onClick={() => handleOpenModal("paid")}
+                >
+                <LuFileCheck className="w-10 h-10" />
+                </Button>
+            </Tooltip>
+            </div>
+        </div>
+
+        {/* Modal para ingresar la descripción y confirmar la acción */}
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <ModalContent>
+            {(onClose) => (
+                <>
+                <ModalHeader>
+                    {activeAction === "draft"
+                    ? "GUARDAR COMO: BORRADOR"
+                    : activeAction === "pending"
+                    ? "GUARDAR COMO: PENDIENTE"
+                    : activeAction === "paid"
+                    ? "GUARDAR COMO: PAGADA"
+                    : "Guardar"}
+                </ModalHeader>
+                <ModalBody>
+                    <Textarea
+                        className="p-2 rounded-md bg-black-nav/50"
+                        label="Descripción"
+                        variant="underlined"
+                        labelPlacement="outside"
+                        placeholder="Escribe aquí la descripción..."
+                        rows={5}
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
-                )}
-
-                {/* Botón de borrador */}
-                {activeButton !== "paid" && activeButton !== "pending" && (
-                <Tooltip content={activeButton === "draft" ? "Volver" : draftTooltipText}>
+                </ModalBody>
+                <ModalFooter>
                     <Button
                     color="default"
                     variant="flat"
-                    isIconOnly
-                    className="w-16 h-16 min-w-16 rounded-full"
-                    onClick={() => setActiveButton(activeButton === "draft" ? null : "draft")}
+                    onPress={() => {
+                        setDescription("");
+                        onClose();
+                    }}
+                    startContent={<IoMdArrowBack />}
                     >
-                    {activeButton === "draft" ? (
-                        <IoMdArrowBack className="w-10 h-10" />
-                    ) : (
-                        <LuFileText className="w-10 h-10" />
-                    )}
+                    Volver
                     </Button>
-                </Tooltip>
-                )}
-                <Divider orientation="vertical"></Divider>
-                {/* Botón de pendiente */}
-                {activeButton !== "draft" && activeButton !== "paid" && (
-                <Tooltip content={activeButton === "pending" ? "Volver" : pendingTooltipText}>
-                    <Button
-                        color={activeButton === "pending" ? "default" : "warning"}
-                        variant="flat"
-                        isIconOnly
-                        className="w-16 h-16 min-w-16 rounded-full"
-                        onClick={() => setActiveButton(activeButton === "pending" ? null : "pending")}
-                    >
-                    {activeButton === "pending" ? (
-                        <IoMdArrowBack className="w-10 h-10" />
-                    ) : (
-                        <LuFileClock className="w-10 h-10" />
-                    )}
-                    </Button>
-                </Tooltip>
-                )}
-
-                {/* Botón de pagada */}
-                {activeButton !== "draft" && activeButton !== "pending" && (
-                    <Tooltip content={activeButton === "paid" ? "Volver" : paidTooltipText}>
-                        <Button
-                        color={activeButton === "paid" ? "default" : "success"}
-                        variant="flat"
-                        isIconOnly
-                        className="w-16 h-16 min-w-16 rounded-full"
-                        onClick={() => setActiveButton(activeButton === "paid" ? null : "paid")}
-                        >
-                        {activeButton === "paid" ? (
-                            <IoMdArrowBack className="w-10 h-10" />
-                        ) : (
-                            <LuFileCheck className="w-10 h-10" />
-                        )}
-                        </Button>
-                    </Tooltip>
-                )}
-
-                {/* Botón de confirmación */}
-                {activeButton && (
-                <Tooltip content="Confirmar">
                     <Button
                     color="primary"
-                    variant="flat"
-                    isIconOnly
-                    className="w-16 h-16 min-w-16 rounded-full"
-                    onClick={async () => {
-                        if (activeButton) {
+                    isLoading={isLoading}
+                    onPress={async () => {
+                        if (activeAction) {
                         setIsLoading(true);
                         try {
-                            await handleButtonType(activeButton);
+                            await handleButtonType(activeAction);
                         } finally {
-                            setActiveButton(null);
                             setIsLoading(false);
+                            onClose();
                         }
                         }
                     }}
-                    isLoading={isLoading}
+                    startContent={<IoMdCheckmark />}
                     >
-                    {isLoading ? (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-                        <Loading />
-                        </div>
-                    ) : (
-                        <IoMdCheckmark className="w-10 h-10" />
-                    )}
+                    Confirmar
                     </Button>
-                </Tooltip>
-                )}
-            </div>
-        </div>
+                </ModalFooter>
+                </>
+            )}
+            </ModalContent>
+        </Modal>
+        </>
     );
 };

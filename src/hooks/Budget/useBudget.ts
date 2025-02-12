@@ -32,7 +32,6 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     const [description, setDescription] = useState<string>("");
     const { data: company, isLoading, isError } = useGetCompanyQuery();
     const [createBudget] = useCreateBudgetMutation();
-    const [isSaving, setIsSaving] = useState<boolean>(false);
     const [updateBudget] = useUpdateBudgetMutation();
     const [dateUpdate, setDateUpdate] = useState<Date | null>(null);
     const router = useRouter();
@@ -170,7 +169,6 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
 
     // Función principal para guardar el presupuesto
     const handleSave = async (action: "draft" | "approved", mode: "create" | "upload", budget_id : string) => {
-        setIsSaving(true);
         try {
             const {
                 customerData,
@@ -234,8 +232,6 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
             resetValues();
         } catch (error) {
             toast.error("Ha ocurrido un error");
-        } finally {
-            setIsSaving(false);
         }
     };
 
@@ -266,7 +262,6 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
         totalWithIgft,
         isLoading,
         isError,
-        isSaving,
         handleSetForm,
         handleSetFormCustomer,
         handleSave,

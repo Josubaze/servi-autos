@@ -33,7 +33,6 @@ import { DocHeader } from "../Common/DocHeader";
         company,
         isLoading,
         isError,
-        isSaving,
         handleSave,
         extractFormData,
         ivaPercentage,
@@ -49,12 +48,7 @@ import { DocHeader } from "../Common/DocHeader";
     
 
     return (
-        <div className="relative flex flex-col py-6 px-0 sm:px-12">
-            {isSaving && (
-                <div className="absolute inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm z-50">
-                    <Loading />
-                </div>
-            )}
+        <div className="relative flex flex-col py-6 px-0 sm:px-12">          
             <BudgetOptions  
                 company={company}
                 selectedServices={selectedServices}

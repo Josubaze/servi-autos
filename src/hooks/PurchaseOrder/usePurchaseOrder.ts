@@ -32,7 +32,6 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
     const [description, setDescription] = useState<string>("");
     const { data: company, isLoading, isError } = useGetCompanyQuery();
     const [createPurchaseOrder] = useCreatePurchaseOrderMutation();
-    const [isSaving, setIsSaving] = useState<boolean>(false);
     const [updatePurchaseOrder] = useUpdatePurchaseOrderMutation();
     const [dateUpdate, setDateUpdate] = useState<Date | null>(null);
     const router = useRouter();
@@ -162,7 +161,6 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
 
     // Función principal para guardar el presupuesto
     const handleSave = async (action: "draft" | "inProgress", mode: "create" | "upload", purchaseOrder_id : string) => {
-        setIsSaving(true);
         try {
             const {
                 providerData,
@@ -219,8 +217,6 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
             resetValues();
         } catch (error) {
             toast.error("Ha ocurrido un error");
-        } finally {
-            setIsSaving(false);
         }
     };
 
@@ -251,7 +247,6 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
         totalWithIgft,
         isLoading,
         isError,
-        isSaving,
         handleSetForm,
         handleSetFormProvider,
         handleSave,

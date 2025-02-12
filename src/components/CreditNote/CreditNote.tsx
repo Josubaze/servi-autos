@@ -33,7 +33,6 @@ import { CreditNoteOptions } from "./CreditNoteOptions/CreditNoteOptions";
         company,
         isLoading,
         isError,
-        isSaving,
         handleSave,
         extractFormData,
         ivaPercentage,
@@ -50,11 +49,6 @@ import { CreditNoteOptions } from "./CreditNoteOptions/CreditNoteOptions";
 
     return (
         <div className="relative flex flex-col py-6 px-0 sm:px-12">
-            {isSaving && (
-                <div className="absolute inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm z-50">
-                    <Loading />
-                </div>
-            )}
             <CreditNoteOptions  
                 company={company}
                 selectedServices={selectedServices}

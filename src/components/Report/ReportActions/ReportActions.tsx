@@ -66,7 +66,7 @@ export const ReportActions = ({
               <ModalHeader>Descripción del informe</ModalHeader>
               <ModalBody>
                 <Textarea
-                  className="p-4 rounded-md bg-black-nav/50"
+                  className="p-2 rounded-md bg-black-nav/50"
                   label="Algo breve, por favor."
                   variant="underlined"
                   labelPlacement="outside"

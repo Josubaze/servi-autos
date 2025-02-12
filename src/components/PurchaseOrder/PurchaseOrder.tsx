@@ -8,7 +8,7 @@ import { usePurchaseOrder } from "src/hooks/PurchaseOrder/usePurchaseOrder";
 import { DocHeader } from "../Common/DocHeader";
 import { ProviderForm } from "./ProviderForm";
 import { PurchaseOrderTable } from "./PurchaseOrderTable/PurchaseOrderTable";
-import { PurchaseOrdertActions } from "./PurchaseOrderActions/PurchaseOrderActions";
+import { PurchaseOrderActions } from "./PurchaseOrderActions/PurchaseOrderActions";
 import { PurchaseOrderOptions } from "./PurchaseOrderOptions";
 
     interface PurchaseOrderProps {
@@ -34,7 +34,6 @@ import { PurchaseOrderOptions } from "./PurchaseOrderOptions";
         company,
         isLoading,
         isError,
-        isSaving,
         handleSave,
         extractFormData,
         ivaPercentage,
@@ -51,11 +50,6 @@ import { PurchaseOrderOptions } from "./PurchaseOrderOptions";
 
     return (
         <div className="relative flex flex-col py-6 px-0 sm:px-12">
-            {isSaving && (
-                <div className="absolute inset-0 flex justify-center items-center bg-black/50 backdrop-blur-sm z-50">
-                    <Loading />
-                </div>
-            )}
             <PurchaseOrderOptions  
                 company={company}
                 selectedProducts={selectedProducts}
@@ -112,7 +106,7 @@ import { PurchaseOrderOptions } from "./PurchaseOrderOptions";
                 setIgtfPercentage={setIgtfPercentage}
             />
 
-            <PurchaseOrdertActions
+            <PurchaseOrderActions
                 description={description}
                 setDescription={setDescription}
                 handleButtonType={(action: "draft" | "inProgress") => handleSave( action, mode, purchaseOrderData?._id || '')} 

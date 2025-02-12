@@ -1,129 +1,156 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TbArrowBadgeRightFilled } from "react-icons/tb";
-import { IoMdCheckmark } from "react-icons/io";
-import { Loading } from "src/components/Common/Loading";
-import { LuFileText } from "react-icons/lu";
-import { LuFileCheck } from "react-icons/lu";
-import { Button, Divider, Input, Tooltip } from "@nextui-org/react";
-import { IoMdArrowBack } from "react-icons/io";
+import { IoMdCheckmark, IoMdArrowBack } from "react-icons/io";
+import { LuFileText, LuFileCheck } from "react-icons/lu";
+import {
+  Button,
+  Divider,
+  Tooltip,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Textarea,
+} from "@nextui-org/react";
 
 interface PurchaseOrderActionsProps {
-    description: string;
-    setDescription: (value: string) => void;
-    handleButtonType: (action: "draft" | "inProgress") => Promise<void>; 
-    mode?: "create" | "upload";
+  description: string;
+  setDescription: (value: string) => void;
+  handleButtonType: (action: "draft" | "inProgress") => Promise<void>;
+  mode?: "create" | "upload";
 }
 
-export const PurchaseOrdertActions = ({
-    description,
-    setDescription,
-    handleButtonType,
-    mode
+export const PurchaseOrderActions = ({
+  description,
+  setDescription,
+  handleButtonType,
+  mode,
 }: PurchaseOrderActionsProps) => {
-    const [activeButton, setActiveButton] = useState<"draft" | "inProgress" | null>(null);
-    const showTextField = activeButton === "draft" || activeButton === "inProgress"; 
+  // Para identificar la acción activa ("draft" o "inProgress")
+  const [activeAction, setActiveAction] = useState<"draft" | "inProgress" | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-    // Texto de los tooltips basado en el valor de 'mode'
-    const draftTooltipText = mode === "upload" ? "Actualizar como Borrador" : "Borrador";
-    const inProgressTooltipText = mode === "upload" ? "Actualizar como Procesar" : "Procesar";
-    const [isLoading, setIsLoading] = useState(false);
+  // Textos de tooltip según el modo
+  const draftTooltipText = mode === "upload" ? "Actualizar como Borrador" : "Borrador";
+  const inProgressTooltipText = mode === "upload" ? "Actualizar como Procesar" : "Procesar";
 
-    return (
-        <div className="grid grid-cols-2 rounded-lg w-full py-3 mt-6 pr-4">
-            <div className="col-start-2 flex items-center justify-end gap-x-4">
-                <div>
-                    <motion.div
-                        animate={{ x: ["0px", "20px", "0px"] }}
-                        transition={{ duration: 1, repeat: 5, ease: "easeInOut" }}
-                        className="flex gap-x-2 justify-center items-center"
-                    >
-                        <span className="font-knewave text-4xl">GUARDAR</span> 
-                        <TbArrowBadgeRightFilled className="text-5xl" />
-                    </motion.div>
-                </div>
+  // Función para abrir el modal y establecer la acción activa
+  const handleOpenModal = (action: "draft" | "inProgress") => {
+    setActiveAction(action);
+    onOpen();
+  };
 
-                {/* Mostrar el TextField solo cuando un botón está activo */}
-                {showTextField && (
-                    <Input
-                        label="Descripción"
-                        variant="underlined"
-                        fullWidth
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                )}
+  // Reiniciar activeAction cuando el modal se cierra
+  useEffect(() => {
+    if (!isOpen) {
+      setActiveAction(null);
+    }
+  }, [isOpen]);
 
-                {/* Botón de borrador */}
-                {activeButton !== "inProgress" && ( 
-                    <Tooltip content={activeButton === "draft" ? "Volver" : draftTooltipText}>
-                        <Button
-                            color="default"
-                            variant="flat"
-                            isIconOnly
-                            className="w-16 h-16 min-w-16 rounded-full"
-                            onClick={() => setActiveButton(activeButton === "draft" ? null : "draft")}
-                        >
-                            {activeButton === "draft" ? (
-                                <IoMdArrowBack className="w-10 h-10" />
-                            ) : (
-                                <LuFileText className="w-10 h-10" />
-                            )}
-                        </Button>
-                    </Tooltip>
-                )}
-                <Divider orientation="vertical"></Divider>
-                {/* Botón de En Proceso */}
-                {activeButton !== "draft" && (
-                    <Tooltip content={activeButton === "inProgress" ? "Volver" : inProgressTooltipText}>
-                        <Button
-                            color={activeButton === "inProgress" ? "default" : "success"}
-                            variant="flat"
-                            isIconOnly
-                            className="w-16 h-16 min-w-16 rounded-full"
-                            onClick={() => setActiveButton(activeButton === "inProgress" ? null : "inProgress")}
-                        >
-                            {activeButton === "inProgress" ? (
-                                <IoMdArrowBack className="w-10 h-10" />
-                            ) : (
-                                <LuFileCheck className="w-10 h-10" />
-                            )}
-                        </Button>
-                    </Tooltip>
-                )}
+  return (
+    <>
+      <div className="grid grid-cols-2 rounded-lg w-full py-3 mt-6 pr-4">
+        <div className="col-start-2 flex items-center justify-end gap-x-4">
+          <div>
+            <motion.div
+              animate={{ x: ["0px", "20px", "0px"] }}
+              transition={{ duration: 1, repeat: 5, ease: "easeInOut" }}
+              className="flex gap-x-2 justify-center items-center"
+            >
+              <span className="font-knewave text-4xl">GUARDAR</span>
+              <TbArrowBadgeRightFilled className="text-5xl" />
+            </motion.div>
+          </div>
 
-                {/* Botón de confirmación */}
-                {activeButton && (
-                    <Tooltip content="Confirmar">
-                        <Button
-                            color="primary"
-                            variant="flat"
-                            isIconOnly
-                            className="w-16 h-16 min-w-16 rounded-full"
-                            onClick={async () => {
-                                if (activeButton) {
-                                    setIsLoading(true); 
-                                    try {
-                                        await handleButtonType(activeButton); 
-                                    } finally {
-                                        setActiveButton(null);
-                                        setIsLoading(false); 
-                                    }
-                                }
-                            }}
-                            isLoading={isLoading}
-                        >
-                            {isLoading ? (
-                                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-                                    <Loading />
-                                </div>
-                            ) : (
-                                <IoMdCheckmark className="w-10 h-10" />
-                            )}
-                        </Button>
-                    </Tooltip>
-                )}
-            </div>
+          {/* Botón para acción "Borrador" */}
+          <Tooltip content={draftTooltipText}>
+            <Button
+              color="default"
+              variant="flat"
+              isIconOnly
+              className="w-16 h-16 min-w-16 rounded-full"
+              onClick={() => handleOpenModal("draft")}
+            >
+              <LuFileText className="w-10 h-10" />
+            </Button>
+          </Tooltip>
+
+          <Divider orientation="vertical" />
+
+          {/* Botón para acción "En Proceso" */}
+          <Tooltip content={inProgressTooltipText}>
+            <Button
+              color="success"
+              variant="flat"
+              isIconOnly
+              className="w-16 h-16 min-w-16 rounded-full"
+              onClick={() => handleOpenModal("inProgress")}
+            >
+              <LuFileCheck className="w-10 h-10" />
+            </Button>
+          </Tooltip>
         </div>
-    );
+      </div>
+
+      {/* Modal de confirmación */}
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>
+                {activeAction === "draft" ? "GUARDAR COMO: BORRADOR" : "GUARDAR COMO: PROCESAR"}
+              </ModalHeader>
+              <ModalBody>
+                <Textarea
+                    className="p-2 rounded-md bg-black-nav/50"
+                    label="Descripción"
+                    variant="underlined"
+                    placeholder="Escribe aquí la descripción..."
+                    fullWidth
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  color="default"
+                  variant="flat"
+                  onPress={() => {
+                    setDescription("");
+                    onClose();
+                  }}
+                  startContent={<IoMdArrowBack />}
+                >
+                  Volver
+                </Button>
+                <Button
+                  color="primary"
+                  variant="flat"
+                  isLoading={isLoading}
+                  onPress={async () => {
+                    if (activeAction) {
+                      setIsLoading(true);
+                      try {
+                        await handleButtonType(activeAction);
+                      } finally {
+                        setIsLoading(false);
+                        onClose();
+                      }
+                    }
+                  }}
+                  startContent={<IoMdCheckmark />}
+                >
+                  Confirmar
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
+  );
 };
