@@ -9,7 +9,6 @@ import { UpdateButton } from "src/components/Common/Buttons/UpdateButton";
 import { DeleteButton } from "src/components/Common/Buttons/DeleteButton";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 
 export const TableProducts: React.FC<TableProductProps> = ({
   data,
@@ -23,7 +22,6 @@ export const TableProducts: React.FC<TableProductProps> = ({
 }) => {
   const { data: session } = useSession(); 
   const isLider = session?.user.role === 'lider';
-  const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
   const columns = [
     { 
       name: "id", 
@@ -90,41 +88,13 @@ export const TableProducts: React.FC<TableProductProps> = ({
                 price: rowData[7],
             };
         
-            const isConfirmingDelete = confirmDeleteIndex === tableMeta.rowIndex;
-        
             return (
                 <div className="flex gap-x-5 justify-center items-center">
-                    {isConfirmingDelete ? (
-                        <>
-                            <p className="font-semibold">Confirmar Eliminación</p>
-                            <div className="flex gap-2">
-                                <button
-                                    className="bg-red-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
-                                    onClick={() => setConfirmDeleteIndex(null)} // Cancelar confirmación
-                                >
-                                    <AiOutlineClose />
-                                </button>
-                                <button
-                                    className="bg-green-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
-                                    onClick={() => {
-                                        setConfirmDeleteIndex(null); // Cerrar confirmación
-                                        handleDelete(product._id); // Ejecutar eliminación
-                                    }}
-                                >
-                                    <AiOutlineCheck />
-                                </button>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <UpdateButton onClick={() => handleEdit(product)} />
-                            <DeleteButton onClick={() => setConfirmDeleteIndex(tableMeta.rowIndex)} />
-                        </>
-                    )}
+                  <UpdateButton onClick={() => handleEdit(product)} />
+                  <DeleteButton onClick={() => handleDelete(product._id)} />
                 </div>
             );
         },
-      
       },
     }
   ];

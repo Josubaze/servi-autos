@@ -10,8 +10,6 @@ import { PageTitle } from '../Common/PageTitle';
 import { ServiceForm } from './ServiceForm';
 import { UpdateServiceForm } from './UpdateServiceForm';
 import { SERVICEVOID } from 'src/utils/constanst';
-import dynamic from 'next/dynamic';
-
 import { FaTools } from "react-icons/fa";
 import { Button } from '@nextui-org/react';
 import { LottieTools } from '../Dashboard/DashWidgets/DashWidgets';

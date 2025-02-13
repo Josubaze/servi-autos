@@ -5,6 +5,7 @@ import { FaPlus } from "react-icons/fa6";
 import { FaBoxes } from "react-icons/fa";
 import { SearchBar } from 'src/components/Common/SearchBar';
 import { useDeleteProductMutation, useGetProductsQuery } from 'src/redux/services/productsApi';
+import { useGetServicesQuery } from 'src/redux/services/servicesApi';
 import { TableProducts } from './TableProducts';
 import { FormProduct } from './ProductForm';
 import { UpdateProductForm } from './UpdateProductForm';
@@ -13,14 +14,26 @@ import { PRODUCTVOID } from 'src/utils/constanst';
 import { PageTitle } from '../Common/PageTitle';
 import { LottieProduct } from '../Dashboard/DashWidgets/DashWidgets';
 import { MarketModal } from '../Common/MarketModal';
-import { Button, Tooltip } from '@nextui-org/react';
+import { 
+  Button,
+  Tooltip,
+  Modal,
+  Divider,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Textarea,
+  useDisclosure,
+} from '@nextui-org/react';
 import { MdStore } from "react-icons/md";
 import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
 
 export const StoreHouse = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProductsQuery();
-  const [deleteProduct, { isError: isErrorDelete }] = useDeleteProductMutation();
+  const { data: services = [] } = useGetServicesQuery();
+  const [deleteProduct, { isError: isErrorDelete, isLoading: isLoadingProduct }] = useDeleteProductMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
   const [showMarket, setShowMarket] = useState(false);
@@ -28,6 +41,9 @@ export const StoreHouse = () => {
   const [currentProduct, setCurrentProduct] = useState(PRODUCTVOID);
   const { data: session } = useSession(); 
   const isLider = session?.user.role === 'lider';
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingProductId, setPendingProductId] = useState<string | null>(null);
+  const [referencingServices, setReferencingServices] = useState<any[]>([]);
 
   const handleEdit = (product: Product) => {
     if(isLider) return;
@@ -35,10 +51,32 @@ export const StoreHouse = () => {
     setShowFormUpdate(true);
   };
 
-  const handleDelete = async (productId: string) => {
-    if(isLider) return;
-    await deleteProduct(productId);
-    toast.success('Producto Borrado Exitosamente!')
+  // Función que se ejecuta al presionar el botón de eliminar
+  const handleDelete = async (id: string) => {
+    const productServices = services.filter((service: any) =>
+      service.products.some((item: any) => item.product._id === id)
+    );
+
+    if (productServices.length > 0) {
+      setPendingProductId(id);
+      setReferencingServices(productServices);
+      setIsModalOpen(true);
+    } else {
+      // Si no hay referencias, eliminamos el producto directamente
+      await deleteProduct(id);
+      toast.success('Producto Borrado Exitosamente!');
+    }
+  };
+
+  // Función que se ejecuta al confirmar en el modal
+  const confirmDelete = async () => {
+    if (pendingProductId) {
+      await deleteProduct(pendingProductId);
+      toast.success('Producto Borrado Exitosamente!');
+      setIsModalOpen(false);
+      setPendingProductId(null);
+      setReferencingServices([]);
+    }
   };
 
   return (
@@ -106,6 +144,57 @@ export const StoreHouse = () => {
             <MarketModal isOpen={showMarket} onClose={() => setShowMarket(false)} />
           )
         }
+
+        
+        <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader>Confirmar eliminación de producto</ModalHeader>
+                <ModalBody>
+                  <h2>
+                    El producto se encuentra referenciado en los siguientes servicios:
+                  </h2>
+                  <div
+                    style={{
+                      maxHeight: '200px',
+                      overflowY: 'auto',
+                      marginTop: '10px',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    {referencingServices.map((service) => (
+                      <div key={service._id} style={{ padding: '4px 0' }}>
+                        <p >
+                          {service.name} (ID: {service._id})
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className='text-red-600'>
+                    Al eliminar este producto se removerá de todos estos servicios. ¿Deseas continuar?
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    variant="flat"
+                    color="default"
+                    onPress={() => onClose()}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    onPress={confirmDelete}
+                    isLoading={isLoadingProduct}
+                  >
+                    Aceptar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+          
 
       </div>
     </>

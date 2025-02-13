@@ -132,7 +132,6 @@ export const TableServices: React.FC<TableServicesProps> = ({
           </TableHead>
           <TableBody>
           {rowsToShow.map((service: Service) => {
-            console.log(service); // Verifica que el objeto service tenga la forma correcta
             return (
               <ServiceRow
                 key={service._id}
