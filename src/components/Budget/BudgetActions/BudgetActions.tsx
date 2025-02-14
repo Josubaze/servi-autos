@@ -103,7 +103,7 @@ export const BudgetActions = ({
                 </ModalHeader>
                 <ModalBody>
                   <Textarea
-                    className="p-2 rounded-md bg-black-nav/50"
+                    className="p-2 rounded-md"
                     label="Descripción del Presupuesto"
                     variant="underlined"
                     labelPlacement="outside"

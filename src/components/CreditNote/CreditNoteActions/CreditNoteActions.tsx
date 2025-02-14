@@ -72,7 +72,7 @@ export const CreditNoteActions = ({
               <ModalHeader>GUARDAR NOTA DE CRÉDITO</ModalHeader>
               <ModalBody>
                 <Textarea
-                    className="p-2 rounded-md bg-black-nav/50"
+                    className="p-2 rounded-md"
                     label="Sea breve, por favor."
                     variant="underlined"
                     labelPlacement="outside"

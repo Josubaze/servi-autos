@@ -106,7 +106,7 @@ export const PurchaseOrderActions = ({
               </ModalHeader>
               <ModalBody>
                 <Textarea
-                    className="p-2 rounded-md bg-black-nav/50"
+                    className="p-2 rounded-md"
                     label="Descripción"
                     variant="underlined"
                     placeholder="Escribe aquí la descripción..."
