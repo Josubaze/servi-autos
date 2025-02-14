@@ -26,6 +26,8 @@ export const useControlPurchaseOrder = ({ data, isError, isLoading, isFetching, 
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
   const [updateStatePurchaseOrder] = useUpdateStatePurchaseOrderMutation();
   const [createProduct] = useCreateProductMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingId, setPendingId] = useState<string | null>(null);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -52,12 +54,17 @@ export const useControlPurchaseOrder = ({ data, isError, isLoading, isFetching, 
     }
   };
 
-  const handleDelete = async (purchaseOrderId: string) => {
-    try {
-      await deleteMutation(purchaseOrderId);
-      toast.success('Presupuesto eliminado exitosamente');
-    } catch (error) {
-      toast.error('Hubo un error al tratar de eliminar el presupuesto');
+  const handleDelete = (budgetId: string) => {
+    setPendingId(budgetId);
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (pendingId) {
+      await deleteMutation(pendingId);
+      toast.success('Orden de compra eliminada exitosamente!');
+      setIsModalOpen(false);
+      setPendingId(null);
     }
   };
 
@@ -259,6 +266,7 @@ export const useControlPurchaseOrder = ({ data, isError, isLoading, isFetching, 
     handleUpdate,
     handleStateUpdate,
     handleDelete,
+    confirmDelete,
     handleView,
     handleExportPDF,
     handlePrint,
@@ -269,5 +277,7 @@ export const useControlPurchaseOrder = ({ data, isError, isLoading, isFetching, 
     printRef,
     router,
     isLoadingPDF,
+    isModalOpen,
+    setIsModalOpen
   };
 };

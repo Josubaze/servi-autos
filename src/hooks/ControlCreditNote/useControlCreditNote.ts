@@ -22,18 +22,25 @@ export const useControlCreditNote = ({ data, isError, isLoading, isFetching, isS
   const [creditNoteCopy, setCreditNoteCopy] = useState<any>(null);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingId, setPendingId] = useState<string | null>(null);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleDateRangeChange = (value: any) => setSelectedRange(value);
 
 
-  const handleDelete = async (creditNoteId: string) => {
-    try {
-      await deleteMutation(creditNoteId);
-      toast.success('Nota de Crédito eliminada exitosamente');
-    } catch (error) {
-      toast.error('Hubo un error al tratar de eliminar Nota de Crédito');
+  const handleDelete = (creditNoteId: string) => {
+    setPendingId(creditNoteId);
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (pendingId) {
+      await deleteMutation(pendingId);
+      toast.success('Nota de Crédito eliminada exitosamente!');
+      setIsModalOpen(false);
+      setPendingId(null);
     }
   };
 
@@ -233,6 +240,7 @@ export const useControlCreditNote = ({ data, isError, isLoading, isFetching, isS
     selectedRange,
     handleDateRangeChange,
     handleDelete,
+    confirmDelete,
     handleView,
     handleExportPDF,
     handlePrint,
@@ -244,5 +252,7 @@ export const useControlCreditNote = ({ data, isError, isLoading, isFetching, isS
     printRef,
     router,
     isLoadingPDF,
+    isModalOpen,
+    setIsModalOpen
   };
 };

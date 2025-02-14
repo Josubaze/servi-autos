@@ -24,6 +24,8 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
   const [updateStateInvoice] = useUpdateStateInvoiceMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingId, setPendingId] = useState<string | null>(null);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -53,12 +55,17 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
     }
   };
 
-  const handleDelete = async (invoiceId: string) => {
-    try {
-      await deleteMutation(invoiceId);
-      toast.success('Factura eliminada exitosamente');
-    } catch (error) {
-      toast.error('Hubo un error al tratar de eliminar factura');
+  const handleDelete = (invoiceId: string) => {
+    setPendingId(invoiceId);
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (pendingId) {
+      await deleteMutation(pendingId);
+      toast.success('Factura eliminada exitosamente!');
+      setIsModalOpen(false);
+      setPendingId(null);
     }
   };
 
@@ -261,6 +268,7 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
     handleUpload,
     handleStateUpdate,
     handleDelete,
+    confirmDelete,
     handleView,
     handleExportPDF,
     handlePrint,
@@ -272,5 +280,7 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
     printRef,
     router,
     isLoadingPDF,
+    isModalOpen,
+    setIsModalOpen
   };
 };

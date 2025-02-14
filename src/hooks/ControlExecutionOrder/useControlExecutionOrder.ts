@@ -24,6 +24,8 @@ export const useControlExecutionOrder = ({ data, isError, isLoading, isFetching,
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
   const [updateStateExecutionOrder] = useUpdateStateExecutionOrderMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingId, setPendingId] = useState<string | null>(null);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -41,12 +43,17 @@ export const useControlExecutionOrder = ({ data, isError, isLoading, isFetching,
     }
   };
 
-  const handleDelete = async (executionOrderId: string) => {
-    try {
-      await deleteMutation(executionOrderId);
-      toast.success('Orden eliminada exitosamente');
-    } catch (error) {
-      toast.error('Hubo un error al tratar de eliminar orden');
+  const handleDelete = (executionOrderId: string) => {
+    setPendingId(executionOrderId);
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (pendingId) {
+      await deleteMutation(pendingId);
+      toast.success('Orden de ejecución eliminada exitosamente!');
+      setIsModalOpen(false);
+      setPendingId(null);
     }
   };
 
@@ -247,6 +254,7 @@ export const useControlExecutionOrder = ({ data, isError, isLoading, isFetching,
     handleDateRangeChange,
     handleStateUpdate,
     handleDelete,
+    confirmDelete,
     handleView,
     handleExportPDF,
     handlePrint,
@@ -257,5 +265,7 @@ export const useControlExecutionOrder = ({ data, isError, isLoading, isFetching,
     printRef,
     router,
     isLoadingPDF,
+    isModalOpen,
+    setIsModalOpen
   };
 };

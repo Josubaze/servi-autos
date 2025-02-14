@@ -4,7 +4,7 @@ import { FaPlus } from "react-icons/fa6";
 import { SearchBar } from 'src/components/Common/SearchBar';
 import { PageTitle } from '../Common/PageTitle';
 import { HiDocumentPlus } from "react-icons/hi2";
-import { Button, DateRangePicker } from '@nextui-org/react';
+import { Button, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { Loading } from '../Common/Loading';
 import { useControlCreditNote } from 'src/hooks/ControlCreditNote/useControlCreditNote';
@@ -16,13 +16,14 @@ import { CreditNoteView } from "../CreditNoteView";
 export const ControlCreditNote = () => {
   
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetCreditNotesQuery();
-  const [deleteMutation] = useDeleteCreditNoteMutation();
+  const [deleteMutation, {isLoading: isLoadingDelete}] = useDeleteCreditNoteMutation();
   const {
     searchTerm,
     setSearchTerm,
     selectedRange,
     handleDateRangeChange,
     handleDelete,
+    confirmDelete,
     handleView,
     handlePrint,
     handleExportPDF,
@@ -34,6 +35,8 @@ export const ControlCreditNote = () => {
     creditNoteCopy,
     printRef,
     isLoadingPDF,
+    isModalOpen,
+    setIsModalOpen,
   } = useControlCreditNote({ data, isError, isLoading, isFetching, isSuccess, deleteMutation });
 
   return (
@@ -137,6 +140,35 @@ export const ControlCreditNote = () => {
             <Loading />
           </div>
         )}
+
+        <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="text-gray-200">
+                  Confirmar eliminación de nota de crédito
+                </ModalHeader>
+                <ModalBody>
+                  <p className="text-gray-300">
+                    ¿Deseas eliminar esta nota de crédito? Esta acción no se puede deshacer.
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button variant="flat" color="default" onPress={() => onClose()}>
+                    Cancelar
+                  </Button>
+                  <Button 
+                    color="danger" 
+                    onPress={confirmDelete}
+                    isLoading={isLoadingDelete}
+                  >                      
+                    Aceptar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
     </>
   );
 };

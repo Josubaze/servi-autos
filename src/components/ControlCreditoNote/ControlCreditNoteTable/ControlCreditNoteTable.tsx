@@ -29,7 +29,6 @@ export const ControlCreditNoteTable: React.FC<TableControlCreditNoteProps> = ({
     
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'form.num', 'total', '_id']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
-    const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
     const rows = filteredByDateRange.map(creditNote => ({
         num: creditNote.form.num,
         numInvoice: creditNote.form.numInvoice,
@@ -110,47 +109,17 @@ export const ControlCreditNoteTable: React.FC<TableControlCreditNoteProps> = ({
         }),
         customBodyRender: (value: any, tableMeta: any) => {
             const creditNote = rows[tableMeta.rowIndex].creditNote;
-            const isConfirmingDelete = confirmDeleteIndex === tableMeta.rowIndex;
-        
             return (
                 <div className="flex gap-x-5 justify-center items-center">
-                    {isConfirmingDelete ? (
-                        <>
-                            <p className="font-semibold">Confirmar Eliminación</p>
-                            <div className="flex gap-2">
-                                <button
-                                    className="bg-red-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
-                                    onClick={() => setConfirmDeleteIndex(null)}
-                                >
-                                    <AiOutlineClose />
-                                </button>
-                                
-                                <button
-                                    className="bg-green-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
-                                    onClick={() => {
-                                        setConfirmDeleteIndex(null); 
-                                        handleDelete(creditNote._id); // Ejecutar eliminación
-                                    }}
-                                >
-                                    <AiOutlineCheck />
-                                </button>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <ViewButton onClick={() => handleView(creditNote)} />                       
-                            <PrintButton onClick={() => handlePrint(creditNote)} />                          
-                            <ExportButton onClick={() => handleExportPDF(creditNote)} />                         
-                            <DeleteButton onClick={() => setConfirmDeleteIndex(tableMeta.rowIndex)} />
-                        </>
-                    )}
+                    <ViewButton onClick={() => handleView(creditNote)} />                       
+                    <PrintButton onClick={() => handlePrint(creditNote)} />                          
+                    <ExportButton onClick={() => handleExportPDF(creditNote)} />                         
+                    <DeleteButton onClick={() => handleDelete(creditNote._id)} />
                 </div>
-            );
+            )
         },
-        
         },
     }
-      
     ];
 
     const mobileColumnsToShow = ['num', 'numInvoice', 'dateCreation', 'options'];

@@ -31,7 +31,6 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
     handleExportPDF,
     }) => {
     const [confirmStateIndex, setConfirmStateIndex] = useState<number | null>(null);
-    const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', 'total', '_id']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
     const rows = filteredByDateRange.map(budget => ({
@@ -202,52 +201,25 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 style: { textAlign: "center" },
             }),
             customBodyRender: (value: any, tableMeta: any) => {
-                const budget = rows[tableMeta.rowIndex].budget;
-                const isConfirmingDelete = confirmDeleteIndex === tableMeta.rowIndex; 
-    
+                const budget = rows[tableMeta.rowIndex].budget; 
                 return (
-                    <div className="flex gap-x-5 justify-center items-center">
-                        {isConfirmingDelete ? (
-                            <>
-                                <p className="font-semibold">Confirmar Eliminación</p>
-                                <div className="flex gap-2">
-                                    <button
-                                        className="bg-red-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
-                                        onClick={() => setConfirmDeleteIndex(null)} // Cancelar confirmación
-                                    >
-                                        <AiOutlineClose />
-                                    </button>
-                                    <button
-                                        className="bg-green-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
-                                        onClick={() => {
-                                            setConfirmDeleteIndex(null); // Cerrar confirmación
-                                            handleDelete(budget._id); // Ejecutar eliminación
-                                        }}
-                                    >
-                                        <AiOutlineCheck />
-                                    </button>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                {/* Botón de vista */}
-                                <ViewButton onClick={() => handleView(budget)} />
-            
-                                {/* Botón de actualización solo si el estado no es "Aprobado" */}
-                                {budget.state !== "Aprobado" && (
-                                    <UpdateButton onClick={() => handleUpdate(budget._id)} />
-                                )}
-            
-                                {/* Botón de exportar */}
-                                <ExportButton onClick={() => handleExportPDF(budget)} />
-            
-                                {/* Botón de imprimir */}
-                                <PrintButton onClick={() => handlePrint(budget)} />
-            
-                                {/* Botón de eliminar */}
-                                <DeleteButton onClick={() => setConfirmDeleteIndex(tableMeta.rowIndex)} />
-                            </>
+                    <div className="flex gap-x-5 justify-center items-center">                    
+                        {/* Botón de vista */}
+                        <ViewButton onClick={() => handleView(budget)} />
+    
+                        {/* Botón de actualización solo si el estado no es "Aprobado" */}
+                        {budget.state !== "Aprobado" && (
+                            <UpdateButton onClick={() => handleUpdate(budget._id)} />
                         )}
+    
+                        {/* Botón de exportar */}
+                        <ExportButton onClick={() => handleExportPDF(budget)} />
+    
+                        {/* Botón de imprimir */}
+                        <PrintButton onClick={() => handlePrint(budget)} />
+    
+                        {/* Botón de eliminar */}
+                        <DeleteButton onClick={() => handleDelete(budget._id)} />
                     </div>
                 );
             },

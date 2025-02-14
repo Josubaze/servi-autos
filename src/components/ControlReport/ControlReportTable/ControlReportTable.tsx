@@ -31,7 +31,6 @@ export const ControlReportTable: React.FC<ControlReportTableProps> = ({
     handleExportPDF,
     }) => {
     const [confirmStateIndex, setConfirmStateIndex] = useState<number | null>(null);
-    const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', '_id']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
     const rows = filteredByDateRange.map(report => ({
@@ -172,51 +171,19 @@ export const ControlReportTable: React.FC<ControlReportTableProps> = ({
             }),
             customBodyRender: (value: any, tableMeta: any) => {
                 const report = rows[tableMeta.rowIndex].report;
-                const isConfirmingDelete = confirmDeleteIndex === tableMeta.rowIndex;
                 return (
-                    <div className="flex gap-x-5 justify-center items-center">
-                        {isConfirmingDelete ? (
-                            <>
-                                <p className="font-semibold">Confirmar Eliminación</p>
-                                <div className="flex gap-2">
-                                    <button
-                                         className="bg-red-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
-                                        onClick={() => setConfirmDeleteIndex(null)} // Cancelar confirmación
-                                    >
-                                        <AiOutlineClose />
-                                    </button>
-                                    <button
-                                        className="bg-green-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
-                                        onClick={() => {
-                                            setConfirmDeleteIndex(null); 
-                                            handleDelete(report._id); // Ejecutar eliminación
-                                        }}
-                                    >
-                                        <AiOutlineCheck />
-                                    </button>
-                                </div>
-                            </>
-                        ) : (
-                            <>  
-                                {/* Botón de actualización solo si el estado es "Sin Presupuestar" */}
-                                {report.state === "Sin Presupuestar" ? (
-                                    <UpdateButton onClick={() => handleUpdate(report._id)} />
-                                ) : (
-                                    null
-                                )}
-                                {/* Botón de vista */}
-                                <ViewButton onClick={() => handleView(report)} />
-                
-                                {/* Botón de exportar */}
-                                <ExportButton onClick={() => handleExportPDF(report)} />
-                
-                                {/* Botón de imprimir */}
-                                <PrintButton onClick={() => handlePrint(report)} />
-                
-                                {/* Botón de eliminar */}
-                                <DeleteButton onClick={() => setConfirmDeleteIndex(tableMeta.rowIndex)} />
-                            </>
-                        )}
+                    <div className="flex gap-x-5 justify-center items-center">                       
+                        {/* Botón de vista */}
+                        <ViewButton onClick={() => handleView(report)} />
+        
+                        {/* Botón de exportar */}
+                        <ExportButton onClick={() => handleExportPDF(report)} />
+        
+                        {/* Botón de imprimir */}
+                        <PrintButton onClick={() => handlePrint(report)} />
+        
+                        {/* Botón de eliminar */}
+                        <DeleteButton onClick={() => handleDelete(report._id)} />
                     </div>
                 );
             },

@@ -34,7 +34,6 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
     }) => {
     const [isLoadingUp, setIsLoadingUp] = useState(false); 
     const [confirmStateIndex, setConfirmStateIndex] = useState<number | null>(null);
-    const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', 'total', '_id']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
     const rows = filteredByDateRange.map(invoice => ({
@@ -230,52 +229,26 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
             }),
             customBodyRender: (value: any, tableMeta: any) => {
                 const invoice = rows[tableMeta.rowIndex].invoice;
-                const isConfirmingDelete = confirmDeleteIndex === tableMeta.rowIndex;
                 return (
-                    <div className="flex gap-x-5 justify-center items-center">
-                        {isConfirmingDelete ? (
-                            <>
-                                <p className="font-semibold">Confirmar Eliminación</p>
-                                <div className="flex gap-2">
-                                    <button
-                                        className="bg-red-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
-                                        onClick={() => setConfirmDeleteIndex(null)} // Cancelar confirmación
-                                    >
-                                        <AiOutlineClose />
-                                    </button>
-                                    <button
-                                        className="bg-green-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
-                                        onClick={() => {
-                                            setConfirmDeleteIndex(null); 
-                                            handleDelete(invoice._id); // Ejecutar eliminación
-                                        }}
-                                    >
-                                        <AiOutlineCheck />
-                                    </button>
-                                </div>
-                            </>
+                    <div className="flex gap-x-5 justify-center items-center">                    
+                        {/* Botón de vista */}
+                        <ViewButton onClick={() => handleView(invoice)} />
+        
+                        {/* Botón de actualización solo si el estado es "Borrador" */}
+                        {invoice.state === "Borrador" ? (
+                            <UpdateButton onClick={() => handleUpdate(invoice._id)} />
                         ) : (
-                            <>
-                                {/* Botón de vista */}
-                                <ViewButton onClick={() => handleView(invoice)} />
-                
-                                {/* Botón de actualización solo si el estado es "Borrador" */}
-                                {invoice.state === "Borrador" ? (
-                                    <UpdateButton onClick={() => handleUpdate(invoice._id)} />
-                                ) : (
-                                    <CreditNoteButton onClick={() => handleUpload(invoice._id)} />
-                                )}
-                
-                                {/* Botón de exportar */}
-                                <ExportButton onClick={() => handleExportPDF(invoice)} />
-                
-                                {/* Botón de imprimir */}
-                                <PrintButton onClick={() => handlePrint(invoice)} />
-                
-                                {/* Botón de eliminar */}
-                                <DeleteButton onClick={() => setConfirmDeleteIndex(tableMeta.rowIndex)} />
-                            </>
+                            <CreditNoteButton onClick={() => handleUpload(invoice._id)} />
                         )}
+        
+                        {/* Botón de exportar */}
+                        <ExportButton onClick={() => handleExportPDF(invoice)} />
+        
+                        {/* Botón de imprimir */}
+                        <PrintButton onClick={() => handlePrint(invoice)} />
+        
+                        {/* Botón de eliminar */}
+                        <DeleteButton onClick={() => handleDelete(invoice._id)} />
                     </div>
                 );
             },

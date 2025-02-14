@@ -24,6 +24,8 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
   const [updateStateBudget] = useUpdateStateBudgetMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingId, setPendingId] = useState<string | null>(null);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -47,12 +49,17 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
     }
   };
 
-  const handleDelete = async (budgetId: string) => {
-    try {
-      await deleteMutation(budgetId);
-      toast.success('Presupuesto eliminado exitosamente');
-    } catch (error) {
-      toast.error('Hubo un error al tratar de eliminar el presupuesto');
+  const handleDelete = (budgetId: string) => {
+    setPendingId(budgetId);
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (pendingId) {
+      await deleteMutation(pendingId);
+      toast.success('Presupuesto eliminado exitosamente!');
+      setIsModalOpen(false);
+      setPendingId(null);
     }
   };
 
@@ -254,6 +261,7 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
     handleUpdate,
     handleStateUpdate,
     handleDelete,
+    confirmDelete,
     handleView,
     handleExportPDF,
     handlePrint,
@@ -264,5 +272,7 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
     printRef,
     router,
     isLoadingPDF,
+    isModalOpen,
+    setIsModalOpen,
   };
 };

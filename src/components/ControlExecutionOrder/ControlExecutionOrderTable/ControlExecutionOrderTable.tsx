@@ -29,7 +29,6 @@ export const ControlExecutionOrderTable: React.FC<TableControlExecutionOrderProp
     handleExportPDF,
     }) => {
     const [confirmStateIndex, setConfirmStateIndex] = useState<number | null>(null);
-    const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
     const filteredData = useDynamicFilter(data, searchTerm, ['description', 'state', 'form.num', 'total', '_id']);
     const filteredByDateRange = useDateRangeFilter(filteredData, selectedRange);
     const rows = filteredByDateRange.map(executionOrder => ({
@@ -170,45 +169,19 @@ export const ControlExecutionOrderTable: React.FC<TableControlExecutionOrderProp
             }),
             customBodyRender: (value: any, tableMeta: any) => {
                 const executionOrder = rows[tableMeta.rowIndex].executionOrder;
-                const isConfirmingDelete = confirmDeleteIndex === tableMeta.rowIndex;
                 return (
-                    <div className="flex gap-x-5 justify-center items-center">
-                        {isConfirmingDelete ? (
-                            <>
-                                <p className="font-semibold">Confirmar Eliminación</p>
-                                <div className="flex gap-2">
-                                    <button
-                                         className="bg-red-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
-                                        onClick={() => setConfirmDeleteIndex(null)} // Cancelar confirmación
-                                    >
-                                        <AiOutlineClose />
-                                    </button>
-                                    <button
-                                        className="bg-green-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
-                                        onClick={() => {
-                                            setConfirmDeleteIndex(null); 
-                                            handleDelete(executionOrder._id); // Ejecutar eliminación
-                                        }}
-                                    >
-                                        <AiOutlineCheck />
-                                    </button>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                {/* Botón de vista */}
-                                <ViewButton onClick={() => handleView(executionOrder)} />
-                
-                                {/* Botón de exportar */}
-                                <ExportButton onClick={() => handleExportPDF(executionOrder)} />
-                
-                                {/* Botón de imprimir */}
-                                <PrintButton onClick={() => handlePrint(executionOrder)} />
-                
-                                {/* Botón de eliminar */}
-                                <DeleteButton onClick={() => setConfirmDeleteIndex(tableMeta.rowIndex)} />
-                            </>
-                        )}
+                    <div className="flex gap-x-5 justify-center items-center">     
+                        {/* Botón de vista */}
+                        <ViewButton onClick={() => handleView(executionOrder)} />
+        
+                        {/* Botón de exportar */}
+                        <ExportButton onClick={() => handleExportPDF(executionOrder)} />
+        
+                        {/* Botón de imprimir */}
+                        <PrintButton onClick={() => handlePrint(executionOrder)} />
+        
+                        {/* Botón de eliminar */}
+                        <DeleteButton onClick={() => handleDelete(executionOrder._id)} />
                     </div>
                 );
             },

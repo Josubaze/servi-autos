@@ -6,7 +6,7 @@ import { PageTitle } from '../Common/PageTitle';
 import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
 import { HiDocumentPlus } from "react-icons/hi2";
 import { ControlInvoiceTable } from './../ControlInvoice/ControlInvoiceTable';
-import { Button, DateRangePicker } from '@nextui-org/react';
+import { Button, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { Loading } from '../Common/Loading';
 import { useControlInvoice } from 'src/hooks/ControlInvoice/useControlInvoice';
@@ -14,9 +14,8 @@ import { useGetInvoicesQuery, useDeleteInvoiceMutation } from "src/redux/service
 import { InvoiceView } from "../InvoiceView";
 
 export const ControlInvoice = () => {
-  
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetInvoicesQuery();
-  const [deleteMutation] = useDeleteInvoiceMutation();
+  const [deleteMutation, { isLoading: isLoadingDelete }] = useDeleteInvoiceMutation();
   const {
     searchTerm,
     setSearchTerm,
@@ -26,6 +25,7 @@ export const ControlInvoice = () => {
     handleUpload,
     handleStateUpdate,
     handleDelete,
+    confirmDelete,
     handleView,
     handlePrint,
     handleExportPDF,
@@ -37,6 +37,8 @@ export const ControlInvoice = () => {
     invoiceCopy,
     printRef,
     isLoadingPDF,
+    isModalOpen,
+    setIsModalOpen
   } = useControlInvoice({ data, isError, isLoading, isFetching, isSuccess, deleteMutation });
 
   return (
@@ -97,8 +99,8 @@ export const ControlInvoice = () => {
         </button>
       </div>
 
-      {/* Componente oculto para PDF */}
-        {isOpenPdf && (
+     {/* Componente oculto para PDF */}
+     {isOpenPdf && (
           <div className="absolute top-[-9999px] left-[-9999px]">
             <InvoiceView
               onClose={() => setIsOpenPdf(false)}
@@ -141,6 +143,35 @@ export const ControlInvoice = () => {
             <Loading />
           </div>
         )}
+
+      <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="text-gray-200">
+                Confirmar eliminación de factura
+              </ModalHeader>
+              <ModalBody>
+                <p className="text-gray-300">
+                  ¿Deseas eliminar esta factura? Esta acción no se puede deshacer.
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button variant="flat" color="default" onPress={() => onClose()}>
+                  Cancelar
+                </Button>
+                <Button 
+                  color="danger" 
+                  onPress={confirmDelete}
+                  isLoading={isLoadingDelete}
+                >                      
+                  Aceptar
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 };

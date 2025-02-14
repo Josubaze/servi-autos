@@ -11,24 +11,45 @@ import { ServiceForm } from './ServiceForm';
 import { UpdateServiceForm } from './UpdateServiceForm';
 import { SERVICEVOID } from 'src/utils/constanst';
 import { FaTools } from "react-icons/fa";
-import { Button } from '@nextui-org/react';
+import { 
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter, 
+} from '@nextui-org/react';
 import { LottieTools } from '../Dashboard/DashWidgets/DashWidgets';
+import { toast } from 'react-toastify';
 
 export const Services = () => {
   const { data = [], isError, isLoading, isSuccess } = useGetServicesQuery();
-  const [deleteService, { isError: isErrorDelete }] = useDeleteServiceMutation();
+  const [deleteService, { isError: isErrorDelete, isLoading: isLoadingDelete }] = useDeleteServiceMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
   const [showFormUpdate, setShowFormUpdate] = useState(false);
   const [currentService, setCurrentService] = useState(SERVICEVOID);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingServiceId, setPendingServiceId] = useState<string | null>(null);
+
+  const handleDelete = (id: string) => {
+    setPendingServiceId(id);
+    setIsModalOpen(true);
+  };
+
+  const confirmDeleteService = async () => {
+    if (pendingServiceId) {
+      await deleteService(pendingServiceId);
+      toast.success('Servicio Eliminado Exitosamente!');
+      setIsModalOpen(false);
+      setPendingServiceId(null);
+    }
+  };
+
   const handleEdit = (service: Service) => {
     setCurrentService(service);
     setShowFormUpdate(true);
-  };
-
-  const handleDelete = async (serviceId: string) => {
-    await deleteService(serviceId);
   };
 
   const handleCloseForm = () => {
@@ -94,6 +115,39 @@ export const Services = () => {
             service={currentService} 
             onClose={() => setShowFormUpdate(false)}
           />}
+
+          <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+            <ModalContent>
+              {(onClose) => (
+                <>
+                  <ModalHeader className="text-gray-200">
+                    Confirmar eliminación de servicio
+                  </ModalHeader>
+                  <ModalBody>
+                    <p className="text-gray-300">
+                      ¿Deseas eliminar este servicio? Esta acción no se puede deshacer.
+                    </p>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button
+                      variant="flat"
+                      color="default"
+                      onPress={() => onClose()}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button 
+                      color="danger" 
+                      onPress={confirmDeleteService}
+                      isLoading={isLoadingDelete}
+                    >                      
+                      Aceptar
+                    </Button>
+                  </ModalFooter>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
       </div>
     </>
   );

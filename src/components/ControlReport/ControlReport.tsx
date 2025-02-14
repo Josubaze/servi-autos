@@ -3,7 +3,7 @@
 import { SearchBar } from 'src/components/Common/SearchBar';
 import { PageTitle } from '../Common/PageTitle';
 import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
-import { DateRangePicker } from '@nextui-org/react';
+import { Button, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { Loading } from '../Common/Loading';
 import { useGetReportsQuery, useDeleteReportMutation } from "src/redux/services/reports.Api";
@@ -14,7 +14,7 @@ import { ReportView } from '../ReportView';
 export const ControlReport = () => {
   
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetReportsQuery();
-  const [deleteMutation] = useDeleteReportMutation();
+  const [deleteMutation, { isLoading: isLoadingDelete }] = useDeleteReportMutation();
   const {
     searchTerm,
     setSearchTerm,
@@ -23,6 +23,7 @@ export const ControlReport = () => {
     handleStateUpdate,
     handleUpdate,
     handleDelete,
+    confirmDelete,
     handleView,
     handlePrint,
     handleExportPDF,
@@ -32,6 +33,8 @@ export const ControlReport = () => {
     reportCopy,
     printRef,
     isLoadingPDF,
+    isModalOpen,
+    setIsModalOpen
   } = useControlReport({ data, isError, isLoading, isFetching, isSuccess, deleteMutation });
 
   return (
@@ -109,6 +112,35 @@ export const ControlReport = () => {
             <Loading />
           </div>
         )}
+
+        <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="text-gray-200">
+                  Confirmar eliminación de informe
+                </ModalHeader>
+                <ModalBody>
+                  <p className="text-gray-300">
+                    ¿Deseas eliminar este informe? Esta acción no se puede deshacer.
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button variant="flat" color="default" onPress={() => onClose()}>
+                    Cancelar
+                  </Button>
+                  <Button 
+                    color="danger" 
+                    onPress={confirmDelete}
+                    isLoading={isLoadingDelete}
+                  >                      
+                    Aceptar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
     </>
   );
 };

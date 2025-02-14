@@ -56,34 +56,9 @@ export const ServiceRow: React.FC<RowProps> = ({ service , handleEdit, handleDel
               <TableCell align="right">{service.servicePrice}</TableCell>
               <TableCell align="right">{service.totalPrice}</TableCell>
               <TableCell>
-                  <div className="flex gap-x-5 justify-center items-center">
-                      {confirmDelete ? (
-                          <>
-                              <p className="font-semibold">Confirmar Eliminación</p>
-                              <div className="flex gap-2">
-                                  <button
-                                      className="bg-red-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-red-500"
-                                      onClick={() => setConfirmDelete(false)} // Cancelar confirmación
-                                  >
-                                      <AiOutlineClose />
-                                  </button>
-                                  <button
-                                      className="bg-green-600/40 text-white rounded-full px-2 py-2 flex items-center hover:bg-green-500"
-                                      onClick={() => {
-                                          setConfirmDelete(false); // Cerrar confirmación
-                                          handleDelete(service._id); // Ejecutar eliminación
-                                      }}
-                                  >
-                                      <AiOutlineCheck />
-                                  </button>
-                              </div>
-                          </>
-                      ) : (
-                          <>
-                              <UpdateButton onClick={() => handleEdit(service)} />
-                              <DeleteButton onClick={() => setConfirmDelete(true)} />
-                          </>
-                      )}
+                  <div className="flex gap-x-5 justify-center items-center">                                             
+                    <UpdateButton onClick={() => handleEdit(service)} />
+                    <DeleteButton onClick={() => handleDelete(service._id)} />                                              
                   </div>
               </TableCell>
             </>

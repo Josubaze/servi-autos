@@ -24,6 +24,8 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
   const [updateStateReport] = useUpdateStateReportMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingId, setPendingId] = useState<string | null>(null);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -47,12 +49,17 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
     }
   };
 
-  const handleDelete = async (reportId: string) => {
-    try {
-      await deleteMutation(reportId);
-      toast.success('Orden eliminada exitosamente');
-    } catch (error) {
-      toast.error('Hubo un error al tratar de eliminar orden');
+  const handleDelete = (budgetId: string) => {
+    setPendingId(budgetId);
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (pendingId) {
+      await deleteMutation(pendingId);
+      toast.success('Informe eliminado exitosamente!');
+      setIsModalOpen(false);
+      setPendingId(null);
     }
   };
 
@@ -254,6 +261,7 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
     handleUpdate,
     handleStateUpdate,
     handleDelete,
+    confirmDelete,
     handleView,
     handleExportPDF,
     handlePrint,
@@ -264,5 +272,7 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
     printRef,
     router,
     isLoadingPDF,
+    isModalOpen,
+    setIsModalOpen
   };
 };

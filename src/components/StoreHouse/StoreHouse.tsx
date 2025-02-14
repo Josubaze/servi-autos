@@ -144,34 +144,30 @@ export const StoreHouse = () => {
             <MarketModal isOpen={showMarket} onClose={() => setShowMarket(false)} />
           )
         }
-
-        
+      
         <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
           <ModalContent>
             {(onClose) => (
               <>
                 <ModalHeader>Confirmar eliminación de producto</ModalHeader>
                 <ModalBody>
-                  <h2>
-                    El producto se encuentra referenciado en los siguientes servicios:
+                  <h2 className="text-lg font-semibold mb-4 text-gray-200">
+                    Lista de Servicios:
                   </h2>
-                  <div
-                    style={{
-                      maxHeight: '200px',
-                      overflowY: 'auto',
-                      marginTop: '10px',
-                      marginBottom: '10px',
-                    }}
-                  >
+                  <div className="max-h-60 overflow-y-auto space-y-4 scrollbar-custom">
                     {referencingServices.map((service) => (
-                      <div key={service._id} style={{ padding: '4px 0' }}>
-                        <p >
-                          {service.name} (ID: {service._id})
-                        </p>
+                      <div
+                        key={service._id}
+                        className="p-4 bg-gray-700/30 rounded-lg shadow-md"
+                      >
+                        <p className="text-gray-400 text-sm font-medium">ID:</p>
+                        <p className="text-gray-300 text-sm break-all">{service._id}</p>
+                        <p className="text-gray-400 text-sm font-medium mt-2">Nombre:</p>
+                        <p className="text-gray-300 text-sm">{service.name}</p>
                       </div>
                     ))}
                   </div>
-                  <p className='text-red-600'>
+                  <p className="text-red-500 font-medium mt-4">
                     Al eliminar este producto se removerá de todos estos servicios. ¿Deseas continuar?
                   </p>
                 </ModalBody>
@@ -184,6 +180,7 @@ export const StoreHouse = () => {
                     Cancelar
                   </Button>
                   <Button 
+                    color="danger"
                     onPress={confirmDelete}
                     isLoading={isLoadingProduct}
                   >
@@ -194,8 +191,6 @@ export const StoreHouse = () => {
             )}
           </ModalContent>
         </Modal>
-          
-
       </div>
     </>
   );

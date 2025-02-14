@@ -6,9 +6,8 @@ import { PageTitle } from '../Common/PageTitle';
 import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
 import { HiDocumentPlus } from "react-icons/hi2";
 import { ControlPurchaseOrderTable } from './ControlPurchaseOrderTable';
-import { Button, DateRangePicker } from '@nextui-org/react';
+import { Button, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
-import { BudgetView } from '../BudgetView';
 import { Loading } from '../Common/Loading';
 import {  } from "src/redux/services/budgets.Api";
 import { useControlPurchaseOrder } from "src/hooks/ControlPurchaseOrder/useControlPurchaseOrder";
@@ -18,7 +17,7 @@ import { PurchaseOrderView } from "../PurchaseOrderView";
 export const ControlPurchaseOrder = () => {
 
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetPurchaseOrdersQuery();
-  const [deleteMutation] = useDeletePurchaseOrderMutation();
+  const [deleteMutation, {isLoading: isLoadingDelete}] = useDeletePurchaseOrderMutation();
   const {
     searchTerm,
     setSearchTerm,
@@ -27,6 +26,7 @@ export const ControlPurchaseOrder = () => {
     handleUpdate,
     handleStateUpdate,
     handleDelete,
+    confirmDelete,
     handleView,
     handlePrint,
     handleExportPDF,
@@ -37,6 +37,8 @@ export const ControlPurchaseOrder = () => {
     purchaseOrderCopy,
     printRef,
     isLoadingPDF,
+    isModalOpen,
+    setIsModalOpen
   } = useControlPurchaseOrder({ data, isError, isLoading, isFetching, isSuccess, deleteMutation });
 
   return (
@@ -142,6 +144,35 @@ export const ControlPurchaseOrder = () => {
             <Loading />
           </div>
         )}
+
+        <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="text-gray-200">
+                  Confirmar eliminación de orden de compra
+                </ModalHeader>
+                <ModalBody>
+                  <p className="text-gray-300">
+                    ¿Deseas eliminar esta orden de compra? Esta acción no se puede deshacer.
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button variant="flat" color="default" onPress={() => onClose()}>
+                    Cancelar
+                  </Button>
+                  <Button 
+                    color="danger" 
+                    onPress={confirmDelete}
+                    isLoading={isLoadingDelete}
+                  >                      
+                    Aceptar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
     </>
   );
 };

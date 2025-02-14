@@ -3,7 +3,7 @@
 import { SearchBar } from 'src/components/Common/SearchBar';
 import { PageTitle } from '../Common/PageTitle';
 import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
-import { DateRangePicker } from '@nextui-org/react';
+import { Button, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { Loading } from '../Common/Loading';
 import { useControlExecutionOrder } from 'src/hooks/ControlExecutionOrder/useControlExecutionOrder';
@@ -14,7 +14,7 @@ import { ExecutionOrderView } from "../ExecutionOrderView";
 export const ControlExecutionOrder = () => {
   
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetExecutionOrdersQuery();
-  const [deleteMutation] = useDeleteExecutionOrderMutation();
+  const [deleteMutation, { isLoading: isLoadingDelete }] = useDeleteExecutionOrderMutation();
   const {
     searchTerm,
     setSearchTerm,
@@ -22,16 +22,18 @@ export const ControlExecutionOrder = () => {
     handleDateRangeChange,
     handleStateUpdate,
     handleDelete,
+    confirmDelete,
     handleView,
     handlePrint,
     handleExportPDF,
     isOpenPdf,
     isOpenPreview,
     setIsOpenPreview,
-    router,
     executionOrderCopy,
     printRef,
     isLoadingPDF,
+    isModalOpen,
+    setIsModalOpen
   } = useControlExecutionOrder({ data, isError, isLoading, isFetching, isSuccess, deleteMutation });
 
   return (
@@ -109,6 +111,35 @@ export const ControlExecutionOrder = () => {
             <Loading />
           </div>
         )}
+
+        <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="text-gray-200">
+                  Confirmar eliminación de orden de ejecución
+                </ModalHeader>
+                <ModalBody>
+                  <p className="text-gray-300">
+                    ¿Deseas eliminar esta orden de ejecución? Esta acción no se puede deshacer.
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button variant="flat" color="default" onPress={() => onClose()}>
+                    Cancelar
+                  </Button>
+                  <Button 
+                    color="danger" 
+                    onPress={confirmDelete}
+                    isLoading={isLoadingDelete}
+                  >                      
+                    Aceptar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
     </>
   );
 };
