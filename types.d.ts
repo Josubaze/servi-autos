@@ -401,4 +401,11 @@ interface UpdatePasswordData {
   id: string;
 }
 
+interface RecoverPasswordData {
+  password: string;
+  secret_question: string;
+  secret_answer: string;
+  email: string;
+}
+
 declare module 'mui-datatables';

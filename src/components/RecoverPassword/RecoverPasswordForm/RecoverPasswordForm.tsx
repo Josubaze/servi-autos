@@ -1,26 +1,22 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UpdatePasswordSchema } from 'src/utils/validation.zod';
+import { RecoverPasswordSchema } from 'src/utils/validation.zod';
 import { Button, Input } from '@nextui-org/react';
 import { toast } from 'react-toastify';
-import { useUpdateUserMutation } from 'src/redux/services/usersApi';
+import { useRecoverPasswordMutation } from 'src/redux/services/recoverPassword.Api';
 import { useState } from 'react';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
-type FormUserProps = {
-  user: User;
-};
-
-export const ProfileForm = ({ user }: FormUserProps) => {
+export const RecoverPasswordForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<User>({
-    resolver: zodResolver(UpdatePasswordSchema),
+    resolver: zodResolver(RecoverPasswordSchema),
     defaultValues: {
-      _id: user._id,
-      username: user.username,
+      email: '',
       password: '',
       repeatedPassword: '',
       secret_question: '',
@@ -28,8 +24,8 @@ export const ProfileForm = ({ user }: FormUserProps) => {
     },
   });
 
-  const [updateUser, { isLoading }] = useUpdateUserMutation();
-
+  const [recoverPassword, { isLoading }] = useRecoverPasswordMutation();
+  const router = useRouter();
   const [visibility, setVisibility] = useState({
     password: false,
     repeatedPassword: false,
@@ -44,33 +40,33 @@ export const ProfileForm = ({ user }: FormUserProps) => {
   const onSubmit: SubmitHandler<User> = async (data) => {
     try {
       const updatedData = {
-        id: data._id,
+        email: data.email,
         password: data.password,
         secret_question: data.secret_question,
         secret_answer: data.secret_answer,
       };
       console.log(updatedData);
-      await updateUser(updatedData).unwrap();
-      toast.success('Usuario modificado exitosamente!');
+      await recoverPassword(updatedData).unwrap();
+      router.push('/login');
+      toast.success('Contraseña actualizada exitosamente!');
     } catch (error: any) {
-      toast.error(error.message || 'Error al modificar el usuario');
+      toast.error(error.message || 'Los datos ingresados no son correctos');
     }
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-transparent rounded-lg p-4">
+    <div className="w-full max-w-lg mx-auto rounded-lg p-4">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           <Input
             size='lg'
-            label="Nombre de Usuario"
-            {...register('username')}
-            variant="underlined"
+            label="Correo Electrónico"
+            {...register('email')}
+            variant="bordered"
             fullWidth
             type="text"
-            errorMessage={errors.username?.message}
-            isInvalid={!!errors.username}
-            disabled
+            errorMessage={errors.email?.message}
+            isInvalid={!!errors.email}
           />
         </div>
 
@@ -79,7 +75,7 @@ export const ProfileForm = ({ user }: FormUserProps) => {
             size='lg'
             label="Nueva Contraseña"
             {...register('password')}
-            variant="underlined"
+            variant="bordered"
             endContent={
               <button
                 aria-label="toggle password visibility"
@@ -101,7 +97,7 @@ export const ProfileForm = ({ user }: FormUserProps) => {
             size='lg'
             label="Repetir Nueva Contraseña"
             {...register('repeatedPassword')}
-            variant="underlined"
+            variant="bordered"
             endContent={
               <button
                 aria-label="toggle password visibility"
@@ -123,7 +119,7 @@ export const ProfileForm = ({ user }: FormUserProps) => {
             size='lg'
             label="Pregunta Secreta"
             {...register('secret_question')}
-            variant="underlined"
+            variant="bordered"
             endContent={
               <button
                 aria-label="toggle visibility"
@@ -145,7 +141,7 @@ export const ProfileForm = ({ user }: FormUserProps) => {
             size='lg'
             label="Respuesta Secreta"
             {...register('secret_answer')}
-            variant="underlined"
+            variant="bordered"
             endContent={
               <button
                 aria-label="toggle visibility"

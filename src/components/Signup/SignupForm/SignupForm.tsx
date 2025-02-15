@@ -1,146 +1,224 @@
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserSchema } from 'src/utils/validation.zod';
 import { useCreateUserMutation } from 'src/redux/services/usersApi';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Input, Button, Select, SelectItem } from '@nextui-org/react';
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 export const SignupForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<Omit<User, '_id'>>({
-   resolver: zodResolver(UserSchema),
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<Omit<User, '_id'>>({
+    resolver: zodResolver(UserSchema),
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [ createUser, {isError} ] = useCreateUserMutation();
+  const [createUser, { isError }] = useCreateUserMutation();
   const router = useRouter();
+
+  // Estados para controlar la visibilidad de campos sensibles
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isSecretQuestionVisible, setIsSecretQuestionVisible] = useState(false);
+  const [isSecretAnswerVisible, setIsSecretAnswerVisible] = useState(false);
 
   const onSubmit: SubmitHandler<Omit<User, '_id'>> = async (data) => {
     setIsLoading(true);
-    await createUser(data).unwrap();
-    router.push('/login'); 
+    try {
+      await createUser(data).unwrap();
+      router.push('/login');
+    } catch (error) {
+      toast.error('Error al registrar el usuario');
+    }
     setIsLoading(false);
   };
 
   return (
-        <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
-          {/* Nombre de usuario */}
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium leading-6 ring-gray-300 xl:text-xl">
-              Nombre de usuario
-            </label>
-            <div className="mt-2">
-              <input
-                id="username"
-                placeholder="Ej. Fernan"
-                {...register('username')}
-                className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
-              />
-              {errors.username?.message && <p className="text-red-500 pt-2 text-sm">{errors.username.message}</p>}
-            </div>
-          </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {/* Nombre de usuario */}
+      <div>
+        <label htmlFor="username" className="block text-sm font-medium leading-6 pl-2 xl:text-xl">
+          Nombre
+        </label>
+        <div className="mt-2">
+          <Input
+            size="lg"
+            id="username"
+            placeholder="Ej. Fernando Rodriguez"
+            {...register('username')}
+            errorMessage={errors.username?.message}
+            isInvalid={!!errors.username}
+            variant="bordered"
+          />
+        </div>
+      </div>
 
-          {/* Correo Electrónico */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium leading-6 ring-gray-300 xl:text-xl">
-              Correo Electrónico
-            </label>
-            <div className="mt-2">
-              <input
-                id="email"
-                placeholder="Anafer@example.com"
-                {...register('email')}
-                className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
-              />
-              {errors.email?.message && <p className="text-red-500 pt-2 text-sm">{errors.email.message}</p>}
-            </div>
-          </div>
+      {/* Correo Electrónico */}
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium leading-6 pl-2 xl:text-xl">
+          Correo Electrónico
+        </label>
+        <div className="mt-2">
+          <Input
+            size="lg"
+            id="email"
+            placeholder="Anafer@example.com"
+            {...register('email')}
+            errorMessage={errors.email?.message}
+            isInvalid={!!errors.email}
+            variant="bordered"
+          />
+        </div>
+      </div>
 
-          {/* Contraseña */}
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium leading-6 ring-gray-300 xl:text-xl">
-              Contraseña
-            </label>
-            <div className="mt-2">
-              <input
-                id="password"
-                type="password"
-                placeholder="adakk125#1"
-                {...register('password')}
-                className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
-              />
-              {errors.password?.message && <p className="text-red-500 pt-2 text-sm">{errors.password.message}</p>}
-            </div>
-          </div>
-
-          {/* Rol */}
-          <div>
-            <label htmlFor="role" className="block text-sm font-medium leading-6 ring-gray-300 xl:text-xl">
-              Rol
-            </label>
-            <div className="mt-2">
-              <select
-                id="role"
-                {...register('role')}
-                className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
+      {/* Contraseña */}
+      <div>
+        <label htmlFor="password" className="block text-sm font-medium leading-6 pl-2 xl:text-xl">
+          Contraseña
+        </label>
+        <div className="mt-2">
+          <Input
+            id="password"
+            size="lg"
+            placeholder="adakk125#1"
+            {...register('password')}
+            endContent={
+              <button
+                aria-label="toggle password visibility"
+                className="focus:outline-none"
+                type="button"
+                onClick={() => setIsPasswordVisible(!isPasswordVisible)}
               >
-                <option value="administrador">Administrador</option>
-                <option value="lider">Líder de equipo</option>
-              </select>
-              {errors.role?.message && <p className="text-red-500 pt-2 text-sm">{errors.role.message}</p>}
-            </div>
-          </div>
+                {isPasswordVisible ? <FaRegEyeSlash /> : <FaRegEye />}
+              </button>
+            }
+            type={isPasswordVisible ? 'text' : 'password'}
+            variant="bordered"
+            errorMessage={errors.password?.message}
+            isInvalid={!!errors.password}
+          />
+        </div>
+      </div>
 
-          {/* Pregunta y Respuesta secreta */}
-          <div className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-              <label htmlFor="secret-question" className="block text-sm font-medium leading-6 ring-gray-300 xl:text-xl">
-                Pregunta Secreta
-              </label>
-              <div className="mt-2">
-                <input
-                  id="secret-question"
-                  placeholder="¿Nombre de tu mascota?"
-                  {...register('secret_question')}
-                  className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl placeholder:text-sm"
-                />
-                {errors.secret_question?.message && <p className="text-red-500 pt-2 text-sm">{errors.secret_question.message}</p>}
-              </div>
-            </div>
+      {/* Rol usando NextUI Select */}
+      <div>
+        <label htmlFor="role" className="block text-sm font-medium leading-6 pl-2 xl:text-xl">
+          Rol
+        </label>
+        <Controller
+          control={control}
+          name="role"
+          render={({ field: { onChange, value } }) => {
+            const selectedKeys = new Set([value]);
+            return (
+              <Select
+                aria-label="Rol"
+                id='role'
+                className='mt-2'
+                size="lg"
+                variant="bordered"
+                selectedKeys={selectedKeys}
+                onSelectionChange={(keys) => {
+                  // Convertir el Set a string (valor único)
+                  const selectedValue = Array.from(keys)[0] || "";
+                  onChange(selectedValue);
+                }}
+                placeholder="Seleccione un rol"
+              >
+                <SelectItem key="administrador" value="administrador">
+                  Administrador
+                </SelectItem>
+                <SelectItem key="lider" value="lider">
+                  Líder de equipo
+                </SelectItem>
+              </Select>
+            );
+          }}
+        />
+        {errors.role?.message && (
+          <p className="text-red-500 pt-2 text-sm">{errors.role.message}</p>
+        )}
+      </div>
 
-            <div className="sm:col-span-3">
-              <label htmlFor="secret-answer" className="block text-sm font-medium leading-6 ring-gray-300 xl:text-xl">
-                Respuesta
-              </label>
-              <div className="mt-2">
-                <input
-                  id="secret-answer"
-                  placeholder="Neron"
-                  {...register('secret_answer')}
-                  className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
-                />
-                {errors.secret_answer?.message && <p className="text-red-500 pt-2 text-sm">{errors.secret_answer.message}</p>}
-              </div>
-            </div>
-          </div>
+      {/* Pregunta Secreta */}
+      <div>
+        <label htmlFor="secret_question" className="block text-sm font-medium leading-6 pl-2 xl:text-xl">
+          Pregunta Secreta
+        </label>
+        <div className="mt-2">
+          <Input
+            id="secret_question"
+            size="lg"
+            placeholder="¿Nombre de tu mascota?"
+            {...register('secret_question')}
+            endContent={
+              <button
+                aria-label="toggle secret question visibility"
+                className="focus:outline-none"
+                type="button"
+                onClick={() => setIsSecretQuestionVisible(!isSecretQuestionVisible)}
+              >
+                {isSecretQuestionVisible ? <FaRegEyeSlash /> : <FaRegEye />}
+              </button>
+            }
+            type={isSecretQuestionVisible ? 'text' : 'password'}
+            variant="bordered"
+            errorMessage={errors.secret_question?.message}
+            isInvalid={!!errors.secret_question}
+          />
+        </div>
+      </div>
 
-          {/* Botón de registro */}
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full flex items-center justify-center bg-indigo-600 mt-4 py-1.5 lg:py-2 text-sm font-semibold text-white rounded-md shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600 xl:text-xl transition ease-in-out ${
-                isLoading ? 'cursor-not-allowed opacity-50' : ''
-              }`}
-            >
-              {isLoading && (
-                <svg className="animate-spin h-5 w-5 mr-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                </svg>
-              )}
-              {isLoading ? 'Procesando...' : 'Registrar'}
-            </button>
-          </div>
-          {isError && <p className='text-red-500 pt-2 text-center'>Ocurrió un error al tratar de registrar el usuario</p>} 
-        </form>
+      {/* Respuesta Secreta */}
+      <div>
+        <label htmlFor="secret_answer" className="block text-sm font-medium leading-6 pl-2 xl:text-xl">
+          Respuesta Secreta
+        </label>
+        <div className="mt-2">
+          <Input
+            id="secret_answer"
+            size="lg"
+            placeholder="Neron"
+            {...register('secret_answer')}
+            endContent={
+              <button
+                aria-label="toggle secret answer visibility"
+                className="focus:outline-none"
+                type="button"
+                onClick={() => setIsSecretAnswerVisible(!isSecretAnswerVisible)}
+              >
+                {isSecretAnswerVisible ? <FaRegEyeSlash /> : <FaRegEye />}
+              </button>
+            }
+            type={isSecretAnswerVisible ? 'text' : 'password'}
+            variant="bordered"
+            errorMessage={errors.secret_answer?.message}
+            isInvalid={!!errors.secret_answer}
+          />
+        </div>
+      </div>
+
+      {/* Botón de Registro */}
+      <div>
+        <Button
+          size="lg"
+          type="submit"
+          isLoading={isLoading}
+          fullWidth
+          className="bg-indigo-600 hover:bg-indigo-700 text-white"
+        >
+          {isLoading ? 'Procesando...' : 'Registrar'}
+        </Button>
+      </div>
+      {isError && (
+        <p className="text-red-500 pt-2 text-center">
+          Ocurrió un error al tratar de registrar el usuario
+        </p>
+      )}
+    </form>
   );
 };

@@ -1,3 +1,5 @@
+import { signOut } from "next-auth/react";
+
 export const PRODUCTVOID: Product = {
     _id: '',
     name: '',
@@ -45,9 +47,10 @@ export const SERVICEVOID: Service = {
   products: [],
 }
 
+
 export const MENUPROFILE = [
-  { name: 'Tu Perfil', href: '/profile' },
-  { name: 'Cerrar Sesión', href: '/api/auth/signout' },
+  { name: "Tu Perfil", href: "/profile" },
+  { name: "Cerrar Sesión", onClick: () => signOut({ callbackUrl: "/login" }) }, // Usamos onClick en lugar de href
 ];
 
 export const MENUCREATE= [
@@ -89,7 +92,6 @@ export const MENUCREATE= [
   ];
   
   export const NAVITEMS = [
-    { name: 'Inicio', href: '/' },
     { name: 'Iniciar Sesión', href: '/login' },
     { name: 'Registrarse', href: '/signup' },
   ];

@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Rutas públicas accesibles para todos (incluso sin sesión)
-  const publicRoutes = ['/', '/signup', '/login'];
+  const publicRoutes = ['/', '/signup', '/login', '/recover_password'];
 
   // Rutas protegidas que requieren autenticación
   const protectedRoutes = ['/dashboard', '/create', '/control', '/manage', '/market', '/profile'];
@@ -50,7 +50,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/', '/signup', '/login',
+    '/', '/signup', '/login', '/recover_password',
     '/dashboard/:path*', '/create/:path*', '/control/:path*',
     '/manage/:path*', '/market/:path*', '/profile/:path*'
   ],

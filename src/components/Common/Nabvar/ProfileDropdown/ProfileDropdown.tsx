@@ -93,15 +93,24 @@ export const ProfileDropdown: React.FC<OptionsMenuProps> = ({ session }) => {
           <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md outline outline-2 outline-indigo-800 bg-indigo-950">
             {MENUPROFILE.map((item) => (
               <MenuItem key={item.name}>
-                <Link
-                  href={item.href}
-                  className="block px-4 py-2 text-sm font-medium data-[focus]:bg-indigo-700"
-                >
-                  {item.name}
-                </Link>
+                 {item.href ? (
+                    <Link
+                      href={item.href}
+                      className="block px-4 py-2 text-sm font-medium data-[focus]:bg-indigo-700"
+                    >
+                      {item.name}
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={item.onClick}
+                      className="block w-full text-left px-4 py-2 text-sm font-medium data-[focus]:bg-indigo-700"
+                    >
+                      {item.name}
+                    </button>
+                  )}
               </MenuItem>
             ))}
-            {/* Divider para separar las opciones */}
+            
             <Divider orientation="horizontal" />
             {/* Elemento extra con información del usuario */}
             <MenuItem as="div" disabled>
@@ -118,6 +127,7 @@ export const ProfileDropdown: React.FC<OptionsMenuProps> = ({ session }) => {
               </div>
             </MenuItem>
           </MenuItems>
+          
         </Menu>
       </div>
     </div>

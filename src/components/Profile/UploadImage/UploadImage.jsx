@@ -52,52 +52,51 @@ export const UploadImage = () => {
   };
 
   return (
-    <div>
-      <div className="flex justify-center py-4 h-5/6">
-        <form className="w-full max-w-lg mx-auto p-4 shadow bg-black-nav/50 rounded-lg rounded-" onSubmit={handleSubmit}>
-          <div className="flex items-center justify-center mb-3">
-            {session?.user?.image ? (
-              <Image
-                src={session.user.image}
-                alt="User Image"
-                width={250} 
-                height={250} 
-                className="rounded-full"
-              />
-            ) : (
-              <Image
-                src="svg/user.svg"
-                alt="User Image"
-                width={100} 
-                height={100} 
-                className="rounded-full"
-              />
-            )}
-          </div>
+    <div className="flex justify-center">
+      <form className="w-full max-w-lg mx-auto p-4 shadow bg-transparent" onSubmit={handleSubmit}>
+        <div className="flex items-center justify-center mb-3">
+          {session?.user?.image ? (
+            <Image
+              src={session.user.image}
+              alt="User Image"
+              width={290} 
+              height={290} 
+              className="rounded-full"
+            />
+          ) : (
+            <Image
+              src="svg/user.svg"
+              alt="User Image"
+              width={100} 
+              height={100} 
+              className="rounded-full"
+            />
+          )}
+        </div>
 
-          <label htmlFor="imageUpload" className="block text-sm font-medium mt-2">
-            Imagen de Perfil
-          </label>
-          <input
-            type="file"
-            id="imageUpload"
-            className="w-full border border-gray-700 rounded p-1"
-            onChange={(e) => setFile(e.target.files[0])}
-            disabled={loading} // Deshabilitar input si está cargando
-          />
+        <label htmlFor="imageUpload" className="block text-sm font-medium mt-2">
+          Imagen de Perfil
+        </label>
+        <input
+          type="file"
+          id="imageUpload"
+          className="w-full border border-gray-700 rounded p-1"
+          onChange={(e) => setFile(e.target.files[0])}
+          disabled={loading} // Deshabilitar input si está cargando
+        />
 
-          <Button
-            className="mt-4"
-            type="submit"
-            variant="solid"
-            color="success"
-            fullWidth
-            isDisabled={loading} // Deshabilitar botón si está cargando
-          >
-            {loading ? <Spinner size="sm" color="white" /> : "Cargar Imagen"}
-          </Button>
-        </form>
-      </div>
+        <Button
+          size="lg"
+          className="mt-4"
+          type="submit"
+          variant="solid"
+          color="success"
+          fullWidth
+          isDisabled={loading} // Deshabilitar botón si está cargando
+        >
+          {loading ? <Spinner size="sm" color="white" /> : "Cargar Imagen"}
+        </Button>
+      </form>
     </div>
   );
 };

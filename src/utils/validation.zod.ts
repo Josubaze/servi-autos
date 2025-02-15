@@ -41,6 +41,17 @@ export const UpdatePasswordSchema = z.object({
   path: ["repeatedPassword"],
 });
 
+export const RecoverPasswordSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8, { message: "Las contraseñas deben tener al menos 8 caracteres" }),
+  repeatedPassword: z.string().min(8, { message: "Las contraseñas deben tener al menos 8 caracteres" }),
+  secret_question: z.string().min(5, 'La pregunta debe tener al menos 5 caracteres'),
+  secret_answer: z.string().min(2, 'La respuesta debe tener al menos 2 caracteres'),
+}).refine((data) => data.password === data.repeatedPassword, {
+  message: "Las contraseñas deben coincidir",
+  path: ["repeatedPassword"],
+});
+
 export const ProductSchema = z.object({
     name: z.string().min(3, { message: "El nombre debe ser mayor o igual a 3 caracteres" }).max(25, { message: "El nombre debe ser menor o igual a 25 caracteres" }),
     vehicleType: z.string().max(25, { message: "La descripción debe ser menor a 25 caracteres" }).nullish(),

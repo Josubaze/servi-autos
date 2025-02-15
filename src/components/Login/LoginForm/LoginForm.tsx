@@ -4,10 +4,15 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { loginSchema } from 'src/utils/validation.zod';
+import { Button, Input } from '@nextui-org/react';
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 export const LoginForm = () => {
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors }, setError } = useForm<LoginFormValues>({
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +26,7 @@ export const LoginForm = () => {
     });
 
     if (!res?.ok) {
-      setError('password', { message: res?.error || "Error en el inicio de sesión" });
+      toast.error("Credenciales incorrectas!");
     } else {
       router.push('/dashboard');
       router.refresh();
@@ -32,52 +37,60 @@ export const LoginForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium leading-6 xl:text-xl">
+        <label htmlFor="email" className="block text-sm font-medium leading-6 pl-2 xl:text-xl">
           Correo Electrónico
         </label>
         <div className="mt-2">
-          <input
+          <Input
+            size='lg'
             id="email"
-            type="email"
             {...register('email')}
-            className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
+            errorMessage={errors.email?.message}
+            isInvalid={!!errors.email}
+            variant="bordered"
           />
-          {errors.email?.message && <p className="text-red-500 pt-2 text-sm lg:text-lg">{errors.email.message}</p>}
         </div>
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium leading-6 xl:text-xl">
+        <label htmlFor="password" className="block text-sm font-medium leading-6 pl-2 xl:text-xl">
           Contraseña
         </label>
         <div className="mt-2">
-          <input
+          <Input
             id="password"
-            type="password"
+            size="lg"
             {...register('password')}
-            className="block w-full rounded-md px-3 py-1.5 pl-1.5 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm sm:leading-6 xl:py-2 xl:text-xl"
+            endContent={
+              <button
+                aria-label="toggle password visibility"
+                className="focus:outline-none"
+                type="button"
+                onClick={toggleVisibility}
+              >
+                {isVisible ? <FaRegEyeSlash /> : <FaRegEye />}
+              </button>
+            }
+            type={isVisible ? "text" : "password"}
+            variant="bordered"
+            errorMessage={errors.password?.message}
+            isInvalid={!!errors.password}
           />
-          {errors.password?.message && <p className="text-red-500 pt-2 text-sm lg:text-lg">{errors.password.message}</p>}
         </div>
       </div>
 
       <div>
-        <button
+        <Button
+          size='lg'
           type="submit"
-          disabled={isLoading}
-          className={`w-full flex items-center justify-center bg-indigo-600 py-1.5 lg:py-2 text-sm font-semibold text-white rounded-md shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600 xl:text-xl transition ease-in-out ${
-            isLoading ? 'cursor-not-allowed opacity-50' : ''
-          }`}
+          isLoading={isLoading}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white"
+          fullWidth
         >
-          {isLoading && (
-            <svg className="animate-spin h-5 w-5 mr-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-            </svg>
-          )}
           {isLoading ? 'Procesando...' : 'Iniciar Sesión'}
-        </button>
+        </Button>
       </div>
+
     </form>
   );
 };

@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link';
 import { LoginForm } from './LoginForm';
 import { LoginImage } from './LoginImage';
 
@@ -10,8 +11,13 @@ export const Login= () => {
         <LoginImage/>
       </div>
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm">
-        <LoginForm /> 
-        <p className="mt-10 text-center text-sm text-gray-500 xl:text-lg">
+        <LoginForm />
+        <p className='flex-1 mt-5 text-center text-sm text-gray-500 hover:text-gray-100 xl:text-lg'>
+          <Link href="/recover_password" >
+              ¿Olvido su contraseña?
+          </Link> 
+        </p>
+        <p className="flex-1 mt-2 text-center text-sm text-gray-500 xl:text-lg">
           No eres miembro?{' '}
           <a href="/signup" className="font-semibold text-indigo-600 hover:text-indigo-500">
             Registrate aquí!
