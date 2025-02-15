@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import User from 'src/models/user.schema';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
 import bcrypt from 'bcrypt';
@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 interface RouteParams {
   id: string;
 }
+
 export async function GET(request: Request, { params }: { params: RouteParams }) {
   await connectDB();
   try {
@@ -36,40 +37,51 @@ export async function GET(request: Request, { params }: { params: RouteParams })
     );
   }
 }
-export async function PUT(request: Request, { params }: { params: RouteParams }) {
+
+
+
+export async function PUT(request : NextRequest, { params }: { params: UpdatePasswordData }) {
   await connectDB();
   try {
-    const data = await request.json(); // Obtiene los datos para actualizar
+    // Extraer los datos enviados en el body
+    const { password: newPassword, secret_question: providedQuestion, secret_answer: providedAnswer } = await request.json();
 
-    // Si se está actualizando la contraseña, se debe encriptar
-    if (data.password) {
-      data.password = await bcrypt.hash(data.password, 10);
-    }
-
-    if (data.secret_question) {
-      data.secret_question = await bcrypt.hash(data.secret_question, 10);
-    }
-
-    if (data.secret_answer) {
-      data.secret_answer = await bcrypt.hash(data.secret_answer, 10);
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(params.id, data, { new: true });
-    if (!updatedUser) {
+    // Buscar el usuario por su ID
+    const userFound = await User.findById(params.id);
+    if (!userFound) {
       return NextResponse.json(
-        { message: "User not found" },
+        { error: "Usuario no encontrado" },
         { status: 404 }
       );
     }
 
-    // Eliminar información sensible antes de retornar los datos
-    let user = updatedUser.toObject();
-    delete user.password;
-    delete user.secret_question;
-    delete user.secret_answer;
+    // Validar que la pregunta secreta coincida
+    const isQuestionValid = await bcrypt.compare(providedQuestion, userFound.secret_question);
+    // Validar que la respuesta secreta coincida
+    const isAnswerValid = await bcrypt.compare(providedAnswer, userFound.secret_answer);
 
-    return NextResponse.json(user);
-  } catch (error: unknown) {
+    if (!isQuestionValid || !isAnswerValid) {
+      return NextResponse.json(
+        { error: "Pregunta secreta o respuesta incorrecta" },
+        { status: 401 }
+      );
+    }
+
+    // Encriptar la nueva contraseña
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Actualizar la contraseña en la base de datos
+    userFound.password = hashedNewPassword;
+    await userFound.save();
+
+    // Eliminar información sensible antes de retornar la respuesta
+    const userResponse = userFound.toObject();
+    delete userResponse.password;
+    delete userResponse.secret_question;
+    delete userResponse.secret_answer;
+
+    return NextResponse.json(userResponse, { status: 200 });
+  } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
         { error: error.message },
@@ -77,11 +89,40 @@ export async function PUT(request: Request, { params }: { params: RouteParams })
       );
     }
     return NextResponse.json(
-      { error: 'An unknown error occurred' },
+      { error: "Ocurrió un error inesperado" },
       { status: 500 }
     );
   }
 }
+
+export async function PATCH(request: NextRequest, { params }: { params: RouteParams }): Promise<NextResponse> {
+  await connectDB();
+  try {
+    // Extraemos los datos del body, en este caso, esperamos solo el campo "image"
+    const data = await request.json();
+
+    // Actualizamos el usuario con el nuevo campo "image"
+    const updatedUser = await User.findByIdAndUpdate(params.id, data, { new: true });
+    if (!updatedUser) {
+      return NextResponse.json({ message: "Usuario no encontrado" }, { status: 404 });
+    }
+
+    // Si quieres eliminar información sensible en la respuesta
+    const userResponse = updatedUser.toObject();
+    delete userResponse.password;
+    delete userResponse.secret_question;
+    delete userResponse.secret_answer;
+
+    return NextResponse.json(userResponse, { status: 200 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Ocurrió un error inesperado" }, { status: 500 });
+  }
+}
+
+
 
 export async function DELETE(request: Request, { params }: { params: RouteParams }) {
     await connectDB();

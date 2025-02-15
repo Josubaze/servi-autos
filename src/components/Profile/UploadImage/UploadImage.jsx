@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { Button, Spinner } from "@nextui-org/react";
-import { SectionTitle } from "src/components/Common/SectionTitle";
+import { toast } from 'react-toastify';
 
 export const UploadImage = () => {
   const [file, setFile] = useState(null);
@@ -11,7 +11,7 @@ export const UploadImage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file) return alert("Selecciona una imagen primero.");
+    if (!file) return toast.info("Selecciona una imagen primero.");
 
     setLoading(true); // Iniciar el estado de carga
 
@@ -24,17 +24,17 @@ export const UploadImage = () => {
         body: formData,
       });
 
-      if (!response.ok) throw new Error('Error al subir la imagen');
+      if (!response.ok) return toast.error('Error al subir la imagen');
 
       const dataUpload = await response.json();
 
       const updateResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${session.user.id}`, {
-        method: 'PUT',
+        method: 'PATCH', // Usamos PATCH en lugar de PUT
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image: dataUpload.url })
       });
 
-      if (!updateResponse.ok) throw new Error('Error al actualizar el perfil del usuario');
+      if (!updateResponse.ok) return toast.error('Error al actualizar el perfil del usuario');
 
       await update({
         user: {
@@ -53,9 +53,8 @@ export const UploadImage = () => {
 
   return (
     <div>
-      <SectionTitle>ACTUALIZAR DATOS</SectionTitle>
       <div className="flex justify-center py-4 h-5/6">
-        <form className="w-full md:w-1/2 p-3 rounded-md shadow" onSubmit={handleSubmit}>
+        <form className="w-full max-w-lg mx-auto p-4 shadow bg-black-nav/50 rounded-lg rounded-" onSubmit={handleSubmit}>
           <div className="flex items-center justify-center mb-3">
             {session?.user?.image ? (
               <Image

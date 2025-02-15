@@ -4,22 +4,24 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MENUPROFILE } from 'src/utils/constanst';
 import { Notifications } from '../Notifications'; 
-import { Badge, Button } from '@nextui-org/react';
+import { Badge, Button, Divider } from '@nextui-org/react';
 import { IoNotificationsCircleOutline } from 'react-icons/io5';
 import { useSocketContext } from 'src/context/SocketContext';
 
-interface ProfileDropdownProps {
-  image: string | null | undefined;
-}
 
-export const ProfileDropdown = ({ image }: ProfileDropdownProps) => {
+export const ProfileDropdown: React.FC<OptionsMenuProps> = ({ session }) => {
   const { notifications } = useSocketContext();
   const [showNotifications, setShowNotifications] = useState(false);
-  // Ref para envolver el botón de notificaciones y el panel
+  const [unreadNotifications, setUnreadNotifications] = useState(0); 
   const notificationsContainerRef = useRef<HTMLDivElement>(null);
 
+  // Actualiza el estado cuando cambien las notificaciones
+  useEffect(() => {
+    const unreadCount = notifications.filter(n => !n.seen).length;
+    setUnreadNotifications(unreadCount);
+  }, [notifications]);
 
-  // Listener para detectar clics fuera del contenedor de notificaciones
+  // Detecta clics fuera del contenedor de notificaciones para cerrarlo
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -40,9 +42,9 @@ export const ProfileDropdown = ({ image }: ProfileDropdownProps) => {
     <div className="relative flex items-center">
       {/* Contenedor para el botón de notificaciones y su panel */}
       <div className="relative flex items-center justify-center" ref={notificationsContainerRef}>
-        {notifications.length > 0 ? (
+        {unreadNotifications > 0 ? (
           <Badge 
-            content={notifications.filter(n => !n.seen).length} 
+            content={unreadNotifications} 
             className='border-none text-gray-100 bg-indigo-700' 
             shape="circle"
           >
@@ -69,20 +71,18 @@ export const ProfileDropdown = ({ image }: ProfileDropdownProps) => {
         {/* Panel de notificaciones */}
         {showNotifications && (
           <div className="absolute right-0 top-full mt-2">
-            <Notifications/>
+            <Notifications />
           </div>
         )}
       </div>
-
 
       {/* Menú de perfil */}
       <div className="ml-3">
         <Menu as="div" className="relative">
           <MenuButton className="relative flex rounded-full bg-indigo-950 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-950">
-            <span className="absolute -inset-1.5" />
             <div className="relative h-10 w-10 rounded-full overflow-hidden">
               <Image
-                src={image ?? '/svg/user.svg'}
+                src={session?.user.image ?? '/svg/user.svg'}
                 alt="Profile Image"
                 width={50}
                 height={50}
@@ -90,7 +90,7 @@ export const ProfileDropdown = ({ image }: ProfileDropdownProps) => {
             </div>
           </MenuButton>
 
-          <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right py-1 rounded-md outline outline-2 outline-indigo-800 bg-indigo-950">
+          <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md outline outline-2 outline-indigo-800 bg-indigo-950">
             {MENUPROFILE.map((item) => (
               <MenuItem key={item.name}>
                 <Link
@@ -101,9 +101,26 @@ export const ProfileDropdown = ({ image }: ProfileDropdownProps) => {
                 </Link>
               </MenuItem>
             ))}
+            {/* Divider para separar las opciones */}
+            <Divider orientation="horizontal" />
+            {/* Elemento extra con información del usuario */}
+            <MenuItem as="div" disabled>
+              <div className="flex items-center p-2">
+                <div className="relative h-10 w-10 rounded-full overflow-hidden">
+                  <Image
+                    src={session?.user.image ?? '/svg/user.svg'}
+                    alt="Profile Image"
+                    width={50}
+                    height={50}
+                  />
+                </div>
+                <span className="ml-2">{session?.user.name}</span>
+              </div>
+            </MenuItem>
           </MenuItems>
         </Menu>
       </div>
     </div>
   );
 };
+

@@ -30,7 +30,7 @@ export const Navbar = () => {
               <OptionsDesktop session={session}/>
             </div>
           </div>
-          {session?.user && <ProfileDropdown image={session.user.image} />}
+          {session?.user && <ProfileDropdown session={session} />}
         </div>
       </div>
       <OptionsMobile session={session} />

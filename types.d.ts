@@ -24,6 +24,7 @@ interface Product {
     username: string;
     email: string;
     password: string;
+    repeatedPassword?: string;
     role: string;
     secret_question: string;
     secret_answer: string;
@@ -391,6 +392,13 @@ interface MarketProduct {
 
 interface MarketResults {
   results: MarketProduct[];
+}
+
+interface UpdatePasswordData {
+  password: string;
+  secret_question: string;
+  secret_answer: string;
+  id: string;
 }
 
 declare module 'mui-datatables';

@@ -18,13 +18,13 @@ export const usersApi = createApi({
     }),
 
     // Actualizar un usuario existente
-    updateUser: builder.mutation<User, { id: string; updatedData: Omit<User, '_id'> }>({
-      query: ({ id, updatedData }) => ({
-        url: `/users/${id}`, // Ruta para actualizar un usuario por su ID
+    updateUser: builder.mutation<User, UpdatePasswordData>({
+      query: ({ id, ...updatedData }) => ({
+        url: `/users/${id}`,
         method: 'PUT',
         body: updatedData,
       }),
-      invalidatesTags: ['Users'], // Invalidar la caché de 'Users' después de la actualización
+      invalidatesTags: ['Users'],
     }),
 
     // Eliminar un usuario
