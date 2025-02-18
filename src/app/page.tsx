@@ -1,5 +1,5 @@
-import { Hero } from 'src/components/Presentation/Hero'
+import { Presentation } from 'src/components/Presentation'
 
 export default function HomePage() {
-  return <Hero/>
+  return <Presentation/>
 }

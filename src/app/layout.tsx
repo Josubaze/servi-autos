@@ -40,7 +40,7 @@ export default async function RootLayout({
                 <NextUiProvider>
                   <ToasterProvider>
                     <div className="grid min-h-screen grid-rows-[auto,1fr,auto]">
-                      <Suspense fallback={<Disclosure as="nav" className="bg-black-nav"></Disclosure>}>
+                      <Suspense fallback={<Disclosure as="nav" className="bg-transparent"></Disclosure>}>
                         <Navbar />
                       </Suspense>
                       <main className={`${knewave.variable}`}>
