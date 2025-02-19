@@ -18,3 +18,18 @@ body {
     margin: 0;
   }
 }
+
+/* globals.css */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #4338ca95;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #4b5563;
+}

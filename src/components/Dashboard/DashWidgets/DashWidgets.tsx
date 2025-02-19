@@ -63,12 +63,6 @@ export const LottieRecover = dynamic(
   { ssr: false }
 );
 
-export const LottieProfile = dynamic(
-  () => import("src/components/LottieIcon/LottieProfile"),
-  { ssr: false }
-);
-
-
 
 export const DashWidgets = () => {
   const {

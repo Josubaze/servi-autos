@@ -56,7 +56,7 @@ export const ExecutionOrderView = forwardRef<HTMLDivElement, ExecutionOrderViewP
         </Tooltip>
 
         <div
-            className="bg-white py-4 px-6 text-black rounded-lg max-w-4xl mx-auto max-h-screen overflow-y-auto scrollbar-custom"
+            className="bg-white py-4 px-6 text-black rounded-lg max-w-4xl mx-auto max-h-screen overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
         >
             <div 

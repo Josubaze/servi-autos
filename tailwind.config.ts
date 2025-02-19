@@ -36,23 +36,6 @@ const config: Config = {
   darkMode: "class",
   plugins: [
     nextui(),
-    function ({ addComponents } : any) {
-      addComponents({
-        '.scrollbar-custom::-webkit-scrollbar': {
-          width: '8px', // Ancho del scrollbar
-        },
-        '.scrollbar-custom::-webkit-scrollbar-thumb': {
-          backgroundColor: '#6b728080', // Color del thumb
-          borderRadius: '4px', // Esquinas redondeadas
-        },
-        '.scrollbar-custom::-webkit-scrollbar-track': {
-          backgroundColor: 'transparent', // Hacer que el fondo del scroll sea transparente
-        },
-        '.scrollbar-custom::-webkit-scrollbar-thumb:hover': {
-          backgroundColor: '#4b5563', // Color del thumb al hacer hover
-        },
-      });
-    },
   ],
   
 };

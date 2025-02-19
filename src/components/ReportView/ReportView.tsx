@@ -48,7 +48,7 @@ export const ReportView = forwardRef<HTMLDivElement, ReportViewProps>((
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     onClick={onClose}>
       {/* Modal Container */}
-        <div className="bg-white py-4 px-6 text-black rounded-lg max-w-4xl mx-auto max-h-screen overflow-y-auto scrollbar-custom"
+        <div className="bg-white py-4 px-6 text-black rounded-lg max-w-4xl mx-auto max-h-screen overflow-y-auto"
         onClick={(e) => e.stopPropagation()}>
             {/* Botón Cerrar */}
             <Tooltip content='Salir'>
