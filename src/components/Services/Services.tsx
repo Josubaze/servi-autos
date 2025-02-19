@@ -59,7 +59,7 @@ export const Services = () => {
   return (
     <>
       <div className="flex justify-center items-center ">
-        <LottieTools loop className="h-24 pt-3" />
+        <LottieTools loop className="h-28 pt-3" />
         <PageTitle title="GESTIÓN DE SERVICIOS" />
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">

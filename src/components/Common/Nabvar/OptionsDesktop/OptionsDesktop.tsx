@@ -32,77 +32,101 @@ export const OptionsDesktop: React.FC<OptionsAuthProps> = ({ session }) => {
 
       {/* Menú Crear */}
       <Menu as="div" className="relative inline-block text-left">
-        <MenuButton className={classNames(
-          'inline-flex justify-center w-full rounded-md px-3 py-2 text-sm font-medium hover:bg-indigo-700', 
-          (isLider ? MENUCREATELIDER : MENUCREATE).some(item => pathname === item.href) ? 'bg-indigo-700' : ''
-        )}>
-          Crear
-        </MenuButton>
-        <MenuItems className="absolute z-10 mt-2 w-48 origin-top-right rounded-md outline outline-2 outline-indigo-800 bg-indigo-950">
-          {(isLider ? MENUCREATELIDER : MENUCREATE).map((item) => (
-            <MenuItem key={item.name}>
-              <Link
-                href={item.href}
-                className={classNames(
-                  pathname === item.href ? 'bg-indigo-700' : 'data-[focus]:bg-indigo-700',
-                  'block px-4 py-2 text-sm font-medium'
-                )}
-              >
-                {item.name}
-              </Link>
-            </MenuItem>
-          ))}
-        </MenuItems>
+        {({ open }) => (
+          <>
+            <MenuButton
+              className={classNames(
+                'inline-flex justify-center w-full rounded-md px-3 py-2 text-sm font-medium hover:bg-indigo-700',
+                ((isLider ? MENUCREATELIDER : MENUCREATE).some(item => pathname === item.href) || open)
+                  ? 'bg-indigo-700'
+                  : 'bg-transparent'
+              )}
+            >
+              Crear
+            </MenuButton>
+            <MenuItems className="absolute z-10 mt-2 w-48 origin-top-right rounded-md outline outline-2 outline-indigo-700 bg-indigo-700">
+              {(isLider ? MENUCREATELIDER : MENUCREATE).map((item) => (
+                <MenuItem key={item.name}>
+                  <Link
+                    href={item.href}
+                    className={classNames(
+                      pathname === item.href ? 'bg-indigo-600' : 'data-[focus]:bg-indigo-600',
+                      'block px-4 py-2 text-sm font-medium'
+                    )}
+                  >
+                    {item.name}
+                  </Link>
+                </MenuItem>
+              ))}
+            </MenuItems>
+          </>
+        )}
       </Menu>
 
       {/* Menú Control */}
       <Menu as="div" className="relative inline-block text-left">
-        <MenuButton className={classNames(
-          'inline-flex justify-center w-full rounded-md px-3 py-2 text-sm font-medium hover:bg-indigo-700', 
-          (isLider ? MENUCONTROLLIDER : MENUCONTROL).some(item => pathname === item.href) ? 'bg-indigo-700' : ''
-        )}>
-          Control
-        </MenuButton>
-        <MenuItems className="absolute z-10 mt-2 w-48 origin-top-right rounded-md outline outline-2 outline-indigo-800 bg-indigo-950">
-          {(isLider ? MENUCONTROLLIDER : MENUCONTROL).map((item) => (
-            <MenuItem key={item.name}>
-              <Link
-                href={item.href}
-                className={classNames(
-                  pathname === item.href ? 'bg-indigo-700' : 'data-[focus]:bg-indigo-700',
-                  'block px-4 py-2 text-sm font-medium'
-                )}
-              >
-                {item.name}
-              </Link>
-            </MenuItem>
-          ))}
-        </MenuItems>
+        {({ open }) => (
+          <>
+            <MenuButton
+              className={classNames(
+                'inline-flex justify-center w-full rounded-md px-3 py-2 text-sm font-medium hover:bg-indigo-700',
+                ((isLider ? MENUCONTROLLIDER : MENUCONTROL).some(item => pathname === item.href) || open)
+                  ? 'bg-indigo-700'
+                  : 'bg-transparent'
+              )}
+            >
+              Control
+            </MenuButton>
+            <MenuItems className="absolute z-10 mt-2 w-48 origin-top-right rounded-md outline outline-2 outline-indigo-700 bg-indigo-700">
+              {(isLider ? MENUCONTROLLIDER : MENUCONTROL).map((item) => (
+                <MenuItem key={item.name}>
+                  <Link
+                    href={item.href}
+                    className={classNames(
+                      pathname === item.href ? 'bg-indigo-600' : 'data-[focus]:bg-indigo-600',
+                      'block px-4 py-2 text-sm font-medium'
+                    )}
+                  >
+                    {item.name}
+                  </Link>
+                </MenuItem>
+              ))}
+            </MenuItems>
+          </>
+        )}
       </Menu>
 
       {/* Menú Gestionar */}
       <Menu as="div" className="relative inline-block text-left">
-        <MenuButton className={classNames(
-          'inline-flex justify-center w-full rounded-md px-3 py-2 text-sm font-medium hover:bg-indigo-700',  
-          (isLider ? MENUMANAGELIDER : MENUMANAGE).some(item => pathname === item.href) ? 'bg-indigo-700' : ''
-        )}>
-          Gestionar
-        </MenuButton>
-        <MenuItems className="absolute z-10 mt-2 w-48 origin-top-right rounded-md outline outline-2 outline-indigo-800 bg-indigo-950">
-          {(isLider ? MENUMANAGELIDER : MENUMANAGE).map((item) => (
-            <MenuItem key={item.name}>
-              <Link
-                href={item.href}
-                className={classNames(
-                  pathname === item.href ? 'bg-indigo-700' : 'data-[focus]:bg-indigo-700',
-                  'block px-4 py-2 text-sm font-medium'
-                )}
-              >
-                {item.name}
-              </Link>
-            </MenuItem>
-          ))}
-        </MenuItems>
+        {({ open }) => (
+          <>
+            <MenuButton
+              className={classNames(
+                'inline-flex justify-center w-full rounded-md px-3 py-2 text-sm font-medium hover:bg-indigo-700',
+                ((isLider ? MENUMANAGELIDER : MENUMANAGE).some(item => pathname === item.href) || open)
+                  ? 'bg-indigo-700'
+                  : 'bg-transparent'
+              )}
+            >
+              Gestionar
+            </MenuButton>
+            <MenuItems className="absolute z-10 mt-2 w-48 origin-top-right rounded-md outline outline-2 outline-indigo-700 bg-indigo-700">
+              {(isLider ? MENUMANAGELIDER : MENUMANAGE).map((item) => (
+                <MenuItem key={item.name}>
+                  <Link
+                    href={item.href}
+                    className={classNames(
+                      pathname === item.href ? 'bg-indigo-600' : 'data-[focus]:bg-indigo-600',
+                      'block px-4 py-2 text-sm font-medium'
+                    )}
+                  >
+                    {item.name}
+                  </Link>
+                </MenuItem>
+              ))}
+            </MenuItems>
+          </>
+        )}
       </Menu>
 
       <Link 
@@ -117,4 +141,3 @@ export const OptionsDesktop: React.FC<OptionsAuthProps> = ({ session }) => {
     </div>
   );
 };
-

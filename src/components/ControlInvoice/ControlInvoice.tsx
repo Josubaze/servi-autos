@@ -3,7 +3,7 @@
 import { FaPlus } from "react-icons/fa6";
 import { SearchBar } from 'src/components/Common/SearchBar';
 import { PageTitle } from '../Common/PageTitle';
-import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
+import { LottieInvoice } from '../Dashboard/DashWidgets/DashWidgets';
 import { HiDocumentPlus } from "react-icons/hi2";
 import { ControlInvoiceTable } from './../ControlInvoice/ControlInvoiceTable';
 import { Button, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
@@ -44,7 +44,7 @@ export const ControlInvoice = () => {
   return (
     <>
       <div className="flex justify-center items-center">  
-          <LottieBudget loop className="h-24 pt-2" />
+          <LottieInvoice loop className="h-32 pt-2" />
           <PageTitle title="CONTROL DE FACTURAS"/>
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">

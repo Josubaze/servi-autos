@@ -8,6 +8,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import Image from 'next/image';
 
 export const Hero = () => {
   return (
@@ -43,7 +44,7 @@ export const Hero = () => {
       >
         {/* Imagen 1 */}
         <SwiperSlide className="relative h-screen flex justify-center items-center">
-          <img
+          <Image
             src="https://res.cloudinary.com/dxlgp2kxh/image/upload/v1739725138/ai-generated-8214510_1920_fbrjnd.jpg"
             alt="Automatización de Servicios"
             className="h-full w-full object-cover"
@@ -63,7 +64,7 @@ export const Hero = () => {
 
         {/* Imagen 2 */}
         <SwiperSlide className="relative h-screen flex justify-center items-center">
-          <img
+          <Image
             src="https://res.cloudinary.com/dxlgp2kxh/image/upload/v1739725140/auto-repair-shop-1954636_1920_bwxm1b.jpg"
             alt="Gestión de Taller"
             className="h-full w-full object-cover"

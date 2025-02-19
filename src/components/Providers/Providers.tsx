@@ -48,7 +48,7 @@ export const Providers = () => {
   return (
     <>
       <div className="flex justify-center items-center">  
-        <LottieSupplier loop className="h-20 pt-2" />
+        <LottieSupplier loop className="h-28 pt-2" />
         <PageTitle title="GESTIÓN DE PROVEEDORES"/>
       </div>
 

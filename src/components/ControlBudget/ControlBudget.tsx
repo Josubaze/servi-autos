@@ -43,7 +43,7 @@ export const ControlBudget = () => {
   return (
     <>
       <div className="flex justify-center items-center">  
-          <LottieBudget loop className="h-24 pt-2" />
+          <LottieBudget loop className="h-28 pt-2" />
           <PageTitle title="CONTROL DE PRESUPUESTO"/>
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">

@@ -43,6 +43,33 @@ export const LottiePending = dynamic(
   { ssr: false }
 );
 
+export const LottieReport = dynamic(
+  () => import("src/components/LottieIcon/LottieReport"),
+  { ssr: false }
+);
+
+export const LottieExecutionOrder = dynamic(
+  () => import("src/components/LottieIcon/LottieExecutionOrder"),
+  { ssr: false }
+);
+
+export const LottiePurchaseOrder = dynamic(
+  () => import("src/components/LottieIcon/LottiePurchaseOrder"),
+  { ssr: false }
+);
+
+export const LottieRecover = dynamic(
+  () => import("src/components/LottieIcon/LottieRecover"),
+  { ssr: false }
+);
+
+export const LottieProfile = dynamic(
+  () => import("src/components/LottieIcon/LottieProfile"),
+  { ssr: false }
+);
+
+
+
 export const DashWidgets = () => {
   const {
     budgets,
@@ -133,7 +160,7 @@ export const DashWidgets = () => {
           <div className="font-title">Nº Productos</div>
           <div className="flex justify-between items-center">
             <div className="h-30 aspect-w-1 aspect-h-1">
-              <LottieTools loop className="h-20" />
+              <LottieProduct loop className="h-20" />
             </div>
             <div className="text-2xl mr-8">
               {loadingProducts ? (
@@ -159,7 +186,7 @@ export const DashWidgets = () => {
           <div className="font-title">Nº Servicios</div>
           <div className="flex justify-between items-center">
             <div className="h-30 aspect-w-1 aspect-h-1">
-              <LottieProduct loop className="h-20" />
+              <LottieTools loop className="h-20" />
             </div>
             <div className="text-2xl mr-8">
               {loadingServices ? (

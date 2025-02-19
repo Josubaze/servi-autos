@@ -3,6 +3,7 @@ import { Checkbox, Tooltip } from "@nextui-org/react";
 import { motion } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { useSocketContext } from 'src/context/SocketContext';
+import { IoNotifications } from "react-icons/io5";
 
 
 export const Notifications = () => {
@@ -26,8 +27,11 @@ export const Notifications = () => {
   };
 
   return (
-    <div className="w-96 p-6 bg-indigo-950 text-white rounded-lg shadow-xl z-50 relative">
-      <h2 className="text-2xl font-semibold text-center mb-4">🔔 Notificaciones</h2>
+    <div className="w-96 p-6 bg-indigo-700 rounded-lg shadow-xl z-50 relative">
+      <div className='flex items-center justify-center pb-4 gap-x-2'>
+        <span><IoNotifications className='w-6 h-6'/> </span> 
+        <h2 className="text-2xl font-semibold">Notificaciones</h2>
+      </div>
       
       <div className="max-h-96 overflow-y-auto scrollbar-custom space-y-3">
         {sortedNotifications.length === 0 ? (
@@ -44,7 +48,7 @@ export const Notifications = () => {
                   initial={{ opacity: 1 }}
                   animate={{ opacity: isMarked ? 0.5 : 1 }}
                   transition={{ duration: 0.5 }}
-                  className="grid grid-cols-[1fr,auto] items-center bg-indigo-900 border border-indigo-700 p-3 rounded-lg shadow-md gap-4 transition-opacity"
+                  className="grid grid-cols-[1fr,auto] items-center bg-indigo-600 border border-indigo-700 p-3 rounded-lg shadow-md gap-4 transition-opacity"
                 >
                   {/* Mensaje e ID */}
                   <div>

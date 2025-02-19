@@ -3,7 +3,7 @@
 import { FaPlus } from "react-icons/fa6";
 import { SearchBar } from 'src/components/Common/SearchBar';
 import { PageTitle } from '../Common/PageTitle';
-import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
+import { LottiePurchaseOrder } from '../Dashboard/DashWidgets/DashWidgets';
 import { HiDocumentPlus } from "react-icons/hi2";
 import { ControlPurchaseOrderTable } from './ControlPurchaseOrderTable';
 import { Button, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
@@ -44,7 +44,7 @@ export const ControlPurchaseOrder = () => {
   return (
     <>
       <div className="flex justify-center items-center">  
-          <LottieBudget loop className="h-24 pt-2" />
+          <LottiePurchaseOrder loop className="h-36 pt-2" />
           <PageTitle title="CONTROL DE ÓRDENES DE COMPRA"/>
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">

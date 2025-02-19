@@ -48,7 +48,7 @@ export const Customers = () => {
   return (
     <>
       <div className="flex justify-center items-center">  
-        <LottiePersons loop className="h-24 pt-2" />
+        <LottiePersons loop className="h-28 pt-2" />
         <PageTitle title="GESTIÓN DE CLIENTES"/>
       </div>
 

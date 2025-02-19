@@ -2,7 +2,7 @@
 
 import { SearchBar } from 'src/components/Common/SearchBar';
 import { PageTitle } from '../Common/PageTitle';
-import { LottieBudget } from '../Dashboard/DashWidgets/DashWidgets';
+import { LottieExecutionOrder } from '../Dashboard/DashWidgets/DashWidgets';
 import { Button, DateRangePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 import { I18nProvider } from '@react-aria/i18n';
 import { Loading } from '../Common/Loading';
@@ -39,7 +39,7 @@ export const ControlExecutionOrder = () => {
   return (
     <>
       <div className="flex justify-center items-center">  
-          <LottieBudget loop className="h-24 pt-2" />
+          <LottieExecutionOrder loop className="h-28 pt-2" />
           <PageTitle title="CONTROL DE ORDEN DE EJECUCIÓN"/>
       </div>
       <div className="relative flex flex-col pb-6 px-0 sm:px-12">
