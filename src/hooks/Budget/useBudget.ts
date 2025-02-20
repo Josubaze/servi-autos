@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { useCreateBudgetMutation, useUpdateBudgetMutation } from "src/redux/services/budgets.Api";
 import { toast } from "react-toastify";
 import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './useBudgetSummary'
 import { useUpdateStateReportMutation } from "src/redux/services/reports.Api";
+import { useSession } from "next-auth/react";
+import { useCheckAvailabilityMutation } from "src/redux/services/productsApi";
 
 interface FormHandle {
     submitForm: () => Promise<Form | null>;
@@ -45,6 +47,9 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     const totalWithIgft = calculateTotal((subtotal), calculatedIva, calculatedIgtf);
     const [refReport, setRefReport] = useState<string | null>(null);
     const [ updateStateReport ]  = useUpdateStateReportMutation();
+    const { data: session } = useSession();
+    const [ checkAvailability ] = useCheckAvailabilityMutation();
+
     // Inicializar datos si el modo es "update"
     useEffect(() => {
         if (mode === "upload" && budgetData) {
@@ -101,10 +106,19 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
 
     const extractFormData = () => {
         const customerData = formCustomerRef.current?.getFormCustomer?.() || null;
-        const form = formRef.current?.getForm?.() || null;
-    
-        return { customerData, form }; 
-    };
+        let form = formRef.current?.getForm?.() || null;
+      
+        if (form) {
+          form = {
+            ...form,
+            nameWorker: session!.user.name!,
+            emailWorker: session!.user.email!
+          };
+        }
+      
+        return { customerData, form };
+      };
+      
 
     const extractFormDataAndValidate = async () => {
 
@@ -124,54 +138,66 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     // Función para validar los datos del presupuesto
     const validateBudget = async () => {
         const { customerData, form } = await extractFormDataAndValidate();
+        
         if (!company) {
-            toast.error("Faltan datos de la empresa");
-            throw new Error("Datos de la empresa incompletos");
+          toast.error("Faltan datos de la empresa");
+          throw new Error("Datos de la empresa incompletos");
         }
-
+      
         if (!customerData) {
-            toast.error("Faltan datos del cliente");
-            throw new Error("Datos del cliente incompletos");
+          toast.error("Faltan datos del cliente");
+          throw new Error("Datos del cliente incompletos");
         }
-
+      
         if (!form) {
-            toast.error("Faltan datos de las fechas");
-            throw new Error("Datos de las fechas incompletos");
+          toast.error("Faltan datos de las fechas");
+          throw new Error("Datos de las fechas incompletos");
         }
-
+      
         if (selectedServices.length === 0) {
-            toast.error("Agrega un servicio");
-            throw new Error("No hay servicios seleccionados");
+          toast.error("Agrega un servicio");
+          throw new Error("No hay servicios seleccionados");
         }
-
+      
         if (!description || description.trim() === "") {
-            toast.error("Falta agregar una descripción");
-            throw new Error("Descripción vacía");
+          toast.error("Falta agregar una descripción");
+          throw new Error("Descripción vacía");
         }
-
+      
         if (ivaPercentage <= 0) {
-            toast.error("El IVA debe ser mayor a 0");
-            throw new Error("IVA inválido");
+          toast.error("El IVA debe ser mayor a 0");
+          throw new Error("IVA inválido");
         }
-
+      
         if (igtfPercentage <= 0) {
-            toast.error("El IGTF debe ser mayor a 0");
-            throw new Error("IGTF inválido");
+          toast.error("El IGTF debe ser mayor a 0");
+          throw new Error("IGTF inválido");
         }
-
+      
+        // Validar que los datos del trabajador estén definidos
+        if (!session?.user?.name) {
+          toast.error("Falta el nombre del trabajador");
+          throw new Error("Nombre del trabajador no definido");
+        }
+        
+        if (!session?.user?.email) {
+          toast.error("Falta el correo del trabajador");
+          throw new Error("Correo del trabajador no definido");
+        }
+      
         return {
-            customerData,
-            form,
-            company,
-            selectedServices,
-            description,
-            currency,
-            exchangeRate,
+          customerData,
+          form,
+          company,
+          selectedServices,
+          description,
+          currency,
+          exchangeRate,
         };
-    };
-
+      };
+      
     // Función principal para guardar el presupuesto
-    const handleSave = async (action: "draft" | "approved", mode: "create" | "upload", budget_id : string) => {
+    const handleSave = async (action: "draft" | "approved", mode: "create" | "upload", budget_id: string) => {
         try {
             const {
                 customerData,
@@ -183,6 +209,29 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
                 exchangeRate,
             } = await validateBudget();
     
+            // Extraer productos para verificar disponibilidad
+            const productsToCheck = selectedServices.flatMap(service =>
+                service.products.map(product => ({
+                    id: product.product._id,
+                    quantity: product.quantity,
+                }))
+            );
+    
+            // Validar disponibilidad en inventario
+            if (mode === "create") {
+                const { results } = await checkAvailability(productsToCheck).unwrap();
+                const unavailableProducts = results.filter(product => !product.available);
+    
+                if (unavailableProducts.length > 0) {
+                    unavailableProducts.forEach(product => {
+                        toast.error(
+                            `Stock insuficiente para ${product.name}. Disponible: ${product.currentQuantity ?? 0}`
+                        );
+                    });
+                    return;
+                }
+            }
+    
             // Construcción del objeto `budget`
             const budget: Omit<Budget, "_id"> = {
                 form: {
@@ -192,6 +241,8 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
                     dateUpdate: null,
                     currency,
                     exchangeRate,
+                    nameWorker: session!.user.name!,
+                    emailWorker: session!.user.email!,
                 },
                 company: { ...company },
                 customer: { ...customerData },
@@ -215,17 +266,16 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
     
             // Crear o Actualizar según `mode`
             if (mode === "create") {
-
                 await createBudget(budget).unwrap();
-
+    
                 if (refReport !== null) {
-                try {
-                    await updateStateReport({ id: refReport }).unwrap();
-                    toast.info("Se ha actualizado el estado del Informe");
-                } catch (updateError) {
+                    try {
+                        await updateStateReport({ id: refReport }).unwrap();
+                        toast.info("Se ha actualizado el estado del Informe");
+                    } catch (updateError) {
                         console.error("Error al actualizar el estado del informe:", updateError);
                         toast.error("Presupuesto creado, pero ocurrió un error al actualizar el estado del informe");
-                    }   
+                    }
                 }
                 toast.success("Presupuesto creado exitosamente!");
             } else if (mode === "upload") {
@@ -233,12 +283,12 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
                     ...budget,
                     _id: budget_id,
                     form: {
-                        ...budget.form, 
-                        dateUpdate: Date(), 
-                    }
+                        ...budget.form,
+                        dateUpdate: new Date(), 
+                    },
                 };
-                
-                await updateBudget(budgetWithId).unwrap(); // Aquí usas la mutación de actualización
+    
+                await updateBudget(budgetWithId).unwrap();
                 router.push("/control/budgets");
                 toast.success("Presupuesto actualizado exitosamente!");
             }
@@ -248,6 +298,9 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
             toast.error("Ha ocurrido un error");
         }
     };
+    
+    
+
 
     return {
         formCustomerRef,

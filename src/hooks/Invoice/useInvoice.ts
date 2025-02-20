@@ -37,7 +37,6 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
     const [createInvoice] = useCreateInvoiceMutation();
     const [createExecutionOrder] = useCreateExecutionOrderMutation();
     const [updateInvoice] = useUpdateInvoiceMutation();
-    const [dateUpdate, setDateUpdate] = useState<Date | null>(null);
     const router = useRouter();
     const [ivaPercentage, setIvaPercentage] = useState<number>(16); // IVA predeterminado al 16%
     const [igtfPercentage, setIgtfPercentage] = useState<number>(3); // IGTF predeterminado al 3%
@@ -47,6 +46,8 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
     const total = calculateTotal((subtotal), calculatedIva, 0);
     const totalWithIgft = calculateTotal((subtotal), calculatedIva, calculatedIgtf);
     const [ updateProductQuantity ] = useUpdateProductQuantityMutation();
+
+
     // Inicializar datos si el modo es "update"
     useEffect(() => {
         if (mode === "upload" && invoiceData) {
@@ -172,7 +173,6 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
         };
     };
 
-    // Función principal para guardar la factura
     const handleSave = async (action: "draft" | "paid" | "pending", mode: "create" | "upload", invoice_id: string) => {
         try {
             const {
@@ -205,7 +205,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                     })),
                 })),
                 description,
-                state: action === "draft" ? "Borrador" : action === "paid" ? "Pagada" : action === "pending" ? "Pendiente" : "",
+                state: action === "draft" ? "Borrador" : action === "paid" ? "Pagada" : "Pendiente",
                 subtotal,
                 ivaPercentage,
                 igtfPercentage,
@@ -215,49 +215,57 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                 totalWithIgft,
             };
     
-            // Crear o actualizar según `mode`
-            if (mode === "create") {
-                // Validar disponibilidad y restar cantidades antes de crear la factura
-                for (const service of selectedServices) {
-                    for (const product of service.products) {
-                        try {
-                            // Realizar una solicitud para restar productos del inventario
-                            await updateProductQuantity({
-                                _id: product.product._id,
-                                quantity: product.quantity,
-                                operation: "subtract", // Especificar que queremos restar
-                            }).unwrap();
-                        } catch (error: any) {
-                            const typedError = error as ErrorResponse;
-                            // Verificar si el error tiene un mensaje
-                            if (typedError?.data?.message) {
-                                toast.error(`${typedError.data.message} de: ${product.product.name}.`);
-                            } else {
-                                toast.error(`Error desconocido al actualizar el producto: ${product.product.name}`);
-                            }
-                            return; // Salir de la función sin crear la factura
-                        }
+            // Validar disponibilidad y restar cantidades antes de crear la factura
+            for (const service of selectedServices) {
+                for (const product of service.products) {
+                    try {
+                        await updateProductQuantity({
+                            _id: product.product._id,
+                            quantity: product.quantity,
+                            operation: "subtract",
+                        }).unwrap();
+                    } catch (error: any) {
+                        const typedError = error as ErrorResponse;
+                        toast.error(
+                            typedError?.data?.message
+                                ? `${typedError.data.message} de: ${product.product.name}.`
+                                : `Error desconocido al actualizar el producto: ${product.product.name}`
+                        );
+                        return; // Detener el proceso si hay error en el stock
                     }
                 }
+            }
     
-                // Si todos los productos se actualizaron correctamente, crear la factura
-                await createInvoice(invoice).unwrap();
-                toast.success("Factura creada exitosamente!");
-
-                if(invoice.state === 'Pendiente' || invoice.state === 'Pagada'){
-                    // Construcción del objeto `executionOrder`
-                    const executionOrder: Omit<ExecutionOrder, "_id"> = {
-                        form: invoice.form,  
-                        company: invoice.company,
-                        customer: invoice.customer,
-                        services: invoice.services,  
-                        description: invoice.description,
-                        state:"En proceso"
-                    };
+            // Crear factura solo si el mode es "create"
+            if (mode === "create") {
+                try {
+                    // Intentar crear la factura
+                    await createInvoice(invoice).unwrap();
+                    toast.success("Factura creada exitosamente!");
+                } catch (error) {
+                    toast.error("Error al crear la factura.");
+                    return;
+                }
     
-                    // Crear el executionOrder después de crear la factura
-                    await createExecutionOrder(executionOrder).unwrap();
-                    toast.success("Orden de ejecución creada exitosamente!");
+                // Si la factura está en estado "Pendiente" o "Pagada", crear la orden de ejecución
+                if (invoice.state === "Pendiente" || invoice.state === "Pagada") {
+                    try {
+                        const executionOrder: Omit<ExecutionOrder, "_id"> = {
+                            form: invoice.form, // Usar los datos de la factura creada
+                            company: invoice.company,
+                            customer: invoice.customer,
+                            services: invoice.services,
+                            description: invoice.description,
+                            state: "En proceso",
+                        };
+    
+                        // Intentar crear la orden de ejecución
+                        await createExecutionOrder(executionOrder).unwrap();
+                        toast.success("Orden de ejecución creada exitosamente!");
+                    } catch (error) {
+                        toast.error("Error al crear la orden de ejecución.");
+                        return;
+                    }
                 }
             } else if (mode === "upload") {
                 const invoiceWithId = {
@@ -265,20 +273,30 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
                     _id: invoice_id,
                     form: {
                         ...invoice.form,
-                        dateUpdate: Date.now // Actualiza la fecha
+                        dateUpdate: Date.now(), // Actualiza la fecha
                     },
                 };
     
-                await updateInvoice(invoiceWithId).unwrap();
-                router.push("/control/invoices");
-                toast.success("Factura actualizada exitosamente!");
+                try {
+                    // Intentar actualizar la factura
+                    await updateInvoice(invoiceWithId).unwrap();
+                    router.push("/control/invoices");
+                    toast.success("Borrador actualizado exitosamente!");
+                } catch (error) {
+                    toast.error("Error al actualizar el borrador de la factura.");
+                }
             }
     
-            resetValues();
         } catch (error) {
-            toast.error("Ha ocurrido un error");
+            toast.error("Ha ocurrido un error inesperado.");
+        } finally {
+            resetValues();
         }
     };
+    
+    
+    
+    
     
 
     return {

@@ -31,6 +31,18 @@ export const productsApi = createApi({
             }),
             invalidatesTags: ['Products'],
         }),
+         // ✅ acepta tanto un solo producto como varios productos en un array
+        checkAvailability: builder.mutation<
+            { results: { name: string; available: boolean; currentQuantity?: number; message?: string }[] }, 
+            { id: string; quantity: number }[]
+        >({
+            query: (productsToCheck) => ({
+                url: '/products/check_availability',
+                method: 'POST',
+                body: productsToCheck,
+            }),
+            invalidatesTags: ['Products'],
+        }),
         updateProduct: builder.mutation<void, Product>({
             query: (product) => ({
                 url: `/products/${product._id}`,
@@ -50,5 +62,5 @@ export const productsApi = createApi({
     }),
 });
 
-export const { useGetProductsQuery, useDeleteProductMutation , useCreateProductMutation, useUpdateProductMutation, useUpdateProductQuantityMutation,
+export const { useGetProductsQuery, useDeleteProductMutation , useCreateProductMutation, useUpdateProductMutation, useUpdateProductQuantityMutation, useCheckAvailabilityMutation
  } =  productsApi

@@ -172,9 +172,15 @@ export const ControlReportTable: React.FC<ControlReportTableProps> = ({
             customBodyRender: (value: any, tableMeta: any) => {
                 const report = rows[tableMeta.rowIndex].report;
                 return (
-                    <div className="flex gap-x-5 justify-center items-center">                       
+                    <div className="flex gap-x-5 justify-center items-center">  
                         {/* Botón de vista */}
                         <ViewButton onClick={() => handleView(report)} />
+
+                        {/* Botón de actulizar */} 
+                        {
+                            report.state !== "Presupuestado" &&
+                            <UpdateButton onClick={() => handleUpdate(report._id)}/> 
+                        } 
         
                         {/* Botón de exportar */}
                         <ExportButton onClick={() => handleExportPDF(report)} />

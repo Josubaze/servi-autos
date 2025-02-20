@@ -3,6 +3,7 @@ import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { toast } from "react-toastify";
 import { useRouter } from 'next/navigation';
 import { useCreateReportMutation, useUpdateReportMutation } from "src/redux/services/reports.Api";
+import { useCheckAvailabilityMutation } from "src/redux/services/productsApi";
 
 interface FormHandle {
     submitForm: () => Promise<FormReport | null>;
@@ -31,6 +32,7 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
     const [updateReport] = useUpdateReportMutation();
     const [dateUpdate, setDateUpdate] = useState<Date | null>(null);
     const router = useRouter();
+      const [ checkAvailability ] = useCheckAvailabilityMutation();
 
 
     // Inicializar datos si el modo es "update"
@@ -121,8 +123,8 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
         };
     };
 
-    // Función principal para guardar el presupuesto
-    const handleSave = async ( mode: "create" | "upload", report_id : string) => {
+    // Función principal para guardar el informe
+    const handleSave = async (mode: "create" | "upload", report_id: string) => {
         try {
             const {
                 customerData,
@@ -132,7 +134,25 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
                 description,
             } = await validateBudget();
     
-            // Construcción del objeto `report`
+            const productsToCheck = selectedServices.flatMap(service =>
+                service.products.map(product => ({
+                    id: product.product._id, 
+                    quantity: product.quantity,
+                }))
+            );
+    
+            const { results } = await checkAvailability(productsToCheck).unwrap();
+            const unavailableProducts = results.filter(product => !product.available);
+    
+            if (unavailableProducts.length > 0) {
+                unavailableProducts.forEach(product => {
+                    toast.error(
+                        `Stock insuficiente para ${product.name}. Disponible: ${product.currentQuantity ?? 0}`
+                    );
+                });
+                return; // 🚨 Salir sin crear el informe
+            }
+    
             const report: Omit<ReportWork, "_id"> = {
                 form: {
                     num: form.num,
@@ -151,10 +171,9 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
                     })),
                 })),
                 description,
-                state:"Sin Presupuestar"
+                state: "Sin Presupuestar"
             };
     
-            // Crear o Actualizar según `mode`
             if (mode === "create") {
                 await createReport(report).unwrap();
                 toast.success("Informe creado exitosamente!");
@@ -163,12 +182,12 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
                     ...report,
                     _id: report_id,
                     form: {
-                        ...report.form, // Asegúrate de mantener las propiedades existentes de `budgetForm`
-                        dateUpdate: Date(), // Actualiza la fecha
+                        ...report.form,
+                        dateUpdate: new Date(), // ✅ Actualiza la fecha
                     }
                 };
-                
-                await updateReport(reportWithId).unwrap(); // Aquí usas la mutación de actualización
+    
+                await updateReport(reportWithId).unwrap();
                 router.push("/control/reports");
                 toast.success("Informe actualizado exitosamente!");
             }
@@ -176,8 +195,9 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
             resetValues();
         } catch (error) {
             toast.error("Ha ocurrido un error");
-        } 
+        }
     };
+    
 
     return {
         formCustomerRef,

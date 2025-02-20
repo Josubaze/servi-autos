@@ -86,7 +86,7 @@ interface Product {
 
   interface Budget {
     _id: string;
-    form: Form;
+    form: FormBudget;
     company: Company;
     customer: Customer;
     services: Service[];
@@ -188,6 +188,8 @@ interface Product {
     dateUpdate: any;
     currency: string;
     exchangeRate: number;
+    nameWorker?: string;
+    emailWorker?: string; 
   }
 
   interface FormCreditNote{
