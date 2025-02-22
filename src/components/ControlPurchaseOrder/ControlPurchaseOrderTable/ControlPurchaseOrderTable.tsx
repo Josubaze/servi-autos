@@ -41,6 +41,7 @@ export const ControlPurchaseOrderTable: React.FC<TableControlPurchaseOrderProps>
         dateUpdate: purchaseOrder.form.dateUpdate ? new Date(purchaseOrder.form.dateUpdate).toLocaleDateString() : "", 
         state: purchaseOrder.state,
         total: purchaseOrder.total,
+        createdBy: purchaseOrder.form.emailWorker,
         totalWithIgft: purchaseOrder.totalWithIgft,
         purchaseOrderId: purchaseOrder._id, 
         purchaseOrder: purchaseOrder,
@@ -120,6 +121,11 @@ export const ControlPurchaseOrderTable: React.FC<TableControlPurchaseOrderProps>
                 )
             },
         },
+    },
+    {
+        name: "createdBy",
+        label: "Creado por",
+        options: { filter: true, sort: true },
     },
     {
         name: "state",

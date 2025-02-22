@@ -2,20 +2,25 @@ import { NextResponse } from "next/server";
 import Budget from 'src/models/budget.schema';
 import { connectDB } from 'src/server/dataBase/connectDB'; 
 
-interface RouteParams {
-    id: string; 
-}
+interface Params {
+    params: { id: string };
+  }
 
-export async function GET(request: Request, { params }: { params: RouteParams }) {
+export async function GET(request: Request, { params }: Params) {
     await connectDB();
     try {
-        const budgetFound = await Budget.findById(params.id);
+        const budgetFound = await Budget.findById(params.id).populate({
+            path: 'report',
+            select: 'form.nameWorker form.emailWorker' 
+        });
+        
         if (!budgetFound) {
             return NextResponse.json(
                 { message: "Budget not found" },
                 { status: 404 }
             );
         }
+        
         return NextResponse.json(budgetFound);
     } catch (error: unknown) {
         if (error instanceof Error) {
@@ -31,7 +36,8 @@ export async function GET(request: Request, { params }: { params: RouteParams })
     }
 }
 
-export async function PUT(request: Request, { params }: { params: RouteParams }) {
+
+export async function PUT(request: Request, { params }: Params) {
     await connectDB();
     try {
         const data = await request.json(); // Obtiene los datos para actualizar
@@ -57,13 +63,12 @@ export async function PUT(request: Request, { params }: { params: RouteParams })
     }
 }
 
-export async function PATCH(request: Request, { params }: { params: RouteParams }) {
+export async function PATCH(request: Request, { params }: Params) {
     await connectDB();
 
     try {
-        const { id } = params; // Obtén el ID del presupuesto desde los parámetros
+        const { id } = params; 
 
-        // Busca el Budget para verificar su estado actual
         const existingBudget = await Budget.findById(id);
 
         if (!existingBudget) {
@@ -73,26 +78,39 @@ export async function PATCH(request: Request, { params }: { params: RouteParams 
             );
         }
 
-        // Verifica que el estado actual sea "Borrador"
-        if (existingBudget.state !== "Borrador") {
+        // No permitir actualización si el estado es "Borrador"
+        if (existingBudget.state === "Borrador") {
             return NextResponse.json(
-                { message: `Cannot update state. Current state is '${existingBudget.state}', only 'Borrador' can be updated.` },
+                { message: "Cannot update state. 'Borrador' is not allowed to be updated." },
                 { status: 400 }
             );
         }
 
-        // Actualiza el estado a "Aprobado" y la fecha de actualización
+        let newState;
+        if (existingBudget.state === "Aprobado") {
+            newState = "Facturado";
+        } else if (existingBudget.state === "Facturado") {
+            return NextResponse.json(
+                { message: "Cannot update state. 'Facturado' is a final state." },
+                { status: 400 }
+            );
+        } else {
+            return NextResponse.json(
+                { message: `Invalid state: '${existingBudget.state}'` },
+                { status: 400 }
+            );
+        }
+
         const updatedBudget = await Budget.findByIdAndUpdate(
             id,
             {
-                state: "Aprobado",
-                // Actualiza solo la fecha de actualización sin modificar el resto del objeto `form`
-                $set: { "form.dateUpdate": Date() },
+                state: newState,
+                $set: { "form.dateUpdate": new Date() },
             },
-            { new: true } // Devuelve el documento actualizado
+            { new: true } 
         );
 
-        return NextResponse.json(updatedBudget); // Devuelve el budget actualizado
+        return NextResponse.json(updatedBudget);
     } catch (error: unknown) {
         if (error instanceof Error) {
             return NextResponse.json(
@@ -108,7 +126,8 @@ export async function PATCH(request: Request, { params }: { params: RouteParams 
 }
 
 
-export async function DELETE(request: Request, { params }: { params: RouteParams }) {
+
+export async function DELETE(request: Request, { params }: Params) {
     await connectDB();
     try {
         const budgetDeleted = await Budget.findByIdAndDelete(params.id);

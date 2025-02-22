@@ -27,12 +27,12 @@ export async function POST(request: Request) {
     await connectDB(); 
     try {
         const data = await request.json(); 
-        const lastExecutionOrder = await ExecutionOrder.findOne().sort({ n_order: -1 }); 
-        const newOrderNumber = lastExecutionOrder ? lastExecutionOrder.n_order + 1 : 1; // Si no hay órdenes, inicia en 1
+        const lastExecutionOrder = await ExecutionOrder.findOne().sort({ num: -1 }); 
+        const newOrderNumber = lastExecutionOrder ? lastExecutionOrder.num + 1 : 1; // Si no hay órdenes, inicia en 1
 
         const newExecutionOrder = new ExecutionOrder({
             ...data,
-            n_order: newOrderNumber,
+            num: newOrderNumber,
         });
 
         const savedExecutionOrder = await newExecutionOrder.save();

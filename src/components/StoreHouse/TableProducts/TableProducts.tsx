@@ -8,7 +8,6 @@ import { darkTheme } from "src/styles/themes/themeTable";
 import { UpdateButton } from "src/components/Common/Buttons/UpdateButton";
 import { DeleteButton } from "src/components/Common/Buttons/DeleteButton";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
 
 export const TableProducts: React.FC<TableProductProps> = ({
   data,

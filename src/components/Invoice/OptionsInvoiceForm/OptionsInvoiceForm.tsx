@@ -7,7 +7,6 @@ import { FaFileInvoice } from "react-icons/fa";
 // Interfaz para las props
 interface OptionsInvoiceFormProps {
     setShowMarket: (isVisible: boolean) => void;
-    setShowInvoices: (isVisible: boolean) => void;
     setIsTableVisible: (isVisible: boolean) => void;
 }
 
@@ -15,7 +14,6 @@ interface OptionsInvoiceFormProps {
 export const OptionsInvoiceForm: React.FC<OptionsInvoiceFormProps> = ({
     setShowMarket,
     setIsTableVisible,
-    setShowInvoices,
 }) => {
     return (
         <div className="flex w-full items-center gap-x-2 pl-6">
@@ -27,16 +25,6 @@ export const OptionsInvoiceForm: React.FC<OptionsInvoiceFormProps> = ({
             > 
                 Cargar Presupuesto
                 <FaFilePowerpoint className="h-5 w-5" />
-            </Button>
-
-            <Button
-                color="default"
-                variant="flat"
-                onClick={() => setShowInvoices(true)}
-                className="w-1/2"
-            > 
-                Cargar Factura
-                <FaFileInvoice className="h-5 w-5" />
             </Button>
 
             <Button

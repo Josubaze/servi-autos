@@ -4,10 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ServiceSchema } from 'src/utils/validation.zod'; 
 import { useCreateServiceMutation } from 'src/redux/services/servicesApi'; 
 import { useGetProductsQuery } from 'src/redux/services/productsApi'; 
-import { Notification } from 'src/components/Common/Notification';
-import TextField from '@mui/material/TextField';
-import {  ThemeProvider } from "@mui/material/styles";
-import { TextFieldTheme } from 'src/styles/themes/themeTextField';
 import { CloseButton } from 'src/components/Common/Buttons/CloseButton';
 import { SelectedTableProducts } from '../SelectedTableProducts';
 import { SelectProducts } from 'src/components/Common/SelectProducts';
@@ -21,7 +17,7 @@ export const ServiceForm = ({ onClose }: FormServiceProps) => {
     resolver: zodResolver(ServiceSchema),
   });
   const { data = [], isError: isErrorProducts, isFetching, isLoading, isSuccess } = useGetProductsQuery(); 
-  const [createService, { isError, isSuccess: isSuccessCreate, isLoading: isLoadingCreate }] = useCreateServiceMutation(); 
+  const [createService, { isError, isLoading: isLoadingCreate }] = useCreateServiceMutation(); 
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]); 
   const [isProductTableVisible, setIsProductTableVisible] = useState(false); 
 

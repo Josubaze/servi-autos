@@ -4,7 +4,6 @@ import { BudgetFormSchema } from 'src/utils/validation.zod';
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { motion } from "framer-motion"; 
 import { useGetBudgetsQuery } from "src/redux/services/budgets.Api";
-import { SelectBudgets } from "src/components/Common/SelectBudgets/SelectBudgets";
 import { Dispatch, SetStateAction } from 'react';
 import { Loading } from "src/components/Common/Loading";
 import { MarketModal } from "src/components/Common/MarketModal";
@@ -35,8 +34,6 @@ export const BudgetForm = forwardRef(({
     setCurrency, 
     exchangeRate, 
     setExchangeRate, 
-    setIgtfPercentage,
-    setIvaPercentage,
     setDescription,
     setSelectedServices,
     setOriginalServices,
@@ -48,7 +45,6 @@ export const BudgetForm = forwardRef(({
     const expirationDate = today.add({ days: 15 });
     const { data: budgets = [], isSuccess, isLoading, isFetching, isError } = useGetBudgetsQuery(); 
     const { data: reports = [], isSuccess: isSuccessRe, isLoading: isLoadingRe, isFetching: isFetchingRe, isError: isErrorRe } = useGetReportsQuery();
-    const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
     const [showMarket, setShowMarket] = useState<boolean>(false);
     const [showReport, setShowReport] = useState<boolean>(false);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -70,48 +66,6 @@ export const BudgetForm = forwardRef(({
             exchangeRate: exchangeRate ?? 1
         }
     });
-
-    // Función para cargar el presupuesto y convertir si es necesario
-    const handleBudgetSelect = (budget: Budget) => {
-        if (!budget) return;
-        setIsUpdating(true); // Activar el loading al inicio
-
-        setTimeout(() => {
-            // Actualiza todos los valores del formulario
-            handleSetFormCustomer(budget.customer);
-            setCurrency(budget.form.currency);
-            setValue("currency", budget.form.currency);
-            setExchangeRate(budget.form.exchangeRate);
-            setValue("exchangeRate", budget.form.exchangeRate);
-            setSelectedServices(budget.services);
-
-            if (budget.form.currency === "Bs" && budget.form.exchangeRate > 1) {
-                const updatedOriginalServices = budget.services.map((service) => ({
-                    ...service,
-                    totalPrice: parseFloat((service.totalPrice / budget.form.exchangeRate).toFixed(2)),
-                    servicePrice: parseFloat((service.servicePrice / budget.form.exchangeRate).toFixed(2)),
-                    products: service.products.map((product) => ({
-                        ...product,
-                        product: {
-                            ...product.product,
-                            price: parseFloat((product.product.price / budget.form.exchangeRate).toFixed(2)),
-                        },
-                    })),
-                }));
-
-                setOriginalServices(updatedOriginalServices);
-            } else {
-                setOriginalServices(budget.services);
-            }
-
-            setIvaPercentage(budget.ivaPercentage);
-            setIgtfPercentage(budget.igtfPercentage);
-            setDescription(budget.description);
-            setIsTableVisible(false);
-
-            setIsUpdating(false); // Desactivar el loading cuando termina
-        }, 500); // Simulamos un pequeño delay de 500ms
-    };
 
     // Función para cargar el informe y convertir si es necesario
     const handleReportSelect = (report: ReportWork) => {
@@ -173,8 +127,7 @@ export const BudgetForm = forwardRef(({
     return (
         <>
         <OptionsBudgetForm 
-            setShowReport={setShowReport}
-            setIsTableVisible={setIsTableVisible} 
+            setShowReport={setShowReport} 
             setShowMarket={setShowMarket}>
         </OptionsBudgetForm>
 
@@ -310,30 +263,15 @@ export const BudgetForm = forwardRef(({
                     isSuccess={isSuccessRe}
                     onSelectReport={handleReportSelect}
                     onCloseTable={() => setShowReport(false)}
+                    filterBySinPresupuestar={true}
                 />
             </div>
         )}                
         
-        {isTableVisible && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
-                onClick={() => setIsTableVisible(false)}
-            >
-                <SelectBudgets
-                    data={budgets}
-                    isLoading={isLoading}
-                    isError={isError}
-                    isFetching={isFetching}
-                    isSuccess={isSuccess}
-                    onSelectBudget={handleBudgetSelect}
-                    onCloseTable={() => setIsTableVisible(false)}
-                />
-            </div>
-        )}
-
         {isUpdating && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-                  <Loading />
-                </div>
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+                <Loading />
+            </div>
         )}
         {
             showMarket && (

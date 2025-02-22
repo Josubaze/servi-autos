@@ -26,6 +26,14 @@ const creditNoteSchema = new Schema(
           type: Number,
           required: true,
         },
+        nameWorker: {
+          type: String,
+          required: true,
+        },
+        emailWorker: {
+          type: String,
+          required: true,
+        },
       },
       required: true,
     },

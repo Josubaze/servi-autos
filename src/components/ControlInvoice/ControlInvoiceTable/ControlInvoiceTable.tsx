@@ -42,6 +42,7 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
         dateCreation: new Date(invoice.form.dateCreation).toLocaleDateString(),
         dateUpdate: invoice.form.dateUpdate ? new Date(invoice.form.dateUpdate).toLocaleDateString() : "", 
         state: invoice.state,
+        createdBy: invoice.form.emailWorker,
         total: invoice.total,
         totalWithIgft: invoice.totalWithIgft,
         invoiceId: invoice._id, 
@@ -122,6 +123,11 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
                 )
             },
         },
+    },
+    {
+        name: "createdBy",
+        label: "Creado por",
+        options: { filter: true, sort: true },
     },
     {
         name: "state",

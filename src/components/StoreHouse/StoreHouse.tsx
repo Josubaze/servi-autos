@@ -18,22 +18,21 @@ import {
   Button,
   Tooltip,
   Modal,
-  Divider,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Textarea,
-  useDisclosure,
+
 } from '@nextui-org/react';
 import { MdStore } from "react-icons/md";
 import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
+import { set } from 'mongoose';
 
 export const StoreHouse = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProductsQuery();
   const { data: services = [] } = useGetServicesQuery();
-  const [deleteProduct, { isError: isErrorDelete, isLoading: isLoadingProduct }] = useDeleteProductMutation();
+  const [deleteProduct, { isError: isErrorDelete, isLoading: isLoadingDeleteProduct }] = useDeleteProductMutation();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showForm, setShowForm] = useState(false);
   const [showMarket, setShowMarket] = useState(false);
@@ -42,6 +41,7 @@ export const StoreHouse = () => {
   const { data: session } = useSession(); 
   const isLider = session?.user.role === 'lider';
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenNoRef, setIsModalOpenNoRef] = useState(false);
   const [pendingProductId, setPendingProductId] = useState<string | null>(null);
   const [referencingServices, setReferencingServices] = useState<any[]>([]);
 
@@ -51,7 +51,6 @@ export const StoreHouse = () => {
     setShowFormUpdate(true);
   };
 
-  // Función que se ejecuta al presionar el botón de eliminar
   const handleDelete = async (id: string) => {
     const productServices = services.filter((service: any) =>
       service.products.some((item: any) => item.product._id === id)
@@ -62,18 +61,17 @@ export const StoreHouse = () => {
       setReferencingServices(productServices);
       setIsModalOpen(true);
     } else {
-      // Si no hay referencias, eliminamos el producto directamente
-      await deleteProduct(id);
-      toast.success('Producto Borrado Exitosamente!');
+      setPendingProductId(id);
+      setIsModalOpenNoRef(true);
     }
   };
-
-  // Función que se ejecuta al confirmar en el modal
+  
   const confirmDelete = async () => {
     if (pendingProductId) {
       await deleteProduct(pendingProductId);
       toast.success('Producto Borrado Exitosamente!');
       setIsModalOpen(false);
+      setIsModalOpenNoRef(false);
       setPendingProductId(null);
       setReferencingServices([]);
     }
@@ -182,8 +180,37 @@ export const StoreHouse = () => {
                   <Button 
                     color="danger"
                     onPress={confirmDelete}
-                    isLoading={isLoadingProduct}
+                    isLoading={isLoadingDeleteProduct}
                   >
+                    Aceptar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isModalOpenNoRef} onOpenChange={setIsModalOpenNoRef}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="text-gray-200">
+                  Confirmar eliminación de producto
+                </ModalHeader>
+                <ModalBody>
+                  <p className="text-gray-300">
+                    ¿Deseas eliminar este producto? Esta acción no se puede deshacer.
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button variant="flat" color="default" onPress={() => onClose()}>
+                    Cancelar
+                  </Button>
+                  <Button 
+                    color="danger" 
+                    onPress={confirmDelete}
+                    isLoading={isLoadingDeleteProduct}
+                  >                      
                     Aceptar
                   </Button>
                 </ModalFooter>

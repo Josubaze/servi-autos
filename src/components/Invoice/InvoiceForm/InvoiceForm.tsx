@@ -16,7 +16,6 @@ import { I18nProvider } from "@react-aria/i18n";
 import { getLocalTimeZone, now } from '@internationalized/date';
 import { OptionsInvoiceForm } from '../OptionsInvoiceForm/OptionsInvoiceForm';
 import { SelectInvoices } from 'src/components/Common/SelectInvoices';
-import { set } from 'mongoose';
 
 interface InvoiceFormProps {
     setCurrency: (currency: string) => void;
@@ -29,7 +28,8 @@ interface InvoiceFormProps {
     setIgtfPercentage: Dispatch<SetStateAction<number>>;
     handleSetFormCustomer: (customer: Customer) => void; 
     setDescription: (description: string) => void; 
-    mode: string; // Modo actual (ejemplo: "edit" o "create")
+    mode: string; 
+    setRefBudget: Dispatch<SetStateAction<string | null>>;
   }   
 export const InvoiceForm = forwardRef(({ 
     currency, 
@@ -42,7 +42,8 @@ export const InvoiceForm = forwardRef(({
     setSelectedServices,
     setOriginalServices,
     handleSetFormCustomer,
-    mode
+    mode,
+    setRefBudget
 }: InvoiceFormProps, ref) => {
     const today = now(getLocalTimeZone());
     const expirationDate = today.add({ days: 15 });
@@ -51,7 +52,6 @@ export const InvoiceForm = forwardRef(({
     const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [showMarket, setShowMarket] = useState(false)
-    const [showInvoices, setShowInvoices] = useState(false)
     const [localNum, setLocalNum] = useState<number | undefined>(undefined);
     const { transformToCalendarDate } = useCalendarDate();
     const { 
@@ -79,6 +79,7 @@ export const InvoiceForm = forwardRef(({
 
         setTimeout(() => {
             // Actualiza todos los valores del formulario
+            setRefBudget(budget._id)
             handleSetFormCustomer(budget.customer);
             setCurrency(budget.form.currency);
             setValue("currency", budget.form.currency);
@@ -109,7 +110,6 @@ export const InvoiceForm = forwardRef(({
             setIgtfPercentage(budget.igtfPercentage);
             setDescription(budget.description);
             setIsTableVisible(false);
-            setShowInvoices(false);
 
             setIsUpdating(false); // Desactivar el loading cuando termina
         }, 500); // Simulamos un pequeño delay de 500ms
@@ -163,7 +163,6 @@ export const InvoiceForm = forwardRef(({
         <>
         <OptionsInvoiceForm 
             setIsTableVisible={setIsTableVisible} 
-            setShowInvoices={setShowInvoices}
             setShowMarket={setShowMarket}>
         </OptionsInvoiceForm>
 
@@ -300,22 +299,6 @@ export const InvoiceForm = forwardRef(({
                     isSuccess={isSuccess}
                     onSelectBudget={handleBudgetSelect}
                     onCloseTable={() => setIsTableVisible(false)}
-                />
-            </div>
-        )}
-
-        {showInvoices && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
-                onClick={() => setShowInvoices(false)}
-            >
-                <SelectInvoices
-                    data={invoices}
-                    isLoading={isLoading}
-                    isError={isError}
-                    isFetching={isFetching}
-                    isSuccess={isSuccess}
-                    onSelectInvoice={handleBudgetSelect}
-                    onCloseTable={() => setShowInvoices(false)}
                 />
             </div>
         )}

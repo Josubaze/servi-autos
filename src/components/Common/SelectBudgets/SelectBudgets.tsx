@@ -25,8 +25,9 @@ export const SelectBudgets: React.FC<{
   onSelectBudget,
   onCloseTable
   }) => {
-    // Transformar los datos
-    const rows = data.map(budget => ({
+    const rows = data
+    .filter(budget => budget.state === "Aprobado") // Filtrar los que no sean "Borrador"
+    .map(budget => ({
         n_budget: budget.form.num,
         description: budget.description,
         dateCreation: new Date(budget.form.dateCreation).toLocaleDateString(),
@@ -34,7 +35,9 @@ export const SelectBudgets: React.FC<{
         state: budget.state,
         budgetId: budget._id, 
         budget: budget,
+        createdBy: budget.form.emailWorker,
     }));
+
 
     const columns = [
     {
@@ -82,6 +85,11 @@ export const SelectBudgets: React.FC<{
                 )
             },
         },
+    },
+    {
+        name: "createdBy",
+        label: "Creado por",
+        options: { filter: true, sort: true },
     },
     {
         name: "state",
@@ -171,9 +179,11 @@ export const SelectBudgets: React.FC<{
         ) : isSuccess ? (
             <StyledEngineProvider injectFirst>
             <ThemeProvider theme={darkThemeSolid}>
-                <div className="w-full max-h-[750px] overflow-y-auto">
+                <div className="w-full max-h-[750px] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+                >
                   <MUIDataTable
-                  title={"Lista de Presupuestos"}
+                  title={"Lista de Presupuestos Aprobados"}
                   data={rows}
                   columns={responsiveColumns}
                   options={options}

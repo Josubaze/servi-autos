@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from './../Budget/useBudgetSummary'
 import { useUpdateProductQuantityMutation } from "src/redux/services/productsApi";
 import { useCreateCreditNoteMutation } from "src/redux/services/creditNotes.Api";
+import { useSession } from "next-auth/react";
 
 interface FormHandle {
     submitForm: () => Promise<FormCreditNote | null>;
@@ -43,6 +44,7 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
     const totalWithIgft = calculateTotal((subtotal), calculatedIva, calculatedIgtf);
     const [updateProductQuantity ] = useUpdateProductQuantityMutation();
     const router = useRouter();
+    const { data: session } = useSession();
 
     // // Inicializar datos si el modo es "update"
     useEffect(() => {
@@ -104,8 +106,16 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
 
     const extractFormData = () => {
         const customerData = formCustomerRef.current?.getFormCustomer?.() || null;
-        const form = formRef.current?.getForm?.() || null;
-    
+        let form = formRef.current?.getForm?.() || null;
+      
+        if (form) {
+          form = {
+            ...form,
+            nameWorker: session!.user.name!,
+            emailWorker: session!.user.email!
+          };
+        }
+      
         return { customerData, form }; 
     };
 
@@ -163,6 +173,17 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
             throw new Error("IGTF inválido");
         }
 
+        // Validar que los datos del trabajador estén definidos
+        if (!session?.user?.name) {
+            toast.error("Falta el nombre del trabajador");
+            throw new Error("Nombre del trabajador no definido");
+        }
+        
+        if (!session?.user?.email) {
+            toast.error("Falta el correo del trabajador");
+            throw new Error("Correo del trabajador no definido");
+        }
+
         return {
             customerData,
             form,
@@ -174,9 +195,10 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
         };
     };
 
-    // Función principal para guardar la factura
+    // Función principal para guardar la nota
     const handleSave = async () => {
         try {
+            // 1. Validar datos del presupuesto
             const {
                 customerData,
                 form,
@@ -187,7 +209,7 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
                 exchangeRate,
             } = await validateBudget();
     
-            // Construcción del objeto `creditNote`
+            // 2. Construcción del objeto `creditNote`
             const creditNote: Omit<CreditNote, "_id"> = {
                 form: {
                     num: form.num,
@@ -195,6 +217,8 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
                     dateCreation: form.dateCreation.toDate(),
                     currency,
                     exchangeRate,
+                    nameWorker: session!.user.name!,
+                    emailWorker: session!.user.email!,
                 },
                 company: { ...company },
                 customer: { ...customerData },
@@ -215,38 +239,43 @@ export const useCreditNote = ({ mode = "create", invoiceData = null }: UseCredit
                 totalWithIgft,
             };
     
-            // Actualizar cantidades de productos en la base de datos
-            for (const service of selectedServices) {
-                for (const product of service.products) {
-                    try {
-                        // Realizar una solicitud para sumar productos de nuevo al inventario
-                        await updateProductQuantity({
-                            _id: product.product._id,
-                            quantity: product.quantity,
-                            operation: "add", // Especificar que queremos sumar
-                        }).unwrap();
-                    } catch (error: any) {
-                        const typedError = error as ErrorResponse;
-                        // Verificar si el error tiene un mensaje
-                        if (typedError?.data?.message) {
-                            toast.error(`${typedError.data.message} de: ${product.product.name}.`);
-                        } else {
-                            toast.error(`Error desconocido al actualizar el producto: ${product.product.name}`);
-                        }
-                        return; 
-                    }
-                }
+            // 3. Intentar crear la nota de crédito en la base de datos
+            try {
+                await createCreditNote(creditNote).unwrap();
+                toast.success("Nota de crédito creada exitosamente!");
+            } catch (error: any) {
+                toast.error("Error al crear la nota de crédito");
+                return; // Si falla la creación, detener el proceso
             }
     
-            // Si todos los productos se actualizaron correctamente, crear la nota de crédito
-            await createCreditNote(creditNote).unwrap();
+            // 4. Crear el array de actualizaciones para devolver los productos al inventario
+            const updates = selectedServices.flatMap((service) =>
+                service.products.map((product) => ({
+                    id: product.product._id,
+                    quantity: product.quantity,
+                    operation: "add" as "add", // Especificar que queremos sumar de vuelta
+                }))
+            );
+    
+            // 5. Intentar actualizar los productos en el almacén
+            try {
+                await updateProductQuantity(updates).unwrap();
+                toast.success("Los productos han sido devueltos al almacén correctamente.");
+            } catch (error: any) {
+                const typedError = error as ErrorResponse;
+                toast.error(
+                    typedError?.data?.message || "Error desconocido al actualizar los productos"
+                );
+            }
+    
+            // 6. Redirigir y resetear valores solo si todo salió bien
             router.push("/control/credit-note");
-            toast.success("Nota de crédito creada exitosamente!");
             resetValues();
         } catch (error) {
             toast.error("Ha ocurrido un error");
         }
     };
+    
     
 
     return {

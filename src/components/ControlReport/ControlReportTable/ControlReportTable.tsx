@@ -38,6 +38,7 @@ export const ControlReportTable: React.FC<ControlReportTableProps> = ({
         description: report.description,
         dateCreation: new Date(report.form.dateCreation).toLocaleDateString(),
         dateUpdate: report.form.dateUpdate ? new Date(report.form.dateUpdate).toLocaleDateString() : "", 
+        createdBy: report.form.emailWorker,
         state: report.state,
         reportId: report._id, 
         report: report,
@@ -89,6 +90,11 @@ export const ControlReportTable: React.FC<ControlReportTableProps> = ({
                 )
             },
         },
+    },
+    {
+        name: "createdBy",
+        label: "Creado por",
+        options: { filter: true, sort: true },
     },
     {
         name: "state",

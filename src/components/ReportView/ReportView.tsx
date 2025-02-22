@@ -89,7 +89,7 @@ export const ReportView = forwardRef<HTMLDivElement, ReportViewProps>((
                 </div>
 
                 <div className='mb-4 flex flex-col'>
-                    <h2 className="text-lg font-semibold mb-2">Realizado por</h2>
+                    <h2 className="text-lg font-semibold mb-2">Creado por</h2>
                     <p className='text-sm'><strong>Nombre:</strong> {form?.nameWorker || 'No disponible'}</p>
                     <p className='text-sm'><strong>Email:</strong> {form?.emailWorker || 'No disponible'}</p>
                    

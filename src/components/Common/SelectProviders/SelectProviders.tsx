@@ -141,7 +141,9 @@ export const SelectProviders: React.FC<{
       ) : isSuccess ? (
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={darkThemeSolid}>
-          <div className="w-full max-h-[750px] overflow-y-auto">
+          <div className="w-full max-h-[750px] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+          >
             <MUIDataTable
               title={"Lista de Proveedores"}
               data={rows}

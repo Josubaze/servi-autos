@@ -66,14 +66,14 @@ export const ExecutionOrderView = forwardRef<HTMLDivElement, ExecutionOrderViewP
                 {/* Header */}
                 <div className="text-center border-b pb-4 mb-6">
                 <h1 className="text-2xl font-bold uppercase tracking-wide">Orden de Ejecución</h1>
-                <p className="text-sm text-gray-600">{company?.name || 'No disponible'}</p>
-                <p className="text-sm text-gray-600">{company?.id_card || 'No disponible'}</p>
-                <p className="text-sm text-gray-600">{company?.email || 'No disponible'}</p>
+                <p className="text-sm text-black">{company?.name || 'No disponible'}</p>
+                <p className="text-sm text-black">{company?.id_card || 'No disponible'}</p>
+                <p className="text-sm text-black">{company?.email || 'No disponible'}</p>
                 </div>
 
 
                 {/* Detalles del Trabajo e Información del Cliente (lado a lado) */}
-                <div className="grid grid-cols-2 gap-6 mb-6">
+                <div className="grid grid-cols-2 gap-6 mb-4">
                 <div>
                     <h2 className="text-lg font-semibold mb-2">Detalles del Trabajo</h2>
                     <p><strong>Nº de Orden:</strong> {form?.num || 'No disponible'}</p>
@@ -87,6 +87,19 @@ export const ExecutionOrderView = forwardRef<HTMLDivElement, ExecutionOrderViewP
                     <p><strong>Email:</strong> {customer?.email || 'No disponible'}</p>
                 </div>
                 </div>
+                <div className="grid grid-cols-2 gap-6 mb-4">
+                    <div className='mb-4 flex flex-col'>
+                        <h2 className="text-lg font-semibold mb-2">Creado por</h2>
+                        <p className='text-sm'><strong>Nombre:</strong> {form?.nameWorker || 'No disponible'}</p>
+                        <p className='text-sm'><strong>Email:</strong> {form?.emailWorker || 'No disponible'}</p>
+                    </div>
+
+                    <div className='mb-4 flex flex-col'>
+                        <h2 className="text-lg font-semibold mb-2">Asignado a Lider:</h2>
+                        <p className='text-sm'><strong>Nombre:</strong> {form?.nameWorkerLeader || 'No disponible'}</p>
+                        <p className='text-sm'><strong>Email:</strong> {form?.emailWorkerLeader || 'No disponible'}</p>
+                    </div>
+                </div>
 
                 
                 {/* Tabla de Servicios */}
@@ -97,26 +110,26 @@ export const ExecutionOrderView = forwardRef<HTMLDivElement, ExecutionOrderViewP
                         <div key={service._id} className="rounded-lg bg-white p-6 border border-gray-200">
                             {/* Información del Servicio */}
                             <div className="mb-4">
-                            <h3 className="text-lg font-medium text-gray-700">{service.name}</h3>
+                            <h3 className="text-lg font-medium text-black">{service.name}</h3>
                             <p className="text-sm text-gray-500">Cantidad: {service.serviceQuantity}</p>
                             </div>
 
                             {/* Productos Asociados */}
                             {service.products && service.products.length > 0 ? (
                             <div className="mt-4">
-                                <p className="text-sm font-semibold text-gray-600 mb-3">Productos asociados:</p>
+                                <p className="text-sm font-semibold text-black mb-3">Productos asociados:</p>
                                 <table className="min-w-full table-auto">
                                 <thead>
                                     <tr className="bg-gray-100">
-                                    <th className="py-2 px-4 text-left text-sm font-medium text-gray-600">Producto</th>
-                                    <th className="py-2 px-4 text-right text-sm font-medium text-gray-600">Cantidad</th>
+                                    <th className="py-2 px-4 text-left text-sm font-medium text-black">Producto</th>
+                                    <th className="py-2 px-4 text-right text-sm font-medium text-black">Cantidad</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {service.products.map((product) => (
                                     <tr key={product.product._id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-200 transition-colors">
-                                        <td className="py-2 px-4 text-sm font-medium text-gray-700">{product.product.name}</td>
-                                        <td className="py-2 px-4 text-sm text-right text-gray-700">{product.quantity}</td>
+                                        <td className="py-2 px-4 text-sm font-medium text-black">{product.product.name}</td>
+                                        <td className="py-2 px-4 text-sm text-right text-black">{product.quantity}</td>
                                     </tr>
                                     ))}
                                 </tbody>

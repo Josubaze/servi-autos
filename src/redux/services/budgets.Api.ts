@@ -30,7 +30,7 @@ export const budgetsApi = createApi({
             invalidatesTags: ['Budgets'], // Invalidar la caché de Budgets después de eliminar
         }),
         // Crear un nuevo presupuesto
-        createBudget: builder.mutation<void, Omit<Budget, '_id'>>({
+        createBudget: builder.mutation<void, Omit<BudgetCreate, '_id'>>({
             query: (newBudget) => ({
                 url: '/budgets',
                 method: 'POST',
@@ -39,7 +39,7 @@ export const budgetsApi = createApi({
             invalidatesTags: ['Budgets'], // Invalidar la caché de Budgets después de crear
         }),
         // Actualizar un presupuesto existente
-        updateBudget: builder.mutation<void, Budget>({
+        updateBudget: builder.mutation<void, BudgetCreate>({
             query: (budget) => ({
                 url: `/budgets/${budget._id}`,
                 method: 'PUT',
@@ -54,6 +54,13 @@ export const budgetsApi = createApi({
             }),
             invalidatesTags: ['Budgets'],
         }),
+        markAsInvoice: builder.mutation<Budget, { id: string }>({
+            query: ({ id }) => ({
+                url: `/budgets/mark_as_invoice/${id}`,
+                method: 'PATCH',
+            }),
+            invalidatesTags: ['Budgets'],
+        }),
     }),
 });
 
@@ -64,4 +71,5 @@ export const {
     useCreateBudgetMutation,
     useUpdateBudgetMutation,
     useUpdateStateBudgetMutation,
+    useMarkAsInvoiceMutation
 } = budgetsApi;

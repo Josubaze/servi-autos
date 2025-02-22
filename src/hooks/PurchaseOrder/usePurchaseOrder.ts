@@ -4,6 +4,7 @@ import { useCreatePurchaseOrderMutation, useUpdatePurchaseOrderMutation } from "
 import { toast } from "react-toastify";
 import { useRouter } from 'next/navigation';
 import {useBudgetSummary} from '../Budget/useBudgetSummary';
+import { useSession } from "next-auth/react";
 
 interface FormHandle {
     submitForm: () => Promise<FormPurchaseOrder | null>;
@@ -42,6 +43,7 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
     const calculatedIgtf = calculateIgft((subtotal+calculatedIva), igtfPercentage);
     const total = calculateTotal((subtotal), calculatedIva, 0);
     const totalWithIgft = calculateTotal((subtotal), calculatedIva, calculatedIgtf);
+    const { data: session } = useSession();
 
     // Inicializar datos si el modo es "update"
     useEffect(() => {
@@ -90,9 +92,17 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
 
     const extractFormData = () => {
         const providerData = formProviderRef.current?.getFormProvider?.() || null;
-        const form = formRef.current?.getForm?.() || null;
-    
-        return { providerData, form }; 
+        let form = formRef.current?.getForm?.() || null;
+      
+        if (form) {
+          form = {
+            ...form,
+            nameWorker: session!.user.name!,
+            emailWorker: session!.user.email!
+          };
+        }
+      
+        return { providerData, form };
     };
 
     const extractFormDataAndValidate = async () => {
@@ -148,6 +158,17 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
             throw new Error("IGTF inválido");
         }
 
+        // Validar que los datos del trabajador estén definidos
+        if (!session?.user?.name) {
+            toast.error("Falta el nombre del trabajador");
+            throw new Error("Nombre del trabajador no definido");
+        }
+        
+        if (!session?.user?.email) {
+            toast.error("Falta el correo del trabajador");
+            throw new Error("Correo del trabajador no definido");
+        }
+
         return {
             providerData,
             form,
@@ -166,7 +187,7 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
                 providerData,
                 form,
                 company,
-                // selectedServices,
+                selectedProducts,
                 description,
                 currency,
                 exchangeRate,
@@ -180,6 +201,8 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
                     dateUpdate: null,
                     currency,
                     exchangeRate,
+                    nameWorker: session!.user.name!,
+                    emailWorker: session!.user.email!,
                 },
                 company: { ...company },
                 provider: { ...providerData },
@@ -197,8 +220,14 @@ export const usePurchaseOrder = ({ mode = "create", purchaseOrderData = null }: 
     
             // Crear o Actualizar según `mode`
             if (mode === "create") {
-                await createPurchaseOrder(purchaseOrder).unwrap();
-                toast.success("Orden de Compra creada exitosamente!");
+                try {
+                    await createPurchaseOrder(purchaseOrder).unwrap();
+                    toast.success("Orden de Compra creada exitosamente!");
+                } catch (error) {
+                    toast.error("Error al crear la Orden de Compra");
+                    return;
+                    
+                }
             } else if (mode === "upload") {
                 const purchaseOrderWithId = {
                     ...purchaseOrder,

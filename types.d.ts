@@ -84,6 +84,15 @@ interface Product {
     totalPrice: number;
   }
 
+
+  interface ReportMinimal {
+    _id: string;
+    form: {
+      nameWorker: string;
+      emailWorker: string;
+    };
+  }
+
   interface Budget {
     _id: string;
     form: FormBudget;
@@ -99,8 +108,27 @@ interface Product {
     calculatedIgtf: number;
     total: number;
     totalWithIgft: number;
-  }
-  
+    report?: ReportMinimal;
+}
+
+interface BudgetCreate {
+  _id: string;
+  form: FormBudget;
+  company: Company;
+  customer: Customer;
+  services: Service[];
+  description: string;
+  state: string;
+  subtotal: number;
+  ivaPercentage: number;
+  igtfPercentage: number;
+  calculatedIva: number;
+  calculatedIgtf: number;
+  total: number;
+  totalWithIgft: number;
+  report?: string;
+}
+
   interface Invoice {
     _id: string;
     form: Form;
@@ -190,6 +218,8 @@ interface Product {
     exchangeRate: number;
     nameWorker?: string;
     emailWorker?: string; 
+    nameWorkerLeader?: string;
+    emailWorkerLeader?: string;
   }
 
   interface FormCreditNote{
@@ -198,6 +228,8 @@ interface Product {
     dateCreation: any;
     currency: string;
     exchangeRate: number;
+    nameWorker?: string;
+    emailWorker?: string; 
   }
 
   interface FormReport{
@@ -214,6 +246,8 @@ interface Product {
     dateUpdate?: any;
     currency: string;
     exchangeRate: number;
+    nameWorker?: string;
+    emailWorker?: string; 
   }
 
   interface TableServicesProps {

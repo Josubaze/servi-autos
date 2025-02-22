@@ -39,48 +39,6 @@ export async function PUT(request: NextRequest, { params }: Params) {
   }
 }
 
-export async function PATCH(request: NextRequest, { params }: Params) {
-  await connectDB();
-  try {
-    const { quantity, operation }: { quantity: number; operation: "add" | "subtract" } = 
-      await request.json();
-
-    const product = await Product.findById(params.id);
-    if (!product) {
-      return NextResponse.json({ message: "Producto no encontrado" }, { status: 404 });
-    }
-
-    if (operation === "subtract") {
-      if (product.quantity < quantity) {
-        return NextResponse.json(
-          { message: "Cantidad insuficiente en almacén" },
-          { status: 400 }
-        );
-      }
-      product.quantity -= quantity;
-    } else if (operation === "add") {
-      product.quantity += quantity;
-    } else {
-      return NextResponse.json(
-        { message: "Operación inválida. Use 'add' o 'subtract'" },
-        { status: 400 }
-      );
-    }
-
-    await product.save();
-
-    return NextResponse.json({
-      message: "Cantidad actualizada exitosamente",
-      product,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { error: (error as Error).message || "Ocurrió un error desconocido" },
-      { status: 500 }
-    );
-  }
-}
-
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }

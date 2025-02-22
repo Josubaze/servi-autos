@@ -14,11 +14,6 @@ const executionOrderSchema = new Schema(
           required: true,
           default: () => new Date(),
         },
-        dateExpiration: {
-          type: Date,
-          required: true,
-          default: () => new Date(),
-        },
         dateUpdate: {
           type: Date,
           default: null,
@@ -30,6 +25,22 @@ const executionOrderSchema = new Schema(
         exchangeRate: {
           type: Number,
           required: true,
+        },
+        nameWorkerLeader: {
+          type: String,
+          required: true,
+        },
+        emailWorkerLeader: {
+            type: String,
+            required: true,
+        },
+        nameWorker: {
+          type: String,
+          required: true,
+        },
+        emailWorker: {
+            type: String,
+            required: true,
         },
       },
       required: true,

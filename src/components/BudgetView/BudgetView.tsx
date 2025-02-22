@@ -115,9 +115,6 @@ export const BudgetView = forwardRef<HTMLDivElement, BudgetViewProps>((
                                 <strong>Tasa de Cambio:</strong> {form.exchangeRate?.toFixed(2) || 'No disponible'}
                             </p>
                             )}
-                            <p ><strong>Realizado por:</strong></p>
-                            <p ><strong>Nombre: </strong>{form?.nameWorker || 'No disponible'}</p>
-                            <p ><strong>Email: </strong>{form?.emailWorker || 'No disponible'}</p>
                         </div>
                     </div>
                 </div>

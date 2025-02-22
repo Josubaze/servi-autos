@@ -15,16 +15,7 @@ export const OptionsReportForm: React.FC<OptionsReportFormProps> = ({
     setIsTableVisible,
 }) => {
     return (
-        <div className="flex w-full items-center gap-x-2 pl-6">
-            <Button
-            className="bg-yellow-400/20 text-yellow-400/90 w-1/2"
-            variant="flat"
-            onClick={() => setShowMarket(true)}
-            > 
-                Consultar Mercado
-                <MdStore className="h-6 w-6" />
-            </Button>
-
+        <div className="flex w-full items-center gap-x-2 pl-6">          
             <Button
                 color="default"
                 variant="flat"
@@ -33,6 +24,15 @@ export const OptionsReportForm: React.FC<OptionsReportFormProps> = ({
             > 
                 Cargar Informe
                 <IoDocumentText className="h-5 w-5" />
+            </Button>
+
+            <Button
+                className="bg-yellow-400/20 text-yellow-400/90 w-1/2"
+                variant="flat"
+                onClick={() => setShowMarket(true)}
+            > 
+                Consultar Mercado
+                <MdStore className="h-6 w-6" />
             </Button>
         </div>
     );

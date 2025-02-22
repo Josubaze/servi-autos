@@ -39,6 +39,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         dateCreation: new Date(budget.form.dateCreation).toLocaleDateString(),
         dateUpdate: budget.form.dateUpdate ? new Date(budget.form.dateUpdate).toLocaleDateString() : "", 
         state: budget.state,
+        createdBy: budget.form.emailWorker,
         total: budget.total,
         totalWithIgft: budget.totalWithIgft,
         budgetId: budget._id, 
@@ -121,6 +122,11 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
         },
     },
     {
+        name: "createdBy",
+        label: "Creado por",
+        options: { filter: true, sort: true },
+    },
+    {
         name: "state",
         label: "Estado",
         options: {
@@ -133,25 +139,41 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                 const budget = rows[tableMeta.rowIndex].budget;
                 const isConfirmingState = confirmStateIndex === tableMeta.rowIndex; // Verifica si esta fila está en modo confirmación
     
-                // Botón para estado "Aprobado" (sin acción)
-                if (value === "Aprobado") {
+                // Para el estado "Facturado" se muestra un Chip simple sin acción
+                if (value === "Facturado") {
                     return (
                         <div className="flex justify-center">
                             <Chip 
                                 color="default"
                                 size="md"
                                 variant="flat"
-                                >
-                                    {value}
+                            >
+                                {value}
+                            </Chip>
+                        </div>
+                    );
+                }
+
+                if (value === "Borrador") {
+                    return (
+                        <div className="flex justify-center">
+                            <Chip 
+                                color="warning"
+                                className="cursor-pointer hover:opacity-75" 
+                                size="md"
+                                variant="flat"
+                                onClick={() => handleUpdate(budget._id)}
+                            >
+                                {value}
                             </Chip>
                         </div>
                     );
                 }
     
-                // Modo de confirmación con íconos solo para la fila seleccionada
+                // Si la fila está en modo de confirmación se muestran los botones de confirmar/cancelar
                 if (isConfirmingState) {
                     return (
-                        <>  
+                        <>
                             <p className="text-center mb-1 font-semibold">Confirmar Cambio</p>
                             <div className="flex justify-center gap-2">
                                 <button
@@ -174,23 +196,25 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                     );
                 }
     
-                // Botón inicial para estado "Borrador"
+  
+                // Botón inicial para estados "Aprobado"
                 return (
                     <div className="flex justify-center">
                         <Chip 
                             color="success"
-                            className="cursor-pointer hover:bg-green-500/50" 
+                            className="cursor-pointer hover:opacity-75" 
                             size="md"
                             variant="flat"
                             onClick={() => setConfirmStateIndex(tableMeta.rowIndex)}
-                            >
-                                {value}
+                        >
+                            {value}
                         </Chip>
                     </div>
                 );
             },
         },
     },
+    
     {
         name: "options",
         label: "Opciones",

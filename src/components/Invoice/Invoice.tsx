@@ -44,6 +44,7 @@ import { DocHeader } from "../Common/DocHeader";
         setIvaPercentage,
         setIgtfPercentage,
         handleSetFormCustomer,
+        setRefBudget
     } = useInvoice({ mode, invoiceData });
     
 
@@ -80,6 +81,7 @@ import { DocHeader } from "../Common/DocHeader";
                         handleSetFormCustomer={handleSetFormCustomer}
                         setDescription={setDescription}
                         mode={mode}
+                        setRefBudget = {setRefBudget}
                     />
                 </div>
             </div>

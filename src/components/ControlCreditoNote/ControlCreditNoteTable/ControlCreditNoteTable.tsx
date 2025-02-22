@@ -10,8 +10,6 @@ import { ExportButton } from "src/components/Common/Buttons/ExportButton";
 import { PrintButton } from "src/components/Common/Buttons/PrintButton";
 import { ViewButton } from "src/components/Common/Buttons/ViewButton/ViewButton";
 import { NumericFormat } from "react-number-format";
-import { useState } from "react";
-import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 
 export const ControlCreditNoteTable: React.FC<TableControlCreditNoteProps> = ({
     data,
@@ -34,6 +32,7 @@ export const ControlCreditNoteTable: React.FC<TableControlCreditNoteProps> = ({
         numInvoice: creditNote.form.numInvoice,
         description: creditNote.description,
         dateCreation: new Date(creditNote.form.dateCreation).toLocaleDateString(),
+        createdBy: creditNote.form.emailWorker,
         total: creditNote.total,
         creditNoteId: creditNote._id, 
         creditNote: creditNote,
@@ -97,6 +96,11 @@ export const ControlCreditNoteTable: React.FC<TableControlCreditNoteProps> = ({
                 )
             },
         },
+    },
+    {
+        name: "createdBy",
+        label: "Creado por",
+        options: { filter: true, sort: true },
     },
     {
         name: "options",

@@ -1,4 +1,4 @@
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGetCompanyQuery } from "src/redux/services/company.Api";
 import { useCreateBudgetMutation, useUpdateBudgetMutation } from "src/redux/services/budgets.Api";
 import { toast } from "react-toastify";
@@ -7,6 +7,7 @@ import {useBudgetSummary} from './useBudgetSummary'
 import { useUpdateStateReportMutation } from "src/redux/services/reports.Api";
 import { useSession } from "next-auth/react";
 import { useCheckAvailabilityMutation } from "src/redux/services/productsApi";
+import { ObjectId } from 'mongodb';
 
 interface FormHandle {
     submitForm: () => Promise<Form | null>;
@@ -233,7 +234,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
             }
     
             // Construcción del objeto `budget`
-            const budget: Omit<Budget, "_id"> = {
+            const budget: Omit<BudgetCreate, "_id"> = {
                 form: {
                     num: form.num,
                     dateCreation: form.dateCreation.toDate(),
@@ -262,6 +263,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
                 calculatedIgtf,
                 total,
                 totalWithIgft,
+                ...(refReport ? { report: refReport } : {}) 
             };
     
             // Crear o Actualizar según `mode`
@@ -273,7 +275,6 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
                         await updateStateReport({ id: refReport }).unwrap();
                         toast.info("Se ha actualizado el estado del Informe");
                     } catch (updateError) {
-                        console.error("Error al actualizar el estado del informe:", updateError);
                         toast.error("Presupuesto creado, pero ocurrió un error al actualizar el estado del informe");
                     }
                 }

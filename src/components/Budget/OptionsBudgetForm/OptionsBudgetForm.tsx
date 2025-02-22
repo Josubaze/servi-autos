@@ -8,13 +8,11 @@ import { IoDocumentText } from "react-icons/io5";
 interface OptionsBudgetFormProps {
     setShowMarket: (isVisible: boolean) => void;
     setShowReport: (isVisible: boolean) => void;
-    setIsTableVisible: (isVisible: boolean) => void;
 }
 
 // Componente
 export const OptionsBudgetForm: React.FC<OptionsBudgetFormProps> = ({
     setShowMarket,
-    setIsTableVisible,
     setShowReport,
 }) => {
     return (
@@ -27,16 +25,6 @@ export const OptionsBudgetForm: React.FC<OptionsBudgetFormProps> = ({
             > 
                 Cargar Informe
                 <IoDocumentText className="h-5 w-5" />
-            </Button>
-
-            <Button
-                color="default"
-                variant="flat"
-                onClick={() => setIsTableVisible(true)}
-                className="w-1/2"
-            > 
-                Cargar Presupuesto
-                <FaFilePowerpoint className="h-5 w-5" />
             </Button>
 
             <Button

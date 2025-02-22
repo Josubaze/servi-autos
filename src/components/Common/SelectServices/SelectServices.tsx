@@ -66,7 +66,9 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
+            onClick={onCloseTable}
+        >
             {/* Botón Cerrar */}
             <Tooltip content='Salir'>
                 <button
@@ -78,7 +80,9 @@ export const SelectServices: React.FC<SelectServicesProps> = ({
             </Tooltip>
 
             <ThemeProvider theme={darkThemeSolid}>
-                <div className="relative w-full max-h-[700px] overflow-y-auto">
+                <div className="relative w-full max-h-[700px] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+                >
                     <TableContainer component={Paper}>
                         <Table aria-label="collapsible table" className='p-4'>
                         <TableHead>

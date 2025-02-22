@@ -77,3 +77,41 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function PATCH(request: Request ) {
+  await connectDB();
+  try {
+    // Se espera un array de actualizaciones: { id, quantity, operation }
+    const updates: { id: string; quantity: number; operation: "add" | "subtract" }[] = await request.json();
+
+    const results = await Promise.all(
+      updates.map(async (update) => {
+        const product = await Product.findById(update.id);
+        if (!product) {
+          return { id: update.id, success: false, message: "Producto no encontrado" };
+        }
+
+        if (update.operation === "subtract") {
+          if (product.quantity < update.quantity) {
+            return { id: update.id, success: false, message: "Cantidad insuficiente en almacén" };
+          }
+          product.quantity -= update.quantity;
+        } else if (update.operation === "add") {
+          product.quantity += update.quantity;
+        } else {
+          return { id: update.id, success: false, message: "Operación inválida. Use 'add' o 'subtract'" };
+        }
+
+        await product.save();
+        return { id: update.id, success: true, message: "Cantidad actualizada exitosamente" };
+      })
+    );
+
+    return NextResponse.json({ results });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message || "Ocurrió un error desconocido" },
+      { status: 500 }
+    );
+  }
+}

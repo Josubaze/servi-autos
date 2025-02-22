@@ -37,6 +37,8 @@ export const ControlExecutionOrderTable: React.FC<TableControlExecutionOrderProp
         dateCreation: new Date(executionOrder.form.dateCreation).toLocaleDateString(),
         dateUpdate: executionOrder.form.dateUpdate ? new Date(executionOrder.form.dateUpdate).toLocaleDateString() : "", 
         state: executionOrder.state,
+        createdBy: executionOrder.form.emailWorker,
+        assignedTo: executionOrder.form.emailWorkerLeader,
         executionOrderId: executionOrder._id, 
         executionOrder: executionOrder,
     }));
@@ -87,6 +89,16 @@ export const ControlExecutionOrderTable: React.FC<TableControlExecutionOrderProp
                 )
             },
         },
+    },
+    {
+        name: "createdBy",
+        label: "Creado por",
+        options: { filter: true, sort: true },
+    },
+    {
+        name: "assignedTo",
+        label: "Asignado a",
+        options: { filter: true, sort: true },
     },
     {
         name: "state",

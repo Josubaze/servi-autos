@@ -175,8 +175,15 @@ export const useReport = ({ mode = "create", reportData = null }: UseReportProps
             };
     
             if (mode === "create") {
-                await createReport(report).unwrap();
-                toast.success("Informe creado exitosamente!");
+                try {
+                    await createReport(report).unwrap();
+                    toast.success("Informe creado exitosamente!");
+                } catch (error) {
+                    toast.error("Error al crear el Informe");
+                    return;
+                    
+                }
+                
             } else if (mode === "upload") {
                 const reportWithId = {
                     ...report,

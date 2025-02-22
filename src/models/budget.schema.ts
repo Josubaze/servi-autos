@@ -1,5 +1,4 @@
 import { Schema, model, models } from 'mongoose';
-import dayjs from 'dayjs';
 
 const budgetSchema = new Schema(
   {
@@ -37,8 +36,8 @@ const budgetSchema = new Schema(
           required: true,
         },
         emailWorker: {
-            type: String,
-            required: true,
+          type: String,
+          required: true,
         },
       },
       required: true,
@@ -95,7 +94,6 @@ const budgetSchema = new Schema(
       required: true,
       trim: true,
     },
-    // Nuevas propiedades agregadas
     subtotal: {
       type: Number,
       required: true,
@@ -124,6 +122,10 @@ const budgetSchema = new Schema(
       type: Number,
       required: true,
     },
+    report: {
+      type: Schema.Types.ObjectId,
+      ref: 'Report'
+    }
   },
   {
     collection: 'budgets',

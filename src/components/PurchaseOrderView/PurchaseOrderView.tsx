@@ -118,6 +118,10 @@ export const PurchaseOrderView = forwardRef<HTMLDivElement, PurchaseOrderViewPro
                             </p>
                             )}
                             <p><strong>Estado: </strong> { state || 'No Procesada'}</p>
+                            <p ><strong>Creado por:</strong></p>
+                            <p ><strong>Nombre: </strong>{form?.nameWorker || 'No disponible'}</p>
+                            <p ><strong>Email: </strong>{form?.emailWorker || 'No disponible'}</p>
+                            
                         </div>
                     </div>
                 </div>

@@ -35,7 +35,6 @@ export const CreditNoteForm = forwardRef(({
     setExchangeRate, 
     setIgtfPercentage,
     setIvaPercentage,
-    setDescription,
     setSelectedServices,
     setOriginalServices,
     handleSetFormCustomer,

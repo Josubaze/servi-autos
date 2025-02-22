@@ -200,7 +200,9 @@ export const CustomerForm = forwardRef<FormHandle, CustomerFormProps>(({ title }
 
             {/* Modal para la tabla de selección de clientes */}
             {isTableVisible && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
+                   onClick={() => setIsTableVisible(false)}
+                >
                     <SelectCustomers
                         data={customers}
                         isLoading={isLoadingCustomers}

@@ -40,6 +40,7 @@ export const SelectInvoices: React.FC<{
         state: invoice.state,
         invoiceId: invoice._id, 
         invoice: invoice,
+        createdBy: invoice.form.emailWorker,
     }));
 
     const columns = [
@@ -88,6 +89,11 @@ export const SelectInvoices: React.FC<{
                 )
             },
         },
+    },
+    {
+        name: "createdBy",
+        label: "Creado por",
+        options: { filter: true, sort: true },
     },
     {
         name: "state",

@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { Chip } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 
 export const SelectReports: React.FC<{
   data: ReportWork[]; 
@@ -16,6 +17,7 @@ export const SelectReports: React.FC<{
   isFetching: boolean;
   onSelectReport: (report: ReportWork) => void,
   onCloseTable: () => void,
+  filterBySinPresupuestar?: boolean;
 }> = ({
   data,
   isLoading,
@@ -23,19 +25,26 @@ export const SelectReports: React.FC<{
   isSuccess,
   isFetching,
   onSelectReport,
-  onCloseTable
+  onCloseTable,
+  filterBySinPresupuestar
   }) => {
+    const filteredData = filterBySinPresupuestar
+    ? data.filter(report => report.state === "Sin Presupuestar")
+    : data;
 
-    const rows = data
-    .map(report => ({
+    const rows = filteredData.map(report => ({
         num: report.form.num,
         description: report.description,
         dateCreation: new Date(report.form.dateCreation).toLocaleDateString(),
-        dateUpdate: report.form.dateUpdate ? new Date(report.form.dateUpdate).toLocaleDateString() : "", 
+        dateUpdate: report.form.dateUpdate
+        ? new Date(report.form.dateUpdate).toLocaleDateString()
+        : "", 
         state: report.state,
+        createdBy: report.form.emailWorker,
         reportId: report._id, 
         report: report,
     }));
+    
 
     const columns = [
     {
@@ -83,6 +92,11 @@ export const SelectReports: React.FC<{
                 )
             },
         },
+    },
+    {
+        name: "createdBy",
+        label: "Creado por",
+        options: { filter: true, sort: true },
     },
     {
         name: "state",
@@ -161,6 +175,10 @@ export const SelectReports: React.FC<{
         }),
     };
 
+    const title = filterBySinPresupuestar
+    ? "Lista de Informes sin Presupuestar"
+    : "Lista de Informes";
+
     return (
         <>
         {isLoading || isFetching ? (
@@ -176,7 +194,7 @@ export const SelectReports: React.FC<{
                     onClick={(e) => e.stopPropagation()}
                 >
                   <MUIDataTable
-                  title={"Lista de Informes"}
+                  title={title}
                   data={rows}
                   columns={responsiveColumns}
                   options={options}

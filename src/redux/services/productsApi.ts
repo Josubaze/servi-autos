@@ -51,14 +51,16 @@ export const productsApi = createApi({
             }),
             invalidatesTags: ['Products'],
         }),
-        updateProductQuantity: builder.mutation<void, { _id: string; quantity: number; operation: string }>({
-            query: ({ _id, quantity, operation }) => ({
-                url: `/products/${_id}`,
-                method: "PATCH",
-                body: { quantity, operation },
+        updateProductQuantity: builder.mutation<void, { id: string; quantity: number; operation: string }[]>({
+            query: (products) => ({
+              url: `/products`,
+              method: "PATCH",
+              body: products,
             }),
-            invalidatesTags: ['Products'],
+            invalidatesTags: ["Products"],
         }),
+          
+          
     }),
 });
 

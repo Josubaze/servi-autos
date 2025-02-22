@@ -167,7 +167,9 @@ export const ReportForm = forwardRef(({
         </form>
         {/* Modal para la tabla de selección de informe */}
         {isTableVisible && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
+                onClick={() => setIsTableVisible(false)}
+            >
                 <SelectReports
                     data={reports}
                     isLoading={isLoading}

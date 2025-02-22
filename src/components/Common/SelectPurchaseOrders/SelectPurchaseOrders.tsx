@@ -25,8 +25,9 @@ export const SelectPurchaseOrder: React.FC<{
   onSelectPurchaseOrder,
   onCloseTable
   }) => {
-    // Transformar los datos
-    const rows = data.map(purchaseOrder => ({
+    const rows = data
+    .filter(purchaseOrder => purchaseOrder.state !== "Borrador") // Excluir los que tienen state "Borrador"
+    .map(purchaseOrder => ({
         num: purchaseOrder.form.num,
         description: purchaseOrder.description,
         dateCreation: new Date(purchaseOrder.form.dateCreation).toLocaleDateString(),
@@ -34,6 +35,7 @@ export const SelectPurchaseOrder: React.FC<{
         state: purchaseOrder.state,
         purchaseOrderId: purchaseOrder._id, 
         purchaseOrder: purchaseOrder,
+        createdBy: purchaseOrder.form.emailWorker,
     }));
 
     const columns = [
@@ -82,6 +84,11 @@ export const SelectPurchaseOrder: React.FC<{
                 )
             },
         },
+    },
+    {
+        name: "createdBy",
+        label: "Creado por",
+        options: { filter: true, sort: true },
     },
     {
         name: "state",
@@ -171,12 +178,14 @@ export const SelectPurchaseOrder: React.FC<{
         ) : isSuccess ? (
             <StyledEngineProvider injectFirst>
             <ThemeProvider theme={darkThemeSolid}>
-                <div className="w-full max-h-[750px] overflow-y-auto">
-                  <MUIDataTable
-                  title={"Lista de Órdenes de Compra"}
-                  data={rows}
-                  columns={responsiveColumns}
-                  options={options}
+                <div className="w-full max-h-[750px] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+                >
+                    <MUIDataTable
+                    title={"Lista de Órdenes de Compra"}
+                    data={rows}
+                    columns={responsiveColumns}
+                    options={options}
                   />
                 </div>
             </ThemeProvider>
