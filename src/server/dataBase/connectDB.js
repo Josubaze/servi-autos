@@ -1,5 +1,5 @@
 import { connect, connection } from 'mongoose'
-
+import 'src/models';
 const conn = { 
     isConnected: false
 }

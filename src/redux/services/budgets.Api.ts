@@ -54,13 +54,6 @@ export const budgetsApi = createApi({
             }),
             invalidatesTags: ['Budgets'],
         }),
-        markAsInvoice: builder.mutation<Budget, { id: string }>({
-            query: ({ id }) => ({
-                url: `/budgets/mark_as_invoice/${id}`,
-                method: 'PATCH',
-            }),
-            invalidatesTags: ['Budgets'],
-        }),
     }),
 });
 
@@ -71,5 +64,4 @@ export const {
     useCreateBudgetMutation,
     useUpdateBudgetMutation,
     useUpdateStateBudgetMutation,
-    useMarkAsInvoiceMutation
 } = budgetsApi;

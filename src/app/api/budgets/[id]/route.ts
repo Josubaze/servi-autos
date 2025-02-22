@@ -11,16 +11,16 @@ export async function GET(request: Request, { params }: Params) {
     try {
         const budgetFound = await Budget.findById(params.id).populate({
             path: 'report',
-            select: 'form.nameWorker form.emailWorker' 
+            select: 'form.nameWorker form.emailWorker'
         });
-        
+
         if (!budgetFound) {
             return NextResponse.json(
                 { message: "Budget not found" },
                 { status: 404 }
             );
         }
-        
+
         return NextResponse.json(budgetFound);
     } catch (error: unknown) {
         if (error instanceof Error) {
@@ -35,7 +35,6 @@ export async function GET(request: Request, { params }: Params) {
         );
     }
 }
-
 
 export async function PUT(request: Request, { params }: Params) {
     await connectDB();

@@ -86,7 +86,7 @@ interface Product {
 
 
   interface ReportMinimal {
-    _id: string;
+    _id: ObjectId;
     form: {
       nameWorker: string;
       emailWorker: string;
@@ -95,7 +95,7 @@ interface Product {
 
   interface Budget {
     _id: string;
-    form: FormBudget;
+    form: Form;
     company: Company;
     customer: Customer;
     services: Service[];
@@ -108,12 +108,12 @@ interface Product {
     calculatedIgtf: number;
     total: number;
     totalWithIgft: number;
-    report?: ReportMinimal;
+    report: ReportMinimal | null;
 }
 
 interface BudgetCreate {
   _id: string;
-  form: FormBudget;
+  form: Form;
   company: Company;
   customer: Customer;
   services: Service[];
@@ -126,7 +126,7 @@ interface BudgetCreate {
   calculatedIgtf: number;
   total: number;
   totalWithIgft: number;
-  report?: string;
+  report: string | null;
 }
 
   interface Invoice {

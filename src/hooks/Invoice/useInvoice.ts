@@ -98,6 +98,7 @@ export const useInvoice = ({ mode = "create", invoiceData = null }: UseInvoicePr
         }
         setIvaPercentage(16);
         setIgtfPercentage(3);
+        setRefBudget(null);
     };
 
     const handleSetForm = (form : Form) => {

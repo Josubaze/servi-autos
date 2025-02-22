@@ -7,7 +7,6 @@ import {useBudgetSummary} from './useBudgetSummary'
 import { useUpdateStateReportMutation } from "src/redux/services/reports.Api";
 import { useSession } from "next-auth/react";
 import { useCheckAvailabilityMutation } from "src/redux/services/productsApi";
-import { ObjectId } from 'mongodb';
 
 interface FormHandle {
     submitForm: () => Promise<Form | null>;
@@ -95,6 +94,7 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
         }
         setIvaPercentage(16);
         setIgtfPercentage(3);
+        setRefReport(null);
     };
 
     const handleSetForm = (form : Form) => {
@@ -263,9 +263,9 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
                 calculatedIgtf,
                 total,
                 totalWithIgft,
-                ...(refReport ? { report: refReport } : {}) 
+                report: refReport ?? null,
             };
-    
+
             // Crear o Actualizar según `mode`
             if (mode === "create") {
                 await createBudget(budget).unwrap();

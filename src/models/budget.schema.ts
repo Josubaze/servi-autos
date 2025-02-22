@@ -122,9 +122,11 @@ const budgetSchema = new Schema(
       type: Number,
       required: true,
     },
-    report: {
-      type: Schema.Types.ObjectId,
-      ref: 'Report'
+    report: { 
+      type: Schema.Types.ObjectId, 
+      ref: "Report", 
+      required: false, 
+      default: null 
     }
   },
   {
