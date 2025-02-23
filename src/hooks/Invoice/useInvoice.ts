@@ -182,9 +182,15 @@ export const useInvoice = () => {
               exchangeRate,
               nameWorker: session!.user.name!,
               emailWorker: session!.user.email!,
-              nameWorkerLeader: budget?.report?.form.nameWorker || session!.user.name!,
-              emailWorkerLeader: budget?.report?.form.emailWorker || session!.user.email!,
-            },
+              nameWorkerLeader:
+                budget?.report?.form.nameWorker && budget.report.form.nameWorker.trim() !== ""
+                  ? budget.report.form.nameWorker
+                  : session!.user.name!,
+              emailWorkerLeader:
+                budget?.report?.form.emailWorker && budget.report.form.emailWorker.trim() !== ""
+                  ? budget.report.form.emailWorker
+                  : session!.user.email!,
+                  },
             company: { ...company },
             customer: { ...customerData },
             services: selectedServices.map((service) => ({
@@ -195,10 +201,7 @@ export const useInvoice = () => {
               })),
             })),
             description,
-            state:
-                action === "paid"
-                ? "Pagada"
-                : "Pendiente",
+            state: action === "paid" ? "Pagada" : "Pendiente",
             subtotal,
             ivaPercentage,
             igtfPercentage,
@@ -230,13 +233,35 @@ export const useInvoice = () => {
     
           // 2. Crear la factura
           try {
+            console.log(invoice);
             await createInvoice(invoice).unwrap();
             toast.success("Factura creada exitosamente!");
           } catch (error) {
             toast.error("Error al crear la factura.");
             return;
           }
-          // 3. Actualizar el estado del presupuesto
+    
+          // 3. Crear orden de ejecución 
+          const executionOrder: Omit<ExecutionOrder, "_id"> = {
+            form: invoice.form,
+            company: invoice.company,
+            customer: invoice.customer,
+            services: invoice.services,
+            description: invoice.description,
+            state: "En proceso",
+            numInvoice: invoice.form.num,
+          };
+          try {
+            console.log(executionOrder);
+            await createExecutionOrder(executionOrder).unwrap();
+            toast.success("Orden de ejecución creada exitosamente!");
+          } catch (error) {
+            toast.error("Error al crear la orden de ejecución.");
+            return;
+          }
+          
+
+          // 4. Actualizar el estado del presupuesto
           if (refBudget !== null) {
             try {
               await updateStateBudget({ id: refBudget }).unwrap();
@@ -245,26 +270,6 @@ export const useInvoice = () => {
               toast.error(
                 "Factura creada, pero ocurrió un error al actualizar el estado del Presupuesto"
               );
-            }
-          }
-    
-          // 4. Crear orden de ejecución si el estado es "Pendiente" o "Pagada"
-          if (invoice.state === "Pendiente" || invoice.state === "Pagada") {
-            const executionOrder: Omit<ExecutionOrder, "_id"> = {
-              form: invoice.form,
-              company: invoice.company,
-              customer: invoice.customer,
-              services: invoice.services,
-              description: invoice.description,
-              state: "En proceso",
-              numInvoice: invoice.form.num,
-            };
-            try {
-              await createExecutionOrder(executionOrder).unwrap();
-              toast.success("Orden de ejecución creada exitosamente!");
-            } catch (error) {
-              toast.error("Error al crear la orden de ejecución.");
-              return;
             }
           }
     
