@@ -11,6 +11,7 @@ interface ExecutionOrderViewProps {
     description: string | undefined;
     state: string | undefined;
     onClose: () => void; // Agregamos la función para cerrar el modal
+    numberInvoice?: string | undefined;
 }
 
 export const ExecutionOrderView = forwardRef<HTMLDivElement, ExecutionOrderViewProps>(({
@@ -21,6 +22,7 @@ export const ExecutionOrderView = forwardRef<HTMLDivElement, ExecutionOrderViewP
     description,
     state,
     onClose,
+    numberInvoice,
     }, ref) => {
     const { transformToCalendarDate } = useCalendarDate();  
         const formatDate = (date : any) => {
@@ -77,6 +79,7 @@ export const ExecutionOrderView = forwardRef<HTMLDivElement, ExecutionOrderViewP
                 <div>
                     <h2 className="text-lg font-semibold mb-2">Detalles del Trabajo</h2>
                     <p><strong>Nº de Orden:</strong> {form?.num || 'No disponible'}</p>
+                    <p><strong>Nº de Factura Ref:</strong> {numberInvoice || 'No disponible'}</p>
                     <p><strong>Fecha de Creación:</strong> {formatDate(form?.dateCreation)}</p>
                     <p><strong>Estado:</strong> {state || 'Pendiente'}</p>
                 </div>

@@ -8,7 +8,7 @@ const executionOrderSchema = new Schema(
           type: Number,
           required: true,
           unique: true,
-        },
+        },       
         dateCreation: {
           type: Date,
           required: true,
@@ -96,6 +96,10 @@ const executionOrderSchema = new Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    numInvoice: {
+      type: Number,
+      required: true,
     },
   },
   {

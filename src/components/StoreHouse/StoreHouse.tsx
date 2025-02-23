@@ -27,7 +27,6 @@ import {
 import { MdStore } from "react-icons/md";
 import { toast } from 'react-toastify';
 import { useSession } from 'next-auth/react';
-import { set } from 'mongoose';
 
 export const StoreHouse = () => {
   const { data = [], isError, isLoading, isFetching, isSuccess } = useGetProductsQuery();

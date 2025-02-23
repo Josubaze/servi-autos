@@ -32,12 +32,15 @@ export async function POST(request: Request) {
     try {
         const data: BudgetCreate = await request.json(); 
         console.log(data);
-        const lastBudget = await Budget.findOne().sort({ num: -1 }); 
-        const newBudgetNumber = lastBudget ? lastBudget.num + 1 : 1; // Si no hay presupuestos, inicia en 1
+        const lastBudget = await Budget.findOne().sort({ "form.num": -1 }); 
+        const newBudgetNumber = lastBudget ? lastBudget.form.num + 1 : 1; // Si no hay presupuestos, inicia en 1
 
         const newBudget = new Budget({
-            ...data,
-            num: newBudgetNumber,
+          ...data,
+          form: {
+              ...data.form,
+              num: newBudgetNumber,
+          }
         });
 
         const savedBudget = await newBudget.save();

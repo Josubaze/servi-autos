@@ -3,7 +3,8 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { useUpdateStateReportMutation } from 'src/redux/services/reports.Api';
+import { useDeleteReportMutation, useUpdateStateReportMutation } from 'src/redux/services/reports.Api';
+import { useGetBudgetsQuery } from 'src/redux/services/budgets.Api';
 
 interface UseControlInvoiceProps {
   data: ReportWork[];
@@ -25,7 +26,10 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
   const [updateStateReport] = useUpdateStateReportMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenNoRef, setIsModalOpenNoRef] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const { data: budgets = [] } = useGetBudgetsQuery();
+  const [referencingBudgets, setReferencingBudgets] = useState<Budget[]>();
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -49,19 +53,30 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
     }
   };
 
-  const handleDelete = (budgetId: string) => {
-    setPendingId(budgetId);
-    setIsModalOpen(true);
+  const handleDelete = async (reportId: string) => {
+    const referencingBudgets = budgets.filter((budget: any) => budget.report?._id === reportId);
+  
+    if (referencingBudgets.length > 0) {
+      setPendingId(reportId);
+      setReferencingBudgets(referencingBudgets); 
+      setIsModalOpen(true); 
+    } else {   
+      setPendingId(reportId);
+      setIsModalOpenNoRef(true); 
+    }
   };
-
+  
   const confirmDelete = async () => {
     if (pendingId) {
       await deleteMutation(pendingId);
-      toast.success('Informe eliminado exitosamente!');
+      toast.success('Producto Reporte Exitosamente!');
       setIsModalOpen(false);
+      setIsModalOpenNoRef(false);
       setPendingId(null);
+      setReferencingBudgets([]);
     }
   };
+
 
   const handleView = async (report: ReportWork) => {
     try {
@@ -273,6 +288,9 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
     router,
     isLoadingPDF,
     isModalOpen,
-    setIsModalOpen
+    setIsModalOpen,
+    isModalOpenNoRef,
+    setIsModalOpenNoRef,
+    referencingBudgets,
   };
 };

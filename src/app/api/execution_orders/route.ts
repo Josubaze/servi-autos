@@ -24,15 +24,20 @@ export async function GET() {
 
 // POST: Crear una nueva orden de ejecución
 export async function POST(request: Request) {
-    await connectDB(); 
+    await connectDB();
     try {
         const data = await request.json(); 
-        const lastExecutionOrder = await ExecutionOrder.findOne().sort({ num: -1 }); 
-        const newOrderNumber = lastExecutionOrder ? lastExecutionOrder.num + 1 : 1; // Si no hay órdenes, inicia en 1
+        // Busca la última orden de ejecución ordenando por 'form.num'
+        const lastExecutionOrder = await ExecutionOrder.findOne().sort({ "form.num": -1 });
+        const newOrderNumber = lastExecutionOrder ? lastExecutionOrder.form.num + 1 : 1; // Si no hay órdenes, inicia en 1
 
+        // Asigna el nuevo número dentro de form
         const newExecutionOrder = new ExecutionOrder({
             ...data,
-            num: newOrderNumber,
+            form: {
+                ...data.form,
+                num: newOrderNumber,
+            }
         });
 
         const savedExecutionOrder = await newExecutionOrder.save();
@@ -50,3 +55,4 @@ export async function POST(request: Request) {
         );
     }
 }
+

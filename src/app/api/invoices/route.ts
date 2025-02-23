@@ -27,12 +27,15 @@ export async function POST(request: Request) {
     await connectDB(); 
     try {
         const data: Invoice = await request.json(); 
-        const lastInvoice = await Invoice.findOne().sort({ num: -1 }); 
-        const newInvoiceNumber = lastInvoice ? lastInvoice.num + 1 : 1; // Si no hay facturas, inicia en 1
+        const lastInvoice = await Invoice.findOne().sort({ "form.num": -1 }); 
+        const newInvoiceNumber = lastInvoice ? lastInvoice.form.num + 1 : 1; // Si no hay facturas, inicia en 1
 
         const newInvoice = new Invoice({
             ...data,
-            num: newInvoiceNumber,
+            form: {
+                ...data.form,
+                num: newInvoiceNumber,
+            }
         });
 
         const savedInvoice = await newInvoice.save();

@@ -15,7 +15,6 @@ import { Autocomplete, AutocompleteItem, DatePicker, Input, Spinner } from "@nex
 import { I18nProvider } from "@react-aria/i18n";
 import { getLocalTimeZone, now } from '@internationalized/date';
 import { OptionsInvoiceForm } from '../OptionsInvoiceForm/OptionsInvoiceForm';
-import { SelectInvoices } from 'src/components/Common/SelectInvoices';
 
 interface InvoiceFormProps {
     setCurrency: (currency: string) => void;
@@ -28,7 +27,6 @@ interface InvoiceFormProps {
     setIgtfPercentage: Dispatch<SetStateAction<number>>;
     handleSetFormCustomer: (customer: Customer) => void; 
     setDescription: (description: string) => void; 
-    mode: string; 
     setRefBudget: Dispatch<SetStateAction<string | null>>;
   }   
 export const InvoiceForm = forwardRef(({ 
@@ -42,7 +40,6 @@ export const InvoiceForm = forwardRef(({
     setSelectedServices,
     setOriginalServices,
     handleSetFormCustomer,
-    mode,
     setRefBudget
 }: InvoiceFormProps, ref) => {
     const today = now(getLocalTimeZone());
@@ -72,7 +69,7 @@ export const InvoiceForm = forwardRef(({
     });
 
     // Función para cargar el presupuesto o factura y convertir si es necesario
-    const handleBudgetSelect = (budget: Budget | Invoice) => {
+    const handleBudgetSelect = (budget: Budget) => {
         if (!budget) return;
 
         setIsUpdating(true); // Activar el loading al inicio
@@ -143,9 +140,6 @@ export const InvoiceForm = forwardRef(({
     }));
 
     useEffect(() => {
-        // Si el modo es "update", no ejecutamos este efecto
-        if (mode === "update") return;
-    
         if (isSuccess) {
             const maxInvoice = invoices.length > 0
             ? Math.max(...invoices.map(invoice => invoice.form.num)) // Obtener el mayor valor de n_budget
@@ -156,7 +150,7 @@ export const InvoiceForm = forwardRef(({
             setValue("num", nextNum)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mode, invoices, isSuccess]);
+    }, [invoices, isSuccess]);
     
 
     return (

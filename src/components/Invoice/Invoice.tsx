@@ -10,12 +10,8 @@ import { InvoiceOptions } from "./InvoiceOptions/InvoiceOptions";
 import { InvoiceActions } from "./InvoiceActions";
 import { DocHeader } from "../Common/DocHeader";
 
-    interface InvoiceProps {
-        mode?: "create" | "upload";
-        invoiceData?: Invoice | null;
-    }
 
-    export const Invoice: React.FC<InvoiceProps> = ({ mode = "create", invoiceData= null }) => {
+    export const Invoice = () => {
     const {
         formCustomerRef,
         formRef,
@@ -45,7 +41,7 @@ import { DocHeader } from "../Common/DocHeader";
         setIgtfPercentage,
         handleSetFormCustomer,
         setRefBudget
-    } = useInvoice({ mode, invoiceData });
+    } = useInvoice();
     
 
     return (
@@ -79,9 +75,8 @@ import { DocHeader } from "../Common/DocHeader";
                         setIvaPercentage={setIvaPercentage}
                         setIgtfPercentage={setIgtfPercentage}
                         handleSetFormCustomer={handleSetFormCustomer}
-                        setDescription={setDescription}
-                        mode={mode}
                         setRefBudget = {setRefBudget}
+                        setDescription={setDescription}
                     />
                 </div>
             </div>
@@ -110,8 +105,7 @@ import { DocHeader } from "../Common/DocHeader";
             <InvoiceActions
                 description={description}
                 setDescription={setDescription}
-                handleButtonType={(action: "draft" | "paid" | "pending") => handleSave(action, mode, invoiceData?._id || '')} 
-                mode={mode}              
+                handleButtonType={(action: "paid" | "pending") => handleSave(action)}               
             />
         </div>
     );

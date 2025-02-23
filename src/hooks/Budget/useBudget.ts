@@ -7,6 +7,7 @@ import {useBudgetSummary} from './useBudgetSummary'
 import { useUpdateStateReportMutation } from "src/redux/services/reports.Api";
 import { useSession } from "next-auth/react";
 import { useCheckAvailabilityMutation } from "src/redux/services/productsApi";
+import { report } from "process";
 
 interface FormHandle {
     submitForm: () => Promise<Form | null>;
@@ -81,6 +82,9 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
             setIvaPercentage(budgetData.ivaPercentage || 16);
             setIgtfPercentage(budgetData.igtfPercentage || 3);
             setDescription(budgetData.description);
+            if (budgetData.report !== null)  {
+                setRefReport(budgetData.report._id)
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode, budgetData]);
@@ -285,13 +289,21 @@ export const useBudget = ({ mode = "create", budgetData = null }: UseBudgetProps
                     _id: budget_id,
                     form: {
                         ...budget.form,
-                        dateUpdate: new Date(), 
+                        dateUpdate: Date.now(),
+                        nameWorker: session!.user.name!,
+                        emailWorker: session!.user.email!,
                     },
+                    report: refReport ?? null,
                 };
-    
-                await updateBudget(budgetWithId).unwrap();
-                router.push("/control/budgets");
-                toast.success("Presupuesto actualizado exitosamente!");
+                try {
+                    await updateBudget(budgetWithId).unwrap();
+                    router.push("/control/budgets");
+                    toast.success("Borrador actualizado exitosamente!");
+                } catch (error) {
+                    toast.error("Ha ocurrido un error");
+                    return;
+                }
+                
             }
     
             resetValues();

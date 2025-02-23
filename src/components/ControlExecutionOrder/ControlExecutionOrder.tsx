@@ -102,6 +102,7 @@ export const ControlExecutionOrder = () => {
             selectedServices={executionOrderCopy?.services}
             state={executionOrderCopy?.state}
             description={executionOrderCopy?.description} 
+            numberInvoice={executionOrderCopy?.numInvoice}
             onClose={() => setIsOpenPreview(false)}  
           />
         )}

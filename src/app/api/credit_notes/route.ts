@@ -26,12 +26,15 @@ export async function POST(request: Request) {
     await connectDB();
     try {
         const data = await request.json();
-        const lastCreditNote = await CreditNote.findOne().sort({ n_creditNote: -1 });
-        const newCreditNoteNumber = lastCreditNote ? lastCreditNote.n_creditNote + 1 : 1;
+        const lastCreditNote = await CreditNote.findOne().sort({ "form.num": -1 });
+        const newCreditNoteNumber = lastCreditNote ? lastCreditNote.form.num + 1 : 1;
 
         const newCreditNote = new CreditNote({
             ...data,
-            n_creditNote: newCreditNoteNumber,
+            form: {
+                ...data.form,
+                num: newCreditNoteNumber,
+            }
         });
 
         const savedCreditNote = await newCreditNote.save();

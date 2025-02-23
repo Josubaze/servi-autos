@@ -34,7 +34,10 @@ export const ControlReport = () => {
     printRef,
     isLoadingPDF,
     isModalOpen,
-    setIsModalOpen
+    setIsModalOpen,
+    isModalOpenNoRef,
+    setIsModalOpenNoRef,
+    referencingBudgets,
   } = useControlReport({ data, isError, isLoading, isFetching, isSuccess, deleteMutation });
 
   return (
@@ -114,6 +117,57 @@ export const ControlReport = () => {
         )}
 
         <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader>Confirmar eliminación de Informe</ModalHeader>
+                <ModalBody>
+                  <h2 className="text-lg font-semibold mb-4 text-gray-200">
+                    Lista de Informes:
+                  </h2>
+                  <div className="max-h-60 overflow-y-auto space-y-4 scrollbar-custom">
+                    {referencingBudgets?.map((budget) => (
+                      <div
+                        key={budget._id}
+                        className="p-4 bg-gray-700/30 rounded-lg shadow-md"
+                      >
+                        <p className="text-gray-400 text-sm font-medium">ID:</p>
+                        <p className="text-gray-300 text-sm break-all">{budget._id}</p>
+                        <p className="text-gray-400 text-sm font-medium mt-2">N°:</p>
+                        <p className="text-gray-300 text-sm">{budget.form.num}</p>
+                        <p className="text-gray-400 text-sm font-medium mt-2">Descripción:</p>
+                        <p className="text-gray-300 text-sm">{budget.description}</p>
+                        <p className="text-gray-400 text-sm font-medium mt-2">Fecha de Creación:</p>
+                        <p className="text-gray-300 text-sm">{new Date(budget.form.dateCreation).toLocaleDateString("es-ES")}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-red-500 font-medium mt-4">
+                    Al eliminar este Infome se removerá de todos estos Presupuestos asociados . ¿Deseas continuar?
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    variant="flat"
+                    color="default"
+                    onPress={() => onClose()}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    color="danger" 
+                    onPress={confirmDelete}
+                    isLoading={isLoadingDelete}
+                  >
+                    Aceptar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isModalOpenNoRef} onOpenChange={setIsModalOpenNoRef}>
           <ModalContent>
             {(onClose) => (
               <>

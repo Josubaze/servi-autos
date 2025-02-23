@@ -170,6 +170,7 @@ interface BudgetCreate {
     services: Service[];
     description: string;
     state: string;
+    numInvoice: number;
   }
 
   interface ReportWork {

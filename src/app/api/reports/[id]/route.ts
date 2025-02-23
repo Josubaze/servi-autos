@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import Budget from "src/models/budget.schema";
 import Report from "src/models/report.schema";
 import { connectDB } from 'src/server/dataBase/connectDB'; 
 
@@ -107,15 +108,24 @@ export async function PATCH(request: Request, { params }: { params: RouteParams 
 export async function DELETE(request: Request, { params }: { params: RouteParams }) {
   await connectDB();
   try {
-    const reportDeleted = await Report.findByIdAndDelete(params.id);
+    const reportId = params.id;
+
+    // Eliminar la referencia en Budget y asignar null
+    await Budget.updateMany(
+      { report: reportId },
+      { $set: { report: null } } // Se reemplaza la referencia con null
+    );
+
+    // Eliminar el Report de la base de datos
+    const reportDeleted = await Report.findByIdAndDelete(reportId);
     if (!reportDeleted) {
       return NextResponse.json(
         { message: "Report not found" },
         { status: 404 }
       );
     }
-    const allReports = await Report.find();
-    return NextResponse.json(allReports);
+
+    return NextResponse.json({ message: "Report deleted successfully" });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

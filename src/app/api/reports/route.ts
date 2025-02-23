@@ -28,12 +28,15 @@ export async function POST(request: Request) {
     try {
         const data = await request.json(); 
 
-        const lastReport = await Report.findOne().sort({ n_report: -1 }); 
-        const newReportNumber = lastReport ? lastReport.n_report + 1 : 1; // Si no hay reportes, inicia en 1
+        const lastReport = await Report.findOne().sort({"form.num": -1 }); 
+        const newReportNumber = lastReport ? lastReport.form.num + 1 : 1; // Si no hay reportes, inicia en 1
 
         const newReport = new Report({
             ...data,
-            n_report: newReportNumber,
+            form: {
+                ...data.form,
+                num: newReportNumber,
+            }
         });
 
         const savedReport = await newReport.save();

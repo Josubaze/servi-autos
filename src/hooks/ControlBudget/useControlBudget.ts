@@ -26,7 +26,7 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
   const [updateStateBudget] = useUpdateStateBudgetMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
-
+  console.log(data);
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleDateRangeChange = (value: any) => setSelectedRange(value);

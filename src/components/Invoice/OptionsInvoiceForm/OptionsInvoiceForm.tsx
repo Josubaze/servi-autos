@@ -2,7 +2,6 @@ import React from 'react';
 import { Button } from '@nextui-org/react';
 import { MdStore } from "react-icons/md";
 import { FaFilePowerpoint } from "react-icons/fa6";
-import { FaFileInvoice } from "react-icons/fa";
 
 // Interfaz para las props
 interface OptionsInvoiceFormProps {

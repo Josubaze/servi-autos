@@ -27,12 +27,15 @@ export async function POST(request: Request) {
     await connectDB(); 
     try {
         const data = await request.json(); 
-        const lastPurchaseOrder = await PurchaseOrder.findOne().sort({ n_order: -1 }); 
-        const newOrderNumber = lastPurchaseOrder ? lastPurchaseOrder.n_order + 1 : 1; // Si no hay órdenes, inicia en 1
+        const lastPurchaseOrder = await PurchaseOrder.findOne().sort({ "form.num": -1  }); 
+        const newOrderNumber = lastPurchaseOrder ? lastPurchaseOrder.form.num + 1 : 1; // Si no hay órdenes, inicia en 1
 
         const newPurchaseOrder = new PurchaseOrder({
             ...data,
-            n_order: newOrderNumber,
+            form: {
+                ...data.form,
+                num: newOrderNumber,
+            }
         });
 
         const savedPurchaseOrder = await newPurchaseOrder.save();
