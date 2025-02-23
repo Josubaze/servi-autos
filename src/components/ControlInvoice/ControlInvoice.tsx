@@ -38,7 +38,11 @@ export const ControlInvoice = () => {
     printRef,
     isLoadingPDF,
     isModalOpen,
-    setIsModalOpen
+    setIsModalOpen,
+    isModalChangeState,
+    setIsModalChangeState,
+    confirmChangeState,
+    isLoadingUpdateState
   } = useControlInvoice({ data, isError, isLoading, isFetching, isSuccess, deleteMutation });
 
   return (
@@ -172,6 +176,44 @@ export const ControlInvoice = () => {
           )}
         </ModalContent>
       </Modal>
+
+      <Modal isOpen={isModalChangeState} onOpenChange={setIsModalChangeState}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="text-gray-200">
+                  Confirmar cambio de estado
+                </ModalHeader>
+                  <ModalBody>
+                    <div className="bg-gray-700/30 p-4 rounded-lg">
+                      <p className="text-lg text-gray-200">
+                        ¿Deseas cambiar el estado de{" "}
+                        <span className="text-green-400 font-semibold">Pendiente</span> a{" "}
+                        <span className="text-gray-400 font-semibold">Pagada</span> ?<br />
+                        <span className="text-red-500 font-medium">Esta acción no se puede deshacer.</span>
+                      </p>
+                      <div className="mt-4 p-3 border-l-4 border-red-500 bg-gray-700/30 rounded-md">
+                        <p className="text-sm text-gray-300"> <strong className="text-red-400">Nota: </strong> Cambia el estado solo si el pago de la factura ha sido recibido. Una vez actualizado, el monto sin impuestos se sumará a los Ingresos Recibidos. Esta acción no genera un documento, solo notifica en el sistema la recepción del pago. 
+                        </p>
+                      </div>
+                    </div>
+                  </ModalBody>
+                <ModalFooter>
+                  <Button variant="flat" color="default" onPress={() => onClose()}>
+                    Cancelar
+                  </Button>
+                  <Button 
+                    color="danger" 
+                    onPress={confirmChangeState}
+                    isLoading={isLoadingUpdateState}
+                  >                      
+                    Aceptar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
     </>
   );
 };

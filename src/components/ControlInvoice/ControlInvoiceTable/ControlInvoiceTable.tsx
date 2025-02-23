@@ -140,8 +140,6 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
             }),
             customBodyRender: (value: any, tableMeta: any) => {            
                 const invoice = rows[tableMeta.rowIndex].invoice;
-                const isConfirmingState = confirmStateIndex === tableMeta.rowIndex; // Verifica si esta fila está en modo confirmación
-    
                 if (value === "Pagada") {
                     // Si el estado es "Pagada", solo se muestra un div sin acción
                     return (
@@ -180,34 +178,6 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
                     );
                 }
     
-                // Modo de confirmación con íconos solo para la fila seleccionada
-                if (isConfirmingState) {
-                    return (
-                        <>
-                            <p className="text-center mb-1 font-semibold">Confirmar Cambio</p>
-                            <div className="flex justify-center gap-2">
-                                <button
-                                    className="rounded-full bg-red-600/40 px-2 py-2 text-white text-sm flex items-center hover:bg-red-500"
-                                    onClick={() => setConfirmStateIndex(null)} // Cancelar confirmación
-                                >
-                                    <AiOutlineClose />
-                                </button>
-
-                                <button
-                                    className="rounded-full bg-green-600/40 px-2 py-2 text-white text-sm flex items-center hover:bg-green-500"
-                                    onClick={() => {
-                                        setConfirmStateIndex(null); // Cerrar confirmación
-                                        value === "Pendiente" && handleStateUpdate(invoice._id); // Cambiar estado a "Pagada"
-                                    }}
-                                >
-                                    <AiOutlineCheck />
-                                </button>
-                            </div>
-                        </>
-                    );
-                }
-    
-                // Si no está en confirmación, muestra el botón normal
                 return (
                     <div className="flex justify-center">    
                         <Chip 
@@ -215,7 +185,9 @@ export const ControlInvoiceTable: React.FC<TableControlInvoiceProps> = ({
                             className="cursor-pointer hover:bg-green-500/50" 
                             size="md"
                             variant="flat"
-                            onClick={() => setConfirmStateIndex(tableMeta.rowIndex)}
+                            onClick={() => {
+                                value === "Pendiente" && handleStateUpdate(invoice._id); // Cambiar estado a "Pagada"
+                            }}
                             >
                                 {value}
                         </Chip>

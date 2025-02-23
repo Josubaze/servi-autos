@@ -53,10 +53,10 @@ export const RecoverPasswordSchema = z.object({
 });
 
 export const ProductSchema = z.object({
-    name: z.string().min(3, { message: "El nombre debe ser mayor o igual a 3 caracteres" }).max(25, { message: "El nombre debe ser menor o igual a 25 caracteres" }),
-    vehicleType: z.string().max(25, { message: "La descripción debe ser menor a 25 caracteres" }).nullish(),
-    description: z.string().max(30, { message: "La descripción debe ser menor a 30 caracteres" }).nullish(),
-    category: z.string().min(3, { message: "La categoría debe ser mayor a 3 caracteres" }).max(25, { message: "La categoría debe ser menor a 25 caracteres" }),
+    name: z.string().min(3, { message: "El nombre debe ser mayor o igual a 3 caracteres" }).max(80, { message: "El nombre debe ser menor o igual a 80 caracteres" }),
+    vehicleType: z.string().max(80, { message: "La descripción debe ser menor a 80 caracteres" }).nullish(),
+    description: z.string().max(80, { message: "La descripción debe ser menor a 80 caracteres" }).nullish(),
+    category: z.string().min(3, { message: "La categoría debe ser mayor a 3 caracteres" }).max(80, { message: "La categoría debe ser menor a 80 caracteres" }),
     price: z.union([
         z.string()
           .refine(price => !isNaN(parseFloat(price)) && parseFloat(price) > 0, { message: "El precio debe ser un número positivo" })
@@ -84,7 +84,7 @@ export const ProductSchema = z.object({
   export const CustomerSchema = z.object({
     name: z.string()
       .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
-      .max(40, { message: "El nombre no puede exceder los 40 caracteres" })
+      .max(80, { message: "El nombre no puede exceder los 80 caracteres" })
       .trim(),
   
     id_card: z.string().regex(
@@ -103,7 +103,7 @@ export const ProductSchema = z.object({
     
     address: z.string()
       .min(3, "La dirección debe tener al menos 3 caracteres")
-      .max(40, "La dirección debe tener como máximo 40 caracteres"),
+      .max(80, "La dirección debe tener como máximo 80 caracteres"),
   });
   
 export const ProviderSchema = z.object({
@@ -113,10 +113,10 @@ export const ProviderSchema = z.object({
   ),
   name: z.string()
     .min(3, "El nombre debe tener al menos 3 caracteres")
-    .max(40, "El nombre debe tener como máximo 40 caracteres"),
+    .max(80, "El nombre debe tener como máximo 80 caracteres"),
   contactName: z.string()
     .min(3, "El nombre de contacto debe tener al menos 3 caracteres")
-    .max(40, "El nombre de contacto debe tener como máximo 40 caracteres"),
+    .max(80, "El nombre de contacto debe tener como máximo 80 caracteres"),
   email: z.string()
     .email("Correo electrónico inválido"),
   phone: z.string()
@@ -125,7 +125,7 @@ export const ProviderSchema = z.object({
     .max(11, "El teléfono debe tener como máximo 11 caracteres"),
   address: z.string()
     .min(3, "La dirección debe tener al menos 3 caracteres")
-    .max(40, "La dirección debe tener como máximo 40 caracteres"),
+    .max(80, "La dirección debe tener como máximo 80 caracteres"),
 });
 
 export const BudgetFormSchema = z.object({
@@ -235,7 +235,7 @@ export const ReportFormSchema = z.object({
 
   nameWorker: z.string()
     .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
-    .max(40, { message: "El nombre no puede exceder los 40 caracteres" })
+    .max(80, { message: "El nombre no puede exceder los 80 caracteres" })
     .trim(),
 
   emailWorker: z.string().email	({ message: "Debe ser un correo electrónico válido" }),
@@ -290,7 +290,7 @@ export const PurchaseOrderFormSchema = z.object({
 export const CompanySchema = z.object({
   name: z.string()
     .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
-    .max(40, { message: "El nombre no puede exceder los 40 caracteres" })
+    .max(80, { message: "El nombre no puede exceder los 80 caracteres" })
     .trim(),
 
   id_card: z.string().regex(
@@ -309,5 +309,5 @@ export const CompanySchema = z.object({
   
   address: z.string()
     .min(3, "La dirección debe tener al menos 3 caracteres")
-    .max(40, "La dirección debe tener como máximo 40 caracteres"),
+    .max(80, "La dirección debe tener como máximo 80 caracteres"),
 });

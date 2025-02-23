@@ -38,7 +38,11 @@ export const ControlPurchaseOrder = () => {
     printRef,
     isLoadingPDF,
     isModalOpen,
-    setIsModalOpen
+    setIsModalOpen,
+    setIsModalChangeState,
+    isModalChangeState,
+    confirmChangeState,
+    isLoadingUpdateState
   } = useControlPurchaseOrder({ data, isError, isLoading, isFetching, isSuccess, deleteMutation });
 
   return (
@@ -165,6 +169,46 @@ export const ControlPurchaseOrder = () => {
                     color="danger" 
                     onPress={confirmDelete}
                     isLoading={isLoadingDelete}
+                  >                      
+                    Aceptar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isModalChangeState} onOpenChange={setIsModalChangeState}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="text-gray-200">
+                  Confirmar cambio de estado
+                </ModalHeader>
+                  <ModalBody>
+                    <div className="bg-gray-700/30 p-4 rounded-lg">
+                      <p className="text-lg text-gray-200">
+                        ¿Deseas cambiar el estado de{" "}
+                        <span className="text-green-400 font-semibold">En Proceso</span> a{" "}
+                        <span className="text-gray-400 font-semibold">Recibido</span> ?<br />
+                        <span className="text-red-500 font-medium">Esta acción no se puede deshacer.</span>
+                      </p>
+                      
+                      <div className="mt-4 p-3 border-l-4 border-red-500 bg-gray-700/30 rounded-md">
+                        <p className="text-sm text-gray-300"> <strong className="text-red-400">Nota: </strong> 
+                        Cambia el estado solo si estás seguro de haber recibido la orden completa. Los productos se agregarán automáticamente al almacén, pero debes completar sus propiedades en la sección de Gestionar Almacén. Este cambio no genera un documento, solo actualiza el estado. 
+                        </p>
+                      </div>
+                    </div>
+                  </ModalBody>
+                <ModalFooter>
+                  <Button variant="flat" color="default" onPress={() => onClose()}>
+                    Cancelar
+                  </Button>
+                  <Button 
+                    color="danger" 
+                    onPress={confirmChangeState}
+                    isLoading={isLoadingUpdateState}
                   >                      
                     Aceptar
                   </Button>

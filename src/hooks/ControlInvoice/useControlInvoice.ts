@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { useUpdateStateInvoiceMutation } from 'src/redux/services/invoices.Api';
+import { set } from 'mongoose';
 
 interface UseControlInvoiceProps {
   data: Invoice[];
@@ -23,9 +24,10 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
   const [invoiceCopy, setInvoiceCopy] = useState<any>(null);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
-  const [updateStateInvoice] = useUpdateStateInvoiceMutation();
+  const [updateStateInvoice, { isLoading: isLoadingUpdateState }] = useUpdateStateInvoiceMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [isModalChangeState, setIsModalChangeState] = useState(false);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -44,14 +46,23 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
   };
 
   const handleStateUpdate = async (invoiceId: string) => {
-    setIsLoadingPDF(true);
-    try {
-      await updateStateInvoice({ id: invoiceId }).unwrap();
-        toast.success('Estado actualizado con éxito');
-    } catch (error) {
-        toast.error('Error al actualizar el estado:');
-    } finally {
-      setIsLoadingPDF(false);
+    setPendingId(invoiceId);
+    setIsModalChangeState(true);
+  };
+
+  const confirmChangeState = async () => {
+    if (pendingId ) {
+
+      try {
+        await updateStateInvoice({ id: pendingId }).unwrap();
+        toast.success("Estado actualizado con éxito");
+      } catch (error) {
+        toast.error("Error al actualizar el estado.");
+        return;
+      }
+  
+      setIsModalChangeState(false);
+      setPendingId(null);
     }
   };
 
@@ -281,6 +292,10 @@ export const useControlInvoice = ({ data, isError, isLoading, isFetching, isSucc
     router,
     isLoadingPDF,
     isModalOpen,
-    setIsModalOpen
+    setIsModalOpen,
+    isLoadingUpdateState,
+    setIsModalChangeState,
+    isModalChangeState,
+    confirmChangeState,
   };
 };

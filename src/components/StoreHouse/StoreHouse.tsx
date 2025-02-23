@@ -151,22 +151,28 @@ export const StoreHouse = () => {
                   <h2 className="text-lg font-semibold mb-4 text-gray-200">
                     Lista de Servicios:
                   </h2>
-                  <div className="max-h-60 overflow-y-auto space-y-4 scrollbar-custom">
-                    {referencingServices.map((service) => (
-                      <div
-                        key={service._id}
-                        className="p-4 bg-gray-700/30 rounded-lg shadow-md"
-                      >
-                        <p className="text-gray-400 text-sm font-medium">ID:</p>
-                        <p className="text-gray-300 text-sm break-all">{service._id}</p>
-                        <p className="text-gray-400 text-sm font-medium mt-2">Nombre:</p>
-                        <p className="text-gray-300 text-sm">{service.name}</p>
-                      </div>
-                    ))}
+                  <div className="bg-gray-700/30 p-4 rounded-lg">
+                    <div className="max-h-60 overflow-y-auto space-y-4 scrollbar-custom">
+                      {referencingServices.map((service) => (
+                        <div
+                          key={service._id}
+                          className="p-4 border-l-4 border-indigo-600 bg-gray-800/50 rounded-md shadow-md"
+                        >
+                          <p className="text-gray-300 text-sm font-semibold">ID:</p>
+                          <p className="text-gray-400 text-sm break-all">{service._id}</p>
+                          <p className="text-gray-300 text-sm font-semibold mt-2">Nombre:</p>
+                          <p className="text-gray-400 text-sm">{service.name}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 p-3 border-l-4 border-red-500 bg-gray-700/30 rounded-md">
+                      <p className="text-red-500 font-medium">
+                        Al eliminar este producto, se removerá de todos estos servicios.
+                        <br />
+                        <span className="font-semibold">¿Deseas continuar?</span>
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-red-500 font-medium mt-4">
-                    Al eliminar este producto se removerá de todos estos servicios. ¿Deseas continuar?
-                  </p>
                 </ModalBody>
                 <ModalFooter>
                   <Button

@@ -38,6 +38,10 @@ export const ControlReport = () => {
     isModalOpenNoRef,
     setIsModalOpenNoRef,
     referencingBudgets,
+    isModalChangeState,
+    setIsModalChangeState,
+    confirmChangeState,
+    isLoadingUpdateState
   } = useControlReport({ data, isError, isLoading, isFetching, isSuccess, deleteMutation });
 
   return (
@@ -122,30 +126,40 @@ export const ControlReport = () => {
               <>
                 <ModalHeader>Confirmar eliminación de Informe</ModalHeader>
                 <ModalBody>
-                  <h2 className="text-lg font-semibold mb-4 text-gray-200">
-                    Lista de Informes:
-                  </h2>
-                  <div className="max-h-60 overflow-y-auto space-y-4 scrollbar-custom">
-                    {referencingBudgets?.map((budget) => (
-                      <div
-                        key={budget._id}
-                        className="p-4 bg-gray-700/30 rounded-lg shadow-md"
-                      >
-                        <p className="text-gray-400 text-sm font-medium">ID:</p>
-                        <p className="text-gray-300 text-sm break-all">{budget._id}</p>
-                        <p className="text-gray-400 text-sm font-medium mt-2">N°:</p>
-                        <p className="text-gray-300 text-sm">{budget.form.num}</p>
-                        <p className="text-gray-400 text-sm font-medium mt-2">Descripción:</p>
-                        <p className="text-gray-300 text-sm">{budget.description}</p>
-                        <p className="text-gray-400 text-sm font-medium mt-2">Fecha de Creación:</p>
-                        <p className="text-gray-300 text-sm">{new Date(budget.form.dateCreation).toLocaleDateString("es-ES")}</p>
-                      </div>
-                    ))}
+                  <div className="bg-gray-700/30 p-4 rounded-lg">
+                    <h2 className="text-lg font-semibold mb-4 text-gray-200">Lista de Informes:</h2>
+                    
+                    <div className="max-h-60 overflow-y-auto space-y-4 scrollbar-custom">
+                      {referencingBudgets?.map((budget) => (
+                        <div
+                          key={budget._id}
+                          className="p-4 border-l-4 border-indigo-600 bg-gray-800/50 rounded-md shadow-md"
+                        >
+                          <p className="text-gray-300 text-sm font-semibold">ID:</p>
+                          <p className="text-gray-400 text-sm break-all">{budget._id}</p>
+                          
+                          <p className="text-gray-300 text-sm font-semibold mt-2">N°:</p>
+                          <p className="text-gray-400 text-sm">{budget.form.num}</p>
+                          
+                          <p className="text-gray-300 text-sm font-semibold mt-2">Descripción:</p>
+                          <p className="text-gray-400 text-sm">{budget.description}</p>
+                          
+                          <p className="text-gray-300 text-sm font-semibold mt-2">Fecha de Creación:</p>
+                          <p className="text-gray-400 text-sm">{new Date(budget.form.dateCreation).toLocaleDateString("es-ES")}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-4 p-3 border-l-4 border-red-500 bg-gray-700/30 rounded-md">
+                      <p className="text-red-500 font-medium">
+                        Al eliminar este informe, se removerá de todos los presupuestos asociados.
+                        <br />
+                        <span className="font-semibold">¿Deseas continuar?</span>
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-red-500 font-medium mt-4">
-                    Al eliminar este Infome se removerá de todos estos Presupuestos asociados . ¿Deseas continuar?
-                  </p>
                 </ModalBody>
+
                 <ModalFooter>
                   <Button
                     variant="flat"
@@ -187,6 +201,45 @@ export const ControlReport = () => {
                     color="danger" 
                     onPress={confirmDelete}
                     isLoading={isLoadingDelete}
+                  >                      
+                    Aceptar
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isModalChangeState} onOpenChange={setIsModalChangeState}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="text-gray-200">
+                  Confirmar cambio de estado
+                </ModalHeader>
+                  <ModalBody>
+                    <div className="bg-gray-700/30 p-4 rounded-lg">
+                      <p className="text-lg text-gray-200">
+                        ¿Deseas cambiar el estado de{" "}
+                        <span className="text-green-400 font-semibold">Sin Presupuestar</span> a{" "}
+                        <span className="text-gray-400 font-semibold">Presupuestado</span> ?<br />
+                        <span className="text-red-500 font-medium">Esta acción no se puede deshacer.</span>
+                      </p>
+                      <div className="mt-4 p-3 border-l-4 border-red-500 bg-gray-700/30 rounded-md">
+                        <p className="text-sm text-gray-300">
+                          <strong className="text-red-400">Nota:</strong> Esto es un último recurso en caso de que la actualización no se haya realizado automáticamente. No genera documento solo cambia el estado.
+                        </p>
+                      </div>
+                    </div>
+                  </ModalBody>
+                <ModalFooter>
+                  <Button variant="flat" color="default" onPress={() => onClose()}>
+                    Cancelar
+                  </Button>
+                  <Button 
+                    color="danger" 
+                    onPress={confirmChangeState}
+                    isLoading={isLoadingUpdateState}
                   >                      
                     Aceptar
                   </Button>

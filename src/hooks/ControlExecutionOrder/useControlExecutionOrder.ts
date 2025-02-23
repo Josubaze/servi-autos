@@ -23,23 +23,33 @@ export const useControlExecutionOrder = ({ data, isError, isLoading, isFetching,
   const [executionOrderCopy, setExecutionOrderCopy] = useState<any>(null);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
-  const [updateStateExecutionOrder] = useUpdateStateExecutionOrderMutation();
+  const [updateStateExecutionOrder, { isLoading: isLoadingUpdateState}] = useUpdateStateExecutionOrderMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [isModalChangeState, setIsModalChangeState] = useState(false);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleDateRangeChange = (value: any) => setSelectedRange(value);
 
   const handleStateUpdate = async (executionOrderId: string) => {
-    setIsLoadingPDF(true);
-    try {
-      await updateStateExecutionOrder({ id: executionOrderId }).unwrap();
-        toast.success('Estado actualizado con éxito');
-    } catch (error) {
-        toast.error('Error al actualizar el estado:');
-    } finally {
-      setIsLoadingPDF(false);
+    setPendingId(executionOrderId);
+    setIsModalChangeState(true);
+  };
+
+  const confirmChangeState = async () => {
+    if (pendingId ) {
+
+      try {
+        await updateStateExecutionOrder({ id: pendingId }).unwrap();
+        toast.success("Estado actualizado con éxito");
+      } catch (error) {
+        toast.error("Error al actualizar el estado.");
+        return;
+      }
+  
+      setIsModalChangeState(false);
+      setPendingId(null);
     }
   };
 
@@ -266,6 +276,10 @@ export const useControlExecutionOrder = ({ data, isError, isLoading, isFetching,
     router,
     isLoadingPDF,
     isModalOpen,
-    setIsModalOpen
+    setIsModalOpen,
+    setIsModalChangeState,
+    isModalChangeState,
+    confirmChangeState,
+    isLoadingUpdateState
   };
 };

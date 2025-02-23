@@ -23,10 +23,10 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
   const [budgetCopy, setBudgetCopy] = useState<any>(null);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
-  const [updateStateBudget] = useUpdateStateBudgetMutation();
+  const [updateStateBudget, { isLoading: isLoadingUpdateState }] = useUpdateStateBudgetMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalChangeState, setIsModalChangeState] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
-  console.log(data);
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleDateRangeChange = (value: any) => setSelectedRange(value);
@@ -38,14 +38,21 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
   };
 
   const handleStateUpdate = async (budgetId: string) => {
-    setIsLoadingPDF(true);
-    try {
-      await updateStateBudget({ id: budgetId }).unwrap();
+    setPendingId(budgetId);
+    setIsModalChangeState(true);
+  };
+
+  const confirmChangeState = async () => {
+    if (pendingId) {
+      try {
+        await updateStateBudget({ id: pendingId }).unwrap();
         toast.success('Estado actualizado con éxito');
-    } catch (error) {
-        toast.error('Error al actualizar el estado:');
-    } finally {
-      setIsLoadingPDF(false);
+      } catch (error) {
+          toast.error('Error al actualizar el estado:');
+          return;
+      } 
+      setIsModalChangeState(false);
+      setPendingId(null);
     }
   };
 
@@ -274,5 +281,9 @@ export const useControlBudget = ({ data, isError, isLoading, isFetching, isSucce
     isLoadingPDF,
     isModalOpen,
     setIsModalOpen,
+    setIsModalChangeState,
+    isModalChangeState,
+    confirmChangeState,
+    isLoadingUpdateState,
   };
 };

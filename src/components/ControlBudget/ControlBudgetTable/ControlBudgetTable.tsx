@@ -137,7 +137,6 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
             }),
             customBodyRender: (value: any, tableMeta: any) => {
                 const budget = rows[tableMeta.rowIndex].budget;
-                const isConfirmingState = confirmStateIndex === tableMeta.rowIndex; // Verifica si esta fila está en modo confirmación
     
                 // Para el estado "Facturado" se muestra un Chip simple sin acción
                 if (value === "Facturado") {
@@ -169,34 +168,6 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                         </div>
                     );
                 }
-    
-                // Si la fila está en modo de confirmación se muestran los botones de confirmar/cancelar
-                if (isConfirmingState) {
-                    return (
-                        <>
-                            <p className="text-center mb-1 font-semibold">Confirmar Cambio</p>
-                            <div className="flex justify-center gap-2">
-                                <button
-                                    className="rounded-full bg-red-600/40 px-2 py-2 text-white text-sm flex items-center hover:bg-red-500"
-                                    onClick={() => setConfirmStateIndex(null)} // Cancelar confirmación
-                                >
-                                    <AiOutlineClose />
-                                </button>
-                                <button
-                                    className="rounded-full bg-green-600/40 px-2 py-2 text-white text-sm flex items-center hover:bg-green-500"
-                                    onClick={() => {
-                                        setConfirmStateIndex(null); // Cerrar confirmación
-                                        handleStateUpdate(budget._id); // Ejecutar acción
-                                    }}
-                                >
-                                    <AiOutlineCheck />
-                                </button>
-                            </div>
-                        </>
-                    );
-                }
-    
-  
                 // Botón inicial para estados "Aprobado"
                 return (
                     <div className="flex justify-center">
@@ -205,7 +176,7 @@ export const ControlBudgetTable: React.FC<TableControlBudgetProps> = ({
                             className="cursor-pointer hover:opacity-75" 
                             size="md"
                             variant="flat"
-                            onClick={() => setConfirmStateIndex(tableMeta.rowIndex)}
+                            onClick={() => handleStateUpdate(budget._id)}
                         >
                             {value}
                         </Chip>

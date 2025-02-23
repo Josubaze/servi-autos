@@ -24,10 +24,12 @@ export const useControlPurchaseOrder = ({ data, isError, isLoading, isFetching, 
   const [purchaseOrderCopy, setPurchaseOrderCopy] = useState<PurchaseOrder>();
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
-  const [updateStatePurchaseOrder] = useUpdateStatePurchaseOrderMutation();
+  const [updateStatePurchaseOrder , { isLoading: isLoadingUpdateState }] = useUpdateStatePurchaseOrderMutation();
   const [createProduct] = useCreateProductMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [products, setProduts] = useState<Product[]>([]);
+  const [isModalChangeState, setIsModalChangeState] = useState(false);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -40,19 +42,34 @@ export const useControlPurchaseOrder = ({ data, isError, isLoading, isFetching, 
   };
 
   const handleStateUpdate = async (purchaseOrderId: string, products: Product[]) => {
-    setIsLoadingPDF(true);
-    try {
-      await createProduct( products ).unwrap();
-      toast.success('Productos agregados al almacén');
+    setPendingId(purchaseOrderId);
+    setProduts(products);
+    setIsModalChangeState(true);
+  };
 
-      await updateStatePurchaseOrder({ id: purchaseOrderId }).unwrap();
-      toast.success('Estado actualizado con éxito');
-    } catch (error) {
-        toast.error('Error al actualizar el estado:');
-    } finally {
-      setIsLoadingPDF(false);
+  const confirmChangeState = async () => {
+    if (pendingId && products.length > 0) {
+      try {
+        await createProduct(products).unwrap();
+        toast.success("Productos agregados al almacén");
+      } catch (error) {
+        toast.error("Error al agregar productos al almacén.");
+        return;
+      }
+  
+      try {
+        await updateStatePurchaseOrder({ id: pendingId }).unwrap();
+        toast.success("Estado actualizado con éxito");
+      } catch (error) {
+        toast.error("Error al actualizar el estado.");
+        return;
+      }
+  
+      setIsModalChangeState(false);
+      setPendingId(null);
     }
   };
+  
 
   const handleDelete = (budgetId: string) => {
     setPendingId(budgetId);
@@ -278,6 +295,10 @@ export const useControlPurchaseOrder = ({ data, isError, isLoading, isFetching, 
     router,
     isLoadingPDF,
     isModalOpen,
-    setIsModalOpen
+    setIsModalOpen,
+    isModalChangeState,
+    setIsModalChangeState,
+    confirmChangeState,
+    isLoadingUpdateState
   };
 };

@@ -24,12 +24,13 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
   const [reportCopy, setReportCopy] = useState<any>(null);
   const printRef = useRef<HTMLDivElement | null>(null);
   const [isLoadingPDF, setIsLoadingPDF] = useState(false);
-  const [updateStateReport] = useUpdateStateReportMutation();
+  const [updateStateReport , { isLoading: isLoadingUpdateState }] = useUpdateStateReportMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenNoRef, setIsModalOpenNoRef] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
   const { data: budgets = [] } = useGetBudgetsQuery();
   const [referencingBudgets, setReferencingBudgets] = useState<Budget[]>();
+  const [isModalChangeState, setIsModalChangeState] = useState(false);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -42,14 +43,23 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
   };
 
   const handleStateUpdate = async (reportId: string) => {
-    setIsLoadingPDF(true);
-    try {
-      await updateStateReport({ id: reportId }).unwrap();
-        toast.success('Estado actualizado con éxito');
-    } catch (error) {
-        toast.error('Error al actualizar el estado:');
-    } finally {
-      setIsLoadingPDF(false);
+    setPendingId(reportId);
+    setIsModalChangeState(true);
+  };
+
+  const confirmChangeState = async () => {
+    if (pendingId ) {
+
+      try {
+        await updateStateReport({ id: pendingId }).unwrap();
+        toast.success("Estado actualizado con éxito");
+      } catch (error) {
+        toast.error("Error al actualizar el estado.");
+        return;
+      }
+  
+      setIsModalChangeState(false);
+      setPendingId(null);
     }
   };
 
@@ -292,5 +302,9 @@ export const useControlReport = ({ data, isError, isLoading, isFetching, isSucce
     isModalOpenNoRef,
     setIsModalOpenNoRef,
     referencingBudgets,
+    isModalChangeState,
+    setIsModalChangeState,
+    confirmChangeState,
+    isLoadingUpdateState
   };
 };
