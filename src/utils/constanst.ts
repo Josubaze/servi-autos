@@ -49,7 +49,7 @@ export const SERVICEVOID: Service = {
 
 
 export const MENUPROFILE = [
-  { name: "Tu Perfil", href: "/profile" },
+  { name: "Configuración", href: "/profile" },
   { name: "Cerrar Sesión", onClick: () => signOut({ callbackUrl: "/login" }) }, // Usamos onClick en lugar de href
 ];
 

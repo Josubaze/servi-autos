@@ -40,7 +40,7 @@ export const Profile = () => {
 
   return (
     <div className="w-full px-4 py-4">
-      <PageTitle title="CONFIGURACIÓN DE PERFIL" />
+      <PageTitle title="CONFIGURACIÓN DE CUENTA" />
       <div className="flex justify-center p-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start w-full max-w-6xl">
           {/* Tabs Section */}

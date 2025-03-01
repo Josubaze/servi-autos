@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MENUPROFILE } from 'src/utils/constanst';
 import { Notifications } from '../Notifications'; 
-import { Badge, Button, Divider } from '@nextui-org/react';
+import { Badge, Button, Divider, Tooltip } from '@nextui-org/react';
 import { IoNotificationsCircleOutline } from 'react-icons/io5';
 import { useSocketContext } from 'src/context/SocketContext';
 import { usePathname } from 'next/navigation';
@@ -47,12 +47,23 @@ export const ProfileDropdown: React.FC<OptionsMenuProps> = ({ session }) => {
     <div className="relative flex items-center">
       {/* Contenedor para el botón de notificaciones y su panel */}
       <div className="relative flex items-center justify-center" ref={notificationsContainerRef}>
-        {unreadNotifications > 0 ? (
-          <Badge 
-            content={unreadNotifications} 
-            className='border-none text-gray-100 bg-indigo-700' 
-            shape="circle"
-          >
+        <Tooltip content="Notificaciones">
+          {unreadNotifications > 0 ? (
+            <Badge 
+              content={unreadNotifications} 
+              className='border-none text-gray-100 bg-indigo-700' 
+              shape="circle"
+            >
+              <Button  
+                isIconOnly 
+                radius="full"
+                variant="light"
+                onClick={() => setShowNotifications((prev) => !prev)}
+              >
+                <IoNotificationsCircleOutline size={36} />
+              </Button>
+            </Badge>
+          ) : (
             <Button  
               isIconOnly 
               radius="full"
@@ -61,17 +72,8 @@ export const ProfileDropdown: React.FC<OptionsMenuProps> = ({ session }) => {
             >
               <IoNotificationsCircleOutline size={36} />
             </Button>
-          </Badge>
-        ) : (
-          <Button  
-            isIconOnly 
-            radius="full"
-            variant="light"
-            onClick={() => setShowNotifications((prev) => !prev)}
-          >
-            <IoNotificationsCircleOutline size={36} />
-          </Button>
-        )}
+          )}
+        </Tooltip>
 
         {/* Panel de notificaciones */}
         {showNotifications && (
@@ -81,19 +83,21 @@ export const ProfileDropdown: React.FC<OptionsMenuProps> = ({ session }) => {
         )}
       </div>
 
-      {/* Menú de perfil */}
+      {/* Menú de configuración */}
       <div className="ml-3">
         <Menu as="div" className="relative">
-          <MenuButton className="relative flex rounded-full bg-indigo-700 text-sm focus:outline-none focus:ring-2 ">
-            <div className="relative h-10 w-10 rounded-full overflow-hidden">
-              <Image
-                src={session?.user.image ?? '/svg/user.svg'}
-                alt="Profile Image"
-                width={50}
-                height={50}
-              />
-            </div>
-          </MenuButton>
+          <Tooltip content='Cuenta'>
+            <MenuButton className="relative flex rounded-full bg-indigo-700 text-sm focus:outline-none focus:ring-2 ">
+              <div className="relative h-10 w-10 rounded-full overflow-hidden">
+                <Image
+                  src={session?.user.image ?? '/svg/user.svg'}
+                  alt="Profile Image"
+                  width={50}
+                  height={50}
+                />
+              </div>
+            </MenuButton>
+          </Tooltip>
 
           <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md outline outline-2 outline-indigo-700 bg-indigo-700">
             {MENUPROFILE.map((item) => (
