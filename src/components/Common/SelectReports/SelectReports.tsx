@@ -49,7 +49,7 @@ export const SelectReports: React.FC<{
     const columns = [
     {
         name: "num",
-        label: "N° Factura",
+        label: "N° Informe",
         options: { filter: false, sort: true },
     },
     {
